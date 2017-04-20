@@ -37,6 +37,8 @@ pod_repo_ = repository_rule(
 #
 # @param url: the url of this repo
 #
+# @param owner: the owner at Pinterest of this code
+#
 # @note Github automatically creates zip files for a commit hash:
 # Ex commit: 751edba685e997ea4d8501dcf16df53aac5355a4
 # https://github.com/pinterest/PINCache/archive/751edba685e997ea4d8501dcf16df53aac5355a4.zip
@@ -59,7 +61,7 @@ pod_repo_ = repository_rule(
 # @param cmds: commands executed within this repository.
 # @see repository_context.execute
 
-def new_pod_repository(name, url, strip_prefix = "", repo_tools = "//tools/PodSpecToBUILD/bin:RepoTools", build_file_content = "", cmds = []):
+def new_pod_repository(name, url, owner, strip_prefix = "", repo_tools = "//tools/PodSpecToBUILD/bin:RepoTools", build_file_content = "", cmds = []):
     pod_repo_(
             name = name,
             target_name = name,
