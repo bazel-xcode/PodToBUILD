@@ -6,7 +6,7 @@
 	integration-test
 
 build:
-	BUILD_DIR=tmp_build_dir
+	BUILD_DIR=tmp_build_dir \
 	xcodebuild  \
 	-project PodSpecToBUILD.xcodeproj \
 	-scheme PodSpecToBUILD \
