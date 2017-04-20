@@ -1,0 +1,30 @@
+IBActionSheet_source_headers = glob(
+  [
+    "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
+  ]
+  )
+IBActionSheet_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+IBActionSheet_headers = IBActionSheet_source_headers + IBActionSheet_extra_headers
+objc_library(
+  name = "IBActionSheet",
+  srcs = glob(
+    [
+      "IBActionSheetSample/IBActionSheetSample/IBActionSheet.m"
+    ]
+    ),
+  hdrs = IBActionSheet_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  sdk_frameworks = [
+    "QuartzCore"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

@@ -1,0 +1,158 @@
+objc_library(
+  name = "PINRemoteImage",
+  deps = [
+    ":PINRemoteImage_Core",
+    ":PINRemoteImage_iOS",
+    ":PINRemoteImage_OSX",
+    ":PINRemoteImage_tvOS",
+    ":PINRemoteImage_FLAnimatedImage",
+    ":PINRemoteImage_WebP",
+    ":PINRemoteImage_PINCache"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+PINRemoteImage_Core_source_headers = glob(
+  [
+    "Source/Classes/**/*.h"
+  ]
+  )
+PINRemoteImage_Core_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+PINRemoteImage_Core_headers = PINRemoteImage_Core_source_headers + PINRemoteImage_Core_extra_headers
+objc_library(
+  name = "PINRemoteImage_Core",
+  srcs = glob(
+    [
+      "Source/Classes/**/*.m"
+    ],
+    exclude = [
+      "Source/Classes/PINCache/*.m",
+      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m",
+      "Source/Classes/PINCache/*.m"
+    ]
+    ),
+  hdrs = PINRemoteImage_Core_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  sdk_frameworks = [
+    "ImageIO",
+    "Accelerate"
+  ],
+  deps = [
+    "@PINOperation//:PINOperation"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "PINRemoteImage_iOS",
+  sdk_frameworks = [
+    "UIKit"
+  ],
+  deps = [
+    ":PINRemoteImage_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "PINRemoteImage_OSX",
+  sdk_frameworks = [
+    "Cocoa",
+    "CoreServices"
+  ],
+  deps = [
+    ":PINRemoteImage_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "PINRemoteImage_tvOS",
+  deps = [
+    ":PINRemoteImage_iOS"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+PINRemoteImage_FLAnimatedImage_source_headers = glob(
+  [
+    "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
+  ]
+  )
+PINRemoteImage_FLAnimatedImage_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+PINRemoteImage_FLAnimatedImage_headers = PINRemoteImage_FLAnimatedImage_source_headers + PINRemoteImage_FLAnimatedImage_extra_headers
+objc_library(
+  name = "PINRemoteImage_FLAnimatedImage",
+  srcs = glob(
+    [
+      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m"
+    ]
+    ),
+  hdrs = PINRemoteImage_FLAnimatedImage_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  deps = [
+    ":PINRemoteImage_Core",
+    "@FLAnimatedImage//:FLAnimatedImage"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "PINRemoteImage_WebP",
+  deps = [
+    ":PINRemoteImage_Core",
+    "@libwebp//:libwebp"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+PINRemoteImage_PINCache_source_headers = glob(
+  [
+    "Source/Classes/PINCache/*.h"
+  ]
+  )
+PINRemoteImage_PINCache_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+PINRemoteImage_PINCache_headers = PINRemoteImage_PINCache_source_headers + PINRemoteImage_PINCache_extra_headers
+objc_library(
+  name = "PINRemoteImage_PINCache",
+  srcs = glob(
+    [
+      "Source/Classes/PINCache/*.m"
+    ]
+    ),
+  hdrs = PINRemoteImage_PINCache_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  deps = [
+    "@PINCache//:PINCache",
+    ":PINRemoteImage_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

@@ -1,0 +1,70 @@
+objc_library(
+  name = "googleapis",
+  deps = [
+    ":googleapis_Messages",
+    ":googleapis_Services"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+googleapis_Messages_source_headers = glob(
+  [
+    "google/**/*.pbobjc.h"
+  ]
+  )
+googleapis_Messages_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+googleapis_Messages_headers = googleapis_Messages_source_headers + googleapis_Messages_extra_headers
+objc_library(
+  name = "googleapis_Messages",
+  srcs = glob(
+    [
+      "google/**/*.pbobjc.m"
+    ]
+    ),
+  hdrs = googleapis_Messages_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  deps = [
+    "@Protobuf//:Protobuf"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+googleapis_Services_source_headers = glob(
+  [
+    "google/**/*.pbrpc.h"
+  ]
+  )
+googleapis_Services_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+googleapis_Services_headers = googleapis_Services_source_headers + googleapis_Services_extra_headers
+objc_library(
+  name = "googleapis_Services",
+  srcs = glob(
+    [
+      "google/**/*.pbrpc.m"
+    ]
+    ),
+  hdrs = googleapis_Services_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  deps = [
+    ":googleapis_Messages",
+    "@gRPC-ProtoRPC//:gRPC-ProtoRPC"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

@@ -1,0 +1,27 @@
+ColorCube_source_headers = glob(
+  [
+    "ColorCube/ColorCube/*.h"
+  ]
+  )
+ColorCube_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+ColorCube_headers = ColorCube_source_headers + ColorCube_extra_headers
+objc_library(
+  name = "ColorCube",
+  srcs = glob(
+    [
+      "ColorCube/ColorCube/*.m"
+    ]
+    ),
+  hdrs = ColorCube_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

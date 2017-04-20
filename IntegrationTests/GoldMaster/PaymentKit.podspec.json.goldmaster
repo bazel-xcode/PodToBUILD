@@ -1,0 +1,27 @@
+PaymentKit_source_headers = glob(
+  [
+    "PaymentKit/*.h"
+  ]
+  )
+PaymentKit_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+PaymentKit_headers = PaymentKit_source_headers + PaymentKit_extra_headers
+objc_library(
+  name = "PaymentKit",
+  srcs = glob(
+    [
+      "PaymentKit/*.m"
+    ]
+    ),
+  hdrs = PaymentKit_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

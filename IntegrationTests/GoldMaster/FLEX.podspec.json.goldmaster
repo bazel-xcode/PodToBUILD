@@ -1,0 +1,32 @@
+FLEX_source_headers = glob(
+  [
+    "Classes/**/*.h"
+  ]
+  )
+FLEX_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+FLEX_headers = FLEX_source_headers + FLEX_extra_headers
+objc_library(
+  name = "FLEX",
+  srcs = glob(
+    [
+      "Classes/**/*.m"
+    ]
+    ),
+  hdrs = FLEX_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  sdk_frameworks = [
+    "Foundation",
+    "UIKit",
+    "CoreGraphics"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

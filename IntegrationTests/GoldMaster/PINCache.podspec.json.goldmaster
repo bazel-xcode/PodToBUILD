@@ -1,0 +1,63 @@
+objc_library(
+  name = "PINCache",
+  sdk_frameworks = [
+    "Foundation"
+  ],
+  deps = [
+    ":PINCache_Core",
+    ":PINCache_Arc_exception_safe"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+PINCache_Core_source_headers = glob(
+  [
+    "Source/*.h"
+  ]
+  )
+PINCache_Core_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+PINCache_Core_headers = PINCache_Core_source_headers + PINCache_Core_extra_headers
+objc_library(
+  name = "PINCache_Core",
+  srcs = glob(
+    [
+      "Source/*.m"
+    ],
+    exclude = [
+      "Source/PINDiskCache.m"
+    ]
+    ),
+  hdrs = PINCache_Core_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  deps = [
+    "@PINOperation//:PINOperation"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "PINCache_Arc_exception_safe",
+  srcs = glob(
+    [
+      "Source/PINDiskCache.m"
+    ]
+    ),
+  deps = [
+    ":PINCache_Core"
+  ],
+  copts = [
+    "-fobjc-arc-exceptions"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

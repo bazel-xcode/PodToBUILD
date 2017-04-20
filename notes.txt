@@ -1,0 +1,28 @@
+# Generating a JSON representation of a podspec
+pod spec cat PINCache > ~/Desktop/pincache_podspec.json
+
+# TODO:
+
+- Improve external dependency referencing
+
+# Support external 
+
+# Support recursive podspecs
+    - Fetch dependent podspecs when hitting dependencies.some = "VERSION"
+
+# Support source = {PATH} ( like PINThrift )
+
+# Support "prepare_command" ( Needed for Google APIS )
+
+# Support "weak_frameworks"
+
+# Support "pod_target_config"
+
+# Support "xcconfig" ( convert these into copts )
+
+# Support "libraries"
+
+# Support "requires_arc"
+
+# Support "Platforms"
+

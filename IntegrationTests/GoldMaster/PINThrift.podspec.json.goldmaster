@@ -1,0 +1,27 @@
+PINThrift_source_headers = glob(
+  [
+    "Sources/**/*.h"
+  ]
+  )
+PINThrift_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+PINThrift_headers = PINThrift_source_headers + PINThrift_extra_headers
+objc_library(
+  name = "PINThrift",
+  srcs = glob(
+    [
+      "Sources/**/*.m"
+    ]
+    ),
+  hdrs = PINThrift_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

@@ -1,0 +1,20 @@
+mkdir -p bin/
+
+BUILD_DIR=tmp_build_dir
+mkdir -p BUILD_DIR
+
+xcodebuild  \
+-project PodSpecToBUILD.xcodeproj \
+-scheme PodSpecToBUILD \
+-configuration Release \
+-derivedDataPath $PWD/$BUILD_DIR
+
+ditto $BUILD_DIR/Build/Products/Release/PodSpecToBUILD bin/
+
+xcodebuild  \
+-project PodSpecToBUILD.xcodeproj \
+-scheme RepoTools \
+-configuration Release \
+-derivedDataPath $PWD/$BUILD_DIR
+
+ditto $BUILD_DIR/Build/Products/Release/RepoTools bin/

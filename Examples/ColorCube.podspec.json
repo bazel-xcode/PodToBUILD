@@ -1,0 +1,17 @@
+{
+  "name": "ColorCube",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/keleixu/ColorCube",
+  "authors": "Ole Sprause",
+  "summary": "Dominant color extraction for iOS and Python",
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "git": "https://github.com/keleixu/ColorCube.git",
+    "tag": "0.1.0"
+  },
+  "source_files": "ColorCube/ColorCube/*.{h,m}",
+  "requires_arc": true
+}

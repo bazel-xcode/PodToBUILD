@@ -1,0 +1,74 @@
+objc_library(
+  name = "AsyncDisplayKit",
+  deps = [
+    ":AsyncDisplayKit_Core",
+    ":AsyncDisplayKit_PINRemoteImage",
+    ":AsyncDisplayKit_IGListKit",
+    ":AsyncDisplayKit_Yoga"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+AsyncDisplayKit_Core_source_headers = glob(
+  [
+    "Source/**/*.h",
+    "Base/*.h",
+    "Source/TextKit/*.h"
+  ]
+  )
+AsyncDisplayKit_Core_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+AsyncDisplayKit_Core_headers = AsyncDisplayKit_Core_source_headers + AsyncDisplayKit_Core_extra_headers
+objc_library(
+  name = "AsyncDisplayKit_Core",
+  srcs = glob(
+    [
+      "Source/**/*.m",
+      "Source/**/*.mm",
+      "Base/*.m"
+    ]
+    ),
+  hdrs = AsyncDisplayKit_Core_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "AsyncDisplayKit_PINRemoteImage",
+  deps = [
+    "@PINRemoteImage/PINCache//:PINRemoteImage/PINCache",
+    ":AsyncDisplayKit_Core",
+    "@PINRemoteImage/iOS//:PINRemoteImage/iOS"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "AsyncDisplayKit_IGListKit",
+  deps = [
+    ":AsyncDisplayKit_Core",
+    "@IGListKit//:IGListKit"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "AsyncDisplayKit_Yoga",
+  deps = [
+    ":AsyncDisplayKit_Core",
+    "@Yoga//:Yoga"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

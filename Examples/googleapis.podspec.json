@@ -1,0 +1,55 @@
+{
+  "name": "googleapis",
+  "version": "0.0.2",
+  "license": "Apache 2.0",
+  "authors": {
+    "Google Inc.": "timburks@google.com"
+  },
+  "homepage": "http://github.com/GoogleCloudPlatform/ios-docs-samples",
+  "source": {
+    "git": "https://github.com/GoogleCloudPlatform/ios-docs-samples.git",
+    "tag": "0.0.1"
+  },
+  "summary": "Service definitions for Google Cloud Platform APIs",
+  "platforms": {
+    "ios": "7.1",
+    "osx": "10.9"
+  },
+  "dependencies": {
+    "!ProtoCompiler-gRPCPlugin": [
+      "~> 1.0.0-pre1.1"
+    ]
+  },
+  "prepare_command": "Pods/!ProtoCompiler/protoc         --plugin=protoc-gen-grpc=Pods/!ProtoCompiler-gRPCPlugin/grpc_objective_c_plugin         --objc_out=.         --grpc_out=.         -I .         -I Pods/!ProtoCompiler         google/*/*.proto google/*/*/*/*.proto",
+  "pod_target_xcconfig": {
+    "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1",
+    "USER_HEADER_SEARCH_PATHS": "$SRCROOT/.."
+  },
+  "subspecs": [
+    {
+      "name": "Messages",
+      "source_files": "google/**/*.pbobjc.{h,m}",
+      "header_mappings_dir": ".",
+      "requires_arc": false,
+      "dependencies": {
+        "Protobuf": [
+
+        ]
+      }
+    },
+    {
+      "name": "Services",
+      "source_files": "google/**/*.pbrpc.{h,m}",
+      "header_mappings_dir": ".",
+      "requires_arc": true,
+      "dependencies": {
+        "gRPC-ProtoRPC": [
+
+        ],
+        "googleapis/Messages": [
+
+        ]
+      }
+    }
+  ]
+}

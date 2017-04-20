@@ -1,0 +1,101 @@
+objc_library(
+  name = "Adjust",
+  sdk_frameworks = [
+    "SystemConfiguration"
+  ],
+  deps = [
+    ":Adjust_Core",
+    ":Adjust_Sociomantic",
+    ":Adjust_Criteo"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Adjust_Core_source_headers = glob(
+  [
+    "Adjust/*.h",
+    "Adjust/ADJAdditions/*.h"
+  ]
+  )
+Adjust_Core_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Adjust_Core_headers = Adjust_Core_source_headers + Adjust_Core_extra_headers
+objc_library(
+  name = "Adjust_Core",
+  srcs = glob(
+    [
+      "Adjust/*.m",
+      "Adjust/ADJAdditions/*.m"
+    ]
+    ),
+  hdrs = Adjust_Core_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Adjust_Sociomantic_source_headers = glob(
+  [
+    "plugin/Sociomantic/*.h"
+  ]
+  )
+Adjust_Sociomantic_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Adjust_Sociomantic_headers = Adjust_Sociomantic_source_headers + Adjust_Sociomantic_extra_headers
+objc_library(
+  name = "Adjust_Sociomantic",
+  srcs = glob(
+    [
+      "plugin/Sociomantic/*.m"
+    ]
+    ),
+  hdrs = Adjust_Sociomantic_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  deps = [
+    ":Adjust_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Adjust_Criteo_source_headers = glob(
+  [
+    "plugin/Criteo/*.h"
+  ]
+  )
+Adjust_Criteo_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Adjust_Criteo_headers = Adjust_Criteo_source_headers + Adjust_Criteo_extra_headers
+objc_library(
+  name = "Adjust_Criteo",
+  srcs = glob(
+    [
+      "plugin/Criteo/*.m"
+    ]
+    ),
+  hdrs = Adjust_Criteo_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  deps = [
+    ":Adjust_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

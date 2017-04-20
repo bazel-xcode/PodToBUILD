@@ -1,0 +1,27 @@
+SlackTextViewController_source_headers = glob(
+  [
+    "Source/**/*.h"
+  ]
+  )
+SlackTextViewController_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+SlackTextViewController_headers = SlackTextViewController_source_headers + SlackTextViewController_extra_headers
+objc_library(
+  name = "SlackTextViewController",
+  srcs = glob(
+    [
+      "Source/**/*.m"
+    ]
+    ),
+  hdrs = SlackTextViewController_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+

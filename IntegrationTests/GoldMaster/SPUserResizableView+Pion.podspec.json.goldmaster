@@ -1,0 +1,27 @@
+SPUserResizableView+Pion_source_headers = glob(
+  [
+    "SPUserResizableView/SPUserResizableView.h"
+  ]
+  )
+SPUserResizableView+Pion_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+SPUserResizableView+Pion_headers = SPUserResizableView+Pion_source_headers + SPUserResizableView+Pion_extra_headers
+objc_library(
+  name = "SPUserResizableView+Pion",
+  srcs = glob(
+    [
+      "SPUserResizableView/SPUserResizableView.m"
+    ]
+    ),
+  hdrs = SPUserResizableView+Pion_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+
