@@ -13,22 +13,25 @@ struct PodSpec {
     var sourceFiles: [String]
     var excludeFiles: [String]
     var frameworks: [String]
-    var subspecs = [PodSpec]()
-    var dependencies = [String]()
+    var subspecs: [PodSpec] = []
+    var dependencies: [String] = []
     var compilerFlags: [String]
     var source: PodSpecSource?
     var libraries: [String]
 
     // TODO: None of these fields are parsed. This does *NOT* mean that the
     // program won't build under Bazel.
-    var publicHeaders = [String]()
-    var privateHeaders = [String]()
+    var publicHeaders: [String] = []
+    var privateHeaders: [String] = []
     var requiresARC: Bool = true
 
-    var xcconfigs = [String: String]()
-    var podTargetXcconfig = [String: String]()
+    var xcconfigs: [String: String] = [:]
+    var podTargetXcconfig: [String: String] = [:]
 
     var prepareCommand = ""
+
+    // TODO: Support resource / resources properties as well
+    var resourceBundles: [String: [String]] = [:]
 
     init(JSONPodspec: JSONDict) throws {
         name = try ExtractValue(fromJSON: JSONPodspec["name"])
@@ -43,6 +46,17 @@ struct PodSpec {
         } else {
             dependencies = [String]()
         }
+
+        if let resourceBundleMap = JSONPodspec["resource_bundles"] as? JSONDict {
+            resourceBundles = resourceBundleMap.map { key, val in
+                return (key, strings(fromJSON: val))
+            }.reduce([:], { (dict, tuple) -> [String:[String]] in
+                var mutableDict = dict
+                mutableDict[tuple.0] = tuple.1
+                return mutableDict
+            })
+        }
+
         if let JSONPodSubspecs = JSONPodspec["subspecs"] as? [JSONDict] {
             subspecs = try JSONPodSubspecs.map { try PodSpec(JSONPodspec: $0) }
         }

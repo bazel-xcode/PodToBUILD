@@ -105,7 +105,7 @@ func main() {
     shell.dir(publicHeaderdir)
 
     let pwd = (shell.command("/bin/pwd") as String).components(separatedBy: "\n")[0]
-    
+
     // Create a directory structure condusive to <> imports
     // - Get all of the paths matching wild card imports
     // - Put them into the public header directory
@@ -113,7 +113,7 @@ func main() {
     buildFile.skylarkConvertibles.flatMap { $0 as? RepoTools.ObjcLibrary }
         .flatMap { $0.headers }
         .flatMap { podGlob(pattern: $0) }
-        .forEach { shell.symLink(from: $0, to: publicHeaderdir) }
+        .forEach { shell.symLink(from: "\(pwd)/\($0)", to: publicHeaderdir) }
     // Run the compiler
     let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.skylarkConvertibles.flatMap { $0.toSkylark() })
     let buildFileOut = buildFileSkylarkCompiler.run()

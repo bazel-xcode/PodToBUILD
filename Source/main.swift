@@ -9,14 +9,13 @@ func main() {
     }
 
     let JSONPodspecFile = CommandLine.arguments[1]
-    guard let jsonData = NSData(contentsOfFile: JSONPodspecFile) as? Data,
+    guard let jsonData = NSData(contentsOfFile: JSONPodspecFile) as Data?,
         let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
             JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
         let JSONPodspec = JSONFile as? JSONDict,
         let podSpec = try? PodSpec(JSONPodspec: JSONPodspec)
     else {
-        print("Invalid JSON Podspec")
-        exit(1)
+        fatalError("Invalid JSON Podspec: \(JSONPodspecFile)")
     }
 
     let buildFile = PodBuildFile.with(podSpec: podSpec)

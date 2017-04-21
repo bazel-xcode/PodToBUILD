@@ -1,3 +1,4 @@
 tmp_build_dir
 bazel-*
 bin/WorkspaceTools
+project.xcworkspace

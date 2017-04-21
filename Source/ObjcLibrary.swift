@@ -8,6 +8,24 @@
 
 import Foundation
 
+// https://bazel.build/versions/master/docs/be/objective-c.html#objc_bundle_library
+struct ObjcBundleLibrary: SkylarkConvertible {
+    let name: String
+    let resources: [String]
+
+    func toSkylark() -> [SkylarkNode] {
+        return [
+            SkylarkNode.functionCall(
+                name: "objc_bundle_library",
+                arguments: [
+                    .named(name: "name", value: .string(value: name)),
+                    .named(name: "resources",
+                           value: SkylarkNode.list(value: resources.map { .string(value: $0) }))
+            ])
+        ]
+    }
+}
+
 // ObjcLibrary is an intermediate rep of an objc library
 struct ObjcLibrary: SkylarkConvertible {
     var name: String
@@ -17,6 +35,7 @@ struct ObjcLibrary: SkylarkConvertible {
     var sdkDylibs: [String]
     var deps: [String]
     var copts: [String]
+    var bundles: [String]
     var excludedSource = [String]()
 
     // MARK: - Bazel Rendering
@@ -104,6 +123,11 @@ struct ObjcLibrary: SkylarkConvertible {
                 name: "copts",
                 value: .list(value: lib.copts.map { .string(value: $0) })
             ))
+        }
+
+        if lib.bundles.count > 0 {
+            libArguments.append(.named(name: "bundles",
+                                       value: .list(value: bundles.map { .string(value: $0) })))
         }
         libArguments.append(.named(
             name: "visibility",

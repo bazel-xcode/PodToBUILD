@@ -18,8 +18,7 @@ struct PodBuildFile {
 
     static func makeConvertables(fromPodspec podSpec: PodSpec) -> [SkylarkConvertible] {
         var deps = [String]()
-        var libs = [SkylarkConvertible]()
-        var objcLibs = [ObjcLibrary]()
+        var objcLibs = [SkylarkConvertible]()
 
         for subSpec in podSpec.subspecs {
             let subspecName = bazelLabel(fromString: "\(podSpec.name)_\(subSpec.name)")
@@ -47,12 +46,20 @@ struct PodBuildFile {
                                   sdkFrameworks: subSpec.frameworks,
                                   sdkDylibs: subSpec.libraries,
                                   deps: subspecDeps,
-                                  copts: subSpec.compilerFlags, excludedSource: getCompiledSource(fromPatterns: subSpec.excludeFiles))
-            libs.append(lib)
+                                  copts: subSpec.compilerFlags,
+                                  bundles: subSpec.resourceBundles.map { k, _ in ":\(subSpec.name)-\(k)" },
+                                  excludedSource: getCompiledSource(fromPatterns: subSpec.excludeFiles))
+
+            let bundles: [SkylarkConvertible] = subSpec.resourceBundles.map { k, v in
+                ObjcBundleLibrary(name: "\(subSpec.name)-\(k)", resources: v)
+            }
             objcLibs.append(lib)
+            objcLibs.append(contentsOf: bundles)
         }
 
         let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: podSpec.sourceFiles)
+
+
         let lib = ObjcLibrary(name: podSpec.name,
                               sourceFiles: headersAndSourcesInfo.sourceFiles,
                               headers: headersAndSourcesInfo.headers,
@@ -60,14 +67,17 @@ struct PodBuildFile {
                               sdkDylibs: podSpec.libraries,
                               deps: deps,
                               copts: podSpec.compilerFlags,
+                              bundles: podSpec.resourceBundles.map { k, _ in ":\(podSpec.name)-\(k)" },
                               excludedSource: getCompiledSource(fromPatterns: podSpec.excludeFiles))
 
-        libs.insert(lib, at: 0)
         objcLibs.insert(lib, at: 0)
 
+        let bundles: [SkylarkConvertible] = podSpec.resourceBundles.map { k, v in
+            ObjcBundleLibrary(name: "\(podSpec.name)-\(k)", resources: v)
+        }
+
         // Apply Transformations
-        libs = executePruneRedundantCompilationTransform(libs: objcLibs)
-        return libs
+        return bundles + objcLibs.filter { $0 as? ObjcLibrary == nil } + executePruneRedundantCompilationTransform(libs: objcLibs.flatMap { $0 as? ObjcLibrary })
     }
 
     // In Cocoapods, all internal targets are flatted to a single target

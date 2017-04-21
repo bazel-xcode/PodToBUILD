@@ -1,0 +1,33 @@
+FLAnimatedImage_source_headers = glob(
+  [
+    "FLAnimatedImage/**/*.h"
+  ]
+  )
+FLAnimatedImage_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+FLAnimatedImage_headers = FLAnimatedImage_source_headers + FLAnimatedImage_extra_headers
+objc_library(
+  name = "FLAnimatedImage",
+  srcs = glob(
+    [
+      "FLAnimatedImage/**/*.m"
+    ]
+    ),
+  hdrs = FLAnimatedImage_headers,
+  includes = [
+    "bazel_support/Headers/Public/"
+  ],
+  sdk_frameworks = [
+    "QuartzCore",
+    "ImageIO",
+    "MobileCoreServices",
+    "CoreGraphics"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+
