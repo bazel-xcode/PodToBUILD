@@ -1,3 +1,10 @@
+#!/bin/bash
+
+set -e
+
+SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
+cd $SCRIPTPATH
+
 mkdir -p IntegrationTests/GoldMaster
 
 BUILD_DIR=tmp_build_dir

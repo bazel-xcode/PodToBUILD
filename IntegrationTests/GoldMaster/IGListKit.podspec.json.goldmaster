@@ -1,5 +1,8 @@
 objc_library(
   name = "IGListKit",
+  sdk_dylibs = [
+    "c++"
+  ],
   deps = [
     ":IGListKit_Diffing",
     ":IGListKit_Default"

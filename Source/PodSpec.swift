@@ -17,6 +17,7 @@ struct PodSpec {
     var dependencies = [String]()
     var compilerFlags: [String]
     var source: PodSpecSource?
+    var libraries: [String]
 
     // TODO: None of these fields are parsed. This does *NOT* mean that the
     // program won't build under Bazel.
@@ -27,7 +28,6 @@ struct PodSpec {
     var xcconfigs = [String: String]()
     var podTargetXcconfig = [String: String]()
 
-    var libraries = [String]()
     var prepareCommand = ""
 
     init(JSONPodspec: JSONDict) throws {
@@ -37,6 +37,7 @@ struct PodSpec {
         sourceFiles = strings(fromJSON: JSONPodspec["source_files"])
         publicHeaders = strings(fromJSON: JSONPodspec["public_headers"])
         compilerFlags = strings(fromJSON: JSONPodspec["compiler_flags"])
+        libraries = strings(fromJSON: JSONPodspec["libraries"])
         if let podSubspecDependencies = JSONPodspec["dependencies"] as? JSONDict {
             dependencies = Array(podSubspecDependencies.keys)
         } else {

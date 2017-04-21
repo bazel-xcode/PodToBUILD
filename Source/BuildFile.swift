@@ -39,12 +39,13 @@ struct PodBuildFile {
                     subspecDeps.append("@\(depName)//:\(depName)")
                 }
             }
-
+            
             let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: subSpec.sourceFiles)
             let lib = ObjcLibrary(name: subspecName,
                                   sourceFiles: headersAndSourcesInfo.sourceFiles,
                                   headers: headersAndSourcesInfo.headers,
                                   sdkFrameworks: subSpec.frameworks,
+                                  sdkDylibs: subSpec.libraries,
                                   deps: subspecDeps,
                                   copts: subSpec.compilerFlags, excludedSource: getCompiledSource(fromPatterns: subSpec.excludeFiles))
             libs.append(lib)
@@ -56,6 +57,7 @@ struct PodBuildFile {
                               sourceFiles: headersAndSourcesInfo.sourceFiles,
                               headers: headersAndSourcesInfo.headers,
                               sdkFrameworks: podSpec.frameworks,
+                              sdkDylibs: podSpec.libraries,
                               deps: deps,
                               copts: podSpec.compilerFlags,
                               excludedSource: getCompiledSource(fromPatterns: podSpec.excludeFiles))

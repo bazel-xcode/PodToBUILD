@@ -8,7 +8,8 @@ def _impl(repository_ctx):
     repo_tools = repository_ctx.attr.repo_tools_path
     if repo_tools:
         repo_tools_bin = repository_ctx.path(repo_tools)
-        repo_tools_result = repository_ctx.execute([repo_tools_bin, target_name])
+        output = repository_ctx.execute([repo_tools_bin, target_name])
+        # print("__OUTPUT", output.stdout, output.stderr)
 
     for cmd in repository_ctx.attr.cmds:
         repository_ctx.execute(cmd)

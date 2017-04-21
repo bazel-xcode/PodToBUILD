@@ -1,5 +1,8 @@
 objc_library(
   name = "AsyncDisplayKit",
+  sdk_dylibs = [
+    "c++"
+  ],
   deps = [
     ":AsyncDisplayKit_Core",
     ":AsyncDisplayKit_PINRemoteImage",

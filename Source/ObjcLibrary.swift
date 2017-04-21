@@ -14,6 +14,7 @@ struct ObjcLibrary: SkylarkConvertible {
     var sourceFiles: [String]
     var headers: [String]
     var sdkFrameworks: [String]
+    var sdkDylibs: [String]
     var deps: [String]
     var copts: [String]
     var excludedSource = [String]()
@@ -75,13 +76,21 @@ struct ObjcLibrary: SkylarkConvertible {
             // All includes are bubbled up automatically
             libArguments.append(.named(
                 name: "includes",
-                value: .list(value: [.string(value: "bazel_support/Headers/Public/")])
+                value: .list(value: [
+                    .string(value: "bazel_support/Headers/Public/")
+                ])
             ))
         }
         if lib.sdkFrameworks.count > 0 {
             libArguments.append(.named(
                 name: "sdk_frameworks",
                 value: .list(value: lib.sdkFrameworks.map { .string(value: $0) })
+            ))
+        }
+        if lib.sdkDylibs.count > 0 {
+            libArguments.append(.named(
+                name: "sdk_dylibs",
+                value: .list(value: lib.sdkDylibs.map{ .string(value: $0) })
             ))
         }
         if lib.deps.count > 0 {

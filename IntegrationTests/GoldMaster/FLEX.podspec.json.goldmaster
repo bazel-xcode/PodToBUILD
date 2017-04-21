@@ -25,6 +25,10 @@ objc_library(
     "UIKit",
     "CoreGraphics"
   ],
+  sdk_dylibs = [
+    "z",
+    "sqlite3"
+  ],
   visibility = [
     "//visibility:public"
   ]
