@@ -1,3 +1,11 @@
+//
+//  main.swift
+//  WorkspaceTools
+//
+//  Created by jerry on 4/21/17.
+//  Copyright © 2017 jerry. All rights reserved.
+//
+
 import Foundation
 
 func main() {
@@ -19,8 +27,12 @@ func main() {
         exit(1)
     }
 
-    let buildFile = PodBuildFile.with(podSpec: podSpec)
-    let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.skylarkConvertibles.flatMap { $0.toSkylark() })
+    guard let workspaceEntry = try? PodRepositoryWorkspaceEntry.with(podSpec: podSpec) else {
+        print("Unsupported source type")
+        exit(1)
+    }
+
+    let buildFileSkylarkCompiler = SkylarkCompiler(workspaceEntry.toSkylark())
     print(buildFileSkylarkCompiler.run())
 }
 

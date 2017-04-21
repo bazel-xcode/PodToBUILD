@@ -16,6 +16,7 @@ struct PodSpec {
     var subspecs = [PodSpec]()
     var dependencies = [String]()
     var compilerFlags: [String]
+    var source: PodSpecSource?
 
     // TODO: None of these fields are parsed. This does *NOT* mean that the
     // program won't build under Bazel.
@@ -44,6 +45,24 @@ struct PodSpec {
         if let JSONPodSubspecs = JSONPodspec["subspecs"] as? [JSONDict] {
             subspecs = try JSONPodSubspecs.map { try PodSpec(JSONPodspec: $0) }
         }
+
+        if let JSONSource = JSONPodspec["source"] as? JSONDict {
+            source = try? PodSpecSource(JSONSource: JSONSource)
+        }
+    }
+}
+
+// The source component of a PodSpec
+// @note currently only git is supported
+struct PodSpecSource {
+    var git: String?
+    var tag: String?
+    var commit: String?
+
+    init(JSONSource: JSONDict) throws {
+        git = try ExtractValue(fromJSON: JSONSource["git"])
+        tag = try? ExtractValue(fromJSON: JSONSource["tag"])
+        commit = try? ExtractValue(fromJSON: JSONSource["commit"])
     }
 }
 

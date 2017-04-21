@@ -35,7 +35,7 @@ enum SkylarkFunctionArgument {
     case named(name: String, value: SkylarkNode)
 }
 
-// MARK - SkylarkCompiler
+// MARK: - SkylarkCompiler
 
 struct SkylarkCompiler {
     let nodes: [SkylarkNode]

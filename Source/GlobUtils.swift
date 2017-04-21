@@ -182,7 +182,6 @@ func podGlob(pattern: String) -> [String] {
    return results
 }
 
-
 // MARK: - NSRegularExpression
 
 extension NSRegularExpression {

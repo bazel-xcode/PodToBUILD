@@ -3,15 +3,23 @@
 	releases \
 	goldmaster \
 	test \
-	integration-test
+	integration-test \
+	workspace-tools
 
 build:
-	BUILD_DIR=tmp_build_dir \
 	xcodebuild  \
 	-project PodSpecToBUILD.xcodeproj \
 	-scheme PodSpecToBUILD \
 	-configuration Debug \
-	-derivedDataPath $PWD/$BUILD_DIR
+	-derivedDataPath tmp_build_dir
+
+workspace-tools:
+	xcodebuild  \
+	-project PodSpecToBUILD.xcodeproj \
+	-scheme WorkspaceTools \
+	-configuration Release \
+	-derivedDataPath tmp_build_dir
+	ditto tmp_build_dir/Build/Products/Release/WorkspaceTools bin/
 
 # This program builds a release build of all the binaries
 releases:

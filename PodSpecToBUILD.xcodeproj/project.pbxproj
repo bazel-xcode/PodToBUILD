@@ -20,6 +20,16 @@
 		C4E5BC841EA8564200954EB8 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
 		C4E5BC851EA8564200954EB8 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
 		C4E5BC861EA8564200954EB8 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
+		C4E5BC9A1EAA7AD700954EB8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC991EAA7AD700954EB8 /* main.swift */; };
+		C4E5BC9E1EAA7AFA00954EB8 /* PodSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E151EA56749005C8B70 /* PodSpec.swift */; };
+		C4E5BC9F1EAA7B1200954EB8 /* Skylark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E121EA53E29005C8B70 /* Skylark.swift */; };
+		C4E5BCA01EAA7B1F00954EB8 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
+		C4E5BCA11EAA7B3B00954EB8 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02781EA18AA4009B091A /* Workspace.swift */; };
+		C4E5BCA21EAA7B4E00954EB8 /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
+		C4E5BCA31EAA7B5C00954EB8 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
+		C4E5BCA41EAA7B7200954EB8 /* GlobUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E431EA6B4DB005C8B70 /* GlobUtils.swift */; };
+		C4E5BCA81EAA871E00954EB8 /* WorkspaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BCA71EAA871E00954EB8 /* WorkspaceTests.swift */; };
+		C4E5BCAA1EAA8A9B00954EB8 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */; };
 		C4FA7E131EA53E29005C8B70 /* Skylark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E121EA53E29005C8B70 /* Skylark.swift */; };
 		C4FA7E141EA53FA6005C8B70 /* Skylark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E121EA53E29005C8B70 /* Skylark.swift */; };
 		C4FA7E161EA56749005C8B70 /* PodSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E151EA56749005C8B70 /* PodSpec.swift */; };
@@ -38,6 +48,15 @@
 
 /* Begin PBXCopyFilesBuildPhase section */
 		C42E02031EA1454B009B091A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		C4E5BC951EAA7AD700954EB8 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -70,6 +89,10 @@
 		C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildFileTests.swift; sourceTree = "<group>"; };
 		C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjcLibrary.swift; path = Source/ObjcLibrary.swift; sourceTree = SOURCE_ROOT; };
 		C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SkylarkConvertible.swift; path = Source/SkylarkConvertible.swift; sourceTree = SOURCE_ROOT; };
+		C4E5BC971EAA7AD700954EB8 /* WorkspaceTools */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WorkspaceTools; sourceTree = BUILT_PRODUCTS_DIR; };
+		C4E5BC991EAA7AD700954EB8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		C4E5BCA71EAA871E00954EB8 /* WorkspaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkspaceTests.swift; sourceTree = "<group>"; };
+		C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestUtils.swift; sourceTree = "<group>"; };
 		C4FA7E121EA53E29005C8B70 /* Skylark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Skylark.swift; path = Source/Skylark.swift; sourceTree = SOURCE_ROOT; };
 		C4FA7E151EA56749005C8B70 /* PodSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PodSpec.swift; path = Source/PodSpec.swift; sourceTree = SOURCE_ROOT; };
 		C4FA7E211EA56AEA005C8B70 /* RepoTools */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RepoTools; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +116,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C4E5BC941EAA7AD700954EB8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C4FA7E1E1EA56AEA005C8B70 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -110,6 +140,7 @@
 				C42E02071EA1454B009B091A /* Source */,
 				C42E026C1EA150B0009B091A /* PodSpecToBUILDTests */,
 				C4FA7E221EA56AEA005C8B70 /* RepoTools */,
+				C4E5BC981EAA7AD700954EB8 /* WorkspaceTools */,
 				C42E02061EA1454B009B091A /* Products */,
 				C42E02631EA14E70009B091A /* IntegrationTests */,
 			);
@@ -121,6 +152,7 @@
 				C42E02051EA1454B009B091A /* PodSpecToBUILD */,
 				C42E026B1EA150B0009B091A /* PodSpecToBUILDTests.xctest */,
 				C4FA7E211EA56AEA005C8B70 /* RepoTools */,
+				C4E5BC971EAA7AD700954EB8 /* WorkspaceTools */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -155,9 +187,19 @@
 				C42E026D1EA150B0009B091A /* SkylarkTests.swift */,
 				C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */,
 				C4FA7E3F1EA6A81E005C8B70 /* GlobTests.swift */,
+				C4E5BCA71EAA871E00954EB8 /* WorkspaceTests.swift */,
+				C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */,
 				C42E026F1EA150B0009B091A /* Info.plist */,
 			);
 			path = PodSpecToBUILDTests;
+			sourceTree = "<group>";
+		};
+		C4E5BC981EAA7AD700954EB8 /* WorkspaceTools */ = {
+			isa = PBXGroup;
+			children = (
+				C4E5BC991EAA7AD700954EB8 /* main.swift */,
+			);
+			path = WorkspaceTools;
 			sourceTree = "<group>";
 		};
 		C4FA7E221EA56AEA005C8B70 /* RepoTools */ = {
@@ -222,6 +264,23 @@
 			productReference = C42E026B1EA150B0009B091A /* PodSpecToBUILDTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C4E5BC961EAA7AD700954EB8 /* WorkspaceTools */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C4E5BC9D1EAA7AD700954EB8 /* Build configuration list for PBXNativeTarget "WorkspaceTools" */;
+			buildPhases = (
+				C4E5BC931EAA7AD700954EB8 /* Sources */,
+				C4E5BC941EAA7AD700954EB8 /* Frameworks */,
+				C4E5BC951EAA7AD700954EB8 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WorkspaceTools;
+			productName = WorkspaceTools;
+			productReference = C4E5BC971EAA7AD700954EB8 /* WorkspaceTools */;
+			productType = "com.apple.product-type.tool";
+		};
 		C4FA7E201EA56AEA005C8B70 /* RepoTools */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C4FA7E251EA56AEA005C8B70 /* Build configuration list for PBXNativeTarget "RepoTools" */;
@@ -262,6 +321,10 @@
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
 					};
+					C4E5BC961EAA7AD700954EB8 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
 					C4FA7E201EA56AEA005C8B70 = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
@@ -284,6 +347,7 @@
 				C42E02471EA14876009B091A /* IntegrationTests */,
 				C42E026A1EA150B0009B091A /* PodSpecToBUILDTests */,
 				C4FA7E201EA56AEA005C8B70 /* RepoTools */,
+				C4E5BC961EAA7AD700954EB8 /* WorkspaceTools */,
 			);
 		};
 /* End PBXProject section */
@@ -320,15 +384,32 @@
 			files = (
 				C4FA7E141EA53FA6005C8B70 /* Skylark.swift in Sources */,
 				C4FA7E401EA6A81E005C8B70 /* GlobTests.swift in Sources */,
+				C4E5BCAA1EAA8A9B00954EB8 /* TestUtils.swift in Sources */,
 				C4B95C8E1EA1B04E0033C7FA /* BuildFileTests.swift in Sources */,
 				C4E5BC821EA8564200954EB8 /* ObjcLibrary.swift in Sources */,
 				C4FA7E171EA5674B005C8B70 /* main.swift in Sources */,
+				C4E5BCA81EAA871E00954EB8 /* WorkspaceTests.swift in Sources */,
 				C42E027A1EA18AA4009B091A /* Workspace.swift in Sources */,
 				C42E026E1EA150B0009B091A /* SkylarkTests.swift in Sources */,
 				C4FA7E451EA6B4DB005C8B70 /* GlobUtils.swift in Sources */,
 				C4E5BC851EA8564200954EB8 /* SkylarkConvertible.swift in Sources */,
 				C4FA7E181EA56759005C8B70 /* PodSpec.swift in Sources */,
 				C42E02771EA189EF009B091A /* BuildFile.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4E5BC931EAA7AD700954EB8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C4E5BC9E1EAA7AFA00954EB8 /* PodSpec.swift in Sources */,
+				C4E5BCA01EAA7B1F00954EB8 /* SkylarkConvertible.swift in Sources */,
+				C4E5BCA11EAA7B3B00954EB8 /* Workspace.swift in Sources */,
+				C4E5BC9F1EAA7B1200954EB8 /* Skylark.swift in Sources */,
+				C4E5BCA21EAA7B4E00954EB8 /* BuildFile.swift in Sources */,
+				C4E5BC9A1EAA7AD700954EB8 /* main.swift in Sources */,
+				C4E5BCA31EAA7B5C00954EB8 /* ObjcLibrary.swift in Sources */,
+				C4E5BCA41EAA7B7200954EB8 /* GlobUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +589,22 @@
 			};
 			name = Release;
 		};
+		C4E5BC9B1EAA7AD700954EB8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		C4E5BC9C1EAA7AD700954EB8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 		C4FA7E261EA56AEA005C8B70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -559,6 +656,15 @@
 			buildConfigurations = (
 				C42E02711EA150B0009B091A /* Debug */,
 				C42E02721EA150B0009B091A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C4E5BC9D1EAA7AD700954EB8 /* Build configuration list for PBXNativeTarget "WorkspaceTools" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C4E5BC9B1EAA7AD700954EB8 /* Debug */,
+				C4E5BC9C1EAA7AD700954EB8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

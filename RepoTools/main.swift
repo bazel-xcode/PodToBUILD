@@ -72,7 +72,7 @@ struct ShellContext {
         return task
     }
 
-   private func log(_ args: Any...) {
+    private func log(_ args: Any...) {
         if trace {
             print(args)
         }

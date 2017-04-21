@@ -8,15 +8,51 @@
 
 import Foundation
 
-struct NewGitRepository {
-    var name: String
-    var remote: String
-    var tag: String
+// __Podspec__
+// "source": {
+//  "git": "https://github.com/Flipboard/FLAnimatedImage.git",
+//  "tag": "1.0.12"
+// },
+// ___
+//
+// Example:
+// new_pod_repository(
+//   name = "FLAnimatedImage",
+//   url = "https://github.com/Flipboard/FLAnimatedImage/archive/1.0.12.zip",
+//   strip_prefix = "FLAnimatedImage-1.0.12"
+// )
 
-    init(JSONPodspec: JSONDict) throws {
-        name = try ExtractValue(fromJSON: JSONPodspec["name"])
-        let sourceJSON = try ExtractValue(fromJSON: JSONPodspec["source"]) as JSONDict
-        remote = try ExtractValue(fromJSON: sourceJSON["git"])
-        tag = try ExtractValue(fromJSON: sourceJSON["tag"])
+enum WorkspaceError: Error {
+    case unsupportedSource
+}
+
+struct PodRepositoryWorkspaceEntry: SkylarkConvertible {
+    var name: String
+    var url: String
+    var stripPrefix: String
+
+    func toSkylark() -> [SkylarkNode] {
+        let repoSkylark = SkylarkNode.functionCall(name: "new_pod_repository", arguments: [
+            .named(name: "name", value: .string(value: name)),
+            .named(name: "url", value: .string(value: url)),
+            .named(name: "strip_prefix", value: .string(value: stripPrefix)),
+        ])
+        return [repoSkylark]
+    }
+
+    static func with(podSpec: PodSpec) throws -> PodRepositoryWorkspaceEntry {
+        guard let source = podSpec.source,
+            let git = source.git,
+            let tag = source.tag
+        else {
+            throw WorkspaceError.unsupportedSource
+        }
+        if git.contains("github") == false {
+            throw WorkspaceError.unsupportedSource
+        }
+        let repoBaseURL = git.replacingOccurrences(of: ".git", with: "")
+        let url = "\(repoBaseURL)/archive/\(tag).zip"
+        let guessedStripPrefix = "\(podSpec.name)-\(tag)"
+        return PodRepositoryWorkspaceEntry(name: podSpec.name, url: url, stripPrefix: guessedStripPrefix)
     }
 }
