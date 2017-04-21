@@ -140,6 +140,49 @@ func pattern(fromPattern pattern: String, includingFileType fileType: String) ->
     return result
 }
 
+// Glob with the semantics of pod `source_file` globs.
+// @note the original PodSpec globs are based on the ruby glob semantics
+func podGlob(pattern: String) -> [String] {
+   let components = pattern.components(separatedBy: "/")
+   var path = ""
+   var results = [String]()
+   let maxGlobMaxDepth = 7
+
+   let patternExtension: String
+   if components.last?.hasSuffix("*") == false {
+      patternExtension = components.last!
+   } else {
+      patternExtension = ""
+   }
+
+   // Glob along paths.
+   // In the pattern Some/**/*.h
+   // Files in Some/*.h are expected to be included
+   // In the posix glob, only files of *.h in the last directory will
+   // be included
+   for (idx, component) in components.enumerated() {
+      if component.contains("*") {
+         let globExtension = patternExtension.isEmpty ? "\(component.components(separatedBy: "*")[0])*" : patternExtension
+         let globPath = "\(path)\(globExtension)*"
+         results += glob(pattern: globPath)
+      }
+      path += "\(component)/"
+
+      // Handle globs of the form Some/**/*
+      // Run glob the max number of depths after this path
+      if idx == components.count - 1 {
+         for _ in 1...maxGlobMaxDepth {
+            path += "**/"
+            let globExtension = patternExtension.isEmpty ? "\(component.components(separatedBy: "*")[0])*" : patternExtension
+            let globPath = "\(path)\(globExtension)"
+            results += glob(pattern: globPath)
+         }
+      }
+   }
+   return results
+}
+
+
 // MARK: - NSRegularExpression
 
 extension NSRegularExpression {

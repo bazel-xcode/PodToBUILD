@@ -112,9 +112,10 @@ func main() {
     let buildFile = PodBuildFile.with(podSpec: podSpec)
     _ = buildFile.skylarkConvertibles.flatMap { $0 as? RepoTools.ObjcLibrary }
         .flatMap { $0.headers }
-        .map { return glob(pattern: $0) }
+        .map { return podGlob(pattern: $0) }
         .flatMap { $0 }
-        .map { shell.symLink(from: $0, to: publicHeaderdir) }
+        .filter { $0.hasSuffix("h") }
+        .map { shell.symLink(from: "\(pwd)/\($0)", to: publicHeaderdir) }
     // Run the compiler
     let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.skylarkConvertibles.flatMap { $0.toSkylark() })
     let buildFileOut = buildFileSkylarkCompiler.run()
