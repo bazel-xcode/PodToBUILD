@@ -34,7 +34,8 @@ objc_library(
     ),
   hdrs = PINCache_Core_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINCache/"
   ],
   deps = [
     "@PINOperation//:PINOperation"

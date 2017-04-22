@@ -29,6 +29,7 @@ struct ObjcBundleLibrary: SkylarkConvertible {
 // ObjcLibrary is an intermediate rep of an objc library
 struct ObjcLibrary: SkylarkConvertible {
     var name: String
+    var externalName: String
     var sourceFiles: [String]
     var headers: [String]
     var sdkFrameworks: [String]
@@ -96,7 +97,8 @@ struct ObjcLibrary: SkylarkConvertible {
             libArguments.append(.named(
                 name: "includes",
                 value: .list(value: [
-                    .string(value: "bazel_support/Headers/Public/")
+                    .string(value: "bazel_support/Headers/Public/"),
+                    .string(value: "bazel_support/Headers/Public/\(externalName)/")
                 ])
             ))
         }

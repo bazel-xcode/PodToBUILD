@@ -18,7 +18,8 @@ objc_library(
     ),
   hdrs = FLEX_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/FLEX/"
   ],
   sdk_frameworks = [
     "Foundation",

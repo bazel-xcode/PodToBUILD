@@ -32,7 +32,8 @@ objc_library(
     ),
   hdrs = IGListKit_Diffing_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/IGListKit/"
   ],
   visibility = [
     "//visibility:public"

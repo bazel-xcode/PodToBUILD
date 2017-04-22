@@ -34,7 +34,8 @@ objc_library(
     ),
   hdrs = Adjust_Core_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Adjust/"
   ],
   visibility = [
     "//visibility:public"
@@ -60,7 +61,8 @@ objc_library(
     ),
   hdrs = Adjust_Sociomantic_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Adjust/"
   ],
   deps = [
     ":Adjust_Core"
@@ -89,7 +91,8 @@ objc_library(
     ),
   hdrs = Adjust_Criteo_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Adjust/"
   ],
   deps = [
     ":Adjust_Core"

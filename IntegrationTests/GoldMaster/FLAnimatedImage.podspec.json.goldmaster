@@ -18,7 +18,8 @@ objc_library(
     ),
   hdrs = FLAnimatedImage_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/FLAnimatedImage/"
   ],
   sdk_frameworks = [
     "QuartzCore",

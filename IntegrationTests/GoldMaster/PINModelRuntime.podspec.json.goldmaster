@@ -18,7 +18,8 @@ objc_library(
     ),
   hdrs = PINModelRuntime_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINModelRuntime/"
   ],
   visibility = [
     "//visibility:public"

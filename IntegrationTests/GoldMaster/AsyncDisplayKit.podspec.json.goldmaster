@@ -37,7 +37,8 @@ objc_library(
     ),
   hdrs = AsyncDisplayKit_Core_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
   ],
   visibility = [
     "//visibility:public"

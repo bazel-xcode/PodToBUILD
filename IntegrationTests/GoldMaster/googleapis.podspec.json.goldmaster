@@ -28,7 +28,8 @@ objc_library(
     ),
   hdrs = googleapis_Messages_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/googleapis/"
   ],
   deps = [
     "@Protobuf//:Protobuf"
@@ -57,7 +58,8 @@ objc_library(
     ),
   hdrs = googleapis_Services_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/googleapis/"
   ],
   deps = [
     ":googleapis_Messages",

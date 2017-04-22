@@ -38,7 +38,8 @@ objc_library(
     ),
   hdrs = PINRemoteImage_Core_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINRemoteImage/"
   ],
   sdk_frameworks = [
     "ImageIO",
@@ -105,7 +106,8 @@ objc_library(
     ),
   hdrs = PINRemoteImage_FLAnimatedImage_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINRemoteImage/"
   ],
   deps = [
     ":PINRemoteImage_Core",
@@ -145,7 +147,8 @@ objc_library(
     ),
   hdrs = PINRemoteImage_PINCache_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINRemoteImage/"
   ],
   deps = [
     "@PINCache//:PINCache",

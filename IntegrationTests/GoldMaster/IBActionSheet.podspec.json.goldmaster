@@ -18,7 +18,8 @@ objc_library(
     ),
   hdrs = IBActionSheet_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/IBActionSheet/"
   ],
   sdk_frameworks = [
     "QuartzCore"

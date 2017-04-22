@@ -18,7 +18,8 @@ objc_library(
     ),
   hdrs = PaymentKit_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PaymentKit/"
   ],
   visibility = [
     "//visibility:public"

@@ -41,6 +41,7 @@ struct PodBuildFile {
             
             let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: subSpec.sourceFiles)
             let lib = ObjcLibrary(name: subspecName,
+                                  externalName: podSpec.name,
                                   sourceFiles: headersAndSourcesInfo.sourceFiles,
                                   headers: headersAndSourcesInfo.headers,
                                   sdkFrameworks: subSpec.frameworks,
@@ -61,6 +62,7 @@ struct PodBuildFile {
 
 
         let lib = ObjcLibrary(name: podSpec.name,
+                              externalName: podSpec.name,
                               sourceFiles: headersAndSourcesInfo.sourceFiles,
                               headers: headersAndSourcesInfo.headers,
                               sdkFrameworks: podSpec.frameworks,

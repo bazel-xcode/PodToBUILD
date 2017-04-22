@@ -18,7 +18,8 @@ objc_library(
     ),
   hdrs = iRate_headers,
   includes = [
-    "bazel_support/Headers/Public/"
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/iRate/"
   ],
   visibility = [
     "//visibility:public"
