@@ -33,6 +33,7 @@ struct ObjcLibrary: SkylarkConvertible {
     var sourceFiles: [String]
     var headers: [String]
     var sdkFrameworks: [String]
+    var weakSdkFrameworks: [String]
     var sdkDylibs: [String]
     var deps: [String]
     var copts: [String]
@@ -108,6 +109,14 @@ struct ObjcLibrary: SkylarkConvertible {
                 value: .list(value: lib.sdkFrameworks.map { .string(value: $0) })
             ))
         }
+
+        if lib.weakSdkFrameworks.count > 0 {
+            libArguments.append(.named(
+                name: "weak_sdk_frameworks",
+                value: .list(value: lib.weakSdkFrameworks.map { .string(value: $0) } )
+            ))
+        }
+
         if lib.sdkDylibs.count > 0 {
             libArguments.append(.named(
                 name: "sdk_dylibs",

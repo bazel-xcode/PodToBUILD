@@ -3,6 +3,10 @@ objc_library(
   sdk_frameworks = [
     "SystemConfiguration"
   ],
+  weak_sdk_frameworks = [
+    "AdSupport",
+    "iAd"
+  ],
   deps = [
     ":Adjust_Core",
     ":Adjust_Sociomantic",

@@ -12,8 +12,7 @@ import Foundation
 class GlobTests: XCTestCase {
     func testGarbageGlob() {
         let path = "Garbage/Source/*.{h,m}"
-        let paths = glob(pattern: path)
-        XCTAssertEqual(paths, [String]())
+        XCTAssertFalse(glob(pattern: path, contains: ""))
     }
 
     func testGlobMatchingNoMatch() {

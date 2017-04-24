@@ -13,19 +13,27 @@ class BuildFileTests: XCTestCase {
 
     func testWildCardSourceDependentSourceExclusion() {
         let parentLib = ObjcLibrary(name: "Core",
+                                    externalName: "Core",
                                     sourceFiles: ["Source/*.m"],
                                     headers: [String](),
                                     sdkFrameworks: [String](),
+                                    weakSdkFrameworks: [String](),
+                                    sdkDylibs: [],
                                     deps: [String](),
                                     copts: [String](),
+                                    bundles: [],
                                     excludedSource: [String]())
 
         let depLib = ObjcLibrary(name: "ChildLib",
+                                 externalName: "Core",
                                  sourceFiles: ["Source/SomeSource.m"],
                                  headers: [String](),
                                  sdkFrameworks: [String](),
+                                 weakSdkFrameworks: [String](),
+                                 sdkDylibs: [],
                                  deps: [":Core"],
                                  copts: [String](),
+                                 bundles: [],
                                  excludedSource: [String]())
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
         XCTAssertEqual(libByName["Core"]!.excludedSource, ["Source/SomeSource.m"])
@@ -33,19 +41,27 @@ class BuildFileTests: XCTestCase {
 
     func testWildCardDirectoryDependentSourceExclusion() {
         let parentLib = ObjcLibrary(name: "Core",
+                                    externalName: "Core",
                                     sourceFiles: ["Source/**/*.m"],
                                     headers: [String](),
                                     sdkFrameworks: [String](),
+                                    weakSdkFrameworks: [String](),
+                                    sdkDylibs: [],
                                     deps: [String](),
                                     copts: [String](),
+                                    bundles: [],
                                     excludedSource: [String]())
 
         let depLib = ObjcLibrary(name: "ChildLib",
+                                 externalName: "Core",
                                  sourceFiles: ["Source/Some/Source.m"],
                                  headers: [String](),
                                  sdkFrameworks: [String](),
+                                 weakSdkFrameworks: [String](),
+                                 sdkDylibs: [],
                                  deps: [":Core"],
                                  copts: [String](),
+                                 bundles: [],
                                  excludedSource: [String]())
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
         XCTAssertEqual(libByName["Core"]!.excludedSource, ["Source/Some/Source.m"])
@@ -53,19 +69,27 @@ class BuildFileTests: XCTestCase {
 
     func testWildCardSourceDependentSourceExclusionWithExistingExclusing() {
         let parentLib = ObjcLibrary(name: "Core",
+                                    externalName: "Core",
                                     sourceFiles: ["Source/*.m"],
                                     headers: [String](),
                                     sdkFrameworks: [String](),
+                                    weakSdkFrameworks: [String](),
+                                    sdkDylibs: [],
                                     deps: [String](),
                                     copts: [String](),
+                                    bundles: [],
                                     excludedSource: ["Srce/SomeSource.m"])
 
         let depLib = ObjcLibrary(name: "ChildLib",
+                                 externalName: "Core",
                                  sourceFiles: ["Source/SomeSource.m"],
                                  headers: [String](),
                                  sdkFrameworks: [String](),
+                                 weakSdkFrameworks: [String](),
+                                 sdkDylibs: [],
                                  deps: [":Core"],
                                  copts: [String](),
+                                 bundles: [],
                                  excludedSource: [String]())
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
         XCTAssertEqual(libByName["ChildLib"]!.excludedSource, [String]())

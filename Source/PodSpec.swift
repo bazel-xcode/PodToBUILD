@@ -13,6 +13,7 @@ struct PodSpec {
     var sourceFiles: [String]
     var excludeFiles: [String]
     var frameworks: [String]
+    var weakFrameworks: [String]
     var subspecs: [PodSpec] = []
     var dependencies: [String] = []
     var compilerFlags: [String]
@@ -36,6 +37,7 @@ struct PodSpec {
     init(JSONPodspec: JSONDict) throws {
         name = try ExtractValue(fromJSON: JSONPodspec["name"])
         frameworks = strings(fromJSON: JSONPodspec["frameworks"])
+        weakFrameworks = strings(fromJSON: JSONPodspec["weak_frameworks"])
         excludeFiles = strings(fromJSON: JSONPodspec["exclude_files"])
         sourceFiles = strings(fromJSON: JSONPodspec["source_files"])
         publicHeaders = strings(fromJSON: JSONPodspec["public_headers"])
