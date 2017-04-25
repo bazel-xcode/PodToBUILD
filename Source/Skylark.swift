@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum SkylarkNode {
+public enum SkylarkNode {
     // A string in Skylark.
     // @note The string value is enclosed within ""
     case string(value: String)
@@ -30,25 +30,25 @@ enum SkylarkNode {
     case skylark(value: String)
 }
 
-enum SkylarkFunctionArgument {
+public enum SkylarkFunctionArgument {
     case basic(value: SkylarkNode)
     case named(name: String, value: SkylarkNode)
 }
 
 // MARK: - SkylarkCompiler
 
-struct SkylarkCompiler {
+public struct SkylarkCompiler {
     let nodes: [SkylarkNode]
     let indent: Int
     private let whitespace: String
 
-    init(_ nodes: [SkylarkNode], indent: Int = 0) {
+    public init(_ nodes: [SkylarkNode], indent: Int = 0) {
         self.nodes = nodes
         self.indent = indent
         whitespace = SkylarkCompiler.white(indent: indent)
     }
 
-    func run() -> String {
+    public func run() -> String {
         var buildFile = ""
         for skylark in nodes {
             buildFile += "\(compile(skylark))\n"

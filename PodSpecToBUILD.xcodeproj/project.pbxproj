@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		811187DC1EB00CF600CB5BA2 /* PodSpecToBUILD-Framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 811187DA1EB00CF600CB5BA2 /* PodSpecToBUILD-Framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		811187E01EB00D1800CB5BA2 /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
+		811187E21EB00D1800CB5BA2 /* PodSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E151EA56749005C8B70 /* PodSpec.swift */; };
+		811187E31EB00D1800CB5BA2 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02781EA18AA4009B091A /* Workspace.swift */; };
+		811187E41EB00D1800CB5BA2 /* Skylark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E121EA53E29005C8B70 /* Skylark.swift */; };
+		811187E51EB00D1800CB5BA2 /* GlobUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E431EA6B4DB005C8B70 /* GlobUtils.swift */; };
+		811187E61EB00D1800CB5BA2 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
+		811187E71EB00D1800CB5BA2 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
 		C42E026E1EA150B0009B091A /* SkylarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E026D1EA150B0009B091A /* SkylarkTests.swift */; };
 		C42E02761EA189EF009B091A /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
 		C42E02771EA189EF009B091A /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
@@ -77,6 +85,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		811187D81EB00CF600CB5BA2 /* PodSpecToBUILD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PodSpecToBUILD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		811187DA1EB00CF600CB5BA2 /* PodSpecToBUILD-Framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PodSpecToBUILD-Framework.h"; sourceTree = "<group>"; };
+		811187DB1EB00CF600CB5BA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C42E02051EA1454B009B091A /* PodSpecToBUILD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PodSpecToBUILD; sourceTree = BUILT_PRODUCTS_DIR; };
 		C42E024C1EA14E61009B091A /* GoldMaster */ = {isa = PBXFileReference; lastKnownFileType = folder; name = GoldMaster; path = IntegrationTests/GoldMaster; sourceTree = "<group>"; };
 		C42E02641EA14EA7009B091A /* Examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Examples; sourceTree = "<group>"; };
@@ -102,6 +113,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		811187D41EB00CF600CB5BA2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C42E02021EA1454B009B091A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -133,6 +151,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		811187D91EB00CF600CB5BA2 /* PodSpecToBUILD-Framework */ = {
+			isa = PBXGroup;
+			children = (
+				811187DA1EB00CF600CB5BA2 /* PodSpecToBUILD-Framework.h */,
+				811187DB1EB00CF600CB5BA2 /* Info.plist */,
+			);
+			path = "PodSpecToBUILD-Framework";
+			sourceTree = "<group>";
+		};
 		C42E01FC1EA1454B009B091A = {
 			isa = PBXGroup;
 			children = (
@@ -141,6 +168,7 @@
 				C42E026C1EA150B0009B091A /* PodSpecToBUILDTests */,
 				C4FA7E221EA56AEA005C8B70 /* RepoTools */,
 				C4E5BC981EAA7AD700954EB8 /* WorkspaceTools */,
+				811187D91EB00CF600CB5BA2 /* PodSpecToBUILD-Framework */,
 				C42E02061EA1454B009B091A /* Products */,
 				C42E02631EA14E70009B091A /* IntegrationTests */,
 			);
@@ -153,6 +181,7 @@
 				C42E026B1EA150B0009B091A /* PodSpecToBUILDTests.xctest */,
 				C4FA7E211EA56AEA005C8B70 /* RepoTools */,
 				C4E5BC971EAA7AD700954EB8 /* WorkspaceTools */,
+				811187D81EB00CF600CB5BA2 /* PodSpecToBUILD.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -212,6 +241,17 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		811187D51EB00CF600CB5BA2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				811187DC1EB00CF600CB5BA2 /* PodSpecToBUILD-Framework.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXLegacyTarget section */
 		C42E02471EA14876009B091A /* IntegrationTests */ = {
 			isa = PBXLegacyTarget;
@@ -230,6 +270,24 @@
 /* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
+		811187D71EB00CF600CB5BA2 /* PodSpecToBUILD-Framework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 811187DF1EB00CF600CB5BA2 /* Build configuration list for PBXNativeTarget "PodSpecToBUILD-Framework" */;
+			buildPhases = (
+				811187D31EB00CF600CB5BA2 /* Sources */,
+				811187D41EB00CF600CB5BA2 /* Frameworks */,
+				811187D51EB00CF600CB5BA2 /* Headers */,
+				811187D61EB00CF600CB5BA2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PodSpecToBUILD-Framework";
+			productName = "PodSpecToBUILD-Framework";
+			productReference = 811187D81EB00CF600CB5BA2 /* PodSpecToBUILD.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		C42E02041EA1454B009B091A /* PodSpecToBUILD */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C42E020C1EA1454B009B091A /* Build configuration list for PBXNativeTarget "PodSpecToBUILD" */;
@@ -308,6 +366,11 @@
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = jerry;
 				TargetAttributes = {
+					811187D71EB00CF600CB5BA2 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = HWZFLG9PNK;
+						ProvisioningStyle = Automatic;
+					};
 					C42E02041EA1454B009B091A = {
 						CreatedOnToolsVersion = 8.2.1;
 						LastSwiftMigration = 0820;
@@ -348,11 +411,19 @@
 				C42E026A1EA150B0009B091A /* PodSpecToBUILDTests */,
 				C4FA7E201EA56AEA005C8B70 /* RepoTools */,
 				C4E5BC961EAA7AD700954EB8 /* WorkspaceTools */,
+				811187D71EB00CF600CB5BA2 /* PodSpecToBUILD-Framework */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		811187D61EB00CF600CB5BA2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C42E02691EA150B0009B091A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -363,6 +434,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		811187D31EB00CF600CB5BA2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				811187E21EB00D1800CB5BA2 /* PodSpec.swift in Sources */,
+				811187E71EB00D1800CB5BA2 /* SkylarkConvertible.swift in Sources */,
+				811187E31EB00D1800CB5BA2 /* Workspace.swift in Sources */,
+				811187E41EB00D1800CB5BA2 /* Skylark.swift in Sources */,
+				811187E51EB00D1800CB5BA2 /* GlobUtils.swift in Sources */,
+				811187E01EB00D1800CB5BA2 /* BuildFile.swift in Sources */,
+				811187E61EB00D1800CB5BA2 /* ObjcLibrary.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C42E02011EA1454B009B091A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -431,6 +516,58 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		811187DD1EB00CF600CB5BA2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HWZFLG9PNK;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "PodSpecToBUILD-Framework/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.pinterest.PodSpecToBUILD-Framework";
+				PRODUCT_NAME = PodSpecToBUILD;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		811187DE1EB00CF600CB5BA2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HWZFLG9PNK;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "PodSpecToBUILD-Framework/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.pinterest.PodSpecToBUILD-Framework";
+				PRODUCT_NAME = PodSpecToBUILD;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		C42E020A1EA1454B009B091A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -624,6 +761,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		811187DF1EB00CF600CB5BA2 /* Build configuration list for PBXNativeTarget "PodSpecToBUILD-Framework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				811187DD1EB00CF600CB5BA2 /* Debug */,
+				811187DE1EB00CF600CB5BA2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		C42E02001EA1454B009B091A /* Build configuration list for PBXProject "PodSpecToBUILD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

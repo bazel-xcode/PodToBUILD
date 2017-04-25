@@ -94,7 +94,7 @@ Multi-Platform support:
 
  */
 
-enum PlatformTarget {
+public enum PlatformTarget {
     case ios
     case osx
     case watchos
@@ -102,7 +102,7 @@ enum PlatformTarget {
     case allPlatform
 }
 
-struct MultiPlatform<T> {
+public struct MultiPlatform<T> {
     let ios: T?
     let osx: T?
     let watchos: T?
@@ -120,7 +120,7 @@ struct MultiPlatform<T> {
     }
 }
 
-typealias MultiPlatformSetting<T> = [PlatformTarget: T]
+public typealias MultiPlatformSetting<T> = [PlatformTarget: T]
 
 func renderSetting<T>(_ s: MultiPlatformSetting<T>) -> MultiPlatform<T> {
     func rip(_ key: PlatformTarget) -> T? {
@@ -142,7 +142,7 @@ func renderSetting<T>(_ s: MultiPlatformSetting<T>) -> MultiPlatform<T> {
 
 // Monoid (Obviously...)
 infix operator <>: AdditionPrecedence
-func <><T>(lhs: MultiPlatformSetting<T>, rhs: MultiPlatformSetting<T>) -> MultiPlatformSetting<T> {
+public func <><T>(lhs: MultiPlatformSetting<T>, rhs: MultiPlatformSetting<T>) -> MultiPlatformSetting<T> {
     return lhs.reduce(rhs) { (dict: MultiPlatformSetting<T>, kv: (PlatformTarget, T)) -> MultiPlatformSetting<T> in
         var d = dict;
         d[kv.0] = kv.1;
@@ -151,7 +151,7 @@ func <><T>(lhs: MultiPlatformSetting<T>, rhs: MultiPlatformSetting<T>) -> MultiP
 }
 
 
-enum PodSpecField: String {
+public enum PodSpecField: String {
     case name
     case frameworks
     case weakFrameworks = "weak_frameworks"
@@ -166,7 +166,7 @@ enum PodSpecField: String {
     case source
 }
 
-struct PodSpec {
+public struct PodSpec {
     let name: String
     let sourceFiles: [String]
     let excludeFiles: [String]
@@ -192,7 +192,7 @@ struct PodSpec {
 
     let prepareCommand = ""
 
-    init(JSONPodspec: JSONDict) throws {
+    public init(JSONPodspec: JSONDict) throws {
 
         let fieldMap: [PodSpecField: Any] = JSONPodspec.flatMap { k, v in
             guard let field = PodSpecField.init(rawValue: k) else {
@@ -248,7 +248,7 @@ struct PodSpec {
 
 // The source component of a PodSpec
 // @note currently only git is supported
-struct PodSpecSource {
+public struct PodSpecSource {
     let git: String?
     let tag: String?
     let commit: String?
@@ -262,13 +262,13 @@ struct PodSpecSource {
 
 // MARK: - JSON Value Extraction
 
-typealias JSONDict = [String: Any]
+public typealias JSONDict = [String: Any]
 
-enum JSONError: Error {
+public enum JSONError: Error {
     case unexpectedValueError
 }
 
-func ExtractValue<T>(fromJSON JSON: Any?) throws -> T {
+public func ExtractValue<T>(fromJSON JSON: Any?) throws -> T {
     if let value = JSON as? T {
         return value
     }
@@ -278,7 +278,7 @@ func ExtractValue<T>(fromJSON JSON: Any?) throws -> T {
 // Pods intermixes arrays and strings all over
 // Coerce to a more sane type, since we don't care about the
 // original input
-private func strings(fromJSON JSONValue: Any? = nil) -> [String] {
+fileprivate func strings(fromJSON JSONValue: Any? = nil) -> [String] {
     if let str = JSONValue as? String {
         return [str]
     }

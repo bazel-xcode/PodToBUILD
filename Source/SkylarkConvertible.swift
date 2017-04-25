@@ -9,6 +9,6 @@
 import Foundation
 
 // SkylarkConvertible is a higher level representation of types within Skylark
-protocol SkylarkConvertible {
+public protocol SkylarkConvertible {
     func toSkylark() -> [SkylarkNode]
 }

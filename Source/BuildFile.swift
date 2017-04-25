@@ -8,15 +8,15 @@
 
 import Foundation
 
-struct PodBuildFile {
-    var skylarkConvertibles: [SkylarkConvertible]
+public struct PodBuildFile {
+    public let skylarkConvertibles: [SkylarkConvertible]
 
-    static func with(podSpec: PodSpec) -> PodBuildFile {
+    public static func with(podSpec: PodSpec) -> PodBuildFile {
         let libs = PodBuildFile.makeConvertables(fromPodspec: podSpec)
         return PodBuildFile(skylarkConvertibles: libs)
     }
 
-    static func makeConvertables(fromPodspec podSpec: PodSpec) -> [SkylarkConvertible] {
+    public static func makeConvertables(fromPodspec podSpec: PodSpec) -> [SkylarkConvertible] {
         var deps = [String]()
         var objcLibs = [SkylarkConvertible]()
 
