@@ -1,7 +1,9 @@
 def _exec(repository_ctx, transformed_command):
-    print("__EXEC", transformed_command)
+    if repository_ctx.attr.trace:
+        print("__EXEC", transformed_command)
     output = repository_ctx.execute(transformed_command)
-    print("__OUTPUT", output.stdout, output.stderr)
+    if repository_ctx.attr.trace:
+        print("__OUTPUT", output.stdout, output.stderr)
 
 def _extension(f):
   parts = f.split('/')
@@ -10,18 +12,23 @@ def _extension(f):
 def _make_bazel_path(path):
     return path.replace(" ", "")
 
+def _make_repo_tools(repository_ctx, path):
+    tool_root = path.dirname.dirname
+    _exec(repository_ctx, ["make", "-C", tool_root, "releases"])
+    bin_path = str(tool_root) + "/bin/RepoTools"
+    return bin_path
+
 def _impl(repository_ctx):
-    print("__RUN with repository_ctx", repository_ctx.attr)
+    if repository_ctx.attr.trace:
+        print("__RUN with repository_ctx", repository_ctx.attr)
     # Note: the root directory that these commands execute is external/name
     # after the source code has been fetched
     target_name = repository_ctx.attr.target_name
-
     url = repository_ctx.attr.url
     download = _extension(url)
     _exec(repository_ctx, ["curl", "-LOk", url])
     _exec(repository_ctx, ["unzip", download])
     strip_prefix = repository_ctx.attr.strip_prefix
-    _exec(repository_ctx, ["printenv"])
 
     # TODO: Jerry remove strip_prefix from the public API. 
     # We should automatically find the .podspec according to CocoaPod semantics
@@ -29,18 +36,36 @@ def _impl(repository_ctx):
     # pod and URL.
     if strip_prefix and len(strip_prefix) > 0:
         _exec(repository_ctx, ["ditto", strip_prefix + "/", "."])
+
     _exec(repository_ctx, ["mkdir", "-p", "external/" + target_name])
 
-    repo_tools = repository_ctx.attr.repo_tools_path
-    if repo_tools:
-        repo_tools_bin = repository_ctx.path(repo_tools)
-        _exec(repository_ctx, [repo_tools_bin, target_name])
-		# Dump crash log
-    	_exec(repository_ctx, ["cat", "/tmp/repo_tools_log.txt"])
+    repo_tools_labels = repository_ctx.attr.repo_tools_labels
+    command_dict = repository_ctx.attr.command_dict
+    tool_bin_by_name = {}
+    repo_tool_dict = repository_ctx.attr.repo_tool_dict
 
-    for cmd in repository_ctx.attr.cmds:
-        repository_ctx.execute(cmd)
+    if command_dict and repo_tools_labels:
+        for tool_label in repo_tools_labels:
+            tool_name = repo_tool_dict[str(tool_label)]
+            tool_bin_by_name[tool_name] = repository_ctx.path(tool_label)
 
+    ## This seems to be needed here
+    idx = 0
+    cmd_len = len(command_dict)
+    for some in command_dict:
+        cmd = command_dict[str(idx)]
+        transformed_command = cmd
+        cmd_path = cmd[0]
+        repo_tool_bin = tool_bin_by_name.get(cmd_path)
+        # Alias the command path to the binary program
+        if repo_tool_bin:
+            transformed_command[0] = repo_tool_bin
+        # Set the first argument for RepoTool to "target_name"
+        if cmd_path == "RepoTool":
+            transformed_command.append(target_name)
+            transformed_command[0] = _make_repo_tools(repository_ctx, repo_tool_bin)
+        _exec(repository_ctx, transformed_command)
+        idx = idx + 1
     build_file_content = repository_ctx.attr.build_file_content
     if build_file_content and len(build_file_content) > 0:
         # Write the build file
@@ -53,9 +78,11 @@ pod_repo_ = repository_rule(
             "target_name": attr.string(mandatory=True),
             "url": attr.string(mandatory=True),
             "strip_prefix": attr.string(),
-            "cmds": attr.string_list(),
             "build_file_content": attr.string(mandatory=True),
-            "repo_tools_path": attr.label()
+            "repo_tools_labels": attr.label_list(),
+            "repo_tool_dict": attr.string_dict(),
+            "command_dict": attr.string_list_dict(),
+            "trace": attr.bool(default=False, mandatory=True)
     }
 )
 
@@ -65,7 +92,7 @@ pod_repo_ = repository_rule(
 #
 # @param url: the url of this repo
 #
-# @param owner: the owner at Pinterest of this code
+# @param owner: the owner of this dependency
 #
 # @note Github automatically creates zip files for a commit hash:
 # Ex commit: 751edba685e997ea4d8501dcf16df53aac5355a4
@@ -87,16 +114,39 @@ pod_repo_ = repository_rule(
 # @param build_file_content: string content of a new build file
 #
 # @param cmds: commands executed within this repository.
+# The first part of the command is a string representation of the order the
+# commands will be run in. Skylark seems to break when we try to use an array of
+# arrays.
+# 
 # @see repository_context.execute
+#
+# @param repo_tools: a mapping of binaries to command names.
+# If we are running something like "mv" or "sed" these binaries are already on
+# path, so there is no need to add an entry for them.
+#
+# @param trace: dump out useful debug info
 
-def new_pod_repository(name, url, owner, strip_prefix = "", repo_tools = "//tools/PodSpecToBUILD/bin:RepoTools", build_file_content = "", cmds = []):
+def new_pod_repository(name,
+                       url,
+                       owner,
+                       strip_prefix = "",
+                       build_file_content = "",
+                       cmds = { "0" : ["RepoTool"] },
+                       repo_tools = { "//tools/PodSpecToBUILD/bin:RepoToolsStub"  : "RepoTool" },
+                       trace = False
+                       ):
+    tool_labels = []
+    for tool in repo_tools:
+        tool_labels.append(tool)
     pod_repo_(
             name = name,
             target_name = name,
             url = url,
             strip_prefix = strip_prefix,
             build_file_content =  build_file_content,
-            cmds = cmds,
-            repo_tools_path = repo_tools
+            command_dict = cmds,
+            repo_tools_labels = tool_labels,
+            repo_tool_dict = repo_tools,
+            trace = trace
     )
 

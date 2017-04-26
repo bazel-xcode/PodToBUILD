@@ -13,6 +13,9 @@ build:
 	-configuration Debug \
 	-derivedDataPath tmp_build_dir
 
+clean:
+	rm -rf tmp_build_dir
+
 workspace-tools:
 	xcodebuild  \
 	-project PodSpecToBUILD.xcodeproj \

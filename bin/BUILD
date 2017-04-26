@@ -1,6 +1,6 @@
 sh_binary(
-    name = "RepoTools",
-    srcs = ["RepoTools"],
+    name = "RepoToolsStub",
+    srcs = ["RepoToolsStub"],
     visibility = ['//visibility:public']
 )
 
