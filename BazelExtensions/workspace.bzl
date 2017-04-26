@@ -1,15 +1,42 @@
-def _impl(repository_ctx):
-    repository_ctx.download_and_extract(repository_ctx.attr.url, '.', stripPrefix=repository_ctx.attr.strip_prefix)
+def _exec(repository_ctx, transformed_command):
+    print("__EXEC", transformed_command)
+    output = repository_ctx.execute(transformed_command)
+    print("__OUTPUT", output.stdout, output.stderr)
 
+def _extension(f):
+  parts = f.split('/')
+  return parts[len(parts) - 1]
+
+def _make_bazel_path(path):
+    return path.replace(" ", "")
+
+def _impl(repository_ctx):
+    print("__RUN with repository_ctx", repository_ctx.attr)
     # Note: the root directory that these commands execute is external/name
     # after the source code has been fetched
     target_name = repository_ctx.attr.target_name
 
+    url = repository_ctx.attr.url
+    download = _extension(url)
+    _exec(repository_ctx, ["curl", "-LOk", url])
+    _exec(repository_ctx, ["unzip", download])
+    strip_prefix = repository_ctx.attr.strip_prefix
+    _exec(repository_ctx, ["printenv"])
+
+    # TODO: Jerry remove strip_prefix from the public API. 
+    # We should automatically find the .podspec according to CocoaPod semantics
+    # rather than dealing with the overhead of trying to figure it out for each
+    # pod and URL.
+    if strip_prefix and len(strip_prefix) > 0:
+        _exec(repository_ctx, ["ditto", strip_prefix + "/", "."])
+    _exec(repository_ctx, ["mkdir", "-p", "external/" + target_name])
+
     repo_tools = repository_ctx.attr.repo_tools_path
     if repo_tools:
         repo_tools_bin = repository_ctx.path(repo_tools)
-        output = repository_ctx.execute([repo_tools_bin, target_name])
-        # print("__OUTPUT", output.stdout, output.stderr)
+        _exec(repository_ctx, [repo_tools_bin, target_name])
+		# Dump crash log
+    	_exec(repository_ctx, ["cat", "/tmp/repo_tools_log.txt"])
 
     for cmd in repository_ctx.attr.cmds:
         repository_ctx.execute(cmd)

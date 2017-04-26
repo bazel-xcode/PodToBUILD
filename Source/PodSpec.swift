@@ -222,8 +222,8 @@ public struct PodSpec {
 
         if let resourceBundleMap = fieldMap[.resourceBundles] as? JSONDict {
             resourceBundles = resourceBundleMap.map { key, val in
-                return (key, strings(fromJSON: val))
-            }.reduce([:], { (dict, tuple) -> [String:[String]] in
+                (key, strings(fromJSON: val))
+            }.reduce([:], { (dict, tuple) -> [String: [String]] in
                 var mutableDict = dict
                 mutableDict[tuple.0] = tuple.1
                 return mutableDict

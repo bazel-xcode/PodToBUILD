@@ -20,8 +20,8 @@ struct ObjcBundleLibrary: SkylarkConvertible {
                 arguments: [
                     .named(name: "name", value: .string(value: name)),
                     .named(name: "resources",
-                           value: SkylarkNode.list(value: resources.map { .string(value: $0) }))
-            ])
+                           value: SkylarkNode.list(value: resources.map { .string(value: $0) })),
+            ]),
         ]
     }
 }
@@ -99,7 +99,7 @@ struct ObjcLibrary: SkylarkConvertible {
                 name: "includes",
                 value: .list(value: [
                     .string(value: "bazel_support/Headers/Public/"),
-                    .string(value: "bazel_support/Headers/Public/\(externalName)/")
+                    .string(value: "bazel_support/Headers/Public/\(externalName)/"),
                 ])
             ))
         }
@@ -113,14 +113,14 @@ struct ObjcLibrary: SkylarkConvertible {
         if lib.weakSdkFrameworks.count > 0 {
             libArguments.append(.named(
                 name: "weak_sdk_frameworks",
-                value: .list(value: lib.weakSdkFrameworks.map { .string(value: $0) } )
+                value: .list(value: lib.weakSdkFrameworks.map { .string(value: $0) })
             ))
         }
 
         if lib.sdkDylibs.count > 0 {
             libArguments.append(.named(
                 name: "sdk_dylibs",
-                value: .list(value: lib.sdkDylibs.map{ .string(value: $0) })
+                value: .list(value: lib.sdkDylibs.map { .string(value: $0) })
             ))
         }
         if lib.deps.count > 0 {

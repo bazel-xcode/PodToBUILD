@@ -20,6 +20,7 @@
 		C42E02771EA189EF009B091A /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
 		C42E02791EA18AA4009B091A /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02781EA18AA4009B091A /* Workspace.swift */; };
 		C42E027A1EA18AA4009B091A /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02781EA18AA4009B091A /* Workspace.swift */; };
+		C49C630D1EB001C000F17E47 /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = C49C630C1EB001C000F17E47 /* CrashReporter.m */; };
 		C4B95C8C1EA18FF50033C7FA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B95C8B1EA18FF50033C7FA /* main.swift */; };
 		C4B95C8E1EA1B04E0033C7FA /* BuildFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */; };
 		C4E5BC811EA8564200954EB8 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
@@ -96,6 +97,9 @@
 		C42E026F1EA150B0009B091A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C42E02751EA189EF009B091A /* BuildFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BuildFile.swift; path = Source/BuildFile.swift; sourceTree = SOURCE_ROOT; };
 		C42E02781EA18AA4009B091A /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Workspace.swift; path = Source/Workspace.swift; sourceTree = SOURCE_ROOT; };
+		C49C630A1EB001BF00F17E47 /* RepoTools-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RepoTools-Bridging-Header.h"; sourceTree = "<group>"; };
+		C49C630B1EB001C000F17E47 /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReporter.h; sourceTree = "<group>"; };
+		C49C630C1EB001C000F17E47 /* CrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReporter.m; sourceTree = "<group>"; };
 		C4B95C8B1EA18FF50033C7FA /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = Source/main.swift; sourceTree = SOURCE_ROOT; };
 		C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildFileTests.swift; sourceTree = "<group>"; };
 		C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjcLibrary.swift; path = Source/ObjcLibrary.swift; sourceTree = SOURCE_ROOT; };
@@ -235,6 +239,9 @@
 			isa = PBXGroup;
 			children = (
 				C4FA7E231EA56AEA005C8B70 /* main.swift */,
+				C49C630B1EB001C000F17E47 /* CrashReporter.h */,
+				C49C630C1EB001C000F17E47 /* CrashReporter.m */,
+				C49C630A1EB001BF00F17E47 /* RepoTools-Bridging-Header.h */,
 			);
 			path = RepoTools;
 			sourceTree = "<group>";
@@ -390,6 +397,7 @@
 					};
 					C4FA7E201EA56AEA005C8B70 = {
 						CreatedOnToolsVersion = 8.2.1;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -509,6 +517,7 @@
 				C4FA7E2B1EA56C02005C8B70 /* BuildFile.swift in Sources */,
 				C4FA7E2A1EA56BFF005C8B70 /* PodSpec.swift in Sources */,
 				C4FA7E281EA56BF7005C8B70 /* Skylark.swift in Sources */,
+				C49C630D1EB001C000F17E47 /* CrashReporter.m in Sources */,
 				C4E5BC831EA8564200954EB8 /* ObjcLibrary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -745,7 +754,11 @@
 		C4FA7E261EA56AEA005C8B70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RepoTools/RepoTools-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -753,7 +766,10 @@
 		C4FA7E271EA56AEA005C8B70 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RepoTools/RepoTools-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

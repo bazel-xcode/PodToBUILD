@@ -70,7 +70,7 @@ public class Glob: Collection {
     public let behavior: Behavior
     var paths = [String]()
     public var startIndex: Int { return paths.startIndex }
-    public var endIndex: Int   { return paths.endIndex   }
+    public var endIndex: Int { return paths.endIndex }
 
     public init(pattern: String, behavior: Behavior = Glob.defaultBehavior) {
 
@@ -184,7 +184,7 @@ public class Glob: Collection {
     private func populateFiles(gt: glob_t, includeFiles: Bool) {
         let includeDirectories = behavior.includesDirectoriesInResults
 
-        for i in 0..<Int(gt.gl_matchc) {
+        for i in 0 ..< Int(gt.gl_matchc) {
             if let path = String(validatingUTF8: gt.gl_pathv[i]!) {
                 if !includeFiles || !includeDirectories {
                     let isDirectory = self.isDirectory(path: path)
@@ -210,8 +210,8 @@ public class Glob: Collection {
         return i + 1
     }
 }
-// ============================================
 
+// ============================================
 
 // Glob
 // Return True if the pattern contains the needle
@@ -328,7 +328,7 @@ func pattern(fromPattern pattern: String, includingFileType fileType: String) ->
 // Glob with the semantics of pod `source_file` globs.
 // @note the original PodSpec globs are based on the ruby glob semantics
 func podGlob(pattern: String) -> [String] {
-   return Glob(pattern: pattern, behavior: GlobBehaviorBashV4).paths
+    return Glob(pattern: pattern, behavior: GlobBehaviorBashV4).paths
 }
 
 // MARK: - NSRegularExpression

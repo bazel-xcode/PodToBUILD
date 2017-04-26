@@ -8,6 +8,8 @@
 
 import Foundation
 
+setbuf(__stdoutp, nil)
+
 // ShellContext is a wrapper around interactions with the shell
 struct ShellContext {
     private let trace: Bool
@@ -17,14 +19,13 @@ struct ShellContext {
     }
 
     func command(_ launchPath: String, arguments: [String] = [String]()) -> Data {
-        let task = startShellAndWait(launchPath, arguments: arguments)
-        let data = (task.standardOutput as! Pipe).fileHandleForReading.readDataToEndOfFile()
-        return data
+        let data = startShellAndWait(launchPath, arguments: arguments)
+        return data.0
     }
 
     func command(_ launchPath: String, arguments: [String] = [String]()) -> String {
-        let string = String(data: command(launchPath, arguments: arguments), encoding: String.Encoding.utf8)!
-        return string
+        let data = startShellAndWait(launchPath, arguments: arguments)
+        return String(data: data.0, encoding: String.Encoding.utf8) ?? ""
     }
 
     func command(_ launchPath: String, arguments: [String] = [String]()) {
@@ -56,7 +57,7 @@ struct ShellContext {
 
     // Start a shell and wait for the result
     // @note we use UTF-8 here as the default language and the current env
-    private func startShellAndWait(_ launchPath: String, arguments: [String] = [String]()) -> Process {
+    private func startShellAndWait(_ launchPath: String, arguments: [String] = [String]()) -> (Data, Data) {
         log("SHELL:\(launchPath) \(arguments)")
         let task = Process()
         task.launchPath = launchPath
@@ -65,11 +66,25 @@ struct ShellContext {
         env["LANG"] = "en_US.UTF-8"
         task.environment = env
 
-        let pipe = Pipe()
-        task.standardOutput = pipe
+        let stdout = Pipe()
+        task.standardOutput = stdout
+
+        let stderr = Pipe()
+        task.standardError = stderr
         task.launch()
         task.waitUntilExit()
-        return task
+
+        let stderrData = stderr.fileHandleForReading.readDataToEndOfFile()
+        let stdoutData = stdout.fileHandleForReading.readDataToEndOfFile()
+        if trace {
+            log("PIPE OUTPUT\(launchPath) \(arguments) stderr:\(readData(stderrData))  stdout:\(readData(stdoutData))")
+        }
+
+        return (stdoutData, stderrData)
+    }
+
+    private func readData(_ data: Data) -> String {
+        return String(data: data, encoding: String.Encoding.utf8) ?? ""
     }
 
     private func log(_ args: Any...) {
@@ -80,22 +95,37 @@ struct ShellContext {
 }
 
 func main() {
+
+    _ = CrashReporter()
     if CommandLine.arguments.count < 2 {
         // First, log a JSON rep of a Pod spec
         // pod spec cat PINCache
         print("Usage: PodspecName")
         exit(0)
     }
-
     let shell = ShellContext(trace: false)
+    let whichPod = shell.command("/bin/bash", arguments: ["-l", "-c", "which pod"]) as String
+    if whichPod.isEmpty {
+        print("RepoTools requires a cocoapod installation on host")
+        exit(1)
+    }
+
+    let podBin = whichPod.components(separatedBy: "\n")[0]
+
+    let pwd = shell.command("/bin/pwd").components(separatedBy: "\n")[0]
+
     let podspecName = CommandLine.arguments[1]
-    let jsonData = shell.command("/usr/local/bin/pod", arguments: ["ipc", "spec", podspecName + ".podspec"]) as Data
+    let jsonData = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"]) as Data
+
     guard let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
         JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
-        let JSONPodspec = JSONFile as? JSONDict,
-        let podSpec = try? PodSpec(JSONPodspec: JSONPodspec)
+        let JSONPodspec = JSONFile as? JSONDict
     else {
         print("Invalid JSON Podspec")
+        exit(1)
+    }
+    guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
+        print("Cant read in podspec")
         exit(1)
     }
 
@@ -103,8 +133,6 @@ func main() {
     shell.dir("bazel_support/Headers/Private/")
     let publicHeaderdir = "bazel_support/Headers/Public/\(podspecName)"
     shell.dir(publicHeaderdir)
-
-    let pwd = (shell.command("/bin/pwd") as String).components(separatedBy: "\n")[0]
 
     // Create a directory structure condusive to <> imports
     // - Get all of the paths matching wild card imports
