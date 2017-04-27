@@ -9,15 +9,6 @@ def _extension(f):
   parts = f.split('/')
   return parts[len(parts) - 1]
 
-def _make_bazel_path(path):
-    return path.replace(" ", "")
-
-def _make_repo_tools(repository_ctx, path):
-    tool_root = path.dirname.dirname
-    _exec(repository_ctx, ["make", "-C", tool_root, "releases"])
-    bin_path = str(tool_root) + "/bin/RepoTools"
-    return bin_path
-
 def _impl(repository_ctx):
     if repository_ctx.attr.trace:
         print("__RUN with repository_ctx", repository_ctx.attr)
@@ -63,7 +54,6 @@ def _impl(repository_ctx):
         # Set the first argument for RepoTool to "target_name"
         if cmd_path == "RepoTool":
             transformed_command.append(target_name)
-            transformed_command[0] = _make_repo_tools(repository_ctx, repo_tool_bin)
         _exec(repository_ctx, transformed_command)
         idx = idx + 1
     build_file_content = repository_ctx.attr.build_file_content
@@ -132,7 +122,7 @@ def new_pod_repository(name,
                        strip_prefix = "",
                        build_file_content = "",
                        cmds = { "0" : ["RepoTool"] },
-                       repo_tools = { "//tools/PodSpecToBUILD/bin:RepoToolsStub"  : "RepoTool" },
+                       repo_tools = { "//tools/PodSpecToBUILD/bin:RepoTools"  : "RepoTool" },
                        trace = False
                        ):
     tool_labels = []

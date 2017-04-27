@@ -16,6 +16,14 @@ build:
 clean:
 	rm -rf tmp_build_dir
 
+repo-tools:
+	xcodebuild  \
+	-project PodSpecToBUILD.xcodeproj \
+	-scheme RepoTools \
+	-configuration Release \
+	-derivedDataPath tmp_build_dir
+	ditto tmp_build_dir/Build/Products/Release/RepoTools bin/
+
 workspace-tools:
 	xcodebuild  \
 	-project PodSpecToBUILD.xcodeproj \

@@ -1,6 +1,5 @@
 tmp_build_dir
 bazel-*
 bin/WorkspaceTools
-bin/RepoTools
 bin/PodSpecToBUILD
 project.xcworkspace
