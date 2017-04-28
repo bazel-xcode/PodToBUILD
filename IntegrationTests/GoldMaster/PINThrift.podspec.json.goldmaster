@@ -1,3 +1,4 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
 PINThrift_source_headers = glob(
   [
     "Sources/**/*.h"
@@ -17,6 +18,9 @@ objc_library(
     ]
     ),
   hdrs = PINThrift_headers,
+  pch = pch_with_name_hint(
+    "PINThrift"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/PINThrift/"

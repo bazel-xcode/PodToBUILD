@@ -1,3 +1,4 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
 FLEX_source_headers = glob(
   [
     "Classes/**/*.h"
@@ -17,6 +18,9 @@ objc_library(
     ]
     ),
   hdrs = FLEX_headers,
+  pch = pch_with_name_hint(
+    "FLEX"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/FLEX/"

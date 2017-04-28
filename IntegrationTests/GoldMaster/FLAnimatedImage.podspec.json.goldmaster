@@ -1,3 +1,4 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
 FLAnimatedImage_source_headers = glob(
   [
     "FLAnimatedImage/**/*.h"
@@ -17,6 +18,9 @@ objc_library(
     ]
     ),
   hdrs = FLAnimatedImage_headers,
+  pch = pch_with_name_hint(
+    "FLAnimatedImage"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/FLAnimatedImage/"

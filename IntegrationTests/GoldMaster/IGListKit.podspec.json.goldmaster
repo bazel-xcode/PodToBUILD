@@ -1,3 +1,4 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
 objc_library(
   name = "IGListKit",
   sdk_dylibs = [
@@ -35,6 +36,9 @@ objc_library(
     ]
     ),
   hdrs = IGListKit_Diffing_headers,
+  pch = pch_with_name_hint(
+    "IGListKit"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/IGListKit/"

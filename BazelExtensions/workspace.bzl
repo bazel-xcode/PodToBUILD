@@ -9,6 +9,42 @@ def _extension(f):
   parts = f.split('/')
   return parts[len(parts) - 1]
 
+# Build extensions is a collection of bazel extensions that are loaded into an
+# external repository's BUILD file
+build_extensions = """
+# Insertion sort based on the len() function
+def _len_ins_sort(k):
+    for i in range(1,len(k)):
+        j = i
+        # There is no while True in Skylark so do a few clicks
+        # of insertion sort
+        for itr in range(1, 9999999):
+            if j > 0 and len(k[j]) < len(k[j - 1]):
+                k[j], k[j - 1] = k[j - 1], k[j]
+                j = j - 1
+            else:
+                break
+    return k
+
+# Take in a name hint and return the PCH with that name
+def pch_with_name_hint(hint):
+    # Recursive glob over all the files
+    candidates = native.glob(["**/*.pch"])
+    if len(candidates) == 0:
+        return None
+
+    # We want to get the candidates in order of lowest to highest
+    candidates = _len_ins_sort(candidates)
+    for candidate in candidates:
+        if hint in candidate:
+            return candidate
+    # It is a convention in iOS/OSX development to use a PCH
+    # with the name of the target.
+    # This is a hack because, the recursive glob may find some
+    # arbitrary PCH.
+    return None
+"""
+
 def _impl(repository_ctx):
     if repository_ctx.attr.trace:
         print("__RUN with repository_ctx", repository_ctx.attr)
@@ -60,6 +96,8 @@ def _impl(repository_ctx):
     if build_file_content and len(build_file_content) > 0:
         # Write the build file
         repository_ctx.file("BUILD", repository_ctx.attr.build_file_content)
+
+    repository_ctx.file("build_extensions.bzl", build_extensions)
 
 pod_repo_ = repository_rule(
     implementation = _impl,

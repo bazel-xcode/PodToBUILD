@@ -35,6 +35,12 @@ public enum SkylarkFunctionArgument {
     case named(name: String, value: SkylarkNode)
 }
 
+// Make Nodes to be inserted at the beginning of skylark output
+private func makePrefixNodes() -> [SkylarkNode] {
+    let loadPCHFunctionNode = SkylarkNode.skylark(value: "load('//:build_extensions.bzl', 'pch_with_name_hint')")
+    return [loadPCHFunctionNode]
+}
+
 // MARK: - SkylarkCompiler
 
 public struct SkylarkCompiler {
@@ -43,7 +49,7 @@ public struct SkylarkCompiler {
     private let whitespace: String
 
     public init(_ nodes: [SkylarkNode], indent: Int = 0) {
-        self.nodes = nodes
+        self.nodes = makePrefixNodes() + nodes
         self.indent = indent
         whitespace = SkylarkCompiler.white(indent: indent)
     }

@@ -1,3 +1,4 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
 objc_library(
   name = "PINRemoteImage",
   deps = [
@@ -37,6 +38,9 @@ objc_library(
     ]
     ),
   hdrs = PINRemoteImage_Core_headers,
+  pch = pch_with_name_hint(
+    "PINRemoteImage"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/PINRemoteImage/"
@@ -105,6 +109,9 @@ objc_library(
     ]
     ),
   hdrs = PINRemoteImage_FLAnimatedImage_headers,
+  pch = pch_with_name_hint(
+    "PINRemoteImage"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/PINRemoteImage/"
@@ -149,6 +156,9 @@ objc_library(
     ]
     ),
   hdrs = PINRemoteImage_PINCache_headers,
+  pch = pch_with_name_hint(
+    "PINRemoteImage"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/PINRemoteImage/"

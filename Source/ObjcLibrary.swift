@@ -93,6 +93,16 @@ struct ObjcLibrary: SkylarkConvertible {
                 value: .skylark(value: "\(lib.name)_headers")
             ))
 
+             libArguments.append(.named(
+                name: "pch",
+                value:.functionCall(
+                    // Call internal function to find a PCH.
+                    // @see workspace.bzl
+                    name: "pch_with_name_hint",
+                    arguments: [.basic(value: .string(value: lib.externalName))]
+                )
+            ))
+
             // Include the public headers which are symlinked in
             // All includes are bubbled up automatically
             libArguments.append(.named(

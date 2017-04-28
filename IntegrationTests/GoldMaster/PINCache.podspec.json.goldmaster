@@ -1,3 +1,4 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
 objc_library(
   name = "PINCache",
   sdk_frameworks = [
@@ -33,6 +34,9 @@ objc_library(
     ]
     ),
   hdrs = PINCache_Core_headers,
+  pch = pch_with_name_hint(
+    "PINCache"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/PINCache/"

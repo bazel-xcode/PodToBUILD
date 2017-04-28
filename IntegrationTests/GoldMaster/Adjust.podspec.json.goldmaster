@@ -1,3 +1,4 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
 objc_library(
   name = "Adjust",
   sdk_frameworks = [
@@ -37,6 +38,9 @@ objc_library(
     ]
     ),
   hdrs = Adjust_Core_headers,
+  pch = pch_with_name_hint(
+    "Adjust"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/Adjust/"
@@ -64,6 +68,9 @@ objc_library(
     ]
     ),
   hdrs = Adjust_Sociomantic_headers,
+  pch = pch_with_name_hint(
+    "Adjust"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/Adjust/"
@@ -94,6 +101,9 @@ objc_library(
     ]
     ),
   hdrs = Adjust_Criteo_headers,
+  pch = pch_with_name_hint(
+    "Adjust"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/Adjust/"

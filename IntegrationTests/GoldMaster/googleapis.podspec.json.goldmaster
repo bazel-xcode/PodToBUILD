@@ -1,3 +1,4 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
 objc_library(
   name = "googleapis",
   deps = [
@@ -30,6 +31,9 @@ objc_library(
     ]
     ),
   hdrs = googleapis_Messages_headers,
+  pch = pch_with_name_hint(
+    "googleapis"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/googleapis/"
@@ -60,6 +64,9 @@ objc_library(
     ]
     ),
   hdrs = googleapis_Services_headers,
+  pch = pch_with_name_hint(
+    "googleapis"
+    ),
   includes = [
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/googleapis/"
