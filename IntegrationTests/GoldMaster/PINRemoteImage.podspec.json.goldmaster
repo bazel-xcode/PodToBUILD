@@ -123,6 +123,9 @@ objc_library(
     ":PINRemoteImage_Core",
     "@libwebp//:libwebp"
   ],
+  copts = [
+    "-DPIN_WEBP=1"
+  ],
   visibility = [
     "//visibility:public"
   ]

@@ -120,4 +120,49 @@ class BuildFileTests: XCTestCase {
         XCTAssertEqual(headersAndSourcesInfo.headers, ["Source/Classes/**/*.h"])
         XCTAssertEqual(headersAndSourcesInfo.sourceFiles, ["Source/Classes/**/*.m"])
     }
+
+    // MARK: - JSON Examples
+
+    func testGoogleAPISJSONParsing() {
+        let podSpec = examplePodSpecNamed(name: "googleapis")
+        XCTAssertEqual(podSpec.name, "googleapis")
+        XCTAssertEqual(podSpec.sourceFiles, [String]())
+        XCTAssertEqual(podSpec.podTargetXcconfig!, [
+                "USER_HEADER_SEARCH_PATHS": "$SRCROOT/..",
+                "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
+            ]
+        )
+    }
+
+    func testIGListKitJSONParsing() {
+        let podSpec = examplePodSpecNamed(name: "IGListKit")
+        XCTAssertEqual(podSpec.name, "IGListKit")
+        XCTAssertEqual(podSpec.sourceFiles, [String]())
+        XCTAssertEqual(podSpec.podTargetXcconfig!, [
+            "CLANG_CXX_LANGUAGE_STANDARD": "c++11",
+            "CLANG_CXX_LIBRARY": "libc++"
+            ]
+        )
+    }
+
+    // MARK: - XCConfigs
+    
+    func testPreProcesorDefsXCConfigs() {
+        // We strip off inherited.
+        let config = [
+            "USER_HEADER_SEARCH_PATHS": "$SRCROOT/..",
+            "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
+        ]
+        let compilerFlags = XCConfigTransformer.defaultTransformer().compilerFlags(forXCConfig: config)
+        XCTAssertEqual(compilerFlags, ["-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"])
+    }
+    
+    func testCXXXCConfigs () {
+        let config = [
+            "CLANG_CXX_LANGUAGE_STANDARD": "c++11",
+            "CLANG_CXX_LIBRARY": "libc++"
+        ]
+        let compilerFlags = XCConfigTransformer.defaultTransformer().compilerFlags(forXCConfig: config)
+        XCTAssertEqual(compilerFlags, ["-stdlib=c++11", "-stdlib=libc++"])
+    }
 }

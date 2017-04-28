@@ -7,6 +7,10 @@ objc_library(
     ":IGListKit_Diffing",
     ":IGListKit_Default"
   ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++"
+  ],
   visibility = [
     "//visibility:public"
   ]

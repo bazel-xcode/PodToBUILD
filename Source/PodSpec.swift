@@ -164,6 +164,9 @@ public enum PodSpecField: String {
     case resourceBundles = "resource_bundles"
     case subspecs
     case source
+    case podTargetXcconfig = "pod_target_xcconfig"
+    case userTargetXcconfig = "user_target_xcconfig"
+    case xcconfig // Legacy
 }
 
 public struct PodSpec {
@@ -183,12 +186,9 @@ public struct PodSpec {
     // TODO: Support resource / resources properties as well
     let resourceBundles: [String: [String]]
 
-    // TODO: None of these fields are parsed. This does *NOT* mean that the
-    // program won't build under Bazel.
-//    let privateHeaders: [String]
-//    let requiresARC: Bool = true
-//    let xcconfigs: [String: String]
-//    let podTargetXcconfig: [String: String]
+    let podTargetXcconfig: [String: String]?
+    let userTargetXcconfig: [String: String]?
+    let xcconfig: [String: String]?
 
     let prepareCommand = ""
 
@@ -243,6 +243,10 @@ public struct PodSpec {
         } else {
             source = nil
         }
+
+        xcconfig = try? ExtractValue(fromJSON: fieldMap[.xcconfig])
+        podTargetXcconfig = try? ExtractValue(fromJSON: fieldMap[.podTargetXcconfig])
+        userTargetXcconfig = try? ExtractValue(fromJSON: fieldMap[.userTargetXcconfig])
     }
 }
 

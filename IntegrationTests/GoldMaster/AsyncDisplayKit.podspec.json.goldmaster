@@ -14,6 +14,10 @@ objc_library(
     ":AsyncDisplayKit_IGListKit",
     ":AsyncDisplayKit_Yoga"
   ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -45,6 +49,9 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/AsyncDisplayKit/"
   ],
+  copts = [
+    ""
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -56,6 +63,9 @@ objc_library(
     ":AsyncDisplayKit_Core",
     "@PINRemoteImage/iOS//:PINRemoteImage/iOS"
   ],
+  copts = [
+    "-DPIN_REMOTE_IMAGE=1"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -66,6 +76,9 @@ objc_library(
     ":AsyncDisplayKit_Core",
     "@IGListKit//:IGListKit"
   ],
+  copts = [
+    "-DIG_LIST_KIT=1"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -75,6 +88,9 @@ objc_library(
   deps = [
     ":AsyncDisplayKit_Core",
     "@Yoga//:Yoga"
+  ],
+  copts = [
+    "-DYOGA=1"
   ],
   visibility = [
     "//visibility:public"

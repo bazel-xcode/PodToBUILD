@@ -4,6 +4,9 @@ objc_library(
     ":googleapis_Messages",
     ":googleapis_Services"
   ],
+  copts = [
+    "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
+  ],
   visibility = [
     "//visibility:public"
   ]

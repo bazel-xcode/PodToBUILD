@@ -10,12 +10,13 @@ import Foundation
 
 public struct PodBuildFile {
     public let skylarkConvertibles: [SkylarkConvertible]
+    static let xcconfigTransformer = XCConfigTransformer.defaultTransformer()
 
     public static func with(podSpec: PodSpec) -> PodBuildFile {
         let libs = PodBuildFile.makeConvertables(fromPodspec: podSpec)
         return PodBuildFile(skylarkConvertibles: libs)
     }
-
+    
     public static func makeConvertables(fromPodspec podSpec: PodSpec) -> [SkylarkConvertible] {
         var deps = [String]()
         var objcLibs = [SkylarkConvertible]()
@@ -40,6 +41,11 @@ public struct PodBuildFile {
             }
 
             let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: subSpec.sourceFiles)
+            let copts = subSpec.compilerFlags +
+                xcconfigTransformer.compilerFlags(forXCConfig: subSpec.podTargetXcconfig) +
+                xcconfigTransformer.compilerFlags(forXCConfig: subSpec.userTargetXcconfig) +
+                xcconfigTransformer.compilerFlags(forXCConfig: subSpec.xcconfig)
+            
             let lib = ObjcLibrary(name: subspecName,
                                   externalName: podSpec.name,
                                   sourceFiles: headersAndSourcesInfo.sourceFiles,
@@ -48,7 +54,7 @@ public struct PodBuildFile {
                                   weakSdkFrameworks: subSpec.weakFrameworks,
                                   sdkDylibs: subSpec.libraries,
                                   deps: subspecDeps,
-                                  copts: subSpec.compilerFlags,
+                                  copts: copts,
                                   bundles: subSpec.resourceBundles.map { k, _ in ":\(subSpec.name)-\(k)" },
                                   excludedSource: getCompiledSource(fromPatterns: subSpec.excludeFiles))
 
@@ -61,6 +67,11 @@ public struct PodBuildFile {
 
         let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: podSpec.sourceFiles)
 
+        let copts = podSpec.compilerFlags +
+            xcconfigTransformer.compilerFlags(forXCConfig: podSpec.podTargetXcconfig) +
+            xcconfigTransformer.compilerFlags(forXCConfig: podSpec.userTargetXcconfig) +
+            xcconfigTransformer.compilerFlags(forXCConfig: podSpec.xcconfig)
+
         let lib = ObjcLibrary(name: podSpec.name,
                               externalName: podSpec.name,
                               sourceFiles: headersAndSourcesInfo.sourceFiles,
@@ -69,7 +80,7 @@ public struct PodBuildFile {
                               weakSdkFrameworks: podSpec.weakFrameworks,
                               sdkDylibs: podSpec.libraries,
                               deps: deps,
-                              copts: podSpec.compilerFlags,
+                              copts: copts,
                               bundles: podSpec.resourceBundles.map { k, _ in ":\(podSpec.name)-\(k)" },
                               excludedSource: getCompiledSource(fromPatterns: podSpec.excludeFiles))
 
