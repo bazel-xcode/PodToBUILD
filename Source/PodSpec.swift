@@ -8,148 +8,90 @@
 
 import Foundation
 
-
 /*
-Cocoapods Podspec Specification (as of 4/25/17)
-https://guides.cocoapods.org/syntax/podspec.html#specification
+ Cocoapods Podspec Specification (as of 4/25/17)
+ https://guides.cocoapods.org/syntax/podspec.html#specification
 
-Root Specification:
-     name R
-     version R
-     cocoapods_version
-     authors R
-     social_media_url
-     license R
-     homepage R
-     source R
-     summary R
-     description
-     screenshots
-     documentation_url
-     prepare_command
-     deprecated
-     deprecated_in_favor_of
+ Root Specification:
+ name R
+ version R
+ cocoapods_version
+ authors R
+ social_media_url
+ license R
+ homepage R
+ source R
+ summary R
+ description
+ screenshots
+ documentation_url
+ prepare_command
+ deprecated
+ deprecated_in_favor_of
  A ‘root’ specification stores the information about the specific version of a library.
  The attributes in this group can only be written to on the ‘root’ specification, not on the ‘sub-specifications’.
 
----
+ ---
 
-Platform:
-    platform
-    deployment_target
+ Platform:
+ platform
+ deployment_target
 
-A specification should indicate the platform and the correspondent deployment targets on which the library is supported. If not defined in a subspec the attributes of this group inherit the value of the parent."
+ A specification should indicate the platform and the correspondent deployment targets on which the library is supported. If not defined in a subspec the attributes of this group inherit the value of the parent."
 
----
+ ---
 
-Build settings:
-    dependency
-    requires_arc M
-    frameworks M
-    weak_frameworks M
-    libraries M
-    compiler_flags M
-    pod_target_xcconfig M
-    user_target_xcconfig M
-    prefix_header_contents M
-    prefix_header_file M
-    module_name
-    header_dir M
-    header_mappings_dir M
+ Build settings:
+ dependency
+ requires_arc M
+ frameworks M
+ weak_frameworks M
+ libraries M
+ compiler_flags M
+ pod_target_xcconfig M
+ user_target_xcconfig M
+ prefix_header_contents M
+ prefix_header_file M
+ module_name
+ header_dir M
+ header_mappings_dir M
 
----
-File Patterns (Glob-able) - All MultiPlatform
-    source_files
-    public_header_files
-    private_header_files
-    vendored_frameworks
-    vendored_libraries
-    resource_bundles
-    resources
-    exclude_files
-    preserve_paths
-    module_map
+ ---
+ File Patterns (Glob-able) - All MultiPlatform
+ source_files
+ public_header_files
+ private_header_files
+ vendored_frameworks
+ vendored_libraries
+ resource_bundles
+ resources
+ exclude_files
+ preserve_paths
+ module_map
 
----
+ ---
 
-Subspecs:
-    subspec
-    default_subspecs
- 
+ Subspecs:
+ subspec
+ default_subspecs
+
  On one side, a specification automatically inherits as a dependency all it children ‘sub-specifications’ (unless a default subspec is specified).
  On the other side, a ‘sub-specification’ inherits the value of the attributes of the parents so common values for attributes can be specified in the ancestors.
- 
+
  ---
- 
-Multi-Platform support:
-    ios
-    osx
-    tvos
-    watchos
+
+ Multi-Platform support:
+ ios
+ osx
+ tvos
+ watchos
 
  A specification can store values which are specific to only one platform.
  For example one might want to store resources which are specific to only iOS projects.
- spec.resources = 'Resources/**/*.png'
- spec.ios.resources = 'Resources_ios/**/*.png'
+ spec.resources = 'Resources /**/ *.png'
+ spec.ios.resources = 'Resources_ios /**/ *.png'
 
  */
-
-public enum PlatformTarget {
-    case ios
-    case osx
-    case watchos
-    case tvos
-    case allPlatform
-}
-
-public struct MultiPlatform<T> {
-    let ios: T?
-    let osx: T?
-    let watchos: T?
-    let tvos: T?
-
-    init(ios: T?, osx: T?, watchos: T?, tvos: T?) {
-        self.ios = ios
-        self.osx = osx
-        self.watchos = watchos
-        self.tvos = tvos
-    }
-
-    init(value: T) {
-        self.init(ios: value, osx: value, watchos: value, tvos: value)
-    }
-}
-
-public typealias MultiPlatformSetting<T> = [PlatformTarget: T]
-
-func renderSetting<T>(_ s: MultiPlatformSetting<T>) -> MultiPlatform<T> {
-    func rip(_ key: PlatformTarget) -> T? {
-        return s[key] ?? s[.allPlatform]
-    }
-
-    return MultiPlatform(
-        ios: rip(.ios),
-        osx: rip(.osx),
-        watchos: rip(.watchos),
-        tvos: rip(.tvos)
-    )
-}
-
-
-/// Override the right with left
-/// podspec.sources
-//// podspec.ios.sources
-
-// Monoid (Obviously...)
-infix operator <>: AdditionPrecedence
-public func <><T>(lhs: MultiPlatformSetting<T>, rhs: MultiPlatformSetting<T>) -> MultiPlatformSetting<T> {
-    return lhs.reduce(rhs) { (dict: MultiPlatformSetting<T>, kv: (PlatformTarget, T)) -> MultiPlatformSetting<T> in
-        var d = dict;
-        d[kv.0] = kv.1;
-        return d
-    }
-}
-
 
 public enum PodSpecField: String {
     case name
@@ -167,9 +109,26 @@ public enum PodSpecField: String {
     case podTargetXcconfig = "pod_target_xcconfig"
     case userTargetXcconfig = "user_target_xcconfig"
     case xcconfig // Legacy
+
+    case ios
+    case osx
+    case tvos
+    case watchos
 }
 
-public struct PodSpec {
+protocol PodSpecRepresentable {
+    var sourceFiles: [String] { get }
+    var excludeFiles: [String] { get }
+    var frameworks: [String] { get }
+    var weakFrameworks: [String] { get }
+    var subspecs: [PodSpec] { get }
+    var dependencies: [String] { get }
+    var compilerFlags: [String] { get }
+    var source: PodSpecSource? { get }
+    var libraries: [String] { get }
+}
+
+public struct PodSpec: PodSpecRepresentable {
     let name: String
     let sourceFiles: [String]
     let excludeFiles: [String]
@@ -190,6 +149,11 @@ public struct PodSpec {
     let userTargetXcconfig: [String: String]?
     let xcconfig: [String: String]?
 
+    let ios: PodSpecRepresentable?
+    let osx: PodSpecRepresentable?
+    let tvos: PodSpecRepresentable?
+    let watchos: PodSpecRepresentable?
+
     let prepareCommand = ""
 
     public init(JSONPodspec: JSONDict) throws {
@@ -200,13 +164,18 @@ public struct PodSpec {
                 return nil
             }
             return .some((field, v))
-            }.reduce([:], { (dict: [PodSpecField:Any], kv: (PodSpecField, Any)) -> [PodSpecField:Any] in
-                var d = dict;
-                d[kv.0] = kv.1;
-                return d
-            })
+        }.reduce([:], { (dict: [PodSpecField: Any], kv: (PodSpecField, Any)) -> [PodSpecField: Any] in
+            var d = dict
+            d[kv.0] = kv.1
+            return d
+        })
 
-        name = try ExtractValue(fromJSON: fieldMap[.name])
+        if let name = try? ExtractValue(fromJSON: fieldMap[.name]) as String {
+            self.name = name
+        } else {
+            // This is for "ios", "macos", etc
+            name = ""
+        }
         frameworks = strings(fromJSON: fieldMap[.frameworks])
         weakFrameworks = strings(fromJSON: fieldMap[.weakFrameworks])
         excludeFiles = strings(fromJSON: fieldMap[.excludeFiles])
@@ -247,6 +216,11 @@ public struct PodSpec {
         xcconfig = try? ExtractValue(fromJSON: fieldMap[.xcconfig])
         podTargetXcconfig = try? ExtractValue(fromJSON: fieldMap[.podTargetXcconfig])
         userTargetXcconfig = try? ExtractValue(fromJSON: fieldMap[.userTargetXcconfig])
+
+        ios = (fieldMap[.ios] as? JSONDict).flatMap { try? PodSpec(JSONPodspec: $0) }
+        osx = (fieldMap[.osx] as? JSONDict).flatMap { try? PodSpec(JSONPodspec: $0) }
+        tvos = (fieldMap[.tvos] as? JSONDict).flatMap { try? PodSpec(JSONPodspec: $0) }
+        watchos = (fieldMap[.watchos] as? JSONDict).flatMap { try? PodSpec(JSONPodspec: $0) }
     }
 }
 

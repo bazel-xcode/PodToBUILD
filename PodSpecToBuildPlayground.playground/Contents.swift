@@ -7,17 +7,17 @@ import PodSpecToBUILD
  - The build output and podspec will be shown in the assistant view. (View -> Assistant Editor -> Show Assistant Editor)
  - Fields that are unrecognized / unimplemented will be printed to the console.
  */
-let filePathToJSONPodspec = "/Users/rmalik/dev/iOS/tools/PodSpecToBUILD/Examples/PINCache.podspec.json"
+let filePathToJSONPodspec = "/Users/bkase/code/ios2/tools/PodSpecToBUILD/Examples/IGListKit.podspec.json"
 
 guard let d = try? Data(contentsOf: URL(fileURLWithPath: filePathToJSONPodspec)) else { exit(0) }
 guard let jsonPodSpec = (try? JSONSerialization.jsonObject(with: d, options: .allowFragments)) as? JSONDict else { exit(0) }
 guard let pod = try? PodSpec(JSONPodspec: jsonPodSpec) else { exit(0) }
 
-
 //: Build the PodSpec and run it through the compiler
 let buildFile = PodBuildFile.with(podSpec: pod)
-let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.skylarkConvertibles.flatMap { $0.toSkylark() })
+let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.skylarkConvertibles.toSkylark())
 let buildFileOut = buildFileSkylarkCompiler.run()
+print("Hello world \(buildFileOut)")
 
 //: Assistant View Configuration
 let view = NSView(frame: NSRect(x: 0, y: 0, width: 800, height: 1024))

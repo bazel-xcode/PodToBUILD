@@ -16,7 +16,20 @@ public struct PodBuildFile {
         let libs = PodBuildFile.makeConvertables(fromPodspec: podSpec)
         return PodBuildFile(skylarkConvertibles: libs)
     }
-    
+
+    public static func dependencyName(podName: String, depName: String) -> String {
+        // Build up dependencies. Versions are ignored!
+        // When a given dependency is locally speced, it should
+        // Match the PodName i.e. PINCache/Core
+        let results = depName.components(separatedBy: "/")
+        if results.count > 1 && results[0] == podName {
+            let join = results[1 ... results.count - 1].joined(separator: "/")
+            return ":\(podName)_\(bazelLabel(fromString: join))"
+        } else {
+            return "@\(depName)//:\(depName)"
+        }
+    }
+
     public static func makeConvertables(fromPodspec podSpec: PodSpec) -> [SkylarkConvertible] {
         var deps = [String]()
         var objcLibs = [SkylarkConvertible]()
@@ -25,35 +38,34 @@ public struct PodBuildFile {
             let subspecName = bazelLabel(fromString: "\(podSpec.name)_\(subSpec.name)")
             let workspaceLabel = ":" + subspecName
             deps.append(workspaceLabel)
-
-            var subspecDeps = [String]()
-            for depName in subSpec.dependencies {
-                // Build up dependencies. Versions are ignored!
-                // When a given dependency is locally speced, it should
-                // Match the PodName i.e. PINCache/Core
-                let results = depName.components(separatedBy: "/")
-                if results.count > 1 && results[0] == podSpec.name {
-                    let join = results[1 ... results.count - 1].joined(separator: "/")
-                    subspecDeps.append(":\(podSpec.name)_\(bazelLabel(fromString: join))")
-                } else {
-                    subspecDeps.append("@\(depName)//:\(depName)")
-                }
-            }
+            let subspecDeps = subSpec.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) }
 
             let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: subSpec.sourceFiles)
             let copts = subSpec.compilerFlags +
                 xcconfigTransformer.compilerFlags(forXCConfig: subSpec.podTargetXcconfig) +
                 xcconfigTransformer.compilerFlags(forXCConfig: subSpec.userTargetXcconfig) +
                 xcconfigTransformer.compilerFlags(forXCConfig: subSpec.xcconfig)
-            
+
+            let multiPlatformDeps = MultiPlatform(
+                ios: subSpec.ios?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
+                osx: subSpec.osx?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
+                watchos: subSpec.watchos?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
+                tvos: subSpec.tvos?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) }
+            )
+            let multiPlatformLibs = MultiPlatform(
+                ios: subSpec.ios?.libraries,
+                osx: subSpec.osx?.libraries,
+                watchos: subSpec.watchos?.libraries,
+                tvos: subSpec.tvos?.libraries
+            )
             let lib = ObjcLibrary(name: subspecName,
                                   externalName: podSpec.name,
                                   sourceFiles: headersAndSourcesInfo.sourceFiles,
                                   headers: headersAndSourcesInfo.headers,
                                   sdkFrameworks: subSpec.frameworks,
                                   weakSdkFrameworks: subSpec.weakFrameworks,
-                                  sdkDylibs: subSpec.libraries,
-                                  deps: subspecDeps,
+                                  sdkDylibs: AttrSet(basic: subSpec.libraries) <> AttrSet(multi: multiPlatformLibs),
+                                  deps: AttrSet(basic: subspecDeps) <> AttrSet(multi: multiPlatformDeps),
                                   copts: copts,
                                   bundles: subSpec.resourceBundles.map { k, _ in ":\(subSpec.name)-\(k)" },
                                   excludedSource: getCompiledSource(fromPatterns: subSpec.excludeFiles))
@@ -72,14 +84,26 @@ public struct PodBuildFile {
             xcconfigTransformer.compilerFlags(forXCConfig: podSpec.userTargetXcconfig) +
             xcconfigTransformer.compilerFlags(forXCConfig: podSpec.xcconfig)
 
+        let multiPlatformDeps = MultiPlatform(
+            ios: podSpec.ios?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
+            osx: podSpec.osx?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
+            watchos: podSpec.watchos?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
+            tvos: podSpec.tvos?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) }
+        )
+        let multiPlatformLibs = MultiPlatform(
+            ios: podSpec.ios?.libraries,
+            osx: podSpec.osx?.libraries,
+            watchos: podSpec.watchos?.libraries,
+            tvos: podSpec.tvos?.libraries
+        )
         let lib = ObjcLibrary(name: podSpec.name,
                               externalName: podSpec.name,
                               sourceFiles: headersAndSourcesInfo.sourceFiles,
                               headers: headersAndSourcesInfo.headers,
                               sdkFrameworks: podSpec.frameworks,
                               weakSdkFrameworks: podSpec.weakFrameworks,
-                              sdkDylibs: podSpec.libraries,
-                              deps: deps,
+                              sdkDylibs: AttrSet(basic: podSpec.libraries) <> AttrSet(multi: multiPlatformLibs),
+                              deps: AttrSet(basic: deps) <> AttrSet(multi: multiPlatformDeps),
                               copts: copts,
                               bundles: podSpec.resourceBundles.map { k, _ in ":\(podSpec.name)-\(k)" },
                               excludedSource: getCompiledSource(fromPatterns: podSpec.excludeFiles))
@@ -129,16 +153,22 @@ public struct PodBuildFile {
         // Loop through the first degree depedency graph.
         for lib in libs {
             for source in lib.sourceFiles {
-                for dep in lib.deps {
-                    let components = dep.components(separatedBy: ":")
-                    guard components.count > 1 else { continue }
-                    let depName = components[1]
-                    guard let depLib = libByName[depName] else { continue }
-                    if fileSetContains(needle: source, haystack: depLib.sourceFiles) {
-                        var updatedDep = depLib
-                        updatedDep.excludedSource.append(source)
-                        libByName[updatedDep.name] = updatedDep
+                if let deps = lib.deps.basic {
+                    for dep in deps {
+                        let components = dep.components(separatedBy: ":")
+                        guard components.count > 1 else { continue }
+                        let depName = components[1]
+                        guard let depLib = libByName[depName] else { continue }
+                        if fileSetContains(needle: source, haystack: depLib.sourceFiles) {
+                            var updatedDep = depLib
+                            updatedDep.excludedSource.append(source)
+                            libByName[updatedDep.name] = updatedDep
+                        }
                     }
+                }
+                if !lib.deps.multi.isEmpty {
+                    // FIXME: Handle the case where we only depend on something for a specific platform
+                    continue
                 }
             }
         }

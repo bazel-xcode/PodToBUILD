@@ -18,8 +18,8 @@ class BuildFileTests: XCTestCase {
                                     headers: [String](),
                                     sdkFrameworks: [String](),
                                     weakSdkFrameworks: [String](),
-                                    sdkDylibs: [],
-                                    deps: [String](),
+                                    sdkDylibs: AttrSet.empty,
+                                    deps: AttrSet.empty,
                                     copts: [String](),
                                     bundles: [],
                                     excludedSource: [String]())
@@ -30,8 +30,8 @@ class BuildFileTests: XCTestCase {
                                  headers: [String](),
                                  sdkFrameworks: [String](),
                                  weakSdkFrameworks: [String](),
-                                 sdkDylibs: [],
-                                 deps: [":Core"],
+                                 sdkDylibs: AttrSet.empty,
+                                 deps: AttrSet(basic: [":Core"]),
                                  copts: [String](),
                                  bundles: [],
                                  excludedSource: [String]())
@@ -46,8 +46,8 @@ class BuildFileTests: XCTestCase {
                                     headers: [String](),
                                     sdkFrameworks: [String](),
                                     weakSdkFrameworks: [String](),
-                                    sdkDylibs: [],
-                                    deps: [String](),
+                                    sdkDylibs: AttrSet.empty,
+                                    deps: AttrSet.empty,
                                     copts: [String](),
                                     bundles: [],
                                     excludedSource: [String]())
@@ -58,8 +58,8 @@ class BuildFileTests: XCTestCase {
                                  headers: [String](),
                                  sdkFrameworks: [String](),
                                  weakSdkFrameworks: [String](),
-                                 sdkDylibs: [],
-                                 deps: [":Core"],
+                                 sdkDylibs: AttrSet.empty,
+                                 deps: AttrSet(basic: [":Core"]),
                                  copts: [String](),
                                  bundles: [],
                                  excludedSource: [String]())
@@ -74,8 +74,8 @@ class BuildFileTests: XCTestCase {
                                     headers: [String](),
                                     sdkFrameworks: [String](),
                                     weakSdkFrameworks: [String](),
-                                    sdkDylibs: [],
-                                    deps: [String](),
+                                    sdkDylibs: AttrSet.empty,
+                                    deps: AttrSet.empty,
                                     copts: [String](),
                                     bundles: [],
                                     excludedSource: ["Srce/SomeSource.m"])
@@ -86,8 +86,8 @@ class BuildFileTests: XCTestCase {
                                  headers: [String](),
                                  sdkFrameworks: [String](),
                                  weakSdkFrameworks: [String](),
-                                 sdkDylibs: [],
-                                 deps: [":Core"],
+                                 sdkDylibs: AttrSet.empty,
+                                 deps: AttrSet(basic: [":Core"]),
                                  copts: [String](),
                                  bundles: [],
                                  excludedSource: [String]())
@@ -128,9 +128,9 @@ class BuildFileTests: XCTestCase {
         XCTAssertEqual(podSpec.name, "googleapis")
         XCTAssertEqual(podSpec.sourceFiles, [String]())
         XCTAssertEqual(podSpec.podTargetXcconfig!, [
-                "USER_HEADER_SEARCH_PATHS": "$SRCROOT/..",
-                "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
-            ]
+            "USER_HEADER_SEARCH_PATHS": "$SRCROOT/..",
+            "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1",
+        ]
         )
     }
 
@@ -140,27 +140,27 @@ class BuildFileTests: XCTestCase {
         XCTAssertEqual(podSpec.sourceFiles, [String]())
         XCTAssertEqual(podSpec.podTargetXcconfig!, [
             "CLANG_CXX_LANGUAGE_STANDARD": "c++11",
-            "CLANG_CXX_LIBRARY": "libc++"
-            ]
+            "CLANG_CXX_LIBRARY": "libc++",
+        ]
         )
     }
 
     // MARK: - XCConfigs
-    
+
     func testPreProcesorDefsXCConfigs() {
         // We strip off inherited.
         let config = [
             "USER_HEADER_SEARCH_PATHS": "$SRCROOT/..",
-            "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
+            "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1",
         ]
         let compilerFlags = XCConfigTransformer.defaultTransformer().compilerFlags(forXCConfig: config)
         XCTAssertEqual(compilerFlags, ["-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"])
     }
-    
-    func testCXXXCConfigs () {
+
+    func testCXXXCConfigs() {
         let config = [
             "CLANG_CXX_LANGUAGE_STANDARD": "c++11",
-            "CLANG_CXX_LIBRARY": "libc++"
+            "CLANG_CXX_LIBRARY": "libc++",
         ]
         let compilerFlags = XCConfigTransformer.defaultTransformer().compilerFlags(forXCConfig: config)
         XCTAssertEqual(compilerFlags, ["-stdlib=c++11", "-stdlib=libc++"])

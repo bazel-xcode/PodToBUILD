@@ -13,16 +13,14 @@ struct ObjcBundleLibrary: SkylarkConvertible {
     let name: String
     let resources: [String]
 
-    func toSkylark() -> [SkylarkNode] {
-        return [
-            SkylarkNode.functionCall(
-                name: "objc_bundle_library",
-                arguments: [
-                    .named(name: "name", value: .string(value: name)),
-                    .named(name: "resources",
-                           value: SkylarkNode.list(value: resources.map { .string(value: $0) })),
-            ]),
-        ]
+    func toSkylark() -> SkylarkNode {
+        return .functionCall(
+            name: "objc_bundle_library",
+            arguments: [
+                .named(name: "name", value: .string(name)),
+                .named(name: "resources",
+                       value: resources.toSkylark()),
+        ])
     }
 }
 
@@ -34,17 +32,17 @@ struct ObjcLibrary: SkylarkConvertible {
     var headers: [String]
     var sdkFrameworks: [String]
     var weakSdkFrameworks: [String]
-    var sdkDylibs: [String]
-    var deps: [String]
+    var sdkDylibs: AttrSet<[String]>
+    var deps: AttrSet<[String]>
     var copts: [String]
     var bundles: [String]
     var excludedSource = [String]()
 
     // MARK: - Bazel Rendering
 
-    func toSkylark() -> [SkylarkNode] {
+    func toSkylark() -> SkylarkNode {
         let lib = self
-        let nameArgument = SkylarkFunctionArgument.named(name: "name", value: .string(value: lib.name))
+        let nameArgument = SkylarkFunctionArgument.named(name: "name", value: .string(lib.name))
 
         var inlineSkylark = [SkylarkNode]()
         var libArguments = [SkylarkFunctionArgument]()
@@ -52,12 +50,11 @@ struct ObjcLibrary: SkylarkConvertible {
         libArguments.append(nameArgument)
         if lib.sourceFiles.count > 0 {
             // Glob all of the source files and exclude excluded sources
-            var globArguments = [SkylarkFunctionArgument.basic(value: .list(value: lib.sourceFiles.map { .string(value: $0) }))]
+            var globArguments = [SkylarkFunctionArgument.basic(lib.sourceFiles.toSkylark())]
             if lib.excludedSource.count > 0 {
                 globArguments.append(.named(
                     name: "exclude",
-                    value: .list(value: excludedSource.map { .string(value: $0) }
-                    )
+                    value: excludedSource.toSkylark()
                 ))
             }
             libArguments.append(.named(
@@ -75,22 +72,22 @@ struct ObjcLibrary: SkylarkConvertible {
             // HACK! There is no assignment in Skylark Imp
             inlineSkylark.append(.functionCall(
                 name: "\(lib.name)_source_headers = glob",
-                arguments: [.basic(value: .list(value: lib.headers.map { .string(value: $0) }))]
+                arguments: [.basic(lib.headers.toSkylark())]
             ))
 
             // HACK! There is no assignment in Skylark Imp
             inlineSkylark.append(.functionCall(
                 name: "\(lib.name)_extra_headers = glob",
-                arguments: [.basic(value: .list(value: [.string(value: "bazel_support/Headers/Public/**/*.h")]))]
+                arguments: [.basic(["bazel_support/Headers/Public/**/*.h"].toSkylark())]
             ))
 
             inlineSkylark.append(.skylark(
-                value: "\(lib.name)_headers = \(lib.name)_source_headers + \(lib.name)_extra_headers"
+                "\(lib.name)_headers = \(lib.name)_source_headers + \(lib.name)_extra_headers"
             ))
 
             libArguments.append(.named(
                 name: "hdrs",
-                value: .skylark(value: "\(lib.name)_headers")
+                value: .skylark("\(lib.name)_headers")
             ))
 
              libArguments.append(.named(
@@ -99,7 +96,7 @@ struct ObjcLibrary: SkylarkConvertible {
                     // Call internal function to find a PCH.
                     // @see workspace.bzl
                     name: "pch_with_name_hint",
-                    arguments: [.basic(value: .string(value: lib.externalName))]
+                    arguments: [.basic(.string(lib.externalName))]
                 )
             ))
 
@@ -107,53 +104,54 @@ struct ObjcLibrary: SkylarkConvertible {
             // All includes are bubbled up automatically
             libArguments.append(.named(
                 name: "includes",
-                value: .list(value: [
-                    .string(value: "bazel_support/Headers/Public/"),
-                    .string(value: "bazel_support/Headers/Public/\(externalName)/"),
-                ])
+                value: [
+                    "bazel_support/Headers/Public/",
+                    "bazel_support/Headers/Public/\(externalName)/",
+                ].toSkylark()
             ))
         }
-        if lib.sdkFrameworks.count > 0 {
+        if !lib.sdkFrameworks.isEmpty {
             libArguments.append(.named(
                 name: "sdk_frameworks",
-                value: .list(value: lib.sdkFrameworks.map { .string(value: $0) })
+                value: lib.sdkFrameworks.toSkylark()
             ))
         }
 
-        if lib.weakSdkFrameworks.count > 0 {
+        if !lib.weakSdkFrameworks.isEmpty {
             libArguments.append(.named(
                 name: "weak_sdk_frameworks",
-                value: .list(value: lib.weakSdkFrameworks.map { .string(value: $0) })
+                value: lib.weakSdkFrameworks.toSkylark()
             ))
         }
 
-        if lib.sdkDylibs.count > 0 {
+        if !lib.sdkDylibs.isEmpty {
             libArguments.append(.named(
                 name: "sdk_dylibs",
-                value: .list(value: lib.sdkDylibs.map { .string(value: $0) })
-            ))
-        }
-        if lib.deps.count > 0 {
-            libArguments.append(.named(
-                name: "deps",
-                value: .list(value: lib.deps.map { .string(value: $0) })
-            ))
-        }
-        if lib.copts.count > 0 {
-            libArguments.append(.named(
-                name: "copts",
-                value: .list(value: lib.copts.map { .string(value: $0) })
+                value: lib.sdkDylibs.toSkylark()
             ))
         }
 
-        if lib.bundles.count > 0 {
+        if !lib.deps.isEmpty {
+            libArguments.append(.named(
+                name: "deps",
+                value: lib.deps.toSkylark()
+            ))
+        }
+        if !lib.copts.isEmpty {
+            libArguments.append(.named(
+                name: "copts",
+                value: lib.copts.toSkylark()
+            ))
+        }
+
+        if !lib.bundles.isEmpty {
             libArguments.append(.named(name: "bundles",
-                                       value: .list(value: bundles.map { .string(value: $0) })))
+                                       value: bundles.toSkylark()))
         }
         libArguments.append(.named(
             name: "visibility",
-            value: .list(value: [.string(value: "//visibility:public")])
+            value: ["//visibility:public"].toSkylark()
         ))
-        return inlineSkylark + [.functionCall(name: "objc_library", arguments: libArguments)]
+        return .lines(inlineSkylark + [.functionCall(name: "objc_library", arguments: libArguments)])
     }
 }

@@ -21,7 +21,7 @@ protocol XCConfigValueTransformer {
     var xcconfigKey: String { get }
 }
 
-enum XCConfigValueTransformerError : Error {
+enum XCConfigValueTransformerError: Error {
     case unimplemented
 }
 
@@ -42,32 +42,32 @@ struct XCConfigTransformer {
 
         let allValues = value.components(separatedBy: CharacterSet.whitespaces)
         return allValues.filter { $0 != "$(inherited)" }
-                        .map { transformer.string(forXCConfigValue: $0) }
+            .map { transformer.string(forXCConfigValue: $0) }
     }
 
     public static func defaultTransformer() -> XCConfigTransformer {
         return XCConfigTransformer(transformers: [
-                OtherCFlagsTransformer(),
-                PreprocessorDefinesTransformer(),
-                AllowNonModularIncludesInFrameworkModulesTransformer(),
-                CXXLibraryTransformer(),
-                CXXLanguageStandardTransformer(),
-                PreCompilePrefixHeaderTransformer()
+            OtherCFlagsTransformer(),
+            PreprocessorDefinesTransformer(),
+            AllowNonModularIncludesInFrameworkModulesTransformer(),
+            CXXLibraryTransformer(),
+            CXXLanguageStandardTransformer(),
+            PreCompilePrefixHeaderTransformer(),
         ])
     }
 
     public func compilerFlags(forXCConfig xcconfig: [String: String]?) -> [String] {
         if let xcconfig = xcconfig {
             return xcconfig.flatMap { try? compilerFlag(forXCConfigKey: $0, XCConfigValue: $1) }
-                           .flatMap { $0 }
+                .flatMap { $0 }
         }
         return [String]()
     }
 }
 
-//  MARK - Value Transformers
+//  MARK: - Value Transformers
 
-struct OtherCFlagsTransformer : XCConfigValueTransformer {
+struct OtherCFlagsTransformer: XCConfigValueTransformer {
     var xcconfigKey: String {
         return "OTHER_CFLAGS"
     }
@@ -77,18 +77,18 @@ struct OtherCFlagsTransformer : XCConfigValueTransformer {
     }
 }
 
-struct PreCompilePrefixHeaderTransformer : XCConfigValueTransformer {
+struct PreCompilePrefixHeaderTransformer: XCConfigValueTransformer {
     var xcconfigKey: String {
         return "GCC_PRECOMPILE_PREFIX_HEADER"
     }
 
-    func string(forXCConfigValue value: String) -> String {
-         //TODO: Implement precompiled header support in Bazel.
+    func string(forXCConfigValue _: String) -> String {
+        // TODO: Implement precompiled header support in Bazel.
         return ""
     }
 }
 
-struct PreprocessorDefinesTransformer : XCConfigValueTransformer {
+struct PreprocessorDefinesTransformer: XCConfigValueTransformer {
     var xcconfigKey: String {
         return "GCC_PREPROCESSOR_DEFINITIONS"
     }
@@ -98,17 +98,17 @@ struct PreprocessorDefinesTransformer : XCConfigValueTransformer {
     }
 }
 
-struct AllowNonModularIncludesInFrameworkModulesTransformer :  XCConfigValueTransformer {
+struct AllowNonModularIncludesInFrameworkModulesTransformer: XCConfigValueTransformer {
     var xcconfigKey: String {
         return "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES"
     }
 
-    func string(forXCConfigValue value: String) -> String {
+    func string(forXCConfigValue _: String) -> String {
         return "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
     }
 }
 
-struct CXXLanguageStandardTransformer : XCConfigValueTransformer {
+struct CXXLanguageStandardTransformer: XCConfigValueTransformer {
     var xcconfigKey: String {
         return "CLANG_CXX_LANGUAGE_STANDARD"
     }
@@ -118,7 +118,7 @@ struct CXXLanguageStandardTransformer : XCConfigValueTransformer {
     }
 }
 
-struct CXXLibraryTransformer : XCConfigValueTransformer {
+struct CXXLibraryTransformer: XCConfigValueTransformer {
     var xcconfigKey: String {
         return "CLANG_CXX_LIBRARY"
     }

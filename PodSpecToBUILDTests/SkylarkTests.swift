@@ -9,15 +9,15 @@
 import XCTest
 
 class PodSpecToBUILDTests: XCTestCase {
-    let nameArgument = SkylarkFunctionArgument.named(name: "name", value: .string(value: "test"))
+    let nameArgument = SkylarkFunctionArgument.named(name: "name", value: "test")
 
     func testFunctionCall() {
         let call = SkylarkNode.functionCall(name: "objc_library", arguments: [nameArgument])
         let compiler = SkylarkCompiler([call])
-        let expected = multilineString([
+        let expected = compilerOutput([
             "objc_library(",
             "  name = \"test\"",
-            "  )\n",
+            "  )",
         ])
         print(compiler.run())
         XCTAssertEqual(expected, compiler.run())
@@ -25,11 +25,11 @@ class PodSpecToBUILDTests: XCTestCase {
 
     func testCallWithSkylark() {
         let sourceFiles = ["a.m", "b.m"]
-        let globCall = SkylarkNode.functionCall(name: "glob", arguments: [.basic(value: .list(value: sourceFiles.map { .string(value: $0) }))])
+        let globCall = SkylarkNode.functionCall(name: "glob", arguments: [.basic(sourceFiles.toSkylark())])
         let srcsArg = SkylarkFunctionArgument.named(name: "srcs", value: globCall)
         let call = SkylarkNode.functionCall(name: "objc_library", arguments: [nameArgument, srcsArg])
         let compiler = SkylarkCompiler([call])
-        let expected = multilineString([
+        let expected = compilerOutput([
             "objc_library(",
             "  name = \"test\",",
             "  srcs = glob(",
@@ -38,7 +38,7 @@ class PodSpecToBUILDTests: XCTestCase {
             "      \"b.m\"",
             "    ]",
             "    )",
-            "  )\n",
+            "  )",
         ])
 
         let expectedLines = expected.components(separatedBy: "\n")
@@ -47,7 +47,8 @@ class PodSpecToBUILDTests: XCTestCase {
         }
     }
 
-    func multilineString(_ values: [String]) -> String {
-        return values.joined(separator: "\n")
+    func compilerOutput(_ values: [String]) -> String {
+        // capture the prefix always
+        return ([SkylarkCompiler([]).run()] <> values).joined(separator: "\n")
     }
 }

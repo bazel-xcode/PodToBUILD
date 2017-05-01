@@ -31,13 +31,13 @@ struct PodRepositoryWorkspaceEntry: SkylarkConvertible {
     var url: String
     var stripPrefix: String
 
-    func toSkylark() -> [SkylarkNode] {
+    func toSkylark() -> SkylarkNode {
         let repoSkylark = SkylarkNode.functionCall(name: "new_pod_repository", arguments: [
-            .named(name: "name", value: .string(value: name)),
-            .named(name: "url", value: .string(value: url)),
-            .named(name: "strip_prefix", value: .string(value: stripPrefix)),
+            .named(name: "name", value: .string(name)),
+            .named(name: "url", value: .string(url)),
+            .named(name: "strip_prefix", value: .string(stripPrefix)),
         ])
-        return [repoSkylark]
+        return repoSkylark
     }
 
     static func with(podSpec: PodSpec) throws -> PodRepositoryWorkspaceEntry {
