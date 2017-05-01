@@ -8,8 +8,13 @@
 
 import Foundation
 
+/// Law: Names must be valid bazel names; see the spec
+protocol BazelTarget: SkylarkConvertible {
+    var name: String { get }
+}
+
 // https://bazel.build/versions/master/docs/be/objective-c.html#objc_bundle_library
-struct ObjcBundleLibrary: SkylarkConvertible {
+struct ObjcBundleLibrary: BazelTarget {
     let name: String
     let resources: [String]
 
@@ -17,27 +22,111 @@ struct ObjcBundleLibrary: SkylarkConvertible {
         return .functionCall(
             name: "objc_bundle_library",
             arguments: [
-                .named(name: "name", value: .string(name)),
+                .named(name: "name", value: name.toSkylark()),
                 .named(name: "resources",
                        value: resources.toSkylark()),
         ])
     }
 }
 
+// https://bazel.build/versions/master/docs/be/general.html#config_setting
+struct ConfigSetting: BazelTarget {
+    let name: String
+    let values: [String: String]
+    
+    func toSkylark() -> SkylarkNode {
+        return .functionCall(
+            name: "config_setting",
+            arguments: [
+		        .named(name: "name", value: name.toSkylark()),
+		        .named(name: "values", value: values.toSkylark())
+            ])
+    }
+}
+
+/// rootName -> names -> fixedNames
+func fixDependencyNames(rootName: String) -> ([String]) -> [String]  {
+    return { $0.map{ depName in
+        // Build up dependencies. Versions are ignored!
+        // When a given dependency is locally speced, it should
+        // Match the PodName i.e. PINCache/Core
+        let results = depName.components(separatedBy: "/")
+        if results.count > 1 && results[0] == rootName {
+            let join = results[1 ... results.count - 1].joined(separator: "/")
+            return ":\(rootName)_\(ObjcLibrary.bazelLabel(fromString: join))"
+        } else {
+            return "@\(depName)//:\(depName)"
+        }
+    } }
+}
+
+
 // ObjcLibrary is an intermediate rep of an objc library
-struct ObjcLibrary: SkylarkConvertible {
+struct ObjcLibrary: BazelTarget {
     var name: String
     var externalName: String
     var sourceFiles: [String]
     var headers: [String]
-    var sdkFrameworks: [String]
-    var weakSdkFrameworks: [String]
+    var sdkFrameworks: AttrSet<[String]>
+    var weakSdkFrameworks: AttrSet<[String]>
     var sdkDylibs: AttrSet<[String]>
     var deps: AttrSet<[String]>
-    var copts: [String]
-    var bundles: [String]
+    var copts: AttrSet<[String]>
+    var bundles: AttrSet<[String]>
     var excludedSource = [String]()
+    static let xcconfigTransformer = XCConfigTransformer.defaultTransformer()
 
+    init(name: String,
+        externalName: String,
+        sourceFiles: [String],
+        headers: [String],
+        sdkFrameworks: AttrSet<[String]>,
+        weakSdkFrameworks: AttrSet<[String]>,
+        sdkDylibs: AttrSet<[String]>,
+        deps: AttrSet<[String]>,
+        copts: AttrSet<[String]>,
+        bundles: AttrSet<[String]>,
+        excludedSource: [String] = []) {
+        self.name = name
+        self.externalName = externalName
+        self.sourceFiles = sourceFiles
+        self.headers = headers
+        self.sdkFrameworks = sdkFrameworks
+        self.weakSdkFrameworks = weakSdkFrameworks
+        self.sdkDylibs = sdkDylibs
+        self.deps = deps
+        self.copts = copts
+        self.bundles = bundles
+        self.excludedSource = excludedSource
+    }
+
+    static func bazelLabel(fromString string: String) -> String {
+        return string.replacingOccurrences(of: "\\/", with: "_").replacingOccurrences(of: "-", with: "_")
+    }
+    
+    
+    init(rootName: String, spec: PodSpec, extraDeps: [String] = []) {
+        let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: spec.sourceFiles)
+        
+        let xcconfigFlags =
+            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: spec.podTargetXcconfig) +
+            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: spec.userTargetXcconfig) +
+            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: spec.xcconfig)
+        
+        self.name = spec.name == rootName ?
+                rootName : ObjcLibrary.bazelLabel(fromString: "\(rootName)_\(spec.name)")
+        self.externalName = rootName
+        self.sourceFiles = headersAndSourcesInfo.sourceFiles
+        self.headers = headersAndSourcesInfo.headers
+        self.sdkFrameworks = spec ^* liftToAttr(PodSpec.lens.frameworks)
+        self.weakSdkFrameworks = spec ^* liftToAttr(PodSpec.lens.weakFrameworks)
+        self.sdkDylibs = spec ^* liftToAttr(PodSpec.lens.libraries)
+        self.deps = AttrSet(basic: extraDeps.map{ ":\($0)" }) <> (spec ^* liftToAttr(PodSpec.lens.dependencies .. ReadonlyLens(fixDependencyNames(rootName: rootName))))
+        self.copts = AttrSet(basic: xcconfigFlags) <> (spec ^* liftToAttr(PodSpec.lens.compilerFlags))
+        self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.name)-\(k)" } })
+        self.excludedSource = getCompiledSource(fromPatterns: spec.excludeFiles)
+    }
+    
     // MARK: - Bazel Rendering
 
     func toSkylark() -> SkylarkNode {
@@ -154,4 +243,26 @@ struct ObjcLibrary: SkylarkConvertible {
         ))
         return .lines(inlineSkylark + [.functionCall(name: "objc_library", arguments: libArguments)])
     }
+}
+
+// This is domain specific to bazel. Bazel's "glob" can't support wild cards so add
+// multiple entries instead of {m, cpp}
+// see above for further docs
+func getCompiledSource(fromPatterns patterns: [String]) -> [String] {
+    var sourceFiles = [String]()
+    for sourceFilePattern in patterns {
+        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "m") {
+            sourceFiles.append(impl)
+        }
+        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "mm") {
+            sourceFiles.append(impl)
+        }
+        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "cpp") {
+            sourceFiles.append(impl)
+        }
+        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "c") {
+            sourceFiles.append(impl)
+        }
+    }
+    return sourceFiles
 }

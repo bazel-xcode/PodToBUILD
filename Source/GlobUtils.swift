@@ -370,3 +370,4 @@ extension NSRegularExpression {
         return results.map { nsString.substring(with: $0.range) }
     }
 }
+

@@ -1,9 +1,31 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+config_setting(
+  name = "osxCase",
+  values = {
+    "cpu": "powerpc2"
+  }
+  )
 objc_library(
   name = "PINCache",
   sdk_frameworks = [
     "Foundation"
   ],
+  weak_sdk_frameworks = select(
+    {
+      ":osxCase": [
+        "AppKit"
+      ],
+      "//conditions:default": [
+        "UIKit"
+      ]
+    }
+    ),
   deps = [
     ":PINCache_Core",
     ":PINCache_Arc_exception_safe"

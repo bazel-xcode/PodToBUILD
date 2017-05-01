@@ -37,7 +37,7 @@ public indirect enum SkylarkNode {
 
     /// Lines are a bunch of nodes that we will render as separate lines
     case lines([SkylarkNode])
-
+    
     /// Flatten nested lines to a single array of lines
     func canonicalize() -> SkylarkNode {
         // at the inner layer we just strip the .lines

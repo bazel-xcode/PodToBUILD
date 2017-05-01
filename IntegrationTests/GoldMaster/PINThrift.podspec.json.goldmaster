@@ -25,6 +25,9 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/PINThrift/"
   ],
+  deps = [
+    "@thrift//:thrift"
+  ],
   visibility = [
     "//visibility:public"
   ]

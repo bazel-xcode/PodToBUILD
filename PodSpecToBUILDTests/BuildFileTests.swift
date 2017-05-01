@@ -16,24 +16,24 @@ class BuildFileTests: XCTestCase {
                                     externalName: "Core",
                                     sourceFiles: ["Source/*.m"],
                                     headers: [String](),
-                                    sdkFrameworks: [String](),
-                                    weakSdkFrameworks: [String](),
+                                    sdkFrameworks: AttrSet.empty,
+                                    weakSdkFrameworks: AttrSet.empty,
                                     sdkDylibs: AttrSet.empty,
                                     deps: AttrSet.empty,
-                                    copts: [String](),
-                                    bundles: [],
+                                    copts: AttrSet.empty,
+                                    bundles: AttrSet.empty,
                                     excludedSource: [String]())
 
         let depLib = ObjcLibrary(name: "ChildLib",
                                  externalName: "Core",
                                  sourceFiles: ["Source/SomeSource.m"],
                                  headers: [String](),
-                                 sdkFrameworks: [String](),
-                                 weakSdkFrameworks: [String](),
+                                 sdkFrameworks: AttrSet.empty,
+                                 weakSdkFrameworks: AttrSet.empty,
                                  sdkDylibs: AttrSet.empty,
                                  deps: AttrSet(basic: [":Core"]),
-                                 copts: [String](),
-                                 bundles: [],
+                                 copts: AttrSet.empty,
+                                 bundles: AttrSet.empty,
                                  excludedSource: [String]())
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
         XCTAssertEqual(libByName["Core"]!.excludedSource, ["Source/SomeSource.m"])
@@ -44,24 +44,24 @@ class BuildFileTests: XCTestCase {
                                     externalName: "Core",
                                     sourceFiles: ["Source/**/*.m"],
                                     headers: [String](),
-                                    sdkFrameworks: [String](),
-                                    weakSdkFrameworks: [String](),
+                                    sdkFrameworks: AttrSet.empty,
+                                    weakSdkFrameworks: AttrSet.empty,
                                     sdkDylibs: AttrSet.empty,
                                     deps: AttrSet.empty,
-                                    copts: [String](),
-                                    bundles: [],
+                                    copts: AttrSet.empty,
+                                    bundles: AttrSet.empty,
                                     excludedSource: [String]())
 
         let depLib = ObjcLibrary(name: "ChildLib",
                                  externalName: "Core",
                                  sourceFiles: ["Source/Some/Source.m"],
                                  headers: [String](),
-                                 sdkFrameworks: [String](),
-                                 weakSdkFrameworks: [String](),
+                                 sdkFrameworks: AttrSet.empty,
+                                 weakSdkFrameworks: AttrSet.empty,
                                  sdkDylibs: AttrSet.empty,
                                  deps: AttrSet(basic: [":Core"]),
-                                 copts: [String](),
-                                 bundles: [],
+                                 copts: AttrSet.empty,
+                                 bundles: AttrSet.empty,
                                  excludedSource: [String]())
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
         XCTAssertEqual(libByName["Core"]!.excludedSource, ["Source/Some/Source.m"])
@@ -72,24 +72,24 @@ class BuildFileTests: XCTestCase {
                                     externalName: "Core",
                                     sourceFiles: ["Source/*.m"],
                                     headers: [String](),
-                                    sdkFrameworks: [String](),
-                                    weakSdkFrameworks: [String](),
+                                    sdkFrameworks: AttrSet.empty,
+                                    weakSdkFrameworks: AttrSet.empty,
                                     sdkDylibs: AttrSet.empty,
                                     deps: AttrSet.empty,
-                                    copts: [String](),
-                                    bundles: [],
+                                    copts: AttrSet.empty,
+                                    bundles: AttrSet.empty,
                                     excludedSource: ["Srce/SomeSource.m"])
 
         let depLib = ObjcLibrary(name: "ChildLib",
                                  externalName: "Core",
                                  sourceFiles: ["Source/SomeSource.m"],
                                  headers: [String](),
-                                 sdkFrameworks: [String](),
-                                 weakSdkFrameworks: [String](),
+                                 sdkFrameworks: AttrSet.empty,
+                                 weakSdkFrameworks: AttrSet.empty,
                                  sdkDylibs: AttrSet.empty,
                                  deps: AttrSet(basic: [":Core"]),
-                                 copts: [String](),
-                                 bundles: [],
+                                 copts: AttrSet.empty,
+                                 bundles: AttrSet.empty,
                                  excludedSource: [String]())
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
         XCTAssertEqual(libByName["ChildLib"]!.excludedSource, [String]())
@@ -104,7 +104,73 @@ class BuildFileTests: XCTestCase {
         }
         return libByName
     }
+    
+    // MARK: - Multiplatform Tests
 
+    func testLibFromPodspec() {
+        let podspec = examplePodSpecNamed(name: "IGListKit")
+        let lib = ObjcLibrary(rootName: podspec.name, spec: podspec)
+        
+        let expectedFrameworks: AttrSet<[String]> = AttrSet(multi: MultiPlatform(
+            ios: ["UIKit"],
+            osx: ["Cocoa"],
+            watchos: nil,
+            tvos: ["UIKit"]))
+        XCTAssert(lib.sdkFrameworks == expectedFrameworks)
+    }
+    
+    func testNameFromPodspec() {
+        let podspec = examplePodSpecNamed(name: "IGListKit")
+        let lib = ObjcLibrary(rootName: podspec.name, spec: podspec)
+        
+        XCTAssert(lib.name == podspec.name)
+    }
+    
+    func testDependOnSubspecs() {
+        let podspec = examplePodSpecNamed(name: "IGListKit")
+        let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
+        
+        XCTAssert(
+            AttrSet(basic: [":IGListKit_Diffing", ":IGListKit_Default"]) ==
+                (convs.flatMap{ $0 as? ObjcLibrary}.first!).deps
+        )
+    }
+    
+    func testProperlyOutputConfig() {
+        let podspec = try! PodSpec(JSONPodspec: [
+                "name": "Foo",
+                "osx": ["source_files": ["foo"]]
+            ])
+        let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
+        dump(convs.flatMap{ $0 as? ConfigSetting })
+        XCTAssert(
+            convs.flatMap{ $0 as? ConfigSetting }.map{ $0.name }.first { $0.contains("osx") } != nil
+        )
+    }
+    
+    func testProperlyOutputConfigSubspecs() {
+        let podspec = try! PodSpec(JSONPodspec: [
+            "name": "Foo",
+            "subspecs": [["name": "Foo_1",
+                          "osx": ["source_files": ["foo"]]]]
+        ])
+        let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
+        XCTAssert(
+            convs.flatMap{ $0 as? ConfigSetting }.map{ $0.name }.first { $0.contains("osx") } != nil
+        )
+    }
+    
+    func testDontOutputConfig() {
+        let podspec = try! PodSpec(JSONPodspec: [
+            "name": "Foo"
+        ])
+        let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
+        
+        XCTAssert(
+            convs.flatMap{ $0 as? ConfigSetting }.count == 0
+        )
+    }
+    
     // MARK: - Source File Extraction Tests
 
     func testHeaderExtraction() {

@@ -126,6 +126,8 @@ protocol PodSpecRepresentable {
     var compilerFlags: [String] { get }
     var source: PodSpecSource? { get }
     var libraries: [String] { get }
+    
+    var resourceBundles: [String: [String]] { get }
 }
 
 public struct PodSpec: PodSpecRepresentable {
@@ -221,6 +223,60 @@ public struct PodSpec: PodSpecRepresentable {
         osx = (fieldMap[.osx] as? JSONDict).flatMap { try? PodSpec(JSONPodspec: $0) }
         tvos = (fieldMap[.tvos] as? JSONDict).flatMap { try? PodSpec(JSONPodspec: $0) }
         watchos = (fieldMap[.watchos] as? JSONDict).flatMap { try? PodSpec(JSONPodspec: $0) }
+    }
+}
+
+extension PodSpec {
+    enum lens {
+        static let sourceFiles: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.sourceFiles }
+        }()
+        static let excludeFiles: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.excludeFiles }
+        }()
+        static let frameworks: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.frameworks }
+        }()
+        static let weakFrameworks: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.weakFrameworks }
+        }()
+        static let subspecs: Lens<PodSpecRepresentable, [PodSpec]> = {
+            ReadonlyLens { $0.subspecs }
+        }()
+        static let dependencies: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.dependencies }
+        }()
+        static let compilerFlags: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.compilerFlags }
+        }()
+        static let source: Lens<PodSpecRepresentable, PodSpecSource?> = {
+            ReadonlyLens { $0.source }
+        }()
+        static let libraries: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.libraries }
+        }()
+        static let resourceBundles: Lens<PodSpecRepresentable, [String: [String]]> = {
+            ReadonlyLens { $0.resourceBundles }
+        }()
+
+        static let ios: Lens<PodSpec, PodSpecRepresentable?> = {
+            ReadonlyLens { $0.ios }
+        }()
+        static let osx: Lens<PodSpec, PodSpecRepresentable?> = {
+            ReadonlyLens { $0.osx }
+        }()
+        static let tvos: Lens<PodSpec, PodSpecRepresentable?> = {
+            ReadonlyLens { $0.tvos }
+        }()
+        static let watchos: Lens<PodSpec, PodSpecRepresentable?> = {
+            ReadonlyLens { $0.watchos }
+        }()
+        
+        static func liftOntoSubspecs<Part: Semigroup>(_ lens: Lens<PodSpec, Part?>) -> Lens<PodSpec, Part?> {
+            return ReadonlyLens { whole in
+                (whole ^* lens) <> sfold(whole.subspecs.map{ $0 ^* lens })
+            }
+        }
     }
 }
 

@@ -16,106 +16,56 @@ public struct PodBuildFile {
         let libs = PodBuildFile.makeConvertables(fromPodspec: podSpec)
         return PodBuildFile(skylarkConvertibles: libs)
     }
-
-    public static func dependencyName(podName: String, depName: String) -> String {
-        // Build up dependencies. Versions are ignored!
-        // When a given dependency is locally speced, it should
-        // Match the PodName i.e. PINCache/Core
-        let results = depName.components(separatedBy: "/")
-        if results.count > 1 && results[0] == podName {
-            let join = results[1 ... results.count - 1].joined(separator: "/")
-            return ":\(podName)_\(bazelLabel(fromString: join))"
-        } else {
-            return "@\(depName)//:\(depName)"
+    
+    private static func bundleLibraries(withPodSpec spec: PodSpec) -> [ObjcBundleLibrary] {
+        return spec.resourceBundles.map { k, v in
+            ObjcBundleLibrary(name: "\(spec.name)_\(k)", resources: v)
         }
     }
 
     public static func makeConvertables(fromPodspec podSpec: PodSpec) -> [SkylarkConvertible] {
-        var deps = [String]()
-        var objcLibs = [SkylarkConvertible]()
-
-        for subSpec in podSpec.subspecs {
-            let subspecName = bazelLabel(fromString: "\(podSpec.name)_\(subSpec.name)")
-            let workspaceLabel = ":" + subspecName
-            deps.append(workspaceLabel)
-            let subspecDeps = subSpec.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) }
-
-            let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: subSpec.sourceFiles)
-            let copts = subSpec.compilerFlags +
-                xcconfigTransformer.compilerFlags(forXCConfig: subSpec.podTargetXcconfig) +
-                xcconfigTransformer.compilerFlags(forXCConfig: subSpec.userTargetXcconfig) +
-                xcconfigTransformer.compilerFlags(forXCConfig: subSpec.xcconfig)
-
-            let multiPlatformDeps = MultiPlatform(
-                ios: subSpec.ios?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
-                osx: subSpec.osx?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
-                watchos: subSpec.watchos?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
-                tvos: subSpec.tvos?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) }
-            )
-            let multiPlatformLibs = MultiPlatform(
-                ios: subSpec.ios?.libraries,
-                osx: subSpec.osx?.libraries,
-                watchos: subSpec.watchos?.libraries,
-                tvos: subSpec.tvos?.libraries
-            )
-            let lib = ObjcLibrary(name: subspecName,
-                                  externalName: podSpec.name,
-                                  sourceFiles: headersAndSourcesInfo.sourceFiles,
-                                  headers: headersAndSourcesInfo.headers,
-                                  sdkFrameworks: subSpec.frameworks,
-                                  weakSdkFrameworks: subSpec.weakFrameworks,
-                                  sdkDylibs: AttrSet(basic: subSpec.libraries) <> AttrSet(multi: multiPlatformLibs),
-                                  deps: AttrSet(basic: subspecDeps) <> AttrSet(multi: multiPlatformDeps),
-                                  copts: copts,
-                                  bundles: subSpec.resourceBundles.map { k, _ in ":\(subSpec.name)-\(k)" },
-                                  excludedSource: getCompiledSource(fromPatterns: subSpec.excludeFiles))
-
-            let bundles: [SkylarkConvertible] = subSpec.resourceBundles.map { k, v in
-                ObjcBundleLibrary(name: "\(subSpec.name)-\(k)", resources: v)
-            }
-            objcLibs.append(lib)
-            objcLibs.append(contentsOf: bundles)
+        let subspecTargets: [BazelTarget] = podSpec.subspecs.flatMap { spec in
+            (bundleLibraries(withPodSpec: podSpec) as [BazelTarget]) +
+	            ([ObjcLibrary(rootName: podSpec.name, spec: spec) as BazelTarget])
         }
-
-        let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: podSpec.sourceFiles)
-
-        let copts = podSpec.compilerFlags +
-            xcconfigTransformer.compilerFlags(forXCConfig: podSpec.podTargetXcconfig) +
-            xcconfigTransformer.compilerFlags(forXCConfig: podSpec.userTargetXcconfig) +
-            xcconfigTransformer.compilerFlags(forXCConfig: podSpec.xcconfig)
-
-        let multiPlatformDeps = MultiPlatform(
-            ios: podSpec.ios?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
-            osx: podSpec.osx?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
-            watchos: podSpec.watchos?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) },
-            tvos: podSpec.tvos?.dependencies.map { dependencyName(podName: podSpec.name, depName: $0) }
-        )
-        let multiPlatformLibs = MultiPlatform(
-            ios: podSpec.ios?.libraries,
-            osx: podSpec.osx?.libraries,
-            watchos: podSpec.watchos?.libraries,
-            tvos: podSpec.tvos?.libraries
-        )
-        let lib = ObjcLibrary(name: podSpec.name,
-                              externalName: podSpec.name,
-                              sourceFiles: headersAndSourcesInfo.sourceFiles,
-                              headers: headersAndSourcesInfo.headers,
-                              sdkFrameworks: podSpec.frameworks,
-                              weakSdkFrameworks: podSpec.weakFrameworks,
-                              sdkDylibs: AttrSet(basic: podSpec.libraries) <> AttrSet(multi: multiPlatformLibs),
-                              deps: AttrSet(basic: deps) <> AttrSet(multi: multiPlatformDeps),
-                              copts: copts,
-                              bundles: podSpec.resourceBundles.map { k, _ in ":\(podSpec.name)-\(k)" },
-                              excludedSource: getCompiledSource(fromPatterns: podSpec.excludeFiles))
-
-        objcLibs.insert(lib, at: 0)
-
-        let bundles: [SkylarkConvertible] = podSpec.resourceBundles.map { k, v in
-            ObjcBundleLibrary(name: "\(podSpec.name)-\(k)", resources: v)
-        }
-
-        // Apply Transformations
-        return bundles + objcLibs.filter { $0 as? ObjcLibrary == nil } + executePruneRedundantCompilationTransform(libs: objcLibs.flatMap { $0 as? ObjcLibrary })
+        
+        let rootLib = ObjcLibrary(rootName: podSpec.name,
+                                spec: podSpec,
+                                extraDeps: subspecTargets.map{ $0.name })
+        
+        // We don't care about the values here
+        // So we just lens to an arbitrary monoid that we can <>
+        // Trivial has no information, we just care about whether or not it's nil
+        let trivialized: Lens<PodSpecRepresentable, Trivial?> = ReadonlyLens(const(.some(Trivial())))
+        
+        // Just assume ios for now, we can figure out the proper commands later
+        let configs: [SkylarkConvertible] = (
+            (podSpec ^*
+                PodSpec.lens.liftOntoSubspecs(PodSpec.lens.ios >•> trivialized))
+                .map(const([ ConfigSetting(name: SelectCase.ios.rawValue,
+                                           values: ["cpu": "powerpc1"]) ])) <>
+            (podSpec ^*
+                PodSpec.lens.liftOntoSubspecs(PodSpec.lens.osx >•> trivialized))
+                .map(const([ ConfigSetting(name: SelectCase.osx.rawValue,
+						                   values: ["cpu": "powerpc2"]) ])) <>
+            (podSpec ^*
+                PodSpec.lens.liftOntoSubspecs(PodSpec.lens.tvos >•> trivialized))
+                .map(const([ ConfigSetting(name: SelectCase.tvos.rawValue,
+                                           values: ["cpu": "powerpc3"]) ])) <>
+            (podSpec ^*
+                PodSpec.lens.liftOntoSubspecs(PodSpec.lens.watchos >•> trivialized))
+                .map(const([ ConfigSetting(name: SelectCase.watchos.rawValue,
+                                           values: ["cpu": "powerpc4"]) ]))
+        ) ?? []
+        
+        // TODO(jerrymarino): Remove the runtime-type-cast when your fix lands
+        let libs: [SkylarkConvertible] =
+            executePruneRedundantCompilationTransform(libs:
+                [rootLib] +
+                    (subspecTargets.flatMap{ $0 as? ObjcLibrary})
+            )
+        
+        return configs + libs
     }
 
     // In Cocoapods, all internal targets are flatted to a single target
@@ -206,30 +156,4 @@ func headersAndSources(fromSourceFilePatterns patterns: [String]) -> SourceFileP
         }
     }
     return (headers, sourceFiles)
-}
-
-// This is domain specific to bazel. Bazel's "glob" can't support wild cards so add
-// multiple entries instead of {m, cpp}
-// @see GlobUtils for further docs
-private func getCompiledSource(fromPatterns patterns: [String]) -> [String] {
-    var sourceFiles = [String]()
-    for sourceFilePattern in patterns {
-        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "m") {
-            sourceFiles.append(impl)
-        }
-        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "mm") {
-            sourceFiles.append(impl)
-        }
-        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "cpp") {
-            sourceFiles.append(impl)
-        }
-        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "c") {
-            sourceFiles.append(impl)
-        }
-    }
-    return sourceFiles
-}
-
-private func bazelLabel(fromString string: String) -> String {
-    return string.replacingOccurrences(of: "\\/", with: "_").replacingOccurrences(of: "-", with: "_")
 }
