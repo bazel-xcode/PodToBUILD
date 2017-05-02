@@ -95,15 +95,9 @@ struct ShellContext {
 }
 
 func main() {
-
     _ = CrashReporter()
-    if CommandLine.arguments.count < 2 {
-        // First, log a JSON rep of a Pod spec
-        // pod spec cat PINCache
-        print("Usage: PodspecName")
-        exit(0)
-    }
-    let shell = ShellContext(trace: false)
+    let buildOptions = BasicBuildOptions.parse(args: CommandLine.arguments)
+    let shell = ShellContext(trace: buildOptions.trace)
     let whichPod = shell.command("/bin/bash", arguments: ["-l", "-c", "which pod"]) as String
     if whichPod.isEmpty {
         print("RepoTools requires a cocoapod installation on host")
@@ -137,7 +131,7 @@ func main() {
     // Create a directory structure condusive to <> imports
     // - Get all of the paths matching wild card imports
     // - Put them into the public header directory
-    let buildFile = PodBuildFile.with(podSpec: podSpec)
+    let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)
     buildFile.skylarkConvertibles.flatMap { $0 as? RepoTools.ObjcLibrary }
         .flatMap { $0.headers }
         .flatMap { podGlob(pattern: $0) }

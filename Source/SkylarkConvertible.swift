@@ -12,6 +12,7 @@ import Foundation
 public protocol SkylarkConvertible {
     func toSkylark() -> SkylarkNode
 }
+
 extension SkylarkNode: SkylarkConvertible {
     public func toSkylark() -> SkylarkNode {
         return self

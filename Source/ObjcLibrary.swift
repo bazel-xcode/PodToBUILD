@@ -60,9 +60,12 @@ func fixDependencyNames(rootName: String) -> ([String]) -> [String]  {
     } }
 }
 
+enum ObjcLibraryConfigurableKeys : String {
+    case copts
+}
 
 // ObjcLibrary is an intermediate rep of an objc library
-struct ObjcLibrary: BazelTarget {
+struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     var name: String
     var externalName: String
     var sourceFiles: [String]
@@ -104,7 +107,6 @@ struct ObjcLibrary: BazelTarget {
         return string.replacingOccurrences(of: "\\/", with: "_").replacingOccurrences(of: "-", with: "_")
     }
     
-    
     init(rootName: String, spec: PodSpec, extraDeps: [String] = []) {
         let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: spec.sourceFiles)
         
@@ -126,7 +128,28 @@ struct ObjcLibrary: BazelTarget {
         self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.name)-\(k)" } })
         self.excludedSource = getCompiledSource(fromPatterns: spec.excludeFiles)
     }
-    
+
+    mutating func add(configurableKey: String, value: Any) {
+        if let key = ObjcLibraryConfigurableKeys(rawValue: configurableKey) {
+            switch key {
+            case .copts:
+                if let value = value as? String {
+                    self.copts = self.copts <> AttrSet(basic: [value])
+                }
+            }
+        }
+    }
+
+    // MARK: Source Excludable
+
+    var excludableSourceFiles: [String] {
+        return sourceFiles
+    }
+
+    mutating func addExcludedSourceFile(sourceFile: String) {
+        excludedSource += [sourceFile]
+    }
+
     // MARK: - Bazel Rendering
 
     func toSkylark() -> SkylarkNode {
@@ -265,4 +288,27 @@ func getCompiledSource(fromPatterns patterns: [String]) -> [String] {
         }
     }
     return sourceFiles
+}
+
+typealias SourceFilePatternRep = (headers: [String], sourceFiles: [String])
+
+// Extract Headers and Source Files
+// @see getCompiledSource for further docs
+func headersAndSources(fromSourceFilePatterns patterns: [String]) -> SourceFilePatternRep {
+    var headers = [String]()
+    var sourceFiles = [String]()
+    for sourceFilePattern in patterns {
+        if sourceFilePattern.contains("[") || sourceFilePattern.contains("}") || sourceFilePattern.contains("?") {
+            if let header = pattern(fromPattern: sourceFilePattern, includingFileType: "h") {
+                headers.append(header)
+            }
+
+            sourceFiles += getCompiledSource(fromPatterns: [sourceFilePattern])
+        } else if sourceFilePattern.hasSuffix("m") {
+            sourceFiles.append(sourceFilePattern)
+        } else if sourceFilePattern.hasSuffix("h") {
+            headers.append(sourceFilePattern)
+        }
+    }
+    return (headers, sourceFiles)
 }

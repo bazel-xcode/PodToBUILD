@@ -97,10 +97,16 @@ class BuildFileTests: XCTestCase {
     }
 
     private func executePruneRedundantCompilationTransform(libs: [ObjcLibrary]) -> [String: ObjcLibrary] {
-        let transformed = PodBuildFile.executePruneRedundantCompilationTransform(libs: libs)
+        let opts = BasicBuildOptions(podName: "",
+                                     userOptions: [String](),
+                                     globalCopts: [String](),
+                                     trace: false
+                                        )
+        let transformed  = RedundantCompiledSourceTransform.transform(convertibles: libs, options: opts)
         var libByName = [String: ObjcLibrary]()
-        for lib in transformed {
-            libByName[lib.name] = lib
+        transformed.forEach {
+                let t = ($0 as! ObjcLibrary)
+                libByName[t.name] = t
         }
         return libByName
     }

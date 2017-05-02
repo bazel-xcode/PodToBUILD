@@ -45,6 +45,12 @@ def pch_with_name_hint(hint):
     return None
 """
 
+global_copts = [
+    # TODO: Enable modules ( Jerry )
+    # Disable all warnings
+    "-Wno-everything",
+]
+
 def _impl(repository_ctx):
     if repository_ctx.attr.trace:
         print("__RUN with repository_ctx", repository_ctx.attr)
@@ -90,6 +96,15 @@ def _impl(repository_ctx):
         # Set the first argument for RepoTool to "target_name"
         if cmd_path == "RepoTool":
             transformed_command.append(target_name)
+            for user_option in repository_ctx.attr.user_options:
+                transformed_command.append("--user_option")
+                transformed_command.append(user_option)
+            for global_copt in global_copts:
+                transformed_command.append("--global_copt")
+                transformed_command.append(global_copt)
+            if repository_ctx.attr.trace:
+                transformed_command.append("--trace")
+                transformed_command.append("true")
         _exec(repository_ctx, transformed_command)
         idx = idx + 1
     build_file_content = repository_ctx.attr.build_file_content
@@ -106,6 +121,7 @@ pod_repo_ = repository_rule(
             "target_name": attr.string(mandatory=True),
             "url": attr.string(mandatory=True),
             "strip_prefix": attr.string(),
+            "user_options": attr.string_list(),
             "build_file_content": attr.string(mandatory=True),
             "repo_tools_labels": attr.label_list(),
             "repo_tool_dict": attr.string_dict(),
@@ -158,6 +174,7 @@ def new_pod_repository(name,
                        url,
                        owner,
                        strip_prefix = "",
+                       user_options = [],
                        build_file_content = "",
                        cmds = { "0" : ["RepoTool"] },
                        repo_tools = { "//tools/PodSpecToBUILD/bin:RepoTools"  : "RepoTool" },
@@ -170,6 +187,7 @@ def new_pod_repository(name,
             name = name,
             target_name = name,
             url = url,
+            user_options = user_options,
             strip_prefix = strip_prefix,
             build_file_content =  build_file_content,
             command_dict = cmds,
