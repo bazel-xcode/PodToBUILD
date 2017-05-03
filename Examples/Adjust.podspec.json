@@ -1,8 +1,8 @@
 {
   "name": "Adjust",
-  "version": "4.3.0",
+  "version": "4.11.3",
   "summary": "This is the iOS SDK of adjust. You can read more about it at http://adjust.com.",
-  "homepage": "http://adjust.com",
+  "homepage": "https://github.com/adjust/ios_sdk",
   "license": {
     "type": "MIT",
     "file": "MIT-LICENSE"
@@ -12,16 +12,22 @@
   },
   "source": {
     "git": "https://github.com/adjust/ios_sdk.git",
-    "tag": "v4.3.0"
+    "tag": "v4.11.3"
   },
   "platforms": {
-    "ios": "5.0"
+    "ios": "6.0",
+    "tvos": "9.0"
   },
   "frameworks": "SystemConfiguration",
-  "weak_frameworks": [
-    "AdSupport",
-    "iAd"
-  ],
+  "ios": {
+    "weak_frameworks": [
+      "AdSupport",
+      "iAd"
+    ]
+  },
+  "tvos": {
+    "weak_frameworks": "AdSupport"
+  },
   "requires_arc": true,
   "default_subspecs": "Core",
   "subspecs": [
@@ -44,6 +50,15 @@
     {
       "name": "Criteo",
       "source_files": "plugin/Criteo/*.{h,m}",
+      "dependencies": {
+        "Adjust/Core": [
+
+        ]
+      }
+    },
+    {
+      "name": "Trademob",
+      "source_files": "plugin/Trademob/*.{h,m}",
       "dependencies": {
         "Adjust/Core": [
 

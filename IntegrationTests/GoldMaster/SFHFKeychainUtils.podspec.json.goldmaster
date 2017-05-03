@@ -1,0 +1,10 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "SFHFKeychainUtils",
+  sdk_frameworks = [
+    "Security"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

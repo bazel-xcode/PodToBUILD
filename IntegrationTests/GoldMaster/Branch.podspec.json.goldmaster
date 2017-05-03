@@ -1,0 +1,86 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "Branch",
+  deps = [
+    ":Branch_Core",
+    ":Branch_without_IDFA"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Branch_Core_source_headers = glob(
+  [
+    "Branch-SDK/Branch-SDK/*.h",
+    "Branch-SDK/Branch-SDK/Requests/*.h",
+    "Branch-SDK/Fabric/*.h"
+  ]
+  )
+Branch_Core_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Branch_Core_headers = Branch_Core_source_headers + Branch_Core_extra_headers
+objc_library(
+  name = "Branch_Core",
+  srcs = glob(
+    [
+      "Branch-SDK/Branch-SDK/*.m",
+      "Branch-SDK/Branch-SDK/Requests/*.m"
+    ]
+    ),
+  hdrs = Branch_Core_headers,
+  pch = pch_with_name_hint(
+    "Branch"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Branch/"
+  ],
+  sdk_frameworks = [
+    "AdSupport",
+    "CoreTelephony",
+    "MobileCoreServices"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Branch_without_IDFA_source_headers = glob(
+  [
+    "Branch-SDK/Branch-SDK/*.h",
+    "Branch-SDK/Branch-SDK/Requests/*.h",
+    "Branch-SDK/Fabric/*.h"
+  ]
+  )
+Branch_without_IDFA_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Branch_without_IDFA_headers = Branch_without_IDFA_source_headers + Branch_without_IDFA_extra_headers
+objc_library(
+  name = "Branch_without_IDFA",
+  srcs = glob(
+    [
+      "Branch-SDK/Branch-SDK/*.m",
+      "Branch-SDK/Branch-SDK/Requests/*.m"
+    ]
+    ),
+  hdrs = Branch_without_IDFA_headers,
+  pch = pch_with_name_hint(
+    "Branch"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Branch/"
+  ],
+  sdk_frameworks = [
+    "CoreTelephony",
+    "MobileCoreServices"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

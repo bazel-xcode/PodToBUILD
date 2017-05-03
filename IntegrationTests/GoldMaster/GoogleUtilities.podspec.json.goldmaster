@@ -1,0 +1,34 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "GoogleUtilities",
+  sdk_frameworks = [
+    "AddressBook",
+    "CoreGraphics"
+  ],
+  sdk_dylibs = [
+    "z"
+  ],
+  deps = [
+    ":GoogleUtilities_VendoredFrameworks",
+    "@GoogleSymbolUtilities//:GoogleSymbolUtilities"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "GoogleUtilities_VendoredFrameworks",
+  framework_imports = glob(
+    [
+      "Frameworks/frameworks/GoogleUtilities.framework/**"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )

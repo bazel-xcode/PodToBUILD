@@ -1,0 +1,35 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+kingpin_source_headers = glob(
+  [
+    "kingpin/*.h"
+  ]
+  )
+kingpin_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+kingpin_headers = kingpin_source_headers + kingpin_extra_headers
+objc_library(
+  name = "kingpin",
+  srcs = glob(
+    [
+      "kingpin/*.m"
+    ]
+    ),
+  hdrs = kingpin_headers,
+  pch = pch_with_name_hint(
+    "kingpin"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/kingpin/"
+  ],
+  sdk_frameworks = [
+    "MapKit",
+    "CoreLocation"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

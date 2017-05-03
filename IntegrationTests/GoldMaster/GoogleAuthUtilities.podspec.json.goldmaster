@@ -1,0 +1,32 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "GoogleAuthUtilities",
+  sdk_frameworks = [
+    "Security",
+    "SystemConfiguration"
+  ],
+  deps = [
+    ":GoogleAuthUtilities_VendoredFrameworks",
+    "@GoogleSymbolUtilities//:GoogleSymbolUtilities",
+    "@GoogleNetworkingUtilities//:GoogleNetworkingUtilities"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "GoogleAuthUtilities_VendoredFrameworks",
+  framework_imports = glob(
+    [
+      "Frameworks/frameworks/GoogleAuthUtilities.framework/**"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )

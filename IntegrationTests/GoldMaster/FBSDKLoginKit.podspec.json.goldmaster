@@ -1,0 +1,48 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+FBSDKLoginKit_source_headers = glob(
+  [
+    "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
+  ]
+  )
+FBSDKLoginKit_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+FBSDKLoginKit_headers = FBSDKLoginKit_source_headers + FBSDKLoginKit_extra_headers
+objc_library(
+  name = "FBSDKLoginKit",
+  srcs = glob(
+    [
+      "FBSDKLoginKit/FBSDKLoginKit/**/*.m"
+    ]
+    ),
+  hdrs = FBSDKLoginKit_headers,
+  pch = pch_with_name_hint(
+    "FBSDKLoginKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/FBSDKLoginKit/"
+  ],
+  weak_sdk_frameworks = [
+    "Accounts",
+    "CoreLocation",
+    "Social",
+    "Security",
+    "QuartzCore",
+    "CoreGraphics",
+    "UIKit",
+    "Foundation",
+    "AudioToolbox"
+  ],
+  deps = [
+    "@FBSDKCoreKit//:FBSDKCoreKit"
+  ],
+  copts = [
+    "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

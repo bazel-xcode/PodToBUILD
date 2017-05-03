@@ -1,0 +1,74 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+config_setting(
+  name = "tvosCase",
+  values = {
+    "cpu": "powerpc3"
+  }
+  )
+FBSDKCoreKit_source_headers = glob(
+  [
+    "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+  ]
+  )
+FBSDKCoreKit_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+FBSDKCoreKit_headers = FBSDKCoreKit_source_headers + FBSDKCoreKit_extra_headers
+objc_library(
+  name = "FBSDKCoreKit",
+  srcs = glob(
+    [
+      "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+    ]
+    ),
+  hdrs = FBSDKCoreKit_headers,
+  pch = pch_with_name_hint(
+    "FBSDKCoreKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/FBSDKCoreKit/"
+  ],
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "Accounts",
+        "CoreLocation",
+        "Social",
+        "Security",
+        "QuartzCore",
+        "CoreGraphics",
+        "UIKit",
+        "Foundation",
+        "AudioToolbox"
+      ],
+      ":tvosCase": [
+        "CoreLocation",
+        "Security",
+        "QuartzCore",
+        "CoreGraphics",
+        "UIKit",
+        "Foundation",
+        "AudioToolbox"
+      ]
+    }
+    ),
+  deps = select(
+    {
+      "//conditions:default": [
+        "@Bolts//:Bolts"
+      ]
+    }
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )

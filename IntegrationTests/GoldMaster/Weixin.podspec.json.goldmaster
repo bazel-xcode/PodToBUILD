@@ -1,0 +1,44 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+Weixin_source_headers = glob(
+  [
+    "SDK1.6.2/*.h"
+  ]
+  )
+Weixin_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Weixin_headers = Weixin_source_headers + Weixin_extra_headers
+objc_library(
+  name = "Weixin",
+  hdrs = Weixin_headers,
+  pch = pch_with_name_hint(
+    "Weixin"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Weixin/"
+  ],
+  sdk_frameworks = [
+    "CoreTelephony",
+    "SystemConfiguration"
+  ],
+  sdk_dylibs = [
+    "c++",
+    "sqlite3",
+    "z"
+  ],
+  deps = [
+    ":Weixin_VendoredLibraries"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_import(
+  name = "Weixin_VendoredLibraries",
+  archives = [
+    "SDK1.6.2/libWeChatSDK.a"
+  ]
+  )

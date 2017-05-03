@@ -1,0 +1,71 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+Stripe_source_headers = glob(
+  [
+    "Stripe/PublicHeaders/*.h",
+    "Stripe/*.h"
+  ]
+  )
+Stripe_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Stripe_headers = Stripe_source_headers + Stripe_extra_headers
+objc_library(
+  name = "Stripe",
+  srcs = glob(
+    [
+      "Stripe/*.m"
+    ]
+    ),
+  hdrs = Stripe_headers,
+  pch = pch_with_name_hint(
+    "Stripe"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Stripe/"
+  ],
+  sdk_frameworks = [
+    "Foundation",
+    "Security",
+    "WebKit",
+    "PassKit",
+    "AddressBook"
+  ],
+  deps = [
+    ":Stripe_Bundle_Stripe"
+  ],
+  bundles = select(
+    {
+      "//conditions:default": [
+        ":Stripe_Bundle_Stripe"
+      ]
+    }
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_bundle_library(
+  name = "Stripe_Bundle_Stripe",
+  resources = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Stripe/Resources/**/*"
+        ],
+        exclude = [
+
+        ],
+        exclude_directories = 1
+        )
+    }
+    )
+  )

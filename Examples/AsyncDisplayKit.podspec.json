@@ -1,6 +1,6 @@
 {
   "name": "AsyncDisplayKit",
-  "version": "2.2",
+  "version": "2.2.1",
   "license": {
     "type": "BSD"
   },
@@ -11,8 +11,9 @@
   "summary": "Smooth asynchronous user interfaces for iOS apps.",
   "source": {
     "git": "https://github.com/facebook/AsyncDisplayKit.git",
-    "tag": "2.2"
+    "tag": "2.2.1"
   },
+  "deprecated_in_favor_of": "Texture",
   "documentation_url": "http://asyncdisplaykit.org/appledoc/",
   "weak_frameworks": [
     "Photos",
@@ -33,20 +34,20 @@
   "subspecs": [
     {
       "name": "Core",
-      "prefix_header_file": "Source/AsyncDisplayKit-Prefix.pch",
+      "prefix_header_file": "AsyncDisplayKit/AsyncDisplayKit-Prefix.pch",
       "public_header_files": [
-        "Source/*.h",
-        "Source/Details/**/*.h",
-        "Source/Layout/**/*.h",
-        "Source/Base/*.h",
-        "Source/Debug/AsyncDisplayKit+Debug.h",
-        "Source/TextKit/ASTextNodeTypes.h",
-        "Source/TextKit/ASTextKitComponents.h"
+        "AsyncDisplayKit/*.h",
+        "AsyncDisplayKit/Details/**/*.h",
+        "AsyncDisplayKit/Layout/**/*.h",
+        "Base/*.h",
+        "AsyncDisplayKit/Debug/ASLayoutElementInspectorNode.h",
+        "AsyncDisplayKit/TextKit/ASTextNodeTypes.h",
+        "AsyncDisplayKit/TextKit/ASTextKitComponents.h"
       ],
       "source_files": [
-        "Source/**/*.{h,m,mm}",
+        "AsyncDisplayKit/**/*.{h,m,mm}",
         "Base/*.{h,m}",
-        "Source/TextKit/*.h"
+        "AsyncDisplayKit/TextKit/*.h"
       ],
       "xcconfig": {
         "GCC_PRECOMPILE_PREFIX_HEADER": "YES"

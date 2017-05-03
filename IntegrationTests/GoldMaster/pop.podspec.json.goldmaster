@@ -1,0 +1,40 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+pop_source_headers = glob(
+  [
+    "pop/**/*.h"
+  ]
+  )
+pop_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+pop_headers = pop_source_headers + pop_extra_headers
+objc_library(
+  name = "pop",
+  srcs = glob(
+    [
+      "pop/**/*.m",
+      "pop/**/*.mm",
+      "pop/**/*.cpp"
+    ]
+    ),
+  hdrs = pop_headers,
+  pch = pch_with_name_hint(
+    "pop"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/pop/"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

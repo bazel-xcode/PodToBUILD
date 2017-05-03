@@ -99,6 +99,10 @@ extension Optional where Wrapped: Monoid & EmptyAwareness {
     func normalize() -> Optional {
         return flatMap { $0.isEmpty ? nil : $0 }
     }
+
+    func denormalize() -> Wrapped {
+        return self ?? Wrapped.empty
+    }
 }
 
 extension String: EmptyAwareness {}

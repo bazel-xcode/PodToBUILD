@@ -1,7 +1,7 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
 Smartling_source_headers = glob(
   [
-    "SmartlingSDK/*.h"
+    "*.h"
   ]
   )
 Smartling_extra_headers = glob(
@@ -12,11 +12,6 @@ Smartling_extra_headers = glob(
 Smartling_headers = Smartling_source_headers + Smartling_extra_headers
 objc_library(
   name = "Smartling",
-  srcs = glob(
-    [
-      "SmartlingSDK/*.m"
-    ]
-    ),
   hdrs = Smartling_headers,
   pch = pch_with_name_hint(
     "Smartling"
@@ -27,6 +22,9 @@ objc_library(
   ],
   sdk_frameworks = [
     "UIKit"
+  ],
+  sdk_dylibs = [
+    "Smartling"
   ],
   visibility = [
     "//visibility:public"

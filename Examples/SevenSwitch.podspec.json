@@ -1,6 +1,6 @@
 {
   "name": "SevenSwitch",
-  "version": "1.4.0",
+  "version": "2.1.0",
   "summary": "iOS7 style drop in replacement for UISwitch.",
   "homepage": "https://github.com/bvogelzang/SevenSwitch",
   "screenshots": [
@@ -12,20 +12,21 @@
     "file": "LICENSE"
   },
   "authors": {
-    "Ben Vogelzang": "bvogelzang@breuer.com"
+    "Ben Vogelzang": "ben.vogelzang@veracross.com"
   },
   "source": {
     "git": "https://github.com/bvogelzang/SevenSwitch.git",
-    "tag": "1.4.0"
+    "tag": "2.1.0"
   },
   "platforms": {
-    "ios": "5.0"
+    "ios": "8.0"
   },
-  "source_files": "SevenSwitch.{h,m}",
+  "source_files": "SevenSwitch.swift",
   "exclude_files": "Classes/Exclude",
   "frameworks": [
     "UIKit",
     "QuartzCore"
   ],
-  "requires_arc": true
+  "requires_arc": true,
+  "pushed_with_swift_version": "3.0"
 }

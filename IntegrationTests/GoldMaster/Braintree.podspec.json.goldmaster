@@ -1,0 +1,521 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "Braintree",
+  deps = [
+    ":Braintree_Core",
+    ":Braintree_Apple_Pay",
+    ":Braintree_Card",
+    ":Braintree_DataCollector",
+    ":DataCollector_VendoredLibraries",
+    ":Braintree_PayPal",
+    ":Braintree_Venmo",
+    ":UI_Bundle_Braintree_UI_Localization",
+    ":UI_Bundle_Braintree_Drop_In_Localization",
+    ":Braintree_UI",
+    ":Braintree_UnionPay",
+    ":3D_Secure_Bundle_Braintree_3D_Secure_Localization",
+    ":Braintree_3D_Secure",
+    ":Braintree_PayPalOneTouch",
+    ":Braintree_PayPalDataCollector",
+    ":PayPalDataCollector_VendoredLibraries",
+    ":Braintree_PayPalUtils"
+  ],
+  copts = [
+    "-Wall -Werror -Wextra"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Braintree_Core_source_headers = glob(
+  [
+    "BraintreeCore/**/*.h"
+  ]
+  )
+Braintree_Core_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_Core_headers = Braintree_Core_source_headers + Braintree_Core_extra_headers
+objc_library(
+  name = "Braintree_Core",
+  srcs = glob(
+    [
+      "BraintreeCore/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_Core_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  sdk_frameworks = [
+    "AddressBook"
+  ],
+  weak_sdk_frameworks = [
+    "Contacts"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Braintree_Apple_Pay_source_headers = glob(
+  [
+    "BraintreeApplePay/**/*.h"
+  ]
+  )
+Braintree_Apple_Pay_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_Apple_Pay_headers = Braintree_Apple_Pay_source_headers + Braintree_Apple_Pay_extra_headers
+objc_library(
+  name = "Braintree_Apple_Pay",
+  srcs = glob(
+    [
+      "BraintreeApplePay/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_Apple_Pay_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  sdk_frameworks = [
+    "PassKit"
+  ],
+  deps = [
+    ":Braintree_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Braintree_Card_source_headers = glob(
+  [
+    "BraintreeCard/**/*.h"
+  ]
+  )
+Braintree_Card_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_Card_headers = Braintree_Card_source_headers + Braintree_Card_extra_headers
+objc_library(
+  name = "Braintree_Card",
+  srcs = glob(
+    [
+      "BraintreeCard/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_Card_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  deps = [
+    ":Braintree_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Braintree_DataCollector_source_headers = glob(
+  [
+    "BraintreeDataCollector/**/*.h"
+  ]
+  )
+Braintree_DataCollector_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_DataCollector_headers = Braintree_DataCollector_source_headers + Braintree_DataCollector_extra_headers
+objc_library(
+  name = "Braintree_DataCollector",
+  srcs = glob(
+    [
+      "BraintreeDataCollector/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_DataCollector_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  deps = [
+    ":DataCollector_VendoredLibraries",
+    ":Braintree_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_import(
+  name = "DataCollector_VendoredLibraries",
+  archives = [
+    "BraintreeDataCollector/Kount/libDeviceCollectorLibrary.a"
+  ]
+  )
+Braintree_PayPal_source_headers = glob(
+  [
+    "BraintreePayPal/*.h",
+    "BraintreePayPal/Public/*.h"
+  ]
+  )
+Braintree_PayPal_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_PayPal_headers = Braintree_PayPal_source_headers + Braintree_PayPal_extra_headers
+objc_library(
+  name = "Braintree_PayPal",
+  srcs = glob(
+    [
+      "BraintreePayPal/*.m"
+    ]
+    ),
+  hdrs = Braintree_PayPal_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  deps = [
+    ":Braintree_PayPalOneTouch",
+    ":Braintree_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Braintree_Venmo_source_headers = glob(
+  [
+    "BraintreeVenmo/**/*.h"
+  ]
+  )
+Braintree_Venmo_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_Venmo_headers = Braintree_Venmo_source_headers + Braintree_Venmo_extra_headers
+objc_library(
+  name = "Braintree_Venmo",
+  srcs = glob(
+    [
+      "BraintreeVenmo/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_Venmo_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  deps = [
+    ":Braintree_PayPalDataCollector",
+    ":Braintree_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_bundle_library(
+  name = "UI_Bundle_Braintree_UI_Localization",
+  resources = glob(
+    [
+      "BraintreeUI/Localization/*.lproj"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    )
+  )
+objc_bundle_library(
+  name = "UI_Bundle_Braintree_Drop_In_Localization",
+  resources = glob(
+    [
+      "BraintreeUI/Drop-In/Localization/*.lproj"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    )
+  )
+Braintree_UI_source_headers = glob(
+  [
+    "BraintreeUI/**/*.h"
+  ]
+  )
+Braintree_UI_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_UI_headers = Braintree_UI_source_headers + Braintree_UI_extra_headers
+objc_library(
+  name = "Braintree_UI",
+  srcs = glob(
+    [
+      "BraintreeUI/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_UI_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  sdk_frameworks = [
+    "UIKit"
+  ],
+  deps = [
+    ":Braintree_Card",
+    ":Braintree_Core"
+  ],
+  bundles = [
+    ":UI_Bundle_Braintree_UI_Localization",
+    ":UI_Bundle_Braintree_Drop_In_Localization"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Braintree_UnionPay_source_headers = glob(
+  [
+    "BraintreeUnionPay/**/*.h"
+  ]
+  )
+Braintree_UnionPay_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_UnionPay_headers = Braintree_UnionPay_source_headers + Braintree_UnionPay_extra_headers
+objc_library(
+  name = "Braintree_UnionPay",
+  srcs = glob(
+    [
+      "BraintreeUnionPay/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_UnionPay_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  sdk_frameworks = [
+    "UIKit"
+  ],
+  deps = [
+    ":Braintree_Card",
+    ":Braintree_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_bundle_library(
+  name = "3D_Secure_Bundle_Braintree_3D_Secure_Localization",
+  resources = glob(
+    [
+      "Braintree3DSecure/Localization/*.lproj"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    )
+  )
+Braintree_3D_Secure_source_headers = glob(
+  [
+    "Braintree3DSecure/**/*.h"
+  ]
+  )
+Braintree_3D_Secure_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_3D_Secure_headers = Braintree_3D_Secure_source_headers + Braintree_3D_Secure_extra_headers
+objc_library(
+  name = "Braintree_3D_Secure",
+  srcs = glob(
+    [
+      "Braintree3DSecure/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_3D_Secure_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  sdk_frameworks = [
+    "UIKit"
+  ],
+  deps = [
+    ":Braintree_Card",
+    ":Braintree_Core"
+  ],
+  bundles = [
+    ":3D_Secure_Bundle_Braintree_3D_Secure_Localization"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Braintree_PayPalOneTouch_source_headers = glob(
+  [
+    "BraintreePayPal/PayPalOneTouch/**/*.h"
+  ]
+  )
+Braintree_PayPalOneTouch_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_PayPalOneTouch_headers = Braintree_PayPalOneTouch_source_headers + Braintree_PayPalOneTouch_extra_headers
+objc_library(
+  name = "Braintree_PayPalOneTouch",
+  srcs = glob(
+    [
+      "BraintreePayPal/PayPalOneTouch/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_PayPalOneTouch_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  sdk_frameworks = [
+    "UIKit"
+  ],
+  weak_sdk_frameworks = [
+    "SafariServices"
+  ],
+  deps = [
+    ":Braintree_PayPalUtils",
+    ":Braintree_PayPalDataCollector",
+    ":Braintree_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Braintree_PayPalDataCollector_source_headers = glob(
+  [
+    "BraintreePayPal/PayPalDataCollector/**/*.h"
+  ]
+  )
+Braintree_PayPalDataCollector_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_PayPalDataCollector_headers = Braintree_PayPalDataCollector_source_headers + Braintree_PayPalDataCollector_extra_headers
+objc_library(
+  name = "Braintree_PayPalDataCollector",
+  srcs = glob(
+    [
+      "BraintreePayPal/PayPalDataCollector/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_PayPalDataCollector_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  sdk_frameworks = [
+    "MessageUI",
+    "SystemConfiguration",
+    "CoreLocation",
+    "UIKit"
+  ],
+  deps = [
+    ":PayPalDataCollector_VendoredLibraries",
+    ":Braintree_PayPalUtils",
+    ":Braintree_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_import(
+  name = "PayPalDataCollector_VendoredLibraries",
+  archives = [
+    "BraintreePayPal/PayPalDataCollector/Risk/libPPRiskComponent.a"
+  ]
+  )
+Braintree_PayPalUtils_source_headers = glob(
+  [
+    "BraintreePayPal/PayPalUtils/**/*.h"
+  ]
+  )
+Braintree_PayPalUtils_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Braintree_PayPalUtils_headers = Braintree_PayPalUtils_source_headers + Braintree_PayPalUtils_extra_headers
+objc_library(
+  name = "Braintree_PayPalUtils",
+  srcs = glob(
+    [
+      "BraintreePayPal/PayPalUtils/**/*.m"
+    ]
+    ),
+  hdrs = Braintree_PayPalUtils_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
+  sdk_frameworks = [
+    "MessageUI",
+    "SystemConfiguration",
+    "CoreLocation",
+    "UIKit"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

@@ -13,7 +13,7 @@ class WorkspaceTests: XCTestCase {
         let podSpec = examplePodSpecNamed(name: "FLAnimatedImage")
         let workspaceEntry = try! PodRepositoryWorkspaceEntry.with(podSpec: podSpec)
         XCTAssertEqual(workspaceEntry.name, "FLAnimatedImage")
-        XCTAssertEqual(workspaceEntry.url, "https://github.com/Flipboard/FLAnimatedImage/archive/1.0.12.zip")
+        XCTAssertEqual(workspaceEntry.url.absoluteString, "https://github.com/Flipboard/FLAnimatedImage/archive/1.0.12.zip")
         XCTAssertEqual(workspaceEntry.stripPrefix, "FLAnimatedImage-1.0.12")
     }
 }

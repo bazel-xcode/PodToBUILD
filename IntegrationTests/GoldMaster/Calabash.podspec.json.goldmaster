@@ -1,0 +1,20 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+objc_library(
+  name = "Calabash",
+  sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "CFNetwork"
+      ]
+    }
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )

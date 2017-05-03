@@ -1,0 +1,49 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+config_setting(
+  name = "tvosCase",
+  values = {
+    "cpu": "powerpc3"
+  }
+  )
+objc_library(
+  name = "FBSDKShareKit",
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "Accounts",
+        "AudioToolbox",
+        "CoreGraphics",
+        "CoreLocation",
+        "Foundation",
+        "QuartzCore",
+        "Security",
+        "Social",
+        "UIKit"
+      ],
+      ":tvosCase": [
+        "AudioToolbox",
+        "CoreGraphics",
+        "CoreLocation",
+        "Foundation",
+        "QuartzCore",
+        "Security",
+        "UIKit"
+      ]
+    }
+    ),
+  deps = [
+    "@FBSDKCoreKit//:FBSDKCoreKit"
+  ],
+  copts = [
+    "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

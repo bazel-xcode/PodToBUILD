@@ -28,31 +28,42 @@ enum WorkspaceError: Error {
 
 struct PodRepositoryWorkspaceEntry: SkylarkConvertible {
     var name: String
-    var url: String
+    var url: URL
     var stripPrefix: String
 
     func toSkylark() -> SkylarkNode {
         let repoSkylark = SkylarkNode.functionCall(name: "new_pod_repository", arguments: [
             .named(name: "name", value: .string(name)),
-            .named(name: "url", value: .string(url)),
+            .named(name: "url", value: .string(url.absoluteString)),
             .named(name: "strip_prefix", value: .string(stripPrefix)),
         ])
         return repoSkylark
     }
 
     static func with(podSpec: PodSpec) throws -> PodRepositoryWorkspaceEntry {
-        guard let source = podSpec.source,
-            let git = source.git,
-            let tag = source.tag
-        else {
+        guard let source = podSpec.source else {
             throw WorkspaceError.unsupportedSource
         }
-        if git.contains("github") == false {
+
+        switch source {
+        case let .git(url: gitURL, tag: .some(tag), commit: .none):
+            guard gitURL.absoluteString.contains("github") else {
+                throw WorkspaceError.unsupportedSource
+            }
+            guard let url = URL(string: "\(gitURL.deletingPathExtension().absoluteString)/archive/\(tag).zip") else {
+                throw WorkspaceError.unsupportedSource
+            }
+            
+            let guessedStripPrefix = "\(podSpec.name)-\(tag)"
+            return PodRepositoryWorkspaceEntry(name: podSpec.name, url: url, stripPrefix: guessedStripPrefix)
+        case .git(url: _, tag: .none, commit: .some(_)):
+            // TODO: Support commit hashes
+            throw WorkspaceError.unsupportedSource
+        case let .http(url: url):
+            let guessedStripPrefix = url.deletingPathExtension().lastPathComponent
+            return PodRepositoryWorkspaceEntry(name: podSpec.name, url: url, stripPrefix: guessedStripPrefix)
+        default:
             throw WorkspaceError.unsupportedSource
         }
-        let repoBaseURL = git.replacingOccurrences(of: ".git", with: "")
-        let url = "\(repoBaseURL)/archive/\(tag).zip"
-        let guessedStripPrefix = "\(podSpec.name)-\(tag)"
-        return PodRepositoryWorkspaceEntry(name: podSpec.name, url: url, stripPrefix: guessedStripPrefix)
     }
 }

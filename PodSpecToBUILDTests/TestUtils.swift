@@ -26,9 +26,13 @@ private func srcRoot() -> String {
     return componets[0 ... componets.count - 3].joined(separator: "/")
 }
 
-func examplePodSpecNamed(name: String) -> PodSpec {
+public func examplePodSpecFilePath(name: String) -> String {
     let dir = "\(srcRoot())/Examples/"
     let path = Bundle.path(forResource: "\(name).podspec", ofType: "json", inDirectory: dir)
-    let podSpec = podSpecWithFixture(JSONPodspecFilePath: path!)
+    return path!
+}
+
+public func examplePodSpecNamed(name: String) -> PodSpec {
+    let podSpec = podSpecWithFixture(JSONPodspecFilePath: examplePodSpecFilePath(name: name))
     return podSpec
 }

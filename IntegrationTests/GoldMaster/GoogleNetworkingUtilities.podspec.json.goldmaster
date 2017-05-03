@@ -1,0 +1,30 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "GoogleNetworkingUtilities",
+  sdk_frameworks = [
+    "Security"
+  ],
+  deps = [
+    ":GoogleNetworkingUtilities_VendoredFrameworks",
+    "@GoogleSymbolUtilities//:GoogleSymbolUtilities"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "GoogleNetworkingUtilities_VendoredFrameworks",
+  framework_imports = glob(
+    [
+      "Frameworks/frameworks/GoogleNetworkingUtilities.framework/**"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )

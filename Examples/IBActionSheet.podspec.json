@@ -1,6 +1,6 @@
 {
   "name": "IBActionSheet",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "summary": "Customizable iOS 7 style UIActionSheet",
   "homepage": "https://github.com/ianb821/IBActionSheet",
   "license": {
@@ -14,8 +14,8 @@
     "ios": "5.0"
   },
   "source": {
-    "git": "https://github.com/ianb821/IBActionSheet.git",
-    "tag": "0.0.2"
+    "git": "https://github.com/irtemed88/IBActionSheet.git",
+    "tag": "0.0.4"
   },
   "source_files": "IBActionSheetSample/IBActionSheetSample/IBActionSheet.{h,m}",
   "frameworks": "QuartzCore",

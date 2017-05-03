@@ -25,9 +25,9 @@ objc_library(
   )
 AsyncDisplayKit_Core_source_headers = glob(
   [
-    "Source/**/*.h",
+    "AsyncDisplayKit/**/*.h",
     "Base/*.h",
-    "Source/TextKit/*.h"
+    "AsyncDisplayKit/TextKit/*.h"
   ]
   )
 AsyncDisplayKit_Core_extra_headers = glob(
@@ -40,8 +40,8 @@ objc_library(
   name = "AsyncDisplayKit_Core",
   srcs = glob(
     [
-      "Source/**/*.m",
-      "Source/**/*.mm",
+      "AsyncDisplayKit/**/*.m",
+      "AsyncDisplayKit/**/*.mm",
       "Base/*.m"
     ]
     ),

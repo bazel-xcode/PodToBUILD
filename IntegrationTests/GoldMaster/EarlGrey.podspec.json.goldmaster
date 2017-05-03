@@ -1,0 +1,49 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+objc_library(
+  name = "EarlGrey",
+  sdk_frameworks = [
+    "CoreData",
+    "CoreFoundation",
+    "CoreGraphics",
+    "Foundation",
+    "IOKit",
+    "QuartzCore",
+    "UIKit",
+    "XCTest"
+  ],
+  deps = [
+    ":EarlGrey_VendoredFrameworks"
+  ],
+  copts = [
+    "-fobjc-arc-exceptions"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "EarlGrey_VendoredFrameworks",
+  framework_imports = select(
+    {
+      "//conditions:default": glob(
+        [
+          "EarlGrey/EarlGrey.framework/**"
+        ],
+        exclude = [
+
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )

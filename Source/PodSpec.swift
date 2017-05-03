@@ -109,11 +109,12 @@ public enum PodSpecField: String {
     case podTargetXcconfig = "pod_target_xcconfig"
     case userTargetXcconfig = "user_target_xcconfig"
     case xcconfig // Legacy
-
     case ios
     case osx
     case tvos
     case watchos
+    case vendoredFrameworks = "vendored_frameworks"
+    case vendoredLibraries = "vendored_libraries"
 }
 
 protocol PodSpecRepresentable {
@@ -126,11 +127,18 @@ protocol PodSpecRepresentable {
     var compilerFlags: [String] { get }
     var source: PodSpecSource? { get }
     var libraries: [String] { get }
-    
     var resourceBundles: [String: [String]] { get }
+    var vendoredFrameworks: [String] { get }
+    var vendoredLibraries: [String] { get }
+}
+
+public enum PodSpecType {
+    case Spec
+    case Subspec
 }
 
 public struct PodSpec: PodSpecRepresentable {
+    let specType: PodSpecType
     let name: String
     let sourceFiles: [String]
     let excludeFiles: [String]
@@ -143,6 +151,9 @@ public struct PodSpec: PodSpecRepresentable {
     let libraries: [String]
 
     let publicHeaders: [String]
+
+    let vendoredFrameworks: [String]
+    let vendoredLibraries: [String]
 
     // TODO: Support resource / resources properties as well
     let resourceBundles: [String: [String]]
@@ -158,7 +169,7 @@ public struct PodSpec: PodSpecRepresentable {
 
     let prepareCommand = ""
 
-    public init(JSONPodspec: JSONDict) throws {
+    public init(JSONPodspec: JSONDict, podSpecType: PodSpecType = .Spec) throws {
 
         let fieldMap: [PodSpecField: Any] = JSONPodspec.flatMap { k, v in
             guard let field = PodSpecField.init(rawValue: k) else {
@@ -178,6 +189,7 @@ public struct PodSpec: PodSpecRepresentable {
             // This is for "ios", "macos", etc
             name = ""
         }
+        specType = podSpecType
         frameworks = strings(fromJSON: fieldMap[.frameworks])
         weakFrameworks = strings(fromJSON: fieldMap[.weakFrameworks])
         excludeFiles = strings(fromJSON: fieldMap[.excludeFiles])
@@ -185,6 +197,10 @@ public struct PodSpec: PodSpecRepresentable {
         publicHeaders = strings(fromJSON: fieldMap[.publicHeaders])
         compilerFlags = strings(fromJSON: fieldMap[.compilerFlags])
         libraries = strings(fromJSON: fieldMap[.libraries])
+
+        vendoredFrameworks = strings(fromJSON: fieldMap[.vendoredFrameworks])
+        vendoredLibraries = strings(fromJSON: fieldMap[.vendoredLibraries])
+
         if let podSubspecDependencies = fieldMap[.dependencies] as? JSONDict {
             dependencies = Array(podSubspecDependencies.keys)
         } else {
@@ -204,13 +220,13 @@ public struct PodSpec: PodSpecRepresentable {
         }
 
         if let JSONPodSubspecs = fieldMap[.subspecs] as? [JSONDict] {
-            subspecs = try JSONPodSubspecs.map { try PodSpec(JSONPodspec: $0) }
+            subspecs = try JSONPodSubspecs.map { try PodSpec(JSONPodspec: $0, podSpecType: .Subspec) }
         } else {
             subspecs = []
         }
 
         if let JSONSource = fieldMap[.source] as? JSONDict {
-            source = try? PodSpecSource(JSONSource: JSONSource)
+            source = PodSpecSource.source(fromDict: JSONSource)
         } else {
             source = nil
         }
@@ -271,7 +287,15 @@ extension PodSpec {
         static let watchos: Lens<PodSpec, PodSpecRepresentable?> = {
             ReadonlyLens { $0.watchos }
         }()
-        
+
+        static let vendoredLibraries: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.vendoredLibraries }
+        }()
+
+        static let vendoredFrameworks: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.vendoredFrameworks }
+        }()
+
         static func liftOntoSubspecs<Part: Semigroup>(_ lens: Lens<PodSpec, Part?>) -> Lens<PodSpec, Part?> {
             return ReadonlyLens { whole in
                 (whole ^* lens) <> sfold(whole.subspecs.map{ $0 ^* lens })
@@ -282,15 +306,26 @@ extension PodSpec {
 
 // The source component of a PodSpec
 // @note currently only git is supported
-public struct PodSpecSource {
-    let git: String?
-    let tag: String?
-    let commit: String?
+public enum PodSpecSource {
+    case git(url: URL, tag: String?, commit: String?)
+    case http(url: URL)
 
-    init(JSONSource: JSONDict) throws {
-        git = try ExtractValue(fromJSON: JSONSource["git"])
-        tag = try? ExtractValue(fromJSON: JSONSource["tag"])
-        commit = try? ExtractValue(fromJSON: JSONSource["commit"])
+    static func source(fromDict dict: JSONDict) -> PodSpecSource {
+        if let gitURLString: String = try? ExtractValue(fromJSON: dict["git"])  {
+            guard let gitURL = URL(string: gitURLString) else {
+                fatalError("Invalid source URL for Git: \(gitURLString)")
+            }
+            let tag: String? = try? ExtractValue(fromJSON: dict["tag"])
+            let commit: String? = try? ExtractValue(fromJSON: dict["commit"])
+            return .git(url: gitURL, tag: tag, commit: commit)
+        } else if let httpURLString: String = try? ExtractValue(fromJSON: dict["http"]) {
+            guard let httpURL = URL(string: httpURLString) else {
+                fatalError("Invalid source URL for HTTP: \(httpURLString)")
+            }
+            return .http(url: httpURL)
+        } else {
+            fatalError("Unsupported source for PodSpec - \(dict)")
+        }
     }
 }
 
@@ -321,3 +356,4 @@ fileprivate func strings(fromJSON JSONValue: Any? = nil) -> [String] {
     }
     return [String]()
 }
+

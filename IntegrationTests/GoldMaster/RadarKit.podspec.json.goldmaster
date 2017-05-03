@@ -1,0 +1,35 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+RadarKit_source_headers = glob(
+  [
+    "RadarKit/*.h"
+  ]
+  )
+RadarKit_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+RadarKit_headers = RadarKit_source_headers + RadarKit_extra_headers
+objc_library(
+  name = "RadarKit",
+  srcs = glob(
+    [
+      "RadarKit/*.m"
+    ]
+    ),
+  hdrs = RadarKit_headers,
+  pch = pch_with_name_hint(
+    "RadarKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/RadarKit/"
+  ],
+  sdk_frameworks = [
+    "Foundation",
+    "SystemConfiguration"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

@@ -1,0 +1,35 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "GoogleSignIn",
+  sdk_frameworks = [
+    "CoreText",
+    "SafariServices",
+    "Security"
+  ],
+  deps = [
+    ":GoogleSignIn_VendoredFrameworks",
+    "@GoogleToolboxForMac/NSString+URLArguments//:GoogleToolboxForMac/NSString+URLArguments",
+    "@GTMOAuth2//:GTMOAuth2",
+    "@GoogleToolboxForMac/NSDictionary+URLArguments//:GoogleToolboxForMac/NSDictionary+URLArguments",
+    "@GTMSessionFetcher/Core//:GTMSessionFetcher/Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "GoogleSignIn_VendoredFrameworks",
+  framework_imports = glob(
+    [
+      "Frameworks/GoogleSignIn.framework/**"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )

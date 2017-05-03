@@ -31,30 +31,49 @@ public struct PodBuildFile {
         let libs = PodBuildFile.makeConvertables(fromPodspec: podSpec, buildOptions: buildOptions)
         return PodBuildFile(skylarkConvertibles: libs)
     }
-    
-    private static func bundleLibraries(withPodSpec spec: PodSpec) -> [ObjcBundleLibrary] {
-        return spec.resourceBundles.map { k, v in
-            ObjcBundleLibrary(name: "\(spec.name)_\(k)", resources: v)
+
+    private static func bundleLibraries(withPodSpec spec: PodSpec) -> [BazelTarget] {
+        let attrSet: AttrSet<[String: [String]]> = spec ^* liftToAttr(PodSpec.lens.resourceBundles)
+
+        return AttrSet<[String: [String]]>.sequence(attrSet: attrSet).map { k, v in
+            ObjcBundleLibrary(name: "\(spec.name)_Bundle_\(k)", resources: v)
         }
+    }
+
+    private static func vendoredFrameworks(withPodspec spec: PodSpec) -> [BazelTarget] {
+        let frameworks  = spec ^* liftToAttr(PodSpec.lens.vendoredFrameworks)
+        return frameworks.isEmpty ? [] : [ObjcFramework(name: "\(spec.name)_VendoredFrameworks", frameworkImports: frameworks)]
+    }
+
+    private static func vendoredLibraries(withPodspec spec: PodSpec) -> [BazelTarget] {
+        let libraries  = spec ^* liftToAttr(PodSpec.lens.vendoredLibraries)
+        return libraries.isEmpty ? [] : [ObjcImport(name: "\(spec.name)_VendoredLibraries", archives: libraries)]
     }
 
     public static func makeConvertables(fromPodspec podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions()) -> [SkylarkConvertible] {
         let subspecTargets: [BazelTarget] = podSpec.subspecs.flatMap { spec in
-            (bundleLibraries(withPodSpec: podSpec) as [BazelTarget]) +
-	            ([ObjcLibrary(rootName: podSpec.name, spec: spec) as BazelTarget])
+            (bundleLibraries(withPodSpec: spec) as [BazelTarget]) +
+            ([ObjcLibrary(rootName: podSpec.name,
+                          spec: spec,
+                          extraDeps:((vendoredLibraries(withPodspec: spec) as [BazelTarget]) +
+                                     (vendoredFrameworks(withPodspec: spec) as [BazelTarget]))
+                                    .map { $0.name } ) as BazelTarget]) +
+            vendoredLibraries(withPodspec: spec) +
+            vendoredFrameworks(withPodspec: spec)
         }
-        
+
+        let extraDeps = bundleLibraries(withPodSpec: podSpec) + vendoredFrameworks(withPodspec: podSpec) + vendoredLibraries(withPodspec: podSpec)
         let rootLib = ObjcLibrary(rootName: podSpec.name,
-                                spec: podSpec,
-                                extraDeps: subspecTargets.map{ $0.name })
-        
+                                  spec: podSpec,
+                                  extraDeps: (subspecTargets + extraDeps).map{ $0.name })
+
         // We don't care about the values here
         // So we just lens to an arbitrary monoid that we can <>
         // Trivial has no information, we just care about whether or not it's nil
         let trivialized: Lens<PodSpecRepresentable, Trivial?> = ReadonlyLens(const(.some(Trivial())))
-        
+
         // Just assume ios for now, we can figure out the proper commands later
-        let configs: [SkylarkConvertible] = (
+        let configs: [BazelTarget] = (
             (podSpec ^*
                 PodSpec.lens.liftOntoSubspecs(PodSpec.lens.ios >•> trivialized))
                 .map(const([ ConfigSetting(name: SelectCase.ios.rawValue,
@@ -72,8 +91,8 @@ public struct PodBuildFile {
                 .map(const([ ConfigSetting(name: SelectCase.watchos.rawValue,
                                            values: ["cpu": "powerpc4"]) ]))
         ) ?? []
-        
-        var output: [SkylarkConvertible] = configs + [rootLib] + subspecTargets
+
+        var output: [SkylarkConvertible] = configs + [rootLib as BazelTarget] + subspecTargets + extraDeps
         // Execute transforms manually
         // Don't use unneeded abstractions to make a few function calls
         output = UserConfigurableTransform.transform(convertibles: output, options: buildOptions)
@@ -81,3 +100,4 @@ public struct PodBuildFile {
         return output
     }
 }
+

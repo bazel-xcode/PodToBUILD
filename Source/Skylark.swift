@@ -9,6 +9,9 @@
 import Foundation
 
 public indirect enum SkylarkNode {
+    /// A integer in Skylark.
+    case int(Int)
+
     /// A string in Skylark.
     /// @note The string value is enclosed within ""
     case string(String)
@@ -55,6 +58,22 @@ public indirect enum SkylarkNode {
         }
     }
 }
+extension SkylarkNode: Monoid, EmptyAwareness {
+    public static var empty: SkylarkNode { return .skylark("") }
+
+    // TODO(bkase): Annotate AttrSet with monoidal struct wrapper to get around this hack
+    /// WARNING: This doesn't obey the laws :(.
+    public static func <> (lhs: SkylarkNode, rhs: SkylarkNode) -> SkylarkNode {
+        return lhs .+. rhs
+    }
+
+    public var isEmpty: Bool {
+        switch self {
+        case .skylark(""): return true
+        default: return false
+        }
+    }
+}
 
 // because it must be done
 infix operator .+.: AdditionPrecedence
@@ -66,6 +85,32 @@ public indirect enum SkylarkFunctionArgument {
     case basic(SkylarkNode)
     case named(name: String, value: SkylarkNode)
 }
+
+
+struct GlobNode: SkylarkConvertible {
+    // Bazel Glob function: glob(include, exclude=[], exclude_directories=1)
+    let include: AttrSet<[String]>
+    let exclude: AttrSet<[String]>
+    let excludeDirectories: Bool
+
+    func toSkylark() -> SkylarkNode {
+        /*
+         Below we render a Select function that will handle multi-platform glob arguments
+         */
+        let tupleSet: AttrSet<AttrTuple<[String], [String]>> = include.zip(exclude)
+        return tupleSet.map { tuple -> SkylarkNode in
+            let includes = tuple.first ?? Array<String>.empty
+            let excludes = tuple.second ?? Array<String>.empty
+            return SkylarkNode.functionCall(name: "glob",
+                                            arguments: [
+                                                .basic(includes.toSkylark()),
+                                                .named(name: "exclude", value: excludes.toSkylark()),
+                                                .named(name: "exclude_directories", value: .int(excludeDirectories ? 1 : 0))
+            ])
+        }.toSkylark()
+    }
+}
+
 
 // Make Nodes to be inserted at the beginning of skylark output
 // public for test purposes
@@ -98,6 +143,8 @@ public struct SkylarkCompiler {
 
     private func compile(_ node: SkylarkNode) -> String {
         switch node {
+        case let .int(value):
+            return "\(value)"
         case let .string(value):
             return "\"\(value)\""
         case let .multiLineString(value):

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0913CBA01EB7C05A0070B5AF /* MagmasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */; };
 		09FD9B641EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
 		09FD9B651EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
 		09FD9B661EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
@@ -38,6 +39,7 @@
 		C41448EC1EBAB25100C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448F21EBAB25200C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448F31EBAB25200C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
+		81537BE11EB82052006D10AD /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */; };
 		C42E026E1EA150B0009B091A /* SkylarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E026D1EA150B0009B091A /* SkylarkTests.swift */; };
 		C42E02761EA189EF009B091A /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
 		C42E02771EA189EF009B091A /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
@@ -653,6 +655,7 @@
 				C4893A5D1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
 				811187E51EB00D1800CB5BA2 /* GlobUtils.swift in Sources */,
 				09FD9B681EB3B70700272A01 /* Lens.swift in Sources */,
+				81537BE11EB82052006D10AD /* TestUtils.swift in Sources */,
 				09FD9B751EB3FCD300272A01 /* XCConfig.swift in Sources */,
 				811187E01EB00D1800CB5BA2 /* BuildFile.swift in Sources */,
 				811187E61EB00D1800CB5BA2 /* ObjcLibrary.swift in Sources */,

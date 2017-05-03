@@ -1,30 +1,6 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
-SevenSwitch_source_headers = glob(
-  [
-    "SevenSwitch.h"
-  ]
-  )
-SevenSwitch_extra_headers = glob(
-  [
-    "bazel_support/Headers/Public/**/*.h"
-  ]
-  )
-SevenSwitch_headers = SevenSwitch_source_headers + SevenSwitch_extra_headers
 objc_library(
   name = "SevenSwitch",
-  srcs = glob(
-    [
-      "SevenSwitch.m"
-    ]
-    ),
-  hdrs = SevenSwitch_headers,
-  pch = pch_with_name_hint(
-    "SevenSwitch"
-    ),
-  includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/SevenSwitch/"
-  ],
   sdk_frameworks = [
     "UIKit",
     "QuartzCore"

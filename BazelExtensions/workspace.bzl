@@ -46,9 +46,9 @@ def pch_with_name_hint(hint):
 """
 
 global_copts = [
-    # TODO: Enable modules ( Jerry )
     # Disable all warnings
     "-Wno-everything",
+    "-fmodules"
 ]
 
 def _impl(repository_ctx):
@@ -63,7 +63,7 @@ def _impl(repository_ctx):
     _exec(repository_ctx, ["unzip", download])
     strip_prefix = repository_ctx.attr.strip_prefix
 
-    # TODO: Jerry remove strip_prefix from the public API. 
+    # TODO: Jerry remove strip_prefix from the public API.
     # We should automatically find the .podspec according to CocoaPod semantics
     # rather than dealing with the overhead of trying to figure it out for each
     # pod and URL.
@@ -143,14 +143,14 @@ pod_repo_ = repository_rule(
 # https://github.com/pinterest/PINCache/archive/751edba685e997ea4d8501dcf16df53aac5355a4.zip
 # In some cases, the strip prefix will be the commit hash, but make sure the
 # code has the correct directory structure when using this.
-# 
+#
 # @param strip_prefix: a directory prefix to strip from the extracted files.
 # Many archives contain a top-level directory that contains all of the useful
 # files in archive. Instead of needing to specify this prefix over and over in
 # the build_file, this field can be used to strip it from all of the extracted
 # files.
 #
-# @param repo_tools: a program to run after downloading the archive. 
+# @param repo_tools: a program to run after downloading the archive.
 # Typically, this program is responsible for performing modifications to a
 # source repository, in order to support bazel.  i.e.
 # "//tools/PodSpecToBUILD/bin:RepoTools" if PodSpecToBUILD is in //tools
@@ -161,7 +161,7 @@ pod_repo_ = repository_rule(
 # The first part of the command is a string representation of the order the
 # commands will be run in. Skylark seems to break when we try to use an array of
 # arrays.
-# 
+#
 # @see repository_context.execute
 #
 # @param repo_tools: a mapping of binaries to command names.

@@ -14,7 +14,7 @@ public struct UserConfigurableTargetAttributes {
     init(keyPathOperators: [String]) {
         self.keyPathOperators = keyPathOperators
     }
-    
+
     init (buildOptions: BuildOptions) {
         // User options available are keypath operators
         keyPathOperators = buildOptions.userOptions
@@ -44,7 +44,6 @@ extension UserConfigurable {
         var copy = self
         // First, apply all of the global options
         copts.forEach { copy.add(configurableKey: "copts", value: $0) }
-
         // Explicit keyPathOperators override defaults
         // Since in LLVM option parsing, the rightmost option wins
         // https://clang.llvm.org/doxygen/classclang_1_1tooling_1_1CommonOptionsParser.html
@@ -53,7 +52,10 @@ extension UserConfigurable {
                 print("Invalid operator")
                 fatalError()
             }
+
             var components = keyPathOperator.components(separatedBy: opt.rawValue)
+            guard components.count > 1 else { continue }
+
             let key = components[0].replacingOccurrences(of: " ", with: "")
             let values = components[1].components(separatedBy: ",")
             for value in values {
@@ -70,23 +72,29 @@ enum UserConfigurableTransform : SkylarkConvertibleTransform {
         let attributes = UserConfigurableTargetAttributes(buildOptions: options)
         return UserConfigurableTransform.executeUserOptionsTransform(onConvertibles: convertibles, copts: options.globalCopts, userAttributes: attributes)
     }
-    
+
     public static  func executeUserOptionsTransform(onConvertibles convertibles: [SkylarkConvertible], copts: [String], userAttributes: UserConfigurableTargetAttributes) -> [SkylarkConvertible] {
-        var operatorByTarget = [String: String]()
+        var operatorByTarget = [String: [String]]()
         for keyPath in userAttributes.keyPathOperators {
             let components = keyPath.components(separatedBy: ".")
             if let target = components.first {
-                operatorByTarget[target] = components[1]
+                var oprs = (operatorByTarget[target] ?? [String]())
+                oprs.append(components[1])
+                operatorByTarget[target] = oprs
             }
         }
 
         let output: [SkylarkConvertible] = convertibles.map {
             (inputConvertible: SkylarkConvertible) in
-            guard let configurable = inputConvertible as? UserConfigurable,
-                let operators = operatorByTarget[configurable.name] else {
-                    return inputConvertible
-                }
-            return configurable.apply(keyPathOperators: [operators], copts: copts) as! SkylarkConvertible
+            guard let configurable = inputConvertible as? UserConfigurable else {
+                return inputConvertible
+            }
+
+            if let operators = operatorByTarget[configurable.name] {
+                return configurable.apply(keyPathOperators: operators, copts: copts) as! SkylarkConvertible
+            } else {
+                return configurable.apply(keyPathOperators: [], copts: copts) as! SkylarkConvertible
+            }
         }
         return output
     }

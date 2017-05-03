@@ -8,12 +8,19 @@
 
 import Foundation
 
-struct BasicBuildOptions : BuildOptions {
-    let podName: String 
-    let userOptions: [String]
-    let globalCopts: [String]
-    let trace: Bool
+public struct BasicBuildOptions : BuildOptions {
+    public let podName: String
+    public let userOptions: [String]
+    public let globalCopts: [String]
+    public let trace: Bool
 
+
+    public init(podName: String, userOptions: [String], globalCopts: [String], trace: Bool) {
+        self.podName = podName
+        self.userOptions = userOptions
+        self.globalCopts = globalCopts
+        self.trace = trace
+    }
     /// Parse in Command Line arguments
     /// Example: PodName --user_option Opt1
     static func parse(args: [String]) -> BasicBuildOptions {

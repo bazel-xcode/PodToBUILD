@@ -13,18 +13,21 @@ protocol BazelTarget: SkylarkConvertible {
     var name: String { get }
 }
 
+
 // https://bazel.build/versions/master/docs/be/objective-c.html#objc_bundle_library
 struct ObjcBundleLibrary: BazelTarget {
     let name: String
-    let resources: [String]
+    let resources: AttrSet<[String]>
 
     func toSkylark() -> SkylarkNode {
         return .functionCall(
             name: "objc_bundle_library",
             arguments: [
-                .named(name: "name", value: name.toSkylark()),
+                .named(name: "name", value: ObjcLibrary.bazelLabel(fromString: name).toSkylark()),
                 .named(name: "resources",
-                       value: resources.toSkylark()),
+                       value: GlobNode(include: resources,
+                                       exclude: AttrSet.empty,
+                                       excludeDirectories:true).toSkylark()),
         ])
     }
 }
@@ -46,7 +49,7 @@ struct ConfigSetting: BazelTarget {
 
 /// rootName -> names -> fixedNames
 func fixDependencyNames(rootName: String) -> ([String]) -> [String]  {
-    return { $0.map{ depName in
+    return { $0.map { depName in
         // Build up dependencies. Versions are ignored!
         // When a given dependency is locally speced, it should
         // Match the PodName i.e. PINCache/Core
@@ -57,7 +60,55 @@ func fixDependencyNames(rootName: String) -> ([String]) -> [String]  {
         } else {
             return "@\(depName)//:\(depName)"
         }
-    } }
+    }
+     }
+}
+
+// https://bazel.build/versions/master/docs/be/objective-c.html#objc_framework
+struct ObjcFramework: BazelTarget {
+    let name: String // A unique name for this rule.
+    let frameworkImports: AttrSet<[String]> // The list of files under a .framework directory which are provided to Objective-C targets that depend on this target.
+
+
+    // objc_framework(
+    //     name = "OCMock",
+    //     framework_imports = [
+    //         glob(["iOS/OCMock.framework/**"]),
+    //     ],
+    //     is_dynamic = 1,
+    //     visibility = ["visibility:public"]
+    // )
+    func toSkylark() -> SkylarkNode {
+        return SkylarkNode.functionCall(
+                name: "objc_framework",
+                arguments: [
+                    .named(name: "name", value: .string(name)),
+                    .named(name: "framework_imports",
+                           value: GlobNode(include: frameworkImports.map { $0.map { $0 + "/**" } },
+                                           exclude: AttrSet.empty,
+                                           excludeDirectories:true).toSkylark()),
+                    .named(name: "is_dynamic", value: 1),
+                    .named(name: "visibility", value: .list(["//visibility:public"]))
+                ]
+        )
+    }
+}
+
+// https://bazel.build/versions/master/docs/be/objective-c.html#objc_import
+struct ObjcImport: BazelTarget {
+    let name: String // A unique name for this rule.
+    let archives: AttrSet<[String]> // The list of .a files provided to Objective-C targets that depend on this target.
+
+    func toSkylark() -> SkylarkNode {
+        return SkylarkNode.functionCall(
+                name: "objc_import",
+                arguments: [
+                    .named(name: "name", value: name.toSkylark()),
+                    .named(name: "archives", value: archives.toSkylark()),
+                ]
+        )
+
+    }
 }
 
 enum ObjcLibraryConfigurableKeys : String {
@@ -115,7 +166,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: spec.userTargetXcconfig) +
             ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: spec.xcconfig)
         
-        self.name = spec.name == rootName ?
+        self.name = spec.specType == .Spec ?
                 rootName : ObjcLibrary.bazelLabel(fromString: "\(rootName)_\(spec.name)")
         self.externalName = rootName
         self.sourceFiles = headersAndSourcesInfo.sourceFiles
@@ -123,9 +174,9 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.sdkFrameworks = spec ^* liftToAttr(PodSpec.lens.frameworks)
         self.weakSdkFrameworks = spec ^* liftToAttr(PodSpec.lens.weakFrameworks)
         self.sdkDylibs = spec ^* liftToAttr(PodSpec.lens.libraries)
-        self.deps = AttrSet(basic: extraDeps.map{ ":\($0)" }) <> (spec ^* liftToAttr(PodSpec.lens.dependencies .. ReadonlyLens(fixDependencyNames(rootName: rootName))))
+        self.deps = AttrSet(basic: extraDeps.map{ ":\($0)" }.map(ObjcLibrary.bazelLabel)) <> (spec ^* liftToAttr(PodSpec.lens.dependencies .. ReadonlyLens(fixDependencyNames(rootName: rootName))))
         self.copts = AttrSet(basic: xcconfigFlags) <> (spec ^* liftToAttr(PodSpec.lens.compilerFlags))
-        self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.name)-\(k)" } })
+        self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.name)_Bundle_\(k)" }.map(ObjcLibrary.bazelLabel) })
         self.excludedSource = getCompiledSource(fromPatterns: spec.excludeFiles)
     }
 

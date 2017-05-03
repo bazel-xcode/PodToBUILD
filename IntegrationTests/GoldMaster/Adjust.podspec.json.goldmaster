@@ -1,17 +1,37 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+config_setting(
+  name = "tvosCase",
+  values = {
+    "cpu": "powerpc3"
+  }
+  )
 objc_library(
   name = "Adjust",
   sdk_frameworks = [
     "SystemConfiguration"
   ],
-  weak_sdk_frameworks = [
-    "AdSupport",
-    "iAd"
-  ],
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "AdSupport",
+        "iAd"
+      ],
+      ":tvosCase": [
+        "AdSupport"
+      ]
+    }
+    ),
   deps = [
     ":Adjust_Core",
     ":Adjust_Sociomantic",
-    ":Adjust_Criteo"
+    ":Adjust_Criteo",
+    ":Adjust_Trademob"
   ],
   visibility = [
     "//visibility:public"
@@ -101,6 +121,39 @@ objc_library(
     ]
     ),
   hdrs = Adjust_Criteo_headers,
+  pch = pch_with_name_hint(
+    "Adjust"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Adjust/"
+  ],
+  deps = [
+    ":Adjust_Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Adjust_Trademob_source_headers = glob(
+  [
+    "plugin/Trademob/*.h"
+  ]
+  )
+Adjust_Trademob_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Adjust_Trademob_headers = Adjust_Trademob_source_headers + Adjust_Trademob_extra_headers
+objc_library(
+  name = "Adjust_Trademob",
+  srcs = glob(
+    [
+      "plugin/Trademob/*.m"
+    ]
+    ),
+  hdrs = Adjust_Trademob_headers,
   pch = pch_with_name_hint(
     "Adjust"
     ),

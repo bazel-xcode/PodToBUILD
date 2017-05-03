@@ -1,0 +1,27 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "GoogleAppUtilities",
+  deps = [
+    ":GoogleAppUtilities_VendoredFrameworks",
+    "@GoogleSymbolUtilities//:GoogleSymbolUtilities"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "GoogleAppUtilities_VendoredFrameworks",
+  framework_imports = glob(
+    [
+      "Frameworks/frameworks/GoogleAppUtilities.framework/**"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )

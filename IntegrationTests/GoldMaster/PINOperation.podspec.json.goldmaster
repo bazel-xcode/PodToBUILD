@@ -1,0 +1,35 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+PINOperation_source_headers = glob(
+  [
+    "Source/**/*.h"
+  ]
+  )
+PINOperation_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+PINOperation_headers = PINOperation_source_headers + PINOperation_extra_headers
+objc_library(
+  name = "PINOperation",
+  srcs = glob(
+    [
+      "Source/**/*.m",
+      "Source/**/*.mm"
+    ]
+    ),
+  hdrs = PINOperation_headers,
+  pch = pch_with_name_hint(
+    "PINOperation"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINOperation/"
+  ],
+  sdk_frameworks = [
+    "Foundation"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

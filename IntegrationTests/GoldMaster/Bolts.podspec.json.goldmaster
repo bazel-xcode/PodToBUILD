@@ -1,0 +1,50 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+config_setting(
+  name = "osxCase",
+  values = {
+    "cpu": "powerpc2"
+  }
+  )
+config_setting(
+  name = "tvosCase",
+  values = {
+    "cpu": "powerpc3"
+  }
+  )
+config_setting(
+  name = "watchosCase",
+  values = {
+    "cpu": "powerpc4"
+  }
+  )
+objc_library(
+  name = "Bolts",
+  deps = [
+    ":Bolts_Tasks",
+    ":Bolts_AppLinks"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "Bolts_Tasks",
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "Bolts_AppLinks",
+  deps = [
+    ":Bolts_Tasks"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

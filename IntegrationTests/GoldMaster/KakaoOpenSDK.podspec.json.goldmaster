@@ -1,0 +1,130 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "KakaoOpenSDK",
+  deps = [
+    ":KakaoOpenSDK_KakaoOpenSDK",
+    ":KakaoOpenSDK_VendoredFrameworks",
+    ":KakaoOpenSDK_KakaoNavi",
+    ":KakaoNavi_VendoredFrameworks",
+    ":KakaoOpenSDK_KakaoLink",
+    ":KakaoLink_VendoredFrameworks",
+    ":KakaoOpenSDK_KakaoS2",
+    ":KakaoS2_VendoredFrameworks"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "KakaoOpenSDK_KakaoOpenSDK",
+  sdk_frameworks = [
+    "UIKit",
+    "WebKit"
+  ],
+  deps = [
+    ":KakaoOpenSDK_VendoredFrameworks"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "KakaoOpenSDK_VendoredFrameworks",
+  framework_imports = glob(
+    [
+      "KakaoOpenSDK.framework/**"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "KakaoOpenSDK_KakaoNavi",
+  sdk_frameworks = [
+    "UIKit"
+  ],
+  deps = [
+    ":KakaoNavi_VendoredFrameworks"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "KakaoNavi_VendoredFrameworks",
+  framework_imports = glob(
+    [
+      "KakaoNavi.framework/**"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "KakaoOpenSDK_KakaoLink",
+  sdk_frameworks = [
+    "UIKit"
+  ],
+  deps = [
+    ":KakaoLink_VendoredFrameworks"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "KakaoLink_VendoredFrameworks",
+  framework_imports = glob(
+    [
+      "KakaoLink.framework/**"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "KakaoOpenSDK_KakaoS2",
+  sdk_frameworks = [
+    "Foundation"
+  ],
+  deps = [
+    ":KakaoS2_VendoredFrameworks"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_framework(
+  name = "KakaoS2_VendoredFrameworks",
+  framework_imports = glob(
+    [
+      "KakaoS2.framework/**"
+    ],
+    exclude = [
+
+    ],
+    exclude_directories = 1
+    ),
+  is_dynamic = 1,
+  visibility = [
+    "//visibility:public"
+  ]
+  )

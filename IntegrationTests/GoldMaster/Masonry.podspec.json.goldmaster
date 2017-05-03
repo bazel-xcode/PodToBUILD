@@ -1,0 +1,65 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+config_setting(
+  name = "osxCase",
+  values = {
+    "cpu": "powerpc2"
+  }
+  )
+config_setting(
+  name = "tvosCase",
+  values = {
+    "cpu": "powerpc3"
+  }
+  )
+Masonry_source_headers = glob(
+  [
+    "Masonry/*.h"
+  ]
+  )
+Masonry_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Masonry_headers = Masonry_source_headers + Masonry_extra_headers
+objc_library(
+  name = "Masonry",
+  srcs = glob(
+    [
+      "Masonry/*.m"
+    ]
+    ),
+  hdrs = Masonry_headers,
+  pch = pch_with_name_hint(
+    "Masonry"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Masonry/"
+  ],
+  sdk_frameworks = select(
+    {
+      ":osxCase": [
+        "Foundation",
+        "AppKit"
+      ],
+      ":tvosCase": [
+        "Foundation",
+        "UIKit"
+      ],
+      "//conditions:default": [
+        "Foundation",
+        "UIKit"
+      ]
+    }
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )

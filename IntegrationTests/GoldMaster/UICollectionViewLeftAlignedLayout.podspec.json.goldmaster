@@ -1,0 +1,7 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "UICollectionViewLeftAlignedLayout",
+  visibility = [
+    "//visibility:public"
+  ]
+  )

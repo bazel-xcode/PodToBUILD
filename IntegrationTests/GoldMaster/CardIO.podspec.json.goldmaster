@@ -1,0 +1,52 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+CardIO_source_headers = glob(
+  [
+    "CardIO/*.h"
+  ]
+  )
+CardIO_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+CardIO_headers = CardIO_source_headers + CardIO_extra_headers
+objc_library(
+  name = "CardIO",
+  hdrs = CardIO_headers,
+  pch = pch_with_name_hint(
+    "CardIO"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/CardIO/"
+  ],
+  sdk_frameworks = [
+    "Accelerate",
+    "AVFoundation",
+    "AudioToolbox",
+    "CoreMedia",
+    "CoreVideo",
+    "MobileCoreServices",
+    "OpenGLES",
+    "QuartzCore",
+    "Security",
+    "UIKit"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    ":CardIO_VendoredLibraries"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_import(
+  name = "CardIO_VendoredLibraries",
+  archives = [
+    "CardIO/libCardIO.a",
+    "CardIO/libopencv_core.a",
+    "CardIO/libopencv_imgproc.a"
+  ]
+  )

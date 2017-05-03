@@ -31,6 +31,19 @@ extension SkylarkNode: ExpressibleByStringLiteral {
         self.init(stringLiteral: value)
     }
 }
+
+extension SkylarkNode: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: Int) {
+        self = .int(value)
+    }
+}
+
+extension Int: SkylarkConvertible {
+    public func toSkylark() -> SkylarkNode {
+        return .int(self)
+    }
+}
+
 extension String: SkylarkConvertible {
     public func toSkylark() -> SkylarkNode {
         return .string(self)

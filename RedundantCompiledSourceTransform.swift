@@ -50,10 +50,7 @@ struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
     public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions) ->  [SkylarkConvertible] {
         // Needed
         func toSourceExcludable(_ input: SkylarkConvertible) -> SourceExcludable? {
-            if input is SourceExcludable {
-                return (input as! SourceExcludable)
-            }
-            return nil
+            return input as? SourceExcludable
         }
 
         var excludableByName = [String: SourceExcludable]()

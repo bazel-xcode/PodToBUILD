@@ -1,0 +1,47 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+ZipArchive_source_headers = glob(
+  [
+    "*.h",
+    "minizip/crypt.h",
+    "minizip/ioapi.h",
+    "minizip/mztools.h",
+    "minizip/unzip.h",
+    "minizip/zip.h"
+  ]
+  )
+ZipArchive_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+ZipArchive_headers = ZipArchive_source_headers + ZipArchive_extra_headers
+objc_library(
+  name = "ZipArchive",
+  srcs = glob(
+    [
+      "*.m",
+      "minizip/crypt.c",
+      "minizip/ioapi.c",
+      "minizip/mztools.c",
+      "minizip/unzip.c",
+      "minizip/zip.c"
+    ]
+    ),
+  hdrs = ZipArchive_headers,
+  pch = pch_with_name_hint(
+    "ZipArchive"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/ZipArchive/"
+  ],
+  sdk_dylibs = [
+    "z"
+  ],
+  copts = [
+    "-Dunix"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

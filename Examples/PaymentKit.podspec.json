@@ -1,6 +1,6 @@
 {
   "name": "PaymentKit",
-  "version": "1.1",
+  "version": "1.2",
   "summary": "Utility library for creating credit card payment forms.",
   "license": {
     "type": "MIT",
@@ -8,11 +8,11 @@
   },
   "homepage": "https://stripe.com",
   "authors": {
-    "Alex MacCaw": "alex@stripe.com"
+    "Stripe Support": "support@stripe.com"
   },
   "source": {
     "git": "https://github.com/stripe/PaymentKit.git",
-    "tag": "v1.1"
+    "tag": "v1.2"
   },
   "source_files": "PaymentKit/*.{h,m}",
   "public_header_files": "PaymentKit/*.h",
@@ -23,5 +23,7 @@
   "platforms": {
     "ios": "5.0"
   },
-  "requires_arc": true
+  "requires_arc": true,
+  "deprecated": true,
+  "deprecated_in_favor_of": "Stripe"
 }
