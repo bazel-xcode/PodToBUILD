@@ -29,7 +29,7 @@ def _len_ins_sort(k):
 # Take in a name hint and return the PCH with that name
 def pch_with_name_hint(hint):
     # Recursive glob over all the files
-    candidates = native.glob(["**/*.pch"])
+    candidates = native.glob(["**/*.pch"], exclude=[".pch_ignore/**/*.pch"])
     if len(candidates) == 0:
         return None
 

@@ -31,6 +31,11 @@ struct ShellContext {
     func command(_ launchPath: String, arguments: [String] = [String]()) {
         _ = startShellAndWait(launchPath, arguments: arguments)
     }
+    
+    func command(forErrorCode launchPath: String, arguments: [String] = [String]()) -> Int {
+        let (_, _, code) = startShellAndWait(launchPath, arguments: arguments)
+        return code
+    }
 
     func dir(_ path: String) {
         let dir = command("/bin/pwd").components(separatedBy: "\n")[0]
@@ -57,7 +62,7 @@ struct ShellContext {
 
     // Start a shell and wait for the result
     // @note we use UTF-8 here as the default language and the current env
-    private func startShellAndWait(_ launchPath: String, arguments: [String] = [String]()) -> (Data, Data) {
+    private func startShellAndWait(_ launchPath: String, arguments: [String] = [String]()) -> (Data, Data, Int) {
         log("SHELL:\(launchPath) \(arguments)")
         let task = Process()
         task.launchPath = launchPath
@@ -76,11 +81,12 @@ struct ShellContext {
 
         let stderrData = stderr.fileHandleForReading.readDataToEndOfFile()
         let stdoutData = stdout.fileHandleForReading.readDataToEndOfFile()
+        let statusCode = task.terminationStatus
         if trace {
-            log("PIPE OUTPUT\(launchPath) \(arguments) stderr:\(readData(stderrData))  stdout:\(readData(stdoutData))")
+            log("PIPE OUTPUT\(launchPath) \(arguments) stderr:\(readData(stderrData))  stdout:\(readData(stdoutData)) code:\(statusCode)")
         }
 
-        return (stdoutData, stderrData)
+        return (stdoutData, stderrData, Int(statusCode))
     }
 
     private func readData(_ data: Data) -> String {
@@ -100,27 +106,38 @@ func main() {
     let shell = ShellContext(trace: buildOptions.trace)
     let whichPod = shell.command("/bin/bash", arguments: ["-l", "-c", "which pod"]) as String
     if whichPod.isEmpty {
-        print("RepoTools requires a cocoapod installation on host")
-        exit(1)
+        fatalError("RepoTools requires a cocoapod installation on host")
     }
-
-    let podBin = whichPod.components(separatedBy: "\n")[0]
-
-    let pwd = shell.command("/bin/pwd").components(separatedBy: "\n")[0]
-
     let podspecName = CommandLine.arguments[1]
-    let jsonData = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"]) as Data
+    let pwd = shell.command("/bin/pwd").components(separatedBy: "\n")[0]
+    
+    // make json data
+    let jsonData: Data;
+    let hasFile: (String) -> Bool = { file in
+        // did you know that [ is the name of the binary that tests stuff!
+        shell.command(forErrorCode: "/bin/[",
+                      arguments: ["-e", file, "]"]) == 0
+    }
+    let hasPodspec: () -> Bool = { hasFile(podspecName + ".podspec") }
+    let hasPodspecJson: () -> Bool = { hasFile(podspecName + ".podspec.json") }
+    
+    if hasPodspec() {
+        let podBin = whichPod.components(separatedBy: "\n")[0]
+        jsonData = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"]) as Data
+    } else if hasPodspecJson() {
+        jsonData = shell.command("/bin/cat", arguments: [podspecName + ".podspec.json"]) as Data
+    } else {
+        fatalError("Missing podspec!")
+    }
 
     guard let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
         JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
         let JSONPodspec = JSONFile as? JSONDict
     else {
-        print("Invalid JSON Podspec")
-        exit(1)
+        fatalError("Invalid JSON Podspec")
     }
     guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
-        print("Cant read in podspec")
-        exit(1)
+        fatalError("Cant read in podspec")
     }
 
     shell.dir("bazel_support/Headers/Public")
