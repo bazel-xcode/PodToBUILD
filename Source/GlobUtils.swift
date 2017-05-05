@@ -244,6 +244,7 @@ func pattern(fromPattern pattern: String, includingFileType fileType: String) ->
     let components = pattern.components(separatedBy: "/")
     var matches = [String]()
     var patternComponent = ""
+    var fileExtensions = Set<String>()
     for (componentIdx, component) in components.enumerated() {
         if componentIdx != components.count - 1 {
             result += "\(component)/"
@@ -264,6 +265,7 @@ func pattern(fromPattern pattern: String, includingFileType fileType: String) ->
             result += e
             result += "."
         }
+        fileExtensions.insert(fileExtension)
 
         // Pattern Substitution
         var inPattern = false
@@ -320,6 +322,16 @@ func pattern(fromPattern pattern: String, includingFileType fileType: String) ->
     }
 
     if matches.count == 0 {
+        // Don't mix up patterns that have non matching file extensions
+        // within them
+        if fileExtensions.isEmpty,
+            let last = pattern.unicodeScalars.last,
+            CharacterSet.alphanumerics.contains(last) {
+            // If there is no matches, and the last character is alphanumeric,
+            // then we'll assume they meant to write a pattern that was a
+            // recursive glob.
+            return "\(pattern)/**/*.\(fileType)"
+        }
         return nil
     }
     return result

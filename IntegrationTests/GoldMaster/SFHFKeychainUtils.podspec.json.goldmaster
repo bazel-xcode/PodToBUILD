@@ -1,6 +1,33 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+SFHFKeychainUtils_source_headers = glob(
+  [
+    "security/**/*.h"
+  ]
+  )
+SFHFKeychainUtils_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+SFHFKeychainUtils_headers = SFHFKeychainUtils_source_headers + SFHFKeychainUtils_extra_headers
 objc_library(
   name = "SFHFKeychainUtils",
+  srcs = glob(
+    [
+      "security/**/*.m",
+      "security/**/*.mm",
+      "security/**/*.cpp",
+      "security/**/*.c"
+    ]
+    ),
+  hdrs = SFHFKeychainUtils_headers,
+  pch = pch_with_name_hint(
+    "SFHFKeychainUtils"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/SFHFKeychainUtils/"
+  ],
   sdk_frameworks = [
     "Security"
   ],

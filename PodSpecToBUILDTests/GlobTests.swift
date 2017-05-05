@@ -35,6 +35,11 @@ class GlobTests: XCTestCase {
         XCTAssertEqual(testPattern, "Source/Classes/**/*.h")
     }
 
+    func testFalsePositiveBasic() {
+        let testPattern = pattern(fromPattern: "Source/Classes/**/*.py", includingFileType: "m")
+        XCTAssertNil(testPattern)
+    }
+
     func testNaievePatternBuildingSecondPart() {
         let testPattern = pattern(fromPattern: "Source/Classes/**/*.{h,m}", includingFileType: "m")
         XCTAssertEqual(testPattern, "Source/Classes/**/*.m")
@@ -48,5 +53,10 @@ class GlobTests: XCTestCase {
     func testNaievePatternBuildingMismatch() {
         let testPattern = pattern(fromPattern: "Source/Classes/**/*.{h}", includingFileType: "m")
         XCTAssertNil(testPattern)
+    }
+
+    func testPatternsEndingInAlphanumericCharactersYieldGlob() {
+        let testPattern = pattern(fromPattern: "Source/Classes", includingFileType: "m")
+        XCTAssertEqual(testPattern, "Source/Classes/**/*.m")
     }
 }

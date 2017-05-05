@@ -354,16 +354,23 @@ func headersAndSources(fromSourceFilePatterns patterns: [String]) -> SourceFileP
     var headers = [String]()
     var sourceFiles = [String]()
     for sourceFilePattern in patterns {
-        if sourceFilePattern.contains("[") || sourceFilePattern.contains("}") || sourceFilePattern.contains("?") {
+        // Optimization: if we're sure about the source extension, skip pattern
+        // matching
+        if sourceFilePattern.hasSuffix(".h") {
+            headers.append(sourceFilePattern)
+        } else if sourceFilePattern.hasSuffix(".m") {
+            sourceFiles.append(sourceFilePattern)
+        } else if sourceFilePattern.hasSuffix(".mm") {
+            sourceFiles.append(sourceFilePattern)
+        } else if sourceFilePattern.hasSuffix(".c") {
+            sourceFiles.append(sourceFilePattern)
+        } else if sourceFilePattern.hasSuffix(".cpp") {
+            sourceFiles.append(sourceFilePattern)
+        } else {
             if let header = pattern(fromPattern: sourceFilePattern, includingFileType: "h") {
                 headers.append(header)
             }
-
             sourceFiles += getCompiledSource(fromPatterns: [sourceFilePattern])
-        } else if sourceFilePattern.hasSuffix("m") {
-            sourceFiles.append(sourceFilePattern)
-        } else if sourceFilePattern.hasSuffix("h") {
-            headers.append(sourceFilePattern)
         }
     }
     return (headers, sourceFiles)
