@@ -60,7 +60,10 @@ def _impl(repository_ctx):
     url = repository_ctx.attr.url
     download = _extension(url)
     _exec(repository_ctx, ["curl", "-LOk", url])
-    _exec(repository_ctx, ["unzip", download])
+    if url.lower().endswith("zip"):
+        _exec(repository_ctx, ["unzip", download])
+    elif url.lower().endswith("tar.gz"):
+        _exec(repository_ctx, ["tar", "-xzvf", download])
     strip_prefix = repository_ctx.attr.strip_prefix
 
     # TODO: Jerry remove strip_prefix from the public API.
