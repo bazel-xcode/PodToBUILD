@@ -113,6 +113,7 @@ struct ObjcImport: BazelTarget {
 
 enum ObjcLibraryConfigurableKeys : String {
     case copts
+    case sdkFrameworks = "sdk_frameworks"
 }
 
 // ObjcLibrary is an intermediate rep of an objc library
@@ -186,6 +187,10 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             case .copts:
                 if let value = value as? String {
                     self.copts = self.copts <> AttrSet(basic: [value])
+                }
+            case .sdkFrameworks:
+                if let value = value as? String {
+                    self.sdkFrameworks = self.sdkFrameworks <> AttrSet(basic: [value])
                 }
             }
         }
