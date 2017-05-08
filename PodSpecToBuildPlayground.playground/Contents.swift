@@ -9,7 +9,7 @@ import PodSpecToBUILD
  */
 
 
-let podName = "EarlGrey"
+let podName = "SFHFKeychainUtils"
 let pod = examplePodSpecNamed(name: podName)
 let options = BasicBuildOptions(podName: "", userOptions: [String](), globalCopts: ["-fmonoids"], trace: true)
 let jsonPodSpec = try! JSONSerialization.jsonObject(with: try! Data(contentsOf: URL(fileURLWithPath: examplePodSpecFilePath(name: podName)), options: .uncached))
