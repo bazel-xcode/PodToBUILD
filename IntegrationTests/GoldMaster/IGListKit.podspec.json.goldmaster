@@ -74,14 +74,54 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/IGListKit/"
   ],
+  sdk_frameworks = select(
+    {
+      ":osxCase": [
+        "Cocoa"
+      ],
+      ":tvosCase": [
+        "UIKit"
+      ],
+      "//conditions:default": [
+        "UIKit"
+      ]
+    }
+    ),
+  sdk_dylibs = [
+    "c++"
+  ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++"
+  ],
   visibility = [
     "//visibility:public"
   ]
   )
 objc_library(
   name = "IGListKit_Default",
+  sdk_frameworks = select(
+    {
+      ":osxCase": [
+        "Cocoa"
+      ],
+      ":tvosCase": [
+        "UIKit"
+      ],
+      "//conditions:default": [
+        "UIKit"
+      ]
+    }
+    ),
+  sdk_dylibs = [
+    "c++"
+  ],
   deps = [
     ":IGListKit_Diffing"
+  ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++"
   ],
   visibility = [
     "//visibility:public"

@@ -53,7 +53,7 @@ public struct PodBuildFile {
     public static func makeConvertables(fromPodspec podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions()) -> [SkylarkConvertible] {
         let subspecTargets: [BazelTarget] = podSpec.subspecs.flatMap { spec in
             (bundleLibraries(withPodSpec: spec) as [BazelTarget]) +
-            ([ObjcLibrary(rootName: podSpec.name,
+            ([ObjcLibrary(rootSpec: podSpec,
                           spec: spec,
                           extraDeps:((vendoredLibraries(withPodspec: spec) as [BazelTarget]) +
                                      (vendoredFrameworks(withPodspec: spec) as [BazelTarget]))
@@ -63,12 +63,11 @@ public struct PodBuildFile {
         }
 
         let extraDeps = bundleLibraries(withPodSpec: podSpec) + vendoredFrameworks(withPodspec: podSpec) + vendoredLibraries(withPodspec: podSpec)
-        let rootLib = ObjcLibrary(rootName: podSpec.name,
-                                  spec: podSpec,
+        let rootLib = ObjcLibrary(spec: podSpec,
                                   extraDeps: (subspecTargets + extraDeps).map{ $0.name })
 
         // We don't care about the values here
-        // So we just lens to an arbitrary monoid that we can <>
+        // So we just lens to an arbitrary monoid that we can <+>
         // Trivial has no information, we just care about whether or not it's nil
         let trivialized: Lens<PodSpecRepresentable, Trivial?> = ReadonlyLens(const(.some(Trivial())))
 
@@ -77,15 +76,15 @@ public struct PodBuildFile {
             (podSpec ^*
                 PodSpec.lens.liftOntoSubspecs(PodSpec.lens.ios >•> trivialized))
                 .map(const([ ConfigSetting(name: SelectCase.ios.rawValue,
-                                           values: ["cpu": "powerpc1"]) ])) <>
+                                           values: ["cpu": "powerpc1"]) ])) <+>
             (podSpec ^*
                 PodSpec.lens.liftOntoSubspecs(PodSpec.lens.osx >•> trivialized))
                 .map(const([ ConfigSetting(name: SelectCase.osx.rawValue,
-						                   values: ["cpu": "powerpc2"]) ])) <>
+						                   values: ["cpu": "powerpc2"]) ])) <+>
             (podSpec ^*
                 PodSpec.lens.liftOntoSubspecs(PodSpec.lens.tvos >•> trivialized))
                 .map(const([ ConfigSetting(name: SelectCase.tvos.rawValue,
-                                           values: ["cpu": "powerpc3"]) ])) <>
+                                           values: ["cpu": "powerpc3"]) ])) <+>
             (podSpec ^*
                 PodSpec.lens.liftOntoSubspecs(PodSpec.lens.watchos >•> trivialized))
                 .map(const([ ConfigSetting(name: SelectCase.watchos.rawValue,

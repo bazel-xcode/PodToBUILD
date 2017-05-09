@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0913CBA01EB7C05A0070B5AF /* MagmasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */; };
 		09FD9B641EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
 		09FD9B651EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
 		09FD9B661EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
@@ -32,6 +31,7 @@
 		811187E51EB00D1800CB5BA2 /* GlobUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E431EA6B4DB005C8B70 /* GlobUtils.swift */; };
 		811187E61EB00D1800CB5BA2 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
 		811187E71EB00D1800CB5BA2 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
+		81537BE11EB82052006D10AD /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */; };
 		C41448CE1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448CF1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448E51EBAA6D500C5DDF6 /* MagmasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */; };
@@ -39,7 +39,6 @@
 		C41448EC1EBAB25100C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448F21EBAB25200C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448F31EBAB25200C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
-		81537BE11EB82052006D10AD /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */; };
 		C42E026E1EA150B0009B091A /* SkylarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E026D1EA150B0009B091A /* SkylarkTests.swift */; };
 		C42E02761EA189EF009B091A /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
 		C42E02771EA189EF009B091A /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
@@ -194,9 +193,9 @@
 
 /* Begin PBXFileReference section */
 		0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagmasTests.swift; sourceTree = "<group>"; };
-		09FD9B631EB3B70700272A01 /* Lens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Lens.swift; path = Source/Lens.swift; sourceTree = SOURCE_ROOT; };
+		09FD9B631EB3B70700272A01 /* Lens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Lens.swift; path = Source/Lens.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		09FD9B691EB3C01500272A01 /* MultiPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultiPlatform.swift; path = Source/MultiPlatform.swift; sourceTree = SOURCE_ROOT; };
-		09FD9B6F1EB3C08000272A01 /* Magmas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Magmas.swift; path = Source/Magmas.swift; sourceTree = SOURCE_ROOT; };
+		09FD9B6F1EB3C08000272A01 /* Magmas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Magmas.swift; path = Source/Magmas.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		811187D81EB00CF600CB5BA2 /* PodSpecToBUILD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PodSpecToBUILD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		811187DA1EB00CF600CB5BA2 /* PodSpecToBUILD-Framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PodSpecToBUILD-Framework.h"; sourceTree = "<group>"; };
 		811187DB1EB00CF600CB5BA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -221,14 +220,14 @@
 		C4B8A3951EB2A58D00859B73 /* XCConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCConfig.swift; path = Source/XCConfig.swift; sourceTree = SOURCE_ROOT; };
 		C4B95C8B1EA18FF50033C7FA /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = Source/main.swift; sourceTree = SOURCE_ROOT; };
 		C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildFileTests.swift; sourceTree = "<group>"; };
-		C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjcLibrary.swift; path = Source/ObjcLibrary.swift; sourceTree = SOURCE_ROOT; };
-		C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SkylarkConvertible.swift; path = Source/SkylarkConvertible.swift; sourceTree = SOURCE_ROOT; };
+		C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ObjcLibrary.swift; path = Source/ObjcLibrary.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = SkylarkConvertible.swift; path = Source/SkylarkConvertible.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C4E5BC971EAA7AD700954EB8 /* WorkspaceTools */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WorkspaceTools; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4E5BC991EAA7AD700954EB8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C4E5BCA71EAA871E00954EB8 /* WorkspaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkspaceTests.swift; sourceTree = "<group>"; };
 		C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestUtils.swift; sourceTree = "<group>"; };
-		C4FA7E121EA53E29005C8B70 /* Skylark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Skylark.swift; path = Source/Skylark.swift; sourceTree = SOURCE_ROOT; };
-		C4FA7E151EA56749005C8B70 /* PodSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PodSpec.swift; path = Source/PodSpec.swift; sourceTree = SOURCE_ROOT; };
+		C4FA7E121EA53E29005C8B70 /* Skylark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Skylark.swift; path = Source/Skylark.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		C4FA7E151EA56749005C8B70 /* PodSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = PodSpec.swift; path = Source/PodSpec.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C4FA7E211EA56AEA005C8B70 /* RepoTools */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RepoTools; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4FA7E231EA56AEA005C8B70 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C4FA7E3F1EA6A81E005C8B70 /* GlobTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobTests.swift; sourceTree = "<group>"; };
@@ -517,7 +516,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = jerry;
 				TargetAttributes = {
 					811187D71EB00CF600CB5BA2 = {
@@ -912,6 +911,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};

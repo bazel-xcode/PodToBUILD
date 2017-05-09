@@ -39,7 +39,8 @@ public func mfold<M: Monoid>(_ monoids: [M]) -> M {
     return monoids.reduce(M.empty){ $0 <> $1 }
 }
 
-public func<> <T: Semigroup>(lhs: T?, rhs: T?) -> T? {
+infix operator<+>: AdditionPrecedence
+public func<+> <T: Semigroup>(lhs: T?, rhs: T?) -> T? {
     switch (lhs, rhs) {
     case (.none, _): return rhs
     case (_, .none): return lhs
@@ -50,7 +51,7 @@ public func<> <T: Semigroup>(lhs: T?, rhs: T?) -> T? {
 // induce the monoid with optional since swift can't handle
 // option monoids
 public func sfold<S: Semigroup>(_ semigroups: [S?]) -> S? {
-    return semigroups.reduce(nil){ $0 <> $1 }
+    return semigroups.reduce(nil){ $0 <+> $1 }
 }
 
 extension Array: Monoid {
@@ -81,6 +82,16 @@ extension Dictionary: Monoid {
     public static var empty: Dictionary { return [:] }
 }
 
+extension Optional: Monoid {
+    public static func <>(lhs: Optional, rhs: Optional) -> Optional {
+        switch (lhs, rhs) {
+        case (.none, _): return rhs
+        case (_, _): return lhs
+        }
+    }
+    public static var empty: Optional { return nil }
+}
+
 struct Trivial { }
 extension Trivial: Monoid {
     static func<>(lhs: Trivial, rhs: Trivial) -> Trivial {
@@ -108,6 +119,14 @@ extension Optional where Wrapped: Monoid & EmptyAwareness {
 extension String: EmptyAwareness {}
 extension Array: EmptyAwareness {}
 extension Dictionary: EmptyAwareness {}
+extension Optional: EmptyAwareness {
+    public var isEmpty: Bool {
+        switch self {
+        case .none: return true
+        case _: return false
+        }
+    }
+}
 
 func const<A, B>(_ b: @autoclosure @escaping () -> B) -> (A) -> B {
     return { _ in b() }

@@ -54,4 +54,10 @@ class MagmasTests: XCTestCase {
             return x.getOptional.normalize() != .some(String.empty)
         }
     }
+
+    func testOptionalCompositionExtension() {
+        property("composition of optionals using <>") <- forAll { (x: OptionalOf<String>, y: OptionalOf<String>) in
+            return x.getOptional <> Optional.empty == x.getOptional
+        }
+    }
 }

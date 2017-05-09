@@ -53,7 +53,17 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/AsyncDisplayKit/"
   ],
+  weak_sdk_frameworks = [
+    "Photos",
+    "MapKit",
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
   copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++",
     ""
   ],
   visibility = [
@@ -62,12 +72,22 @@ objc_library(
   )
 objc_library(
   name = "AsyncDisplayKit_PINRemoteImage",
+  weak_sdk_frameworks = [
+    "Photos",
+    "MapKit",
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
   deps = [
-    "@PINRemoteImage/PINCache//:PINRemoteImage/PINCache",
+    "@PINRemoteImage//:PINRemoteImage_PINCache",
     ":AsyncDisplayKit_Core",
-    "@PINRemoteImage/iOS//:PINRemoteImage/iOS"
+    "@PINRemoteImage//:PINRemoteImage_iOS"
   ],
   copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++",
     "-DPIN_REMOTE_IMAGE=1"
   ],
   visibility = [
@@ -76,11 +96,21 @@ objc_library(
   )
 objc_library(
   name = "AsyncDisplayKit_IGListKit",
+  weak_sdk_frameworks = [
+    "Photos",
+    "MapKit",
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
   deps = [
     ":AsyncDisplayKit_Core",
     "@IGListKit//:IGListKit"
   ],
   copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++",
     "-DIG_LIST_KIT=1"
   ],
   visibility = [
@@ -89,11 +119,21 @@ objc_library(
   )
 objc_library(
   name = "AsyncDisplayKit_Yoga",
+  weak_sdk_frameworks = [
+    "Photos",
+    "MapKit",
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
   deps = [
     ":AsyncDisplayKit_Core",
     "@Yoga//:Yoga"
   ],
   copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++",
     "-DYOGA=1"
   ],
   visibility = [

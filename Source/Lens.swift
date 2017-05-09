@@ -157,3 +157,7 @@ public func liftOpt<Whole, Part>(_ lens: Lens<Whole, Part>) -> Lens<Whole, Part?
 public func ReadonlyLens<Whole, Part>(_ f: @escaping (Whole) -> Part) -> Lens<Whole, Part> {
     return Lens(view: f, set: unimplementedSet)
 }
+
+public func identityLens<T>() -> Lens<T, T> {
+    return Lens(view: { $0 }, set: { part, _ in part })
+}

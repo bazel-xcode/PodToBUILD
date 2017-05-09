@@ -65,6 +65,20 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/Adjust/"
   ],
+  sdk_frameworks = [
+    "SystemConfiguration"
+  ],
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "AdSupport",
+        "iAd"
+      ],
+      ":tvosCase": [
+        "AdSupport"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -95,6 +109,20 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/Adjust/"
   ],
+  sdk_frameworks = [
+    "SystemConfiguration"
+  ],
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "AdSupport",
+        "iAd"
+      ],
+      ":tvosCase": [
+        "AdSupport"
+      ]
+    }
+    ),
   deps = [
     ":Adjust_Core"
   ],
@@ -128,6 +156,20 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/Adjust/"
   ],
+  sdk_frameworks = [
+    "SystemConfiguration"
+  ],
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "AdSupport",
+        "iAd"
+      ],
+      ":tvosCase": [
+        "AdSupport"
+      ]
+    }
+    ),
   deps = [
     ":Adjust_Core"
   ],
@@ -161,6 +203,20 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/Adjust/"
   ],
+  sdk_frameworks = [
+    "SystemConfiguration"
+  ],
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "AdSupport",
+        "iAd"
+      ],
+      ":tvosCase": [
+        "AdSupport"
+      ]
+    }
+    ),
   deps = [
     ":Adjust_Core"
   ],

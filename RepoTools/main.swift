@@ -136,14 +136,41 @@ func main() {
     else {
         fatalError("Invalid JSON Podspec")
     }
+
     guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
         fatalError("Cant read in podspec")
     }
 
+
     shell.dir("bazel_support/Headers/Public")
     shell.dir("bazel_support/Headers/Private/")
-    let publicHeaderdir = "bazel_support/Headers/Public/\(podspecName)"
-    shell.dir(publicHeaderdir)
+
+
+    let searchPaths = { (spec: ComposedSpec) -> Set<String> in
+        let fallbackSpec = spec
+        let moduleName = AttrSet<String>(
+            value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
+        )
+        let headerDirectoryName: AttrSet<String?> = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.headerDirectory))
+        guard let externalName = (moduleName.isEmpty ? nil : moduleName) ??
+            (headerDirectoryName.isEmpty ? nil : headerDirectoryName.denormalize()) else {
+                return Set<String>()
+        }
+
+        let headerDirs = externalName.map { $0 }
+        let customHeaderSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
+                                                                   multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
+                                                                    return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
+        })
+        return customHeaderSearchPaths
+    }
+
+    let customHeaderSearchPaths = Set([podSpec.name]).union(searchPaths(ComposedSpec.composed(child: podSpec, parent: nil)))
+        .union(podSpec.subspecs.reduce(Set<String>(), { (result, subspec) in
+            result.union(searchPaths(ComposedSpec.composed(child: subspec, parent: ComposedSpec.composed(child: podSpec, parent: nil))))
+        })).map { "bazel_support/Headers/Public/\($0)/" }
+
+    customHeaderSearchPaths.forEach(shell.dir)
 
     // Create a directory structure condusive to <> imports
     // - Get all of the paths matching wild card imports
@@ -152,7 +179,12 @@ func main() {
     buildFile.skylarkConvertibles.flatMap { $0 as? RepoTools.ObjcLibrary }
         .flatMap { $0.headers }
         .flatMap { podGlob(pattern: $0) }
-        .forEach { shell.symLink(from: "\(pwd)/\($0)", to: publicHeaderdir) }
+        .forEach { globResult in
+            customHeaderSearchPaths.forEach { searchPath in
+                shell.symLink(from: "\(pwd)/\(globResult)", to: searchPath)
+            }
+        }
+
     // Run the compiler
     let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.skylarkConvertibles.flatMap { $0.toSkylark() })
     let buildFileOut = buildFileSkylarkCompiler.run()

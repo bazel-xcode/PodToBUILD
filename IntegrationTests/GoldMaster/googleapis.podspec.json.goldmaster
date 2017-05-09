@@ -4,7 +4,7 @@ objc_library(
   deps = [
     ":googleapis_Messages",
     ":googleapis_Services",
-    "@!ProtoCompiler-gRPCPlugin//:!ProtoCompiler-gRPCPlugin"
+    "@!ProtoCompiler_gRPCPlugin//:!ProtoCompiler_gRPCPlugin"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
@@ -42,6 +42,9 @@ objc_library(
   deps = [
     "@Protobuf//:Protobuf"
   ],
+  copts = [
+    "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -74,7 +77,10 @@ objc_library(
   ],
   deps = [
     ":googleapis_Messages",
-    "@gRPC-ProtoRPC//:gRPC-ProtoRPC"
+    "@gRPC_ProtoRPC//:gRPC_ProtoRPC"
+  ],
+  copts = [
+    "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ],
   visibility = [
     "//visibility:public"

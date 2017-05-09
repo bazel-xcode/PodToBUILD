@@ -56,6 +56,15 @@ extension Array: SkylarkConvertible {
     }
 }
 
+extension Optional: SkylarkConvertible {
+    public func toSkylark() -> SkylarkNode {
+        switch self {
+        case .none: return SkylarkNode.empty
+        case .some(let x): return (x as! SkylarkConvertible).toSkylark()
+        }
+    }
+}
+
 extension Dictionary: SkylarkConvertible {
     public func toSkylark() -> SkylarkNode {
         return .dict([:] <> self.map { kv in

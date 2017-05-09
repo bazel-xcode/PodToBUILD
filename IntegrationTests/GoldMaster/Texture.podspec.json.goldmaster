@@ -1,0 +1,140 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+objc_library(
+  name = "Texture",
+  weak_sdk_frameworks = [
+    "Photos",
+    "MapKit",
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    ":Texture_Core",
+    ":Texture_PINRemoteImage",
+    ":Texture_IGListKit",
+    ":Texture_Yoga"
+  ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+Texture_Core_source_headers = glob(
+  [
+    "Source/**/*.h",
+    "Base/*.h",
+    "Source/TextKit/*.h"
+  ]
+  )
+Texture_Core_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ]
+  )
+Texture_Core_headers = Texture_Core_source_headers + Texture_Core_extra_headers
+objc_library(
+  name = "Texture_Core",
+  srcs = glob(
+    [
+      "Source/**/*.m",
+      "Source/**/*.mm",
+      "Base/*.m"
+    ]
+    ),
+  hdrs = Texture_Core_headers,
+  pch = pch_with_name_hint(
+    "AsyncDisplayKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
+  ],
+  weak_sdk_frameworks = [
+    "Photos",
+    "MapKit",
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++",
+    ""
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "Texture_PINRemoteImage",
+  weak_sdk_frameworks = [
+    "Photos",
+    "MapKit",
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    "@PINRemoteImage//:PINRemoteImage_PINCache",
+    ":Texture_Core",
+    "@PINRemoteImage//:PINRemoteImage_iOS"
+  ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "Texture_IGListKit",
+  weak_sdk_frameworks = [
+    "Photos",
+    "MapKit",
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    ":Texture_Core",
+    "@IGListKit//:IGListKit"
+  ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "Texture_Yoga",
+  weak_sdk_frameworks = [
+    "Photos",
+    "MapKit",
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    ":Texture_Core",
+    "@Yoga//:Yoga"
+  ],
+  copts = [
+    "-stdlib=c++11",
+    "-stdlib=libc++",
+    "-DYOGA=1"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

@@ -50,18 +50,25 @@ struct ConfigSetting: BazelTarget {
 /// rootName -> names -> fixedNames
 func fixDependencyNames(rootName: String) -> ([String]) -> [String]  {
     return { $0.map { depName in
-        // Build up dependencies. Versions are ignored!
-        // When a given dependency is locally speced, it should
-        // Match the PodName i.e. PINCache/Core
-        let results = depName.components(separatedBy: "/")
-        if results.count > 1 && results[0] == rootName {
-            let join = results[1 ... results.count - 1].joined(separator: "/")
-            return ":\(rootName)_\(ObjcLibrary.bazelLabel(fromString: join))"
-        } else {
-            return "@\(depName)//:\(depName)"
+            // Build up dependencies. Versions are ignored!
+            // When a given dependency is locally speced, it should
+            // Match the PodName i.e. PINCache/Core
+            let results = depName.components(separatedBy: "/")
+            if results.count > 1 && results[0] == rootName {
+                // This is a local subspec reference
+                let join = results[1 ... results.count - 1].joined(separator: "/")
+                return ":\(rootName)_\(ObjcLibrary.bazelLabel(fromString: join))"
+            } else {
+                if results.count > 1, let podname = results.first {
+                    // This is a reference to an external podspec's subspec
+                    return "@\(podname)//:\(ObjcLibrary.bazelLabel(fromString: depName))"
+                } else {
+                    // This is a reference to another pod library
+                    return "@\(ObjcLibrary.bazelLabel(fromString: depName))//:\(ObjcLibrary.bazelLabel(fromString: depName))"
+                }
+            }
         }
     }
-     }
 }
 
 // https://bazel.build/versions/master/docs/be/objective-c.html#objc_framework
@@ -118,17 +125,21 @@ enum ObjcLibraryConfigurableKeys : String {
 
 // ObjcLibrary is an intermediate rep of an objc library
 struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
-    var name: String
-    var externalName: String
-    var sourceFiles: [String]
-    var headers: [String]
-    var sdkFrameworks: AttrSet<[String]>
-    var weakSdkFrameworks: AttrSet<[String]>
-    var sdkDylibs: AttrSet<[String]>
-    var deps: AttrSet<[String]>
-    var copts: AttrSet<[String]>
-    var bundles: AttrSet<[String]>
+    let name: String
+    let externalName: AttrSet<String>
+    let sourceFiles: [String]
+    let headers: [String]
+    let weakSdkFrameworks: AttrSet<[String]>
+    let sdkDylibs: AttrSet<[String]>
+    let deps: AttrSet<[String]>
+    let bundles: AttrSet<[String]>
+
+
+    // "var" properties are user configurable so we need mutation here
     var excludedSource = [String]()
+    var sdkFrameworks: AttrSet<[String]>
+    var copts: AttrSet<[String]>
+
     static let xcconfigTransformer = XCConfigTransformer.defaultTransformer()
 
     init(name: String,
@@ -143,7 +154,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         bundles: AttrSet<[String]>,
         excludedSource: [String] = []) {
         self.name = name
-        self.externalName = externalName
+        self.externalName = AttrSet(basic: externalName)
         self.sourceFiles = sourceFiles
         self.headers = headers
         self.sdkFrameworks = sdkFrameworks
@@ -156,27 +167,41 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     }
 
     static func bazelLabel(fromString string: String) -> String {
-        return string.replacingOccurrences(of: "\\/", with: "_").replacingOccurrences(of: "-", with: "_")
+        return string.replacingOccurrences(of: "/", with: "_")
+                     .replacingOccurrences(of: "-", with: "_")
+                     .replacingOccurrences(of: "+", with: "_")
     }
     
-    init(rootName: String, spec: PodSpec, extraDeps: [String] = []) {
+    init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = []) {
         let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: spec.sourceFiles)
-        
+        let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].flatMap { $0 })
+
         let xcconfigFlags =
-            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: spec.podTargetXcconfig) +
-            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: spec.userTargetXcconfig) +
-            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: spec.xcconfig)
-        
-        self.name = spec.specType == .Spec ?
-                rootName : ObjcLibrary.bazelLabel(fromString: "\(rootName)_\(spec.name)")
-        self.externalName = rootName
+            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
+            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.userTargetXcconfig)))) +
+            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.xcconfig))))
+
+        // We are not using the fallback spec here since
+        let rootName =  ComposedSpec.create(fromSpecs: [spec, rootSpec].flatMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
+
+        self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(rootName)_\(spec.name)")
+
+        let moduleName = AttrSet<String>(
+            value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
+        )
+
+        let headerDirectoryName: AttrSet<String?> = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.headerDirectory))
+
+        self.externalName = (moduleName.isEmpty ? nil : moduleName) ??
+                            (headerDirectoryName.basic == nil ? nil : headerDirectoryName.denormalize()) ??
+                            AttrSet<String>(value: rootName)
         self.sourceFiles = headersAndSourcesInfo.sourceFiles
         self.headers = headersAndSourcesInfo.headers
-        self.sdkFrameworks = spec ^* liftToAttr(PodSpec.lens.frameworks)
-        self.weakSdkFrameworks = spec ^* liftToAttr(PodSpec.lens.weakFrameworks)
-        self.sdkDylibs = spec ^* liftToAttr(PodSpec.lens.libraries)
+        self.sdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.frameworks))
+        self.weakSdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.weakFrameworks))
+        self.sdkDylibs = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.libraries))
         self.deps = AttrSet(basic: extraDeps.map{ ":\($0)" }.map(ObjcLibrary.bazelLabel)) <> (spec ^* liftToAttr(PodSpec.lens.dependencies .. ReadonlyLens(fixDependencyNames(rootName: rootName))))
-        self.copts = AttrSet(basic: xcconfigFlags) <> (spec ^* liftToAttr(PodSpec.lens.compilerFlags))
+        self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
         self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.name)_Bundle_\(k)" }.map(ObjcLibrary.bazelLabel) })
         self.excludedSource = getCompiledSource(fromPatterns: spec.excludeFiles)
     }
@@ -258,24 +283,28 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 value: .skylark("\(lib.name)_headers")
             ))
 
-             libArguments.append(.named(
+
+            libArguments.append(.named(
                 name: "pch",
                 value:.functionCall(
                     // Call internal function to find a PCH.
                     // @see workspace.bzl
                     name: "pch_with_name_hint",
-                    arguments: [.basic(.string(lib.externalName))]
+                    arguments: [.basic(.string(lib.externalName.basic!))]
                 )
             ))
+
+            let headerDirs = lib.externalName.map { "bazel_support/Headers/Public/\($0)/" }
+            let headerSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
+                                      multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
+                                        return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
+                                    })
 
             // Include the public headers which are symlinked in
             // All includes are bubbled up automatically
             libArguments.append(.named(
                 name: "includes",
-                value: [
-                    "bazel_support/Headers/Public/",
-                    "bazel_support/Headers/Public/\(externalName)/",
-                ].toSkylark()
+                value: (["bazel_support/Headers/Public/"] + headerSearchPaths).toSkylark()
             ))
         }
         if !lib.sdkFrameworks.isEmpty {

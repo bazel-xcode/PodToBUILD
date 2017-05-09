@@ -115,9 +115,14 @@ public enum PodSpecField: String {
     case watchos
     case vendoredFrameworks = "vendored_frameworks"
     case vendoredLibraries = "vendored_libraries"
+    case moduleName = "module_name"
+    case headerDirectory = "header_dir"
 }
 
 protocol PodSpecRepresentable {
+    var name: String { get }
+    var podTargetXcconfig: [String: String]? { get }
+    var userTargetXcconfig: [String: String]? { get }
     var sourceFiles: [String] { get }
     var excludeFiles: [String] { get }
     var frameworks: [String] { get }
@@ -130,15 +135,12 @@ protocol PodSpecRepresentable {
     var resourceBundles: [String: [String]] { get }
     var vendoredFrameworks: [String] { get }
     var vendoredLibraries: [String] { get }
-}
-
-public enum PodSpecType {
-    case Spec
-    case Subspec
+    var headerDirectory: String? { get }
+    var xcconfig: [String: String]? { get }
+    var moduleName: String? { get }
 }
 
 public struct PodSpec: PodSpecRepresentable {
-    let specType: PodSpecType
     let name: String
     let sourceFiles: [String]
     let excludeFiles: [String]
@@ -149,6 +151,9 @@ public struct PodSpec: PodSpecRepresentable {
     let compilerFlags: [String]
     let source: PodSpecSource?
     let libraries: [String]
+
+    let headerDirectory: String?
+    let moduleName: String?
 
     let publicHeaders: [String]
 
@@ -169,7 +174,7 @@ public struct PodSpec: PodSpecRepresentable {
 
     let prepareCommand = ""
 
-    public init(JSONPodspec: JSONDict, podSpecType: PodSpecType = .Spec) throws {
+    public init(JSONPodspec: JSONDict) throws {
 
         let fieldMap: [PodSpecField: Any] = JSONPodspec.flatMap { k, v in
             guard let field = PodSpecField.init(rawValue: k) else {
@@ -189,7 +194,6 @@ public struct PodSpec: PodSpecRepresentable {
             // This is for "ios", "macos", etc
             name = ""
         }
-        specType = podSpecType
         frameworks = strings(fromJSON: fieldMap[.frameworks])
         weakFrameworks = strings(fromJSON: fieldMap[.weakFrameworks])
         excludeFiles = strings(fromJSON: fieldMap[.excludeFiles])
@@ -201,10 +205,13 @@ public struct PodSpec: PodSpecRepresentable {
         vendoredFrameworks = strings(fromJSON: fieldMap[.vendoredFrameworks])
         vendoredLibraries = strings(fromJSON: fieldMap[.vendoredLibraries])
 
+        headerDirectory = fieldMap[.headerDirectory] as? String
+        moduleName = fieldMap[.moduleName] as? String
+
         if let podSubspecDependencies = fieldMap[.dependencies] as? JSONDict {
             dependencies = Array(podSubspecDependencies.keys)
         } else {
-            dependencies = [String]()
+            dependencies = []
         }
 
         if let resourceBundleMap = fieldMap[.resourceBundles] as? JSONDict {
@@ -220,7 +227,7 @@ public struct PodSpec: PodSpecRepresentable {
         }
 
         if let JSONPodSubspecs = fieldMap[.subspecs] as? [JSONDict] {
-            subspecs = try JSONPodSubspecs.map { try PodSpec(JSONPodspec: $0, podSpecType: .Subspec) }
+            subspecs = try JSONPodSubspecs.map { try PodSpec(JSONPodspec: $0) }
         } else {
             subspecs = []
         }
@@ -242,8 +249,68 @@ public struct PodSpec: PodSpecRepresentable {
     }
 }
 
+
+indirect enum ComposedSpec {
+  case composed(child: PodSpec, parent: ComposedSpec?)
+
+    var child: PodSpec {
+        switch self {
+        case .composed(let child, _): return child
+        }
+    }
+
+    var parent: ComposedSpec? {
+        switch self {
+        case .composed(_, let parent): return parent
+        }
+    }
+
+    static func create(fromSpecs specs: [PodSpec]) -> ComposedSpec {
+        guard let parentSpec = specs.first else {
+            fatalError("ComposedSpec.create requires at least one element")
+        }
+
+        return specs.dropFirst().flatMap { $0 }
+            .reduce(.composed(child: parentSpec, parent: nil)) { (parent, child) in
+                    .composed(child: child, parent: parent)
+        }
+    }
+}
+
+extension ComposedSpec {
+    enum lens {
+        static let child: Lens<ComposedSpec, PodSpec> = {
+            return ReadonlyLens{ $0.child }
+        }()
+
+        static let parent: Lens<ComposedSpec, ComposedSpec?> = {
+            return ReadonlyLens{ $0.parent }
+        }()
+
+        static func fallback<E: EmptyAwareness & Monoid>(_ lens: Lens<PodSpec, E>) -> Lens<ComposedSpec, E> {
+            return ReadonlyLens{ mostChildSpec in
+                func loop(_ currentParent: Lens<ComposedSpec, ComposedSpec?>) -> E {
+                    let childValue: E? = mostChildSpec ^* (currentParent >•> liftOpt(ComposedSpec.lens.child) >•> liftOpt(lens))
+                    if let childValue = childValue {
+                        return childValue.isEmpty ? loop(currentParent >•> ComposedSpec.lens.parent) : childValue
+                    } else {
+                        return childValue.denormalize()
+                    }
+                }
+                return loop(liftOpt(identityLens()))
+            }
+        }
+    }
+}
+
+
 extension PodSpec {
     enum lens {
+
+        static let name: Lens<PodSpecRepresentable, String> = {
+            ReadonlyLens { $0.name }
+        }()
+
         static let sourceFiles: Lens<PodSpecRepresentable, [String]> = {
             ReadonlyLens { $0.sourceFiles }
         }()
@@ -296,9 +363,35 @@ extension PodSpec {
             ReadonlyLens { $0.vendoredFrameworks }
         }()
 
+        static let headerDirectory: Lens<PodSpecRepresentable, String?> = {
+            ReadonlyLens { $0.headerDirectory }
+        }()
+
+        static let moduleName: Lens<PodSpecRepresentable, String?> = {
+            ReadonlyLens { $0.moduleName }
+        }()
+
+        static let podTargetXcconfig: Lens<PodSpecRepresentable, [String: String]?> = {
+             ReadonlyLens { $0.podTargetXcconfig }
+        }()
+
+        static let userTargetXcconfig: Lens<PodSpecRepresentable, [String: String]?>  = {
+             ReadonlyLens { $0.userTargetXcconfig }
+        }()
+
+        static let xcconfig: Lens<PodSpecRepresentable, [String: String]?>  = {
+             ReadonlyLens { $0.xcconfig }
+        }()
+
+        static func liftOntoPodSpec<Part>(_ lens: Lens<PodSpecRepresentable, Part>) -> Lens<PodSpec, Part> {
+            return ReadonlyLens { (repr: PodSpec) -> Part in
+                (repr as PodSpecRepresentable) ^* lens
+            }
+        }
+
         static func liftOntoSubspecs<Part: Semigroup>(_ lens: Lens<PodSpec, Part?>) -> Lens<PodSpec, Part?> {
             return ReadonlyLens { whole in
-                (whole ^* lens) <> sfold(whole.subspecs.map{ $0 ^* lens })
+                (whole ^* lens) <+> sfold(whole.subspecs.map{ $0 ^* lens })
             }
         }
     }

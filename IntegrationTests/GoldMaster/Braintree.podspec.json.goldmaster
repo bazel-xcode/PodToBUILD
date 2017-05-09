@@ -59,6 +59,9 @@ objc_library(
   weak_sdk_frameworks = [
     "Contacts"
   ],
+  copts = [
+    "-Wall -Werror -Wextra"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -95,6 +98,9 @@ objc_library(
   deps = [
     ":Braintree_Core"
   ],
+  copts = [
+    "-Wall -Werror -Wextra"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -127,6 +133,9 @@ objc_library(
   ],
   deps = [
     ":Braintree_Core"
+  ],
+  copts = [
+    "-Wall -Werror -Wextra"
   ],
   visibility = [
     "//visibility:public"
@@ -161,6 +170,9 @@ objc_library(
   deps = [
     ":DataCollector_VendoredLibraries",
     ":Braintree_Core"
+  ],
+  copts = [
+    "-Wall -Werror -Wextra"
   ],
   visibility = [
     "//visibility:public"
@@ -203,6 +215,9 @@ objc_library(
     ":Braintree_PayPalOneTouch",
     ":Braintree_Core"
   ],
+  copts = [
+    "-Wall -Werror -Wextra"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -236,6 +251,9 @@ objc_library(
   deps = [
     ":Braintree_PayPalDataCollector",
     ":Braintree_Core"
+  ],
+  copts = [
+    "-Wall -Werror -Wextra"
   ],
   visibility = [
     "//visibility:public"
@@ -298,6 +316,9 @@ objc_library(
     ":Braintree_Card",
     ":Braintree_Core"
   ],
+  copts = [
+    "-Wall -Werror -Wextra"
+  ],
   bundles = [
     ":UI_Bundle_Braintree_UI_Localization",
     ":UI_Bundle_Braintree_Drop_In_Localization"
@@ -338,6 +359,9 @@ objc_library(
   deps = [
     ":Braintree_Card",
     ":Braintree_Core"
+  ],
+  copts = [
+    "-Wall -Werror -Wextra"
   ],
   visibility = [
     "//visibility:public"
@@ -388,6 +412,9 @@ objc_library(
     ":Braintree_Card",
     ":Braintree_Core"
   ],
+  copts = [
+    "-Wall -Werror -Wextra"
+  ],
   bundles = [
     ":3D_Secure_Bundle_Braintree_3D_Secure_Localization"
   ],
@@ -432,6 +459,9 @@ objc_library(
     ":Braintree_PayPalDataCollector",
     ":Braintree_Core"
   ],
+  copts = [
+    "-Wall -Werror -Wextra"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -472,6 +502,9 @@ objc_library(
     ":PayPalDataCollector_VendoredLibraries",
     ":Braintree_PayPalUtils",
     ":Braintree_Core"
+  ],
+  copts = [
+    "-Wall -Werror -Wextra"
   ],
   visibility = [
     "//visibility:public"
@@ -514,6 +547,9 @@ objc_library(
     "SystemConfiguration",
     "CoreLocation",
     "UIKit"
+  ],
+  copts = [
+    "-Wall -Werror -Wextra"
   ],
   visibility = [
     "//visibility:public"

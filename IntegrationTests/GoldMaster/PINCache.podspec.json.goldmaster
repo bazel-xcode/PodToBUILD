@@ -63,6 +63,19 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/PINCache/"
   ],
+  sdk_frameworks = [
+    "Foundation"
+  ],
+  weak_sdk_frameworks = select(
+    {
+      ":osxCase": [
+        "AppKit"
+      ],
+      "//conditions:default": [
+        "UIKit"
+      ]
+    }
+    ),
   deps = [
     "@PINOperation//:PINOperation"
   ],
@@ -76,6 +89,19 @@ objc_library(
     [
       "Source/PINDiskCache.m"
     ]
+    ),
+  sdk_frameworks = [
+    "Foundation"
+  ],
+  weak_sdk_frameworks = select(
+    {
+      ":osxCase": [
+        "AppKit"
+      ],
+      "//conditions:default": [
+        "UIKit"
+      ]
+    }
     ),
   deps = [
     ":PINCache_Core"

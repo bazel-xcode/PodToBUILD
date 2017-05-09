@@ -10,13 +10,25 @@ import Foundation
 
 // Get a JSON Podspec from a file
 func podSpecWithFixture(JSONPodspecFilePath: String) -> PodSpec {
-    guard let jsonData = NSData(contentsOfFile: JSONPodspecFilePath) as? Data,
-        let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
-            JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
-        let JSONPodspec = JSONFile as? JSONDict,
-        let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
-        fatalError()
+    guard let jsonData = try? Data(contentsOf: URL(fileURLWithPath: JSONPodspecFilePath)) else {
+        fatalError("Error: Unable to load podspec at \(JSONPodspecFilePath)")
     }
+
+    guard let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
+        JSONSerialization.ReadingOptions.allowFragments) else {
+        fatalError("Error: Unable to parse JSON podspec at \(JSONPodspecFilePath)")
+    }
+
+
+    guard let JSONPodspec = JSONFile as? JSONDict  else {
+        fatalError("Error: JSON for podspec is malformed. Expected [String:Any] for podspec at: \(JSONPodspecFilePath)")
+    }
+
+
+    guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
+        fatalError("Error: JSON podspec is invalid. Look for missing fields or incorrect data types: \(JSONPodspecFilePath)")
+    }
+
     return podSpec
 }
 

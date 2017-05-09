@@ -9,9 +9,9 @@ import PodSpecToBUILD
  */
 
 
-let podName = "SFHFKeychainUtils"
+let podName = "Texture"
 let pod = examplePodSpecNamed(name: podName)
-let options = BasicBuildOptions(podName: "", userOptions: [String](), globalCopts: ["-fmonoids"], trace: true)
+let options = BasicBuildOptions(podName: "", userOptions: [String](), globalCopts: [], trace: true)
 let jsonPodSpec = try! JSONSerialization.jsonObject(with: try! Data(contentsOf: URL(fileURLWithPath: examplePodSpecFilePath(name: podName)), options: .uncached))
 
 //: Build the PodSpec and run it through the compiler
@@ -26,6 +26,7 @@ print("\(buildFileOut)")
 //: Assistant View Configuration
 let view = NSView(frame: NSRect(x: 0, y: 0, width: 800, height: 1024 * 10))
 let jsonpodTextView = NSTextView(frame: NSRect(x: 0, y: 0, width: view.frame.width / 2.0, height: view.frame.height))
+
 jsonpodTextView.string = String(data: try JSONSerialization.data(withJSONObject: jsonPodSpec, options: .prettyPrinted), encoding: .utf8)
 let buildFileTextView = NSTextView(frame: NSRect(x: view.frame.width / 2.0,
                                                  y: 0,

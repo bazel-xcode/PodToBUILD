@@ -8,10 +8,10 @@ objc_library(
   ],
   deps = [
     ":GoogleSignIn_VendoredFrameworks",
-    "@GoogleToolboxForMac/NSString+URLArguments//:GoogleToolboxForMac/NSString+URLArguments",
+    "@GoogleToolboxForMac//:GoogleToolboxForMac_NSString_URLArguments",
     "@GTMOAuth2//:GTMOAuth2",
-    "@GoogleToolboxForMac/NSDictionary+URLArguments//:GoogleToolboxForMac/NSDictionary+URLArguments",
-    "@GTMSessionFetcher/Core//:GTMSessionFetcher/Core"
+    "@GoogleToolboxForMac//:GoogleToolboxForMac_NSDictionary_URLArguments",
+    "@GTMSessionFetcher//:GTMSessionFetcher_Core"
   ],
   visibility = [
     "//visibility:public"

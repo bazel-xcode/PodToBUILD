@@ -115,7 +115,7 @@ class BuildFileTests: XCTestCase {
 
     func testLibFromPodspec() {
         let podspec = examplePodSpecNamed(name: "IGListKit")
-        let lib = ObjcLibrary(rootName: podspec.name, spec: podspec)
+        let lib = ObjcLibrary(rootSpec: nil, spec: podspec)
         
         let expectedFrameworks: AttrSet<[String]> = AttrSet(multi: MultiPlatform(
             ios: ["UIKit"],
@@ -127,8 +127,7 @@ class BuildFileTests: XCTestCase {
     
     func testNameFromPodspec() {
         let podspec = examplePodSpecNamed(name: "IGListKit")
-        let lib = ObjcLibrary(rootName: podspec.name, spec: podspec)
-        
+        let lib = ObjcLibrary(rootSpec: nil, spec: podspec)
         XCTAssert(lib.name == podspec.name)
     }
     

@@ -31,10 +31,10 @@ public struct MultiPlatform<T: AttrSetConstraint>: Monoid, SkylarkConvertible, E
     // overwrites the value with the one on the right
     public static func<>(lhs: MultiPlatform, rhs: MultiPlatform) -> MultiPlatform {
         return MultiPlatform(
-            ios: lhs.ios <> rhs.ios,
-            osx: lhs.osx <> rhs.osx,
-            watchos: lhs.watchos <> rhs.watchos,
-            tvos: lhs.tvos <> rhs.tvos
+            ios: lhs.ios <+> rhs.ios,
+            osx: lhs.osx <+> rhs.osx,
+            watchos: lhs.watchos <+> rhs.watchos,
+            tvos: lhs.tvos <+> rhs.tvos
         )
     }
 
@@ -73,7 +73,7 @@ public struct MultiPlatform<T: AttrSetConstraint>: Monoid, SkylarkConvertible, E
         self.watchos = nil
     }
 
-    init(value: T) {
+    init(value: T?) {
         self.init(ios: value, osx: value, watchos: value, tvos: value)
     }
 
@@ -88,9 +88,9 @@ public struct MultiPlatform<T: AttrSetConstraint>: Monoid, SkylarkConvertible, E
         precondition(ios != nil || osx != nil || watchos != nil || tvos != nil, "MultiPlatform empty can't be rendered")
 
         return .functionCall(name: "select", arguments: [.basic((
-            osx.map { [":\(SelectCase.osx.rawValue)": $0] } <>
-            watchos.map { [":\(SelectCase.watchos.rawValue)": $0] } <>
-            tvos.map { [":\(SelectCase.tvos.rawValue)": $0] } <>
+            osx.map { [":\(SelectCase.osx.rawValue)": $0] } <+>
+            watchos.map { [":\(SelectCase.watchos.rawValue)": $0] } <+>
+            tvos.map { [":\(SelectCase.tvos.rawValue)": $0] } <+>
             // TODO: Change to T.empty and move ios up when we support other platforms
 	        [SelectCase.fallback.rawValue: ios ?? T.empty ] ?? [:]
         ).toSkylark())])
@@ -109,8 +109,8 @@ struct AttrTuple<A: AttrSetConstraint, B: AttrSetConstraint>: AttrSetConstraint 
 
     public static func <> (lhs: AttrTuple, rhs: AttrTuple) -> AttrTuple {
         return AttrTuple(
-          lhs.first <> rhs.first,
-          lhs.second <> rhs.second
+          lhs.first <+> rhs.first,
+          lhs.second <+> rhs.second
         )
     }
 
@@ -127,7 +127,12 @@ struct AttrTuple<A: AttrSetConstraint, B: AttrSetConstraint>: AttrSetConstraint 
 struct AttrSet<T: AttrSetConstraint>: Monoid, SkylarkConvertible, EmptyAwareness {
     let basic: T?
     let multi: MultiPlatform<T>
-    
+
+    init(value: T?) {
+        self.basic = value.normalize()
+        self.multi = MultiPlatform(value: value)
+    }
+
     init(basic: T?) {
         self.basic = basic.normalize()
         multi = MultiPlatform.empty
@@ -171,7 +176,7 @@ struct AttrSet<T: AttrSetConstraint>: Monoid, SkylarkConvertible, EmptyAwareness
 
     static func<>(lhs: AttrSet<T>, rhs: AttrSet<T>) -> AttrSet<T> {
         return AttrSet(
-            basic: lhs.basic <> rhs.basic,
+            basic: lhs.basic <+> rhs.basic,
             multi: lhs.multi <> rhs.multi
         )
     }
@@ -183,6 +188,16 @@ struct AttrSet<T: AttrSetConstraint>: Monoid, SkylarkConvertible, EmptyAwareness
         case .none: return multi.toSkylark()
         case let .some(b): return b.toSkylark() .+. multi.toSkylark()
         }
+    }
+}
+extension MultiPlatform where T == Optional<String> {
+    func denormalize() -> MultiPlatform<String> {
+        return self.map { $0.denormalize() }
+    }
+}
+extension AttrSet where T == Optional<String> {
+    func denormalize() -> AttrSet<String> {
+        return self.map { $0.denormalize() }
     }
 }
 
