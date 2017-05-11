@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+FMDB_source_headers = [
+
+]
+FMDB_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+FMDB_headers = FMDB_source_headers + FMDB_extra_headers
 objc_library(
   name = "FMDB",
+  srcs = [
+
+  ],
+  hdrs = FMDB_headers,
+  pch = pch_with_name_hint(
+    "FMDB"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/FMDB/"
+  ],
   deps = [
     ":FMDB_standard",
     ":FMDB_FTS",
@@ -14,12 +35,14 @@ objc_library(
 FMDB_standard_source_headers = glob(
   [
     "src/fmdb/FM*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FMDB_standard_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FMDB_standard_headers = FMDB_standard_source_headers + FMDB_standard_extra_headers
 objc_library(
@@ -27,7 +50,12 @@ objc_library(
   srcs = glob(
     [
       "src/fmdb/FM*.m"
-    ]
+    ],
+    exclude = [
+      "src/extra/fts3/*.m",
+      "src/fmdb.m"
+    ],
+    exclude_directories = 1
     ),
   hdrs = FMDB_standard_headers,
   pch = pch_with_name_hint(
@@ -47,12 +75,14 @@ objc_library(
 FMDB_FTS_source_headers = glob(
   [
     "src/extra/fts3/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FMDB_FTS_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FMDB_FTS_headers = FMDB_FTS_source_headers + FMDB_FTS_extra_headers
 objc_library(
@@ -60,7 +90,8 @@ objc_library(
   srcs = glob(
     [
       "src/extra/fts3/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = FMDB_FTS_headers,
   pch = pch_with_name_hint(
@@ -77,8 +108,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+FMDB_standalone_source_headers = [
+
+]
+FMDB_standalone_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+FMDB_standalone_headers = FMDB_standalone_source_headers + FMDB_standalone_extra_headers
 objc_library(
   name = "FMDB_standalone",
+  srcs = [
+
+  ],
+  hdrs = FMDB_standalone_headers,
+  pch = pch_with_name_hint(
+    "FMDB"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/FMDB/"
+  ],
   copts = [
     "-DFMDB_SQLITE_STANDALONE"
   ],
@@ -89,12 +141,14 @@ objc_library(
 FMDB_SQLCipher_source_headers = glob(
   [
     "src/fmdb/FM*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FMDB_SQLCipher_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FMDB_SQLCipher_headers = FMDB_SQLCipher_source_headers + FMDB_SQLCipher_extra_headers
 objc_library(
@@ -102,7 +156,11 @@ objc_library(
   srcs = glob(
     [
       "src/fmdb/FM*.m"
-    ]
+    ],
+    exclude = [
+      "src/fmdb.m"
+    ],
+    exclude_directories = 1
     ),
   hdrs = FMDB_SQLCipher_headers,
   pch = pch_with_name_hint(

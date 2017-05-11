@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 PaymentKit_source_headers = glob(
   [
     "PaymentKit/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PaymentKit_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PaymentKit_headers = PaymentKit_source_headers + PaymentKit_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "PaymentKit/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = PaymentKit_headers,
   pch = pch_with_name_hint(

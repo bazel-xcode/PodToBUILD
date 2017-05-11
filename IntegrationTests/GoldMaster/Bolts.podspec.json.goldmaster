@@ -23,8 +23,29 @@ config_setting(
     "cpu": "powerpc4"
   }
   )
+Bolts_source_headers = [
+
+]
+Bolts_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Bolts_headers = Bolts_source_headers + Bolts_extra_headers
 objc_library(
   name = "Bolts",
+  srcs = [
+
+  ],
+  hdrs = Bolts_headers,
+  pch = pch_with_name_hint(
+    "Bolts"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Bolts/"
+  ],
   deps = [
     ":Bolts_Tasks",
     ":Bolts_AppLinks"
@@ -33,14 +54,56 @@ objc_library(
     "//visibility:public"
   ]
   )
+Bolts_Tasks_source_headers = [
+
+]
+Bolts_Tasks_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Bolts_Tasks_headers = Bolts_Tasks_source_headers + Bolts_Tasks_extra_headers
 objc_library(
   name = "Bolts_Tasks",
+  srcs = [
+
+  ],
+  hdrs = Bolts_Tasks_headers,
+  pch = pch_with_name_hint(
+    "Bolts"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Bolts/"
+  ],
   visibility = [
     "//visibility:public"
   ]
   )
+Bolts_AppLinks_source_headers = [
+
+]
+Bolts_AppLinks_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Bolts_AppLinks_headers = Bolts_AppLinks_source_headers + Bolts_AppLinks_extra_headers
 objc_library(
   name = "Bolts_AppLinks",
+  srcs = [
+
+  ],
+  hdrs = Bolts_AppLinks_headers,
+  pch = pch_with_name_hint(
+    "Bolts"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Bolts/"
+  ],
   deps = [
     ":Bolts_Tasks"
   ],

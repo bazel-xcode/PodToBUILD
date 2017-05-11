@@ -20,12 +20,14 @@ config_setting(
 Masonry_source_headers = glob(
   [
     "Masonry/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Masonry_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Masonry_headers = Masonry_source_headers + Masonry_extra_headers
 objc_library(
@@ -33,7 +35,8 @@ objc_library(
   srcs = glob(
     [
       "Masonry/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Masonry_headers,
   pch = pch_with_name_hint(

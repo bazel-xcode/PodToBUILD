@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+AsyncDisplayKit_source_headers = [
+
+]
+AsyncDisplayKit_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+AsyncDisplayKit_headers = AsyncDisplayKit_source_headers + AsyncDisplayKit_extra_headers
 objc_library(
   name = "AsyncDisplayKit",
+  srcs = [
+
+  ],
+  hdrs = AsyncDisplayKit_headers,
+  pch = pch_with_name_hint(
+    "AsyncDisplayKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
+  ],
   weak_sdk_frameworks = [
     "Photos",
     "MapKit",
@@ -26,14 +47,16 @@ objc_library(
 AsyncDisplayKit_Core_source_headers = glob(
   [
     "AsyncDisplayKit/**/*.h",
-    "Base/*.h",
-    "AsyncDisplayKit/TextKit/*.h"
-  ]
+    "AsyncDisplayKit/TextKit/*.h",
+    "Base/*.h"
+  ],
+  exclude_directories = 1
   )
 AsyncDisplayKit_Core_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 AsyncDisplayKit_Core_headers = AsyncDisplayKit_Core_source_headers + AsyncDisplayKit_Core_extra_headers
 objc_library(
@@ -43,7 +66,8 @@ objc_library(
       "AsyncDisplayKit/**/*.m",
       "AsyncDisplayKit/**/*.mm",
       "Base/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = AsyncDisplayKit_Core_headers,
   pch = pch_with_name_hint(
@@ -70,8 +94,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+AsyncDisplayKit_PINRemoteImage_source_headers = [
+
+]
+AsyncDisplayKit_PINRemoteImage_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+AsyncDisplayKit_PINRemoteImage_headers = AsyncDisplayKit_PINRemoteImage_source_headers + AsyncDisplayKit_PINRemoteImage_extra_headers
 objc_library(
   name = "AsyncDisplayKit_PINRemoteImage",
+  srcs = [
+
+  ],
+  hdrs = AsyncDisplayKit_PINRemoteImage_headers,
+  pch = pch_with_name_hint(
+    "AsyncDisplayKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
+  ],
   weak_sdk_frameworks = [
     "Photos",
     "MapKit",
@@ -94,8 +139,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+AsyncDisplayKit_IGListKit_source_headers = [
+
+]
+AsyncDisplayKit_IGListKit_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+AsyncDisplayKit_IGListKit_headers = AsyncDisplayKit_IGListKit_source_headers + AsyncDisplayKit_IGListKit_extra_headers
 objc_library(
   name = "AsyncDisplayKit_IGListKit",
+  srcs = [
+
+  ],
+  hdrs = AsyncDisplayKit_IGListKit_headers,
+  pch = pch_with_name_hint(
+    "AsyncDisplayKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
+  ],
   weak_sdk_frameworks = [
     "Photos",
     "MapKit",
@@ -117,8 +183,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+AsyncDisplayKit_Yoga_source_headers = [
+
+]
+AsyncDisplayKit_Yoga_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+AsyncDisplayKit_Yoga_headers = AsyncDisplayKit_Yoga_source_headers + AsyncDisplayKit_Yoga_extra_headers
 objc_library(
   name = "AsyncDisplayKit_Yoga",
+  srcs = [
+
+  ],
+  hdrs = AsyncDisplayKit_Yoga_headers,
+  pch = pch_with_name_hint(
+    "AsyncDisplayKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
+  ],
   weak_sdk_frameworks = [
     "Photos",
     "MapKit",

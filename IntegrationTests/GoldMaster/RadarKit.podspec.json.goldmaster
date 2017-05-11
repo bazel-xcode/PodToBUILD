@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 RadarKit_source_headers = glob(
   [
     "RadarKit/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 RadarKit_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 RadarKit_headers = RadarKit_source_headers + RadarKit_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "RadarKit/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = RadarKit_headers,
   pch = pch_with_name_hint(

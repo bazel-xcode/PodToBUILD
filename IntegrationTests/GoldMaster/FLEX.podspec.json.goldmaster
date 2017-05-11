@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 FLEX_source_headers = glob(
   [
     "Classes/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FLEX_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FLEX_headers = FLEX_source_headers + FLEX_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "Classes/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = FLEX_headers,
   pch = pch_with_name_hint(

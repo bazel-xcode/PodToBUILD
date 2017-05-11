@@ -25,9 +25,8 @@ struct ObjcBundleLibrary: BazelTarget {
             arguments: [
                 .named(name: "name", value: ObjcLibrary.bazelLabel(fromString: name).toSkylark()),
                 .named(name: "resources",
-                       value: GlobNode(include: resources,
-                                       exclude: AttrSet.empty,
-                                       excludeDirectories:true).toSkylark()),
+                       value: GlobNode(include: resources.map{ Set($0) },
+                                       exclude: AttrSet.empty).toSkylark()),
         ])
     }
 }
@@ -91,9 +90,12 @@ struct ObjcFramework: BazelTarget {
                 arguments: [
                     .named(name: "name", value: .string(name)),
                     .named(name: "framework_imports",
-                           value: GlobNode(include: frameworkImports.map { $0.map { $0 + "/**" } },
-                                           exclude: AttrSet.empty,
-                                           excludeDirectories:true).toSkylark()),
+                           value: GlobNode(
+                                include: frameworkImports.map {
+                                    Set($0.map { $0 + "/**" })
+                                },
+	                           exclude: AttrSet.empty
+                            ).toSkylark()),
                     .named(name: "is_dynamic", value: 1),
                     .named(name: "visibility", value: .list(["//visibility:public"]))
                 ]
@@ -127,34 +129,31 @@ enum ObjcLibraryConfigurableKeys : String {
 struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     let name: String
     let externalName: AttrSet<String>
-    let sourceFiles: [String]
-    let headers: [String]
+    let sourceFiles: GlobNode
+    let headers: GlobNode
     let weakSdkFrameworks: AttrSet<[String]>
     let sdkDylibs: AttrSet<[String]>
     let deps: AttrSet<[String]>
     let bundles: AttrSet<[String]>
 
-
     // "var" properties are user configurable so we need mutation here
     var excludedSource = [String]()
     var sdkFrameworks: AttrSet<[String]>
     var copts: AttrSet<[String]>
-
     static let xcconfigTransformer = XCConfigTransformer.defaultTransformer()
 
     init(name: String,
-        externalName: String,
-        sourceFiles: [String],
-        headers: [String],
+        externalName: AttrSet<String>,
+        sourceFiles: GlobNode,
+        headers: GlobNode,
         sdkFrameworks: AttrSet<[String]>,
         weakSdkFrameworks: AttrSet<[String]>,
         sdkDylibs: AttrSet<[String]>,
         deps: AttrSet<[String]>,
         copts: AttrSet<[String]>,
-        bundles: AttrSet<[String]>,
-        excludedSource: [String] = []) {
+        bundles: AttrSet<[String]>) {
         self.name = name
-        self.externalName = AttrSet(basic: externalName)
+        self.externalName = externalName
         self.sourceFiles = sourceFiles
         self.headers = headers
         self.sdkFrameworks = sdkFrameworks
@@ -163,7 +162,6 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.deps = deps
         self.copts = copts
         self.bundles = bundles
-        self.excludedSource = excludedSource
     }
 
     static func bazelLabel(fromString string: String) -> String {
@@ -173,8 +171,10 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     }
     
     init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = []) {
-        let headersAndSourcesInfo = headersAndSources(fromSourceFilePatterns: spec.sourceFiles)
         let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].flatMap { $0 })
+
+        let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
+        let allExcludes = spec ^* liftToAttr(PodSpec.lens.excludeFiles)
 
         let xcconfigFlags =
             ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
@@ -195,15 +195,18 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.externalName = (moduleName.isEmpty ? nil : moduleName) ??
                             (headerDirectoryName.basic == nil ? nil : headerDirectoryName.denormalize()) ??
                             AttrSet<String>(value: rootName)
-        self.sourceFiles = headersAndSourcesInfo.sourceFiles
-        self.headers = headersAndSourcesInfo.headers
+        self.sourceFiles = GlobNode(
+            include: extract(sources: allSourceFiles).map{ Set($0) },
+            exclude: extract(sources: allExcludes).map{ Set($0) })
+        self.headers = GlobNode(
+            include: extract(headers: allSourceFiles).map{ Set($0) },
+            exclude: extract(headers: allExcludes).map{ Set($0) })
         self.sdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.frameworks))
         self.weakSdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.weakFrameworks))
         self.sdkDylibs = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.libraries))
         self.deps = AttrSet(basic: extraDeps.map{ ":\($0)" }.map(ObjcLibrary.bazelLabel)) <> (spec ^* liftToAttr(PodSpec.lens.dependencies .. ReadonlyLens(fixDependencyNames(rootName: rootName))))
         self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
         self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.name)_Bundle_\(k)" }.map(ObjcLibrary.bazelLabel) })
-        self.excludedSource = getCompiledSource(fromPatterns: spec.excludeFiles)
     }
 
     mutating func add(configurableKey: String, value: Any) {
@@ -223,12 +226,16 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
     // MARK: Source Excludable
 
-    var excludableSourceFiles: [String] {
-        return sourceFiles
+    var excludableSourceFiles: AttrSet<Set<String>> {
+        return self ^* (ObjcLibrary.lens.sourceFiles .. GlobNode.lens.include)
+    }
+    
+    var alreadyExcluded: AttrSet<Set<String>> {
+        return self ^* (ObjcLibrary.lens.sourceFiles .. GlobNode.lens.exclude)
     }
 
-    mutating func addExcludedSourceFile(sourceFile: String) {
-        excludedSource += [sourceFile]
+    mutating func addExcluded(sourceFiles: AttrSet<Set<String>>) {
+        self = (ObjcLibrary.lens.excludeFiles %~ { oldExclude in oldExclude <> sourceFiles })(self)
     }
 
     // MARK: - Bazel Rendering
@@ -241,42 +248,27 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         var libArguments = [SkylarkFunctionArgument]()
 
         libArguments.append(nameArgument)
-        if lib.sourceFiles.count > 0 {
-            // Glob all of the source files and exclude excluded sources
-            var globArguments = [SkylarkFunctionArgument.basic(lib.sourceFiles.toSkylark())]
-            if lib.excludedSource.count > 0 {
-                globArguments.append(.named(
-                    name: "exclude",
-                    value: excludedSource.toSkylark()
-                ))
-            }
+        if !lib.sourceFiles.isEmpty {
             libArguments.append(.named(
                 name: "srcs",
-                value: .functionCall(name: "glob", arguments: globArguments)
+                value: lib.sourceFiles.toSkylark()
             ))
         }
 
-        if lib.headers.count > 0 {
+        if !lib.headers.isEmpty {
             // Generate header logic
             // source_headers = glob(["Source/*.h"])
             // extra_headers = glob(["bazel_support/Headers/Public/**/*.h"])
             // hdrs = source_headers + extra_headers
-
             // HACK! There is no assignment in Skylark Imp
-            inlineSkylark.append(.functionCall(
-                name: "\(lib.name)_source_headers = glob",
-                arguments: [.basic(lib.headers.toSkylark())]
-            ))
-
-            // HACK! There is no assignment in Skylark Imp
-            inlineSkylark.append(.functionCall(
-                name: "\(lib.name)_extra_headers = glob",
-                arguments: [.basic(["bazel_support/Headers/Public/**/*.h"].toSkylark())]
-            ))
-
-            inlineSkylark.append(.skylark(
-                "\(lib.name)_headers = \(lib.name)_source_headers + \(lib.name)_extra_headers"
-            ))
+            inlineSkylark += [
+                .skylark("\(lib.name)_source_headers") .=. headers.toSkylark(),
+                .skylark("\(lib.name)_extra_headers") .=. GlobNode(
+                    include: AttrSet<Set<String>>(basic: ["bazel_support/Headers/Public/**/*.h"]),
+                    exclude: AttrSet.empty
+                ).toSkylark(),
+                .skylark("\(lib.name)_headers") .=. .skylark("\(lib.name)_source_headers + \(lib.name)_extra_headers")
+            ]
 
             libArguments.append(.named(
                 name: "hdrs",
@@ -353,54 +345,53 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     }
 }
 
-// This is domain specific to bazel. Bazel's "glob" can't support wild cards so add
-// multiple entries instead of {m, cpp}
-// see above for further docs
-func getCompiledSource(fromPatterns patterns: [String]) -> [String] {
-    var sourceFiles = [String]()
-    for sourceFilePattern in patterns {
-        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "m") {
-            sourceFiles.append(impl)
-        }
-        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "mm") {
-            sourceFiles.append(impl)
-        }
-        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "cpp") {
-            sourceFiles.append(impl)
-        }
-        if let impl = pattern(fromPattern: sourceFilePattern, includingFileType: "c") {
-            sourceFiles.append(impl)
-        }
+extension ObjcLibrary {
+    enum lens {
+        static let sourceFiles: Lens<ObjcLibrary, GlobNode> = {
+            return Lens(view: { $0.sourceFiles }, set: { sourceFiles, lib  in
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles)
+            })
+        }()
+        
+        static let deps: Lens<ObjcLibrary, AttrSet<[String]>> = {
+            return Lens(view: { $0.deps }, set: { deps, lib in
+		        ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles)
+            })
+        }()
+        
+        /// Not a real property -- digs into the glob node
+        static let excludeFiles: Lens<ObjcLibrary, AttrSet<Set<String>>> = {
+           return ObjcLibrary.lens.sourceFiles .. GlobNode.lens.exclude
+        }()
     }
-    return sourceFiles
 }
 
-typealias SourceFilePatternRep = (headers: [String], sourceFiles: [String])
-
-// Extract Headers and Source Files
-// @see getCompiledSource for further docs
-func headersAndSources(fromSourceFilePatterns patterns: [String]) -> SourceFilePatternRep {
-    var headers = [String]()
-    var sourceFiles = [String]()
-    for sourceFilePattern in patterns {
-        // Optimization: if we're sure about the source extension, skip pattern
-        // matching
-        if sourceFilePattern.hasSuffix(".h") {
-            headers.append(sourceFilePattern)
-        } else if sourceFilePattern.hasSuffix(".m") {
-            sourceFiles.append(sourceFilePattern)
-        } else if sourceFilePattern.hasSuffix(".mm") {
-            sourceFiles.append(sourceFilePattern)
-        } else if sourceFilePattern.hasSuffix(".c") {
-            sourceFiles.append(sourceFilePattern)
-        } else if sourceFilePattern.hasSuffix(".cpp") {
-            sourceFiles.append(sourceFilePattern)
+private func extractSources(patterns: [String]) -> [String] {
+    return patterns.flatMap { (p: String) -> [String] in
+        let sourceFileTypes = Set(["m", "mm", "c", "cpp"])
+        if let _ = (sourceFileTypes.first{ p.hasSuffix(".\($0)") }) {
+            return [p]
         } else {
-            if let header = pattern(fromPattern: sourceFilePattern, includingFileType: "h") {
-                headers.append(header)
-            }
-            sourceFiles += getCompiledSource(fromPatterns: [sourceFilePattern])
+            // This is domain specific to bazel. Bazel's "glob" can't support wild cards so add
+            // multiple entries instead of {m, cpp}
+            return sourceFileTypes.flatMap{ pattern(fromPattern: p, includingFileType: $0) }
         }
     }
-    return (headers, sourceFiles)
+}
+
+private func extractHeaders(patterns: [String]) -> [String] {
+    return patterns.flatMap { (p: String) -> [String] in
+        if p.hasSuffix("h") {
+            return [p]
+        } else {
+            return pattern(fromPattern: p, includingFileType: "h").map{ [$0] } ?? []
+        }
+    }
+}
+
+func extract(headers: AttrSet<[String]>) -> AttrSet<[String]> {
+    return headers.map(extractHeaders)
+}
+func extract(sources: AttrSet<[String]>) -> AttrSet<[String]> {
+    return sources.map(extractSources)
 }

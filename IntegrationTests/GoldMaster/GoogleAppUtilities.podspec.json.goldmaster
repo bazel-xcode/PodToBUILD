@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+GoogleAppUtilities_source_headers = [
+
+]
+GoogleAppUtilities_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+GoogleAppUtilities_headers = GoogleAppUtilities_source_headers + GoogleAppUtilities_extra_headers
 objc_library(
   name = "GoogleAppUtilities",
+  srcs = [
+
+  ],
+  hdrs = GoogleAppUtilities_headers,
+  pch = pch_with_name_hint(
+    "GoogleAppUtilities"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/GoogleAppUtilities/"
+  ],
   deps = [
     ":GoogleAppUtilities_VendoredFrameworks",
     "@GoogleSymbolUtilities//:GoogleSymbolUtilities"
@@ -14,9 +35,6 @@ objc_framework(
   framework_imports = glob(
     [
       "Frameworks/frameworks/GoogleAppUtilities.framework/**"
-    ],
-    exclude = [
-
     ],
     exclude_directories = 1
     ),

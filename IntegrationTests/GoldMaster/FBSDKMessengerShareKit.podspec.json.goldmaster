@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 FBSDKMessengerShareKit_source_headers = glob(
   [
     "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FBSDKMessengerShareKit_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FBSDKMessengerShareKit_headers = FBSDKMessengerShareKit_source_headers + FBSDKMessengerShareKit_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = FBSDKMessengerShareKit_headers,
   pch = pch_with_name_hint(

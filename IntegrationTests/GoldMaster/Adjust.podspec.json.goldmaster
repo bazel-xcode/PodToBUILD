@@ -11,8 +11,29 @@ config_setting(
     "cpu": "powerpc3"
   }
   )
+Adjust_source_headers = [
+
+]
+Adjust_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Adjust_headers = Adjust_source_headers + Adjust_extra_headers
 objc_library(
   name = "Adjust",
+  srcs = [
+
+  ],
+  hdrs = Adjust_headers,
+  pch = pch_with_name_hint(
+    "Adjust"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Adjust/"
+  ],
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -41,12 +62,14 @@ Adjust_Core_source_headers = glob(
   [
     "Adjust/*.h",
     "Adjust/ADJAdditions/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Adjust_Core_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Adjust_Core_headers = Adjust_Core_source_headers + Adjust_Core_extra_headers
 objc_library(
@@ -55,7 +78,13 @@ objc_library(
     [
       "Adjust/*.m",
       "Adjust/ADJAdditions/*.m"
-    ]
+    ],
+    exclude = [
+      "plugin/Criteo/*.m",
+      "plugin/Sociomantic/*.m",
+      "plugin/Trademob/*.m"
+    ],
+    exclude_directories = 1
     ),
   hdrs = Adjust_Core_headers,
   pch = pch_with_name_hint(
@@ -86,12 +115,14 @@ objc_library(
 Adjust_Sociomantic_source_headers = glob(
   [
     "plugin/Sociomantic/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Adjust_Sociomantic_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Adjust_Sociomantic_headers = Adjust_Sociomantic_source_headers + Adjust_Sociomantic_extra_headers
 objc_library(
@@ -99,7 +130,8 @@ objc_library(
   srcs = glob(
     [
       "plugin/Sociomantic/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Adjust_Sociomantic_headers,
   pch = pch_with_name_hint(
@@ -133,12 +165,14 @@ objc_library(
 Adjust_Criteo_source_headers = glob(
   [
     "plugin/Criteo/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Adjust_Criteo_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Adjust_Criteo_headers = Adjust_Criteo_source_headers + Adjust_Criteo_extra_headers
 objc_library(
@@ -146,7 +180,8 @@ objc_library(
   srcs = glob(
     [
       "plugin/Criteo/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Adjust_Criteo_headers,
   pch = pch_with_name_hint(
@@ -180,12 +215,14 @@ objc_library(
 Adjust_Trademob_source_headers = glob(
   [
     "plugin/Trademob/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Adjust_Trademob_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Adjust_Trademob_headers = Adjust_Trademob_source_headers + Adjust_Trademob_extra_headers
 objc_library(
@@ -193,7 +230,8 @@ objc_library(
   srcs = glob(
     [
       "plugin/Trademob/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Adjust_Trademob_headers,
   pch = pch_with_name_hint(

@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 KVOController_source_headers = glob(
   [
     "FBKVOController/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 KVOController_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 KVOController_headers = KVOController_source_headers + KVOController_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "FBKVOController/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = KVOController_headers,
   pch = pch_with_name_hint(

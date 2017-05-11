@@ -178,13 +178,21 @@ func main() {
     let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)
     buildFile.skylarkConvertibles.flatMap { $0 as? RepoTools.ObjcLibrary }
         .flatMap { $0.headers }
-        .flatMap { podGlob(pattern: $0) }
+        .flatMap { globNode in
+            globNode.include.fold(basic: { (patterns: Set<String>?) -> Set<String> in
+                let s: Set<String> = Set(patterns.map{ $0.flatMap(podGlob) } ?? [])
+                return s
+            }, multi: { (set: Set<String>, multi: MultiPlatform<Set<String>>) -> Set<String> in
+                let inner: Set<String>? = multi |>
+                    MultiPlatform<Set<String>>.lens.viewAll{ Set($0.flatMap(podGlob)) }
+                return set.union(inner.denormalize())
+            })
+        }
         .forEach { globResult in
             customHeaderSearchPaths.forEach { searchPath in
                 shell.symLink(from: "\(pwd)/\(globResult)", to: searchPath)
             }
         }
-
     // Run the compiler
     let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.skylarkConvertibles.flatMap { $0.toSkylark() })
     let buildFileOut = buildFileSkylarkCompiler.run()

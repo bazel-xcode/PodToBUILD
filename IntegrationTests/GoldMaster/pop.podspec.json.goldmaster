@@ -2,22 +2,25 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 pop_source_headers = glob(
   [
     "pop/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 pop_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 pop_headers = pop_source_headers + pop_extra_headers
 objc_library(
   name = "pop",
   srcs = glob(
     [
+      "pop/**/*.cpp",
       "pop/**/*.m",
-      "pop/**/*.mm",
-      "pop/**/*.cpp"
-    ]
+      "pop/**/*.mm"
+    ],
+    exclude_directories = 1
     ),
   hdrs = pop_headers,
   pch = pch_with_name_hint(

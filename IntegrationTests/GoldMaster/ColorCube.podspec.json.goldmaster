@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 ColorCube_source_headers = glob(
   [
     "ColorCube/ColorCube/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 ColorCube_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 ColorCube_headers = ColorCube_source_headers + ColorCube_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "ColorCube/ColorCube/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = ColorCube_headers,
   pch = pch_with_name_hint(

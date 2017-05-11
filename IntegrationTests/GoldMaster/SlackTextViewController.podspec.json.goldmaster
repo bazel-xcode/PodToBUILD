@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 SlackTextViewController_source_headers = glob(
   [
     "Source/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 SlackTextViewController_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 SlackTextViewController_headers = SlackTextViewController_source_headers + SlackTextViewController_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "Source/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = SlackTextViewController_headers,
   pch = pch_with_name_hint(

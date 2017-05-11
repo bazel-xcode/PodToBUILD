@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+PINRemoteImage_source_headers = [
+
+]
+PINRemoteImage_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+PINRemoteImage_headers = PINRemoteImage_source_headers + PINRemoteImage_extra_headers
 objc_library(
   name = "PINRemoteImage",
+  srcs = [
+
+  ],
+  hdrs = PINRemoteImage_headers,
+  pch = pch_with_name_hint(
+    "PINRemoteImage"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINRemoteImage/"
+  ],
   deps = [
     ":PINRemoteImage_Core",
     ":PINRemoteImage_iOS",
@@ -17,12 +38,18 @@ objc_library(
 PINRemoteImage_Core_source_headers = glob(
   [
     "Source/Classes/**/*.h"
-  ]
+  ],
+  exclude = [
+    "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
+    "Source/Classes/PINCache/*.h"
+  ],
+  exclude_directories = 1
   )
 PINRemoteImage_Core_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PINRemoteImage_Core_headers = PINRemoteImage_Core_source_headers + PINRemoteImage_Core_extra_headers
 objc_library(
@@ -32,10 +59,10 @@ objc_library(
       "Source/Classes/**/*.m"
     ],
     exclude = [
-      "Source/Classes/PINCache/*.m",
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m",
       "Source/Classes/PINCache/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = PINRemoteImage_Core_headers,
   pch = pch_with_name_hint(
@@ -56,8 +83,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+PINRemoteImage_iOS_source_headers = [
+
+]
+PINRemoteImage_iOS_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+PINRemoteImage_iOS_headers = PINRemoteImage_iOS_source_headers + PINRemoteImage_iOS_extra_headers
 objc_library(
   name = "PINRemoteImage_iOS",
+  srcs = [
+
+  ],
+  hdrs = PINRemoteImage_iOS_headers,
+  pch = pch_with_name_hint(
+    "PINRemoteImage"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINRemoteImage/"
+  ],
   sdk_frameworks = [
     "UIKit"
   ],
@@ -68,8 +116,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+PINRemoteImage_OSX_source_headers = [
+
+]
+PINRemoteImage_OSX_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+PINRemoteImage_OSX_headers = PINRemoteImage_OSX_source_headers + PINRemoteImage_OSX_extra_headers
 objc_library(
   name = "PINRemoteImage_OSX",
+  srcs = [
+
+  ],
+  hdrs = PINRemoteImage_OSX_headers,
+  pch = pch_with_name_hint(
+    "PINRemoteImage"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINRemoteImage/"
+  ],
   sdk_frameworks = [
     "Cocoa",
     "CoreServices"
@@ -81,8 +150,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+PINRemoteImage_tvOS_source_headers = [
+
+]
+PINRemoteImage_tvOS_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+PINRemoteImage_tvOS_headers = PINRemoteImage_tvOS_source_headers + PINRemoteImage_tvOS_extra_headers
 objc_library(
   name = "PINRemoteImage_tvOS",
+  srcs = [
+
+  ],
+  hdrs = PINRemoteImage_tvOS_headers,
+  pch = pch_with_name_hint(
+    "PINRemoteImage"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINRemoteImage/"
+  ],
   deps = [
     ":PINRemoteImage_iOS"
   ],
@@ -93,12 +183,14 @@ objc_library(
 PINRemoteImage_FLAnimatedImage_source_headers = glob(
   [
     "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PINRemoteImage_FLAnimatedImage_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PINRemoteImage_FLAnimatedImage_headers = PINRemoteImage_FLAnimatedImage_source_headers + PINRemoteImage_FLAnimatedImage_extra_headers
 objc_library(
@@ -106,7 +198,8 @@ objc_library(
   srcs = glob(
     [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = PINRemoteImage_FLAnimatedImage_headers,
   pch = pch_with_name_hint(
@@ -124,8 +217,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+PINRemoteImage_WebP_source_headers = [
+
+]
+PINRemoteImage_WebP_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+PINRemoteImage_WebP_headers = PINRemoteImage_WebP_source_headers + PINRemoteImage_WebP_extra_headers
 objc_library(
   name = "PINRemoteImage_WebP",
+  srcs = [
+
+  ],
+  hdrs = PINRemoteImage_WebP_headers,
+  pch = pch_with_name_hint(
+    "PINRemoteImage"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINRemoteImage/"
+  ],
   deps = [
     ":PINRemoteImage_Core",
     "@libwebp//:libwebp"
@@ -140,12 +254,14 @@ objc_library(
 PINRemoteImage_PINCache_source_headers = glob(
   [
     "Source/Classes/PINCache/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PINRemoteImage_PINCache_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PINRemoteImage_PINCache_headers = PINRemoteImage_PINCache_source_headers + PINRemoteImage_PINCache_extra_headers
 objc_library(
@@ -153,7 +269,8 @@ objc_library(
   srcs = glob(
     [
       "Source/Classes/PINCache/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = PINRemoteImage_PINCache_headers,
   pch = pch_with_name_hint(

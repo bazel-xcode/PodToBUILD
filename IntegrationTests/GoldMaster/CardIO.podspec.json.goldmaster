@@ -2,16 +2,21 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 CardIO_source_headers = glob(
   [
     "CardIO/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 CardIO_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 CardIO_headers = CardIO_source_headers + CardIO_extra_headers
 objc_library(
   name = "CardIO",
+  srcs = [
+
+  ],
   hdrs = CardIO_headers,
   pch = pch_with_name_hint(
     "CardIO"

@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 iRate_source_headers = glob(
   [
     "iRate/iRate.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 iRate_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 iRate_headers = iRate_source_headers + iRate_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "iRate/iRate.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = iRate_headers,
   pch = pch_with_name_hint(

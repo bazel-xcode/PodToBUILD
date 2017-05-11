@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+googleapis_source_headers = [
+
+]
+googleapis_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+googleapis_headers = googleapis_source_headers + googleapis_extra_headers
 objc_library(
   name = "googleapis",
+  srcs = [
+
+  ],
+  hdrs = googleapis_headers,
+  pch = pch_with_name_hint(
+    "googleapis"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/googleapis/"
+  ],
   deps = [
     ":googleapis_Messages",
     ":googleapis_Services",
@@ -16,12 +37,14 @@ objc_library(
 googleapis_Messages_source_headers = glob(
   [
     "google/**/*.pbobjc.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 googleapis_Messages_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 googleapis_Messages_headers = googleapis_Messages_source_headers + googleapis_Messages_extra_headers
 objc_library(
@@ -29,7 +52,11 @@ objc_library(
   srcs = glob(
     [
       "google/**/*.pbobjc.m"
-    ]
+    ],
+    exclude = [
+      "google/**/*.pbrpc.m"
+    ],
+    exclude_directories = 1
     ),
   hdrs = googleapis_Messages_headers,
   pch = pch_with_name_hint(
@@ -52,12 +79,14 @@ objc_library(
 googleapis_Services_source_headers = glob(
   [
     "google/**/*.pbrpc.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 googleapis_Services_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 googleapis_Services_headers = googleapis_Services_source_headers + googleapis_Services_extra_headers
 objc_library(
@@ -65,7 +94,8 @@ objc_library(
   srcs = glob(
     [
       "google/**/*.pbrpc.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = googleapis_Services_headers,
   pch = pch_with_name_hint(

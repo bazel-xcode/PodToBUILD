@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 PINOperation_source_headers = glob(
   [
     "Source/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PINOperation_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PINOperation_headers = PINOperation_source_headers + PINOperation_extra_headers
 objc_library(
@@ -16,7 +18,8 @@ objc_library(
     [
       "Source/**/*.m",
       "Source/**/*.mm"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = PINOperation_headers,
   pch = pch_with_name_hint(

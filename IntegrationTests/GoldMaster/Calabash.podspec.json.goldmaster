@@ -5,8 +5,29 @@ config_setting(
     "cpu": "powerpc1"
   }
   )
+Calabash_source_headers = [
+
+]
+Calabash_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Calabash_headers = Calabash_source_headers + Calabash_extra_headers
 objc_library(
   name = "Calabash",
+  srcs = [
+
+  ],
+  hdrs = Calabash_headers,
+  pch = pch_with_name_hint(
+    "Calabash"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Calabash/"
+  ],
   sdk_frameworks = select(
     {
       "//conditions:default": [

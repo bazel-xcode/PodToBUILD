@@ -176,16 +176,12 @@ public struct PodSpec: PodSpecRepresentable {
 
     public init(JSONPodspec: JSONDict) throws {
 
-        let fieldMap: [PodSpecField: Any] = JSONPodspec.flatMap { k, v in
+        let fieldMap: [PodSpecField: Any] = Dictionary(tuples: JSONPodspec.flatMap { k, v in
             guard let field = PodSpecField.init(rawValue: k) else {
                 fputs("WARNING: Unsupported field in Podspec \(k)\n", __stderrp)
                 return nil
             }
             return .some((field, v))
-        }.reduce([:], { (dict: [PodSpecField: Any], kv: (PodSpecField, Any)) -> [PodSpecField: Any] in
-            var d = dict
-            d[kv.0] = kv.1
-            return d
         })
 
         if let name = try? ExtractValue(fromJSON: fieldMap[.name]) as String {
@@ -215,12 +211,8 @@ public struct PodSpec: PodSpecRepresentable {
         }
 
         if let resourceBundleMap = fieldMap[.resourceBundles] as? JSONDict {
-            resourceBundles = resourceBundleMap.map { key, val in
+            resourceBundles = Dictionary(tuples: resourceBundleMap.map { key, val in
                 (key, strings(fromJSON: val))
-            }.reduce([:], { (dict, tuple) -> [String: [String]] in
-                var mutableDict = dict
-                mutableDict[tuple.0] = tuple.1
-                return mutableDict
             })
         } else {
             resourceBundles = [:]

@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+GoogleAuthUtilities_source_headers = [
+
+]
+GoogleAuthUtilities_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+GoogleAuthUtilities_headers = GoogleAuthUtilities_source_headers + GoogleAuthUtilities_extra_headers
 objc_library(
   name = "GoogleAuthUtilities",
+  srcs = [
+
+  ],
+  hdrs = GoogleAuthUtilities_headers,
+  pch = pch_with_name_hint(
+    "GoogleAuthUtilities"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/GoogleAuthUtilities/"
+  ],
   sdk_frameworks = [
     "Security",
     "SystemConfiguration"
@@ -19,9 +40,6 @@ objc_framework(
   framework_imports = glob(
     [
       "Frameworks/frameworks/GoogleAuthUtilities.framework/**"
-    ],
-    exclude = [
-
     ],
     exclude_directories = 1
     ),

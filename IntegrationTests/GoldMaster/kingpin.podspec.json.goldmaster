@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 kingpin_source_headers = glob(
   [
     "kingpin/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 kingpin_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 kingpin_headers = kingpin_source_headers + kingpin_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "kingpin/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = kingpin_headers,
   pch = pch_with_name_hint(

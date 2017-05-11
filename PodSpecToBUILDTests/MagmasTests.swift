@@ -22,6 +22,12 @@ class MagmasTests: XCTestCase {
                 ^&&^
                 (Array.empty <> xs.getArray == xs.getArray) <?> "Left identity"
         }
+        
+        property("Array empty awareness sound") <- forAll { (xs: ArrayOf<Int>) in
+            return xs.getArray.isEmpty ?
+                xs.getArray == Array.empty :
+                xs.getArray != Array.empty
+        }
     }
     
     func testStringExtensions() {
@@ -33,6 +39,12 @@ class MagmasTests: XCTestCase {
             return (x <> String.empty == x) <?> "Right identity"
                 ^&&^
                 (String.empty <> x == x) <?> "Left identity"
+        }
+        
+        property("String empty awareness sound") <- forAll { (x: String) in
+            return x.isEmpty ?
+                x == String.empty :
+                x != String.empty
         }
     }
     
@@ -46,6 +58,12 @@ class MagmasTests: XCTestCase {
             return (x.getDictionary <> Dictionary.empty == x.getDictionary) <?> "Right identity"
                 ^&&^
                 (Dictionary.empty <> x.getDictionary == x.getDictionary) <?> "Left identity"
+        }
+        
+        property("Dict empty awareness sound") <- forAll { (x: DictionaryOf<String, Int>) in
+            return x.getDictionary.isEmpty ?
+                x.getDictionary == Dictionary.empty :
+                x.getDictionary != Dictionary.empty
         }
     }
     

@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+KakaoOpenSDK_source_headers = [
+
+]
+KakaoOpenSDK_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+KakaoOpenSDK_headers = KakaoOpenSDK_source_headers + KakaoOpenSDK_extra_headers
 objc_library(
   name = "KakaoOpenSDK",
+  srcs = [
+
+  ],
+  hdrs = KakaoOpenSDK_headers,
+  pch = pch_with_name_hint(
+    "KakaoOpenSDK"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/KakaoOpenSDK/"
+  ],
   deps = [
     ":KakaoOpenSDK_KakaoOpenSDK",
     ":KakaoOpenSDK_VendoredFrameworks",
@@ -15,8 +36,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+KakaoOpenSDK_KakaoOpenSDK_source_headers = [
+
+]
+KakaoOpenSDK_KakaoOpenSDK_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+KakaoOpenSDK_KakaoOpenSDK_headers = KakaoOpenSDK_KakaoOpenSDK_source_headers + KakaoOpenSDK_KakaoOpenSDK_extra_headers
 objc_library(
   name = "KakaoOpenSDK_KakaoOpenSDK",
+  srcs = [
+
+  ],
+  hdrs = KakaoOpenSDK_KakaoOpenSDK_headers,
+  pch = pch_with_name_hint(
+    "KakaoOpenSDK"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/KakaoOpenSDK/"
+  ],
   sdk_frameworks = [
     "UIKit",
     "WebKit"
@@ -34,9 +76,6 @@ objc_framework(
     [
       "KakaoOpenSDK.framework/**"
     ],
-    exclude = [
-
-    ],
     exclude_directories = 1
     ),
   is_dynamic = 1,
@@ -44,8 +83,29 @@ objc_framework(
     "//visibility:public"
   ]
   )
+KakaoOpenSDK_KakaoNavi_source_headers = [
+
+]
+KakaoOpenSDK_KakaoNavi_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+KakaoOpenSDK_KakaoNavi_headers = KakaoOpenSDK_KakaoNavi_source_headers + KakaoOpenSDK_KakaoNavi_extra_headers
 objc_library(
   name = "KakaoOpenSDK_KakaoNavi",
+  srcs = [
+
+  ],
+  hdrs = KakaoOpenSDK_KakaoNavi_headers,
+  pch = pch_with_name_hint(
+    "KakaoOpenSDK"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/KakaoOpenSDK/"
+  ],
   sdk_frameworks = [
     "UIKit"
   ],
@@ -62,9 +122,6 @@ objc_framework(
     [
       "KakaoNavi.framework/**"
     ],
-    exclude = [
-
-    ],
     exclude_directories = 1
     ),
   is_dynamic = 1,
@@ -72,8 +129,29 @@ objc_framework(
     "//visibility:public"
   ]
   )
+KakaoOpenSDK_KakaoLink_source_headers = [
+
+]
+KakaoOpenSDK_KakaoLink_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+KakaoOpenSDK_KakaoLink_headers = KakaoOpenSDK_KakaoLink_source_headers + KakaoOpenSDK_KakaoLink_extra_headers
 objc_library(
   name = "KakaoOpenSDK_KakaoLink",
+  srcs = [
+
+  ],
+  hdrs = KakaoOpenSDK_KakaoLink_headers,
+  pch = pch_with_name_hint(
+    "KakaoOpenSDK"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/KakaoOpenSDK/"
+  ],
   sdk_frameworks = [
     "UIKit"
   ],
@@ -90,9 +168,6 @@ objc_framework(
     [
       "KakaoLink.framework/**"
     ],
-    exclude = [
-
-    ],
     exclude_directories = 1
     ),
   is_dynamic = 1,
@@ -100,8 +175,29 @@ objc_framework(
     "//visibility:public"
   ]
   )
+KakaoOpenSDK_KakaoS2_source_headers = [
+
+]
+KakaoOpenSDK_KakaoS2_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+KakaoOpenSDK_KakaoS2_headers = KakaoOpenSDK_KakaoS2_source_headers + KakaoOpenSDK_KakaoS2_extra_headers
 objc_library(
   name = "KakaoOpenSDK_KakaoS2",
+  srcs = [
+
+  ],
+  hdrs = KakaoOpenSDK_KakaoS2_headers,
+  pch = pch_with_name_hint(
+    "KakaoOpenSDK"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/KakaoOpenSDK/"
+  ],
   sdk_frameworks = [
     "Foundation"
   ],
@@ -117,9 +213,6 @@ objc_framework(
   framework_imports = glob(
     [
       "KakaoS2.framework/**"
-    ],
-    exclude = [
-
     ],
     exclude_directories = 1
     ),

@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 FBSDKLoginKit_source_headers = glob(
   [
     "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FBSDKLoginKit_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FBSDKLoginKit_headers = FBSDKLoginKit_source_headers + FBSDKLoginKit_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "FBSDKLoginKit/FBSDKLoginKit/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = FBSDKLoginKit_headers,
   pch = pch_with_name_hint(

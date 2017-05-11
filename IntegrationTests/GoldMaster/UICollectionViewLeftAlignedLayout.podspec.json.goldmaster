@@ -2,23 +2,26 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 UICollectionViewLeftAlignedLayout_source_headers = glob(
   [
     "UICollectionViewLeftAlignedLayout/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 UICollectionViewLeftAlignedLayout_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 UICollectionViewLeftAlignedLayout_headers = UICollectionViewLeftAlignedLayout_source_headers + UICollectionViewLeftAlignedLayout_extra_headers
 objc_library(
   name = "UICollectionViewLeftAlignedLayout",
   srcs = glob(
     [
-      "UICollectionViewLeftAlignedLayout/**/*.m",
-      "UICollectionViewLeftAlignedLayout/**/*.mm",
+      "UICollectionViewLeftAlignedLayout/**/*.c",
       "UICollectionViewLeftAlignedLayout/**/*.cpp",
-      "UICollectionViewLeftAlignedLayout/**/*.c"
-    ]
+      "UICollectionViewLeftAlignedLayout/**/*.m",
+      "UICollectionViewLeftAlignedLayout/**/*.mm"
+    ],
+    exclude_directories = 1
     ),
   hdrs = UICollectionViewLeftAlignedLayout_headers,
   pch = pch_with_name_hint(

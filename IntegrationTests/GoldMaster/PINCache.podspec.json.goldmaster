@@ -11,8 +11,29 @@ config_setting(
     "cpu": "powerpc2"
   }
   )
+PINCache_source_headers = [
+
+]
+PINCache_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+PINCache_headers = PINCache_source_headers + PINCache_extra_headers
 objc_library(
   name = "PINCache",
+  srcs = [
+
+  ],
+  hdrs = PINCache_headers,
+  pch = pch_with_name_hint(
+    "PINCache"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINCache/"
+  ],
   sdk_frameworks = [
     "Foundation"
   ],
@@ -37,12 +58,14 @@ objc_library(
 PINCache_Core_source_headers = glob(
   [
     "Source/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PINCache_Core_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 PINCache_Core_headers = PINCache_Core_source_headers + PINCache_Core_extra_headers
 objc_library(
@@ -53,7 +76,8 @@ objc_library(
     ],
     exclude = [
       "Source/PINDiskCache.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = PINCache_Core_headers,
   pch = pch_with_name_hint(
@@ -83,13 +107,32 @@ objc_library(
     "//visibility:public"
   ]
   )
+PINCache_Arc_exception_safe_source_headers = [
+
+]
+PINCache_Arc_exception_safe_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+PINCache_Arc_exception_safe_headers = PINCache_Arc_exception_safe_source_headers + PINCache_Arc_exception_safe_extra_headers
 objc_library(
   name = "PINCache_Arc_exception_safe",
   srcs = glob(
     [
       "Source/PINDiskCache.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
+  hdrs = PINCache_Arc_exception_safe_headers,
+  pch = pch_with_name_hint(
+    "PINCache"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/PINCache/"
+  ],
   sdk_frameworks = [
     "Foundation"
   ],

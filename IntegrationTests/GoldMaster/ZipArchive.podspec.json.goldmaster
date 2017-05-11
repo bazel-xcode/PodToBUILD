@@ -7,12 +7,14 @@ ZipArchive_source_headers = glob(
     "minizip/mztools.h",
     "minizip/unzip.h",
     "minizip/zip.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 ZipArchive_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 ZipArchive_headers = ZipArchive_source_headers + ZipArchive_extra_headers
 objc_library(
@@ -25,7 +27,8 @@ objc_library(
       "minizip/mztools.c",
       "minizip/unzip.c",
       "minizip/zip.c"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = ZipArchive_headers,
   pch = pch_with_name_hint(

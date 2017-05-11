@@ -2,12 +2,14 @@ load('//:build_extensions.bzl', 'pch_with_name_hint')
 SPUserResizableView+Pion_source_headers = glob(
   [
     "SPUserResizableView/SPUserResizableView.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 SPUserResizableView+Pion_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 SPUserResizableView+Pion_headers = SPUserResizableView+Pion_source_headers + SPUserResizableView+Pion_extra_headers
 objc_library(
@@ -15,7 +17,8 @@ objc_library(
   srcs = glob(
     [
       "SPUserResizableView/SPUserResizableView.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = SPUserResizableView+Pion_headers,
   pch = pch_with_name_hint(

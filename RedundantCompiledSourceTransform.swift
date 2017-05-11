@@ -11,11 +11,24 @@ import Foundation
 
 // A target that has files that we are concerned with refining
 protocol SourceExcludable : BazelTarget {
-    var excludableSourceFiles: [String] { get }
+    var excludableSourceFiles: AttrSet<Set<String>> { get }
+    var alreadyExcluded: AttrSet<Set<String>> { get }
 
-    mutating func addExcludedSourceFile(sourceFile: String)
+    mutating func addExcluded(sourceFiles: AttrSet<Set<String>>)
 
     var deps: AttrSet<[String]> { get }
+}
+extension Dictionary where Key == String, Value == SourceExcludable {
+    // TODO figure out the right synatx here
+    // subscript(bazelName: String) -> SourceExcludable? {
+    func get(bazelName: String) -> SourceExcludable? {
+            return bazelName.components(separatedBy: ":").last.flatMap { self[$0] }
+	}
+    mutating func set(bazelName: String, newValue: SourceExcludable) {
+        if let key = bazelName.components(separatedBy: ":").last {
+            self[key] = newValue
+        }
+    }
 }
 
 struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
@@ -46,6 +59,25 @@ struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
     //   deps = [
     //     ":Core"
     //   ],
+    
+    // DFS traversal across a set of SourceExcludables
+    // At each step we propagate along includes and excludes from some dependency to it's parent
+    private static func fixUnspecifiedSourceExcludesInGraphFrom(
+        root: SourceExcludable,
+        excludableByName: inout [String: SourceExcludable]
+    ) {
+		root.deps.basic.flatMap { $0 }?.forEach { depName in
+            guard var updatedDep: SourceExcludable = excludableByName.get(bazelName: depName) else { return }
+            
+            updatedDep.addExcluded(sourceFiles: root.excludableSourceFiles <> root.alreadyExcluded)
+            excludableByName[updatedDep.name] = updatedDep
+            
+            fixUnspecifiedSourceExcludesInGraphFrom(
+                root: excludableByName[updatedDep.name] ?? updatedDep,
+                excludableByName: &excludableByName
+            )
+        }       
+    }
 
     public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions) ->  [SkylarkConvertible] {
         // Needed
@@ -53,48 +85,23 @@ struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
             return input as? SourceExcludable
         }
 
+        // Initialize the dictionary
         var excludableByName = [String: SourceExcludable]()
-        convertibles.flatMap(toSourceExcludable).forEach {
-            excludableByName[$0.name] = $0
-        }
+        convertibles.flatMap(toSourceExcludable).forEach { excludableByName[$0.name] = $0 }
 
-        // Return updated convertibles
-        func updated(convertible: SkylarkConvertible) -> SkylarkConvertible {
-            guard let excludable = toSourceExcludable(convertible),
-                let updated = excludableByName[excludable.name] else {
-                    return convertible
-            }
-            return updated
+        // DFS through the depedency graph.
+        convertibles.flatMap(toSourceExcludable).forEach { excludable in
+            fixUnspecifiedSourceExcludesInGraphFrom(
+                root: excludable,
+                excludableByName: &excludableByName
+            )
         }
         
-        // Loop through the first degree depedency graph.
-        // TODO? Handle the case where we only depend on something for a 
-        // specific platform and Nth degree excludes?
-        convertibles.flatMap(toSourceExcludable).forEach {
-            let excludable = $0
-            for source in excludable.excludableSourceFiles {
-                excludable.deps.basic.flatMap { $0 }?.forEach {
-                    let components = $0.components(separatedBy: ":")
-                    guard components.count > 1 else { return }
-                    let depName = components[1]
-                    guard let depLib = excludableByName[depName] else { return }
-                    if fileSetContains(needle: source, haystack: depLib.excludableSourceFiles) {
-                        var updatedDep = depLib
-                        updatedDep.addExcludedSourceFile(sourceFile: source)
-                        excludableByName[updatedDep.name] = updatedDep
-                    }
-                }
-            }
-        }
-        return convertibles.map(updated)
+        // Rewrite the input with the fixed-excludables
+        return convertibles.map{ toSourceExcludable($0).flatMap{ excludableByName[$0.name] } ?? $0 }
     }
 
-    static func fileSetContains(needle: String, haystack: [String]) -> Bool {
-        for hay in haystack {
-            if glob(pattern: hay, contains: needle) {
-                return true
-            }
-        }
-        return false
+    static func find(needle: String, haystacks: [String]) -> Bool {
+        return haystacks.first { glob(pattern: $0, contains: needle) } != nil
     }
 }

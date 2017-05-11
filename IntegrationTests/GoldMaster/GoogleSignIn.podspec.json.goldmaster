@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+GoogleSignIn_source_headers = [
+
+]
+GoogleSignIn_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+GoogleSignIn_headers = GoogleSignIn_source_headers + GoogleSignIn_extra_headers
 objc_library(
   name = "GoogleSignIn",
+  srcs = [
+
+  ],
+  hdrs = GoogleSignIn_headers,
+  pch = pch_with_name_hint(
+    "GoogleSignIn"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/GoogleSignIn/"
+  ],
   sdk_frameworks = [
     "CoreText",
     "SafariServices",
@@ -22,9 +43,6 @@ objc_framework(
   framework_imports = glob(
     [
       "Frameworks/GoogleSignIn.framework/**"
-    ],
-    exclude = [
-
     ],
     exclude_directories = 1
     ),

@@ -5,8 +5,29 @@ config_setting(
     "cpu": "powerpc1"
   }
   )
+EarlGrey_source_headers = [
+
+]
+EarlGrey_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+EarlGrey_headers = EarlGrey_source_headers + EarlGrey_extra_headers
 objc_library(
   name = "EarlGrey",
+  srcs = [
+
+  ],
+  hdrs = EarlGrey_headers,
+  pch = pch_with_name_hint(
+    "EarlGrey"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/EarlGrey/"
+  ],
   sdk_frameworks = [
     "CoreData",
     "CoreFoundation",
@@ -34,9 +55,6 @@ objc_framework(
       "//conditions:default": glob(
         [
           "EarlGrey/EarlGrey.framework/**"
-        ],
-        exclude = [
-
         ],
         exclude_directories = 1
         )

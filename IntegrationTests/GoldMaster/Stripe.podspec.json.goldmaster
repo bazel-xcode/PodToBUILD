@@ -7,14 +7,16 @@ config_setting(
   )
 Stripe_source_headers = glob(
   [
-    "Stripe/PublicHeaders/*.h",
-    "Stripe/*.h"
-  ]
+    "Stripe/*.h",
+    "Stripe/PublicHeaders/*.h"
+  ],
+  exclude_directories = 1
   )
 Stripe_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Stripe_headers = Stripe_source_headers + Stripe_extra_headers
 objc_library(
@@ -22,7 +24,8 @@ objc_library(
   srcs = glob(
     [
       "Stripe/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Stripe_headers,
   pch = pch_with_name_hint(
@@ -60,9 +63,6 @@ objc_bundle_library(
       "//conditions:default": glob(
         [
           "Stripe/Resources/**/*"
-        ],
-        exclude = [
-
         ],
         exclude_directories = 1
         )

@@ -97,6 +97,63 @@ public struct MultiPlatform<T: AttrSetConstraint>: Monoid, SkylarkConvertible, E
     }
 }
 
+extension MultiPlatform {
+    enum lens {
+        static func ios() -> Lens<MultiPlatform<T>, T?> {
+	        return Lens(view: { $0.ios }, set: { ios, multi in
+		        MultiPlatform(
+                    ios: ios,
+                    osx: multi.osx,
+                    watchos: multi.watchos,
+                    tvos: multi.tvos
+                )
+            })
+        }
+        
+        static func osx() -> Lens<MultiPlatform<T>, T?> {
+	        return Lens(view: { $0.osx }, set: { osx, multi in
+		        MultiPlatform(
+                    ios: multi.ios,
+                    osx: osx,
+                    watchos: multi.watchos,
+                    tvos: multi.tvos
+                )
+            })
+        }
+        
+        static func watchos() -> Lens<MultiPlatform<T>, T?> {
+	        return Lens(view: { $0.watchos }, set: { watchos, multi in
+		        MultiPlatform(
+                    ios: multi.ios,
+                    osx: multi.osx,
+                    watchos: watchos,
+                    tvos: multi.tvos
+                )
+            })
+        }
+        
+        static func tvos() -> Lens<MultiPlatform<T>, T?> {
+	        return Lens(view: { $0.tvos }, set: { tvos, multi in
+		        MultiPlatform(
+                    ios: multi.ios,
+                    osx: multi.osx,
+                    watchos: multi.watchos,
+                    tvos: tvos
+                )
+            })
+        }
+        
+        static func viewAll<U: Semigroup>(f: @escaping (T) -> U) -> ((MultiPlatform<T>) -> U?) {
+	        return { whole in
+                (whole ^* MultiPlatform<T>.lens.ios()).map(f) <>
+                (whole ^* MultiPlatform<T>.lens.osx()).map(f) <>
+                (whole ^* MultiPlatform<T>.lens.watchos()).map(f) <>
+                (whole ^* MultiPlatform<T>.lens.tvos()).map(f)
+            }
+        }
+    }
+}
+
 
 struct AttrTuple<A: AttrSetConstraint, B: AttrSetConstraint>: AttrSetConstraint {
     let first: A?
@@ -151,7 +208,7 @@ struct AttrSet<T: AttrSetConstraint>: Monoid, SkylarkConvertible, EmptyAwareness
     func map<U: AttrSetConstraint>(_ transform: (T) -> U) -> AttrSet<U> {
         return AttrSet<U>(basic: basic.map(transform), multi: multi.map(transform))
     }
-
+    
     func fold<U>(basic: (T?) -> U, multi: (U, MultiPlatform<T>) -> U) -> U {
         return multi(basic(self.basic), self.multi)
     }
@@ -201,6 +258,22 @@ extension AttrSet where T == Optional<String> {
     }
 }
 
+extension AttrSet {
+    enum lens {
+        static func basic() -> Lens<AttrSet<T>, T?> {
+            return Lens<AttrSet<T>, T?>(view: { $0.basic }, set: { (basic: T?, attrSet: AttrSet<T>) -> AttrSet<T> in
+                AttrSet<T>(basic: basic, multi: attrSet.multi)
+            })
+        }
+        
+        static func multi() -> Lens<AttrSet<T>, MultiPlatform<T>> {
+            return Lens<AttrSet<T>, MultiPlatform<T>>(view: { $0.multi }, set: { multi, attrSet in
+                AttrSet<T>(basic: attrSet.basic, multi: multi)
+            })
+        }
+    }
+}
+
 
 extension Dictionary {
     init<S: Sequence>(tuples: S) where S.Iterator.Element == (Key, Value) {
@@ -217,27 +290,31 @@ extension AttrSet {
                     (k, AttrSet<V>(basic: v))
                 })
         }, multi: { (acc: [K: AttrSet<V>], multi: MultiPlatform<[K:V]>) in
-            let iosDict: [K: V] = (multi.ios ?? [:])
-            let ios: [K: AttrSet<V>] = Dictionary<K, AttrSet<V>>(tuples: iosDict.map{ k, v in
-                (k, AttrSet<V>(multi: MultiPlatform(ios: v)))
-            })
-
-            let osxDict: [K: V] = (multi.osx ?? [:])
-            let osx: [K: AttrSet<V>] = Dictionary<K, AttrSet<V>>(tuples: osxDict.map{ k, v in
-                (k, AttrSet<V>(multi: MultiPlatform(osx: v)))
-            })
-
-            let watchDict: [K: V] = (multi.watchos ?? [:])
-            let watch: [K: AttrSet<V>] = Dictionary<K, AttrSet<V>>(tuples: watchDict.map{ k, v in
-                (k, AttrSet<V>(multi: MultiPlatform(watchos: v)))
-            })
-
-            let tvosDict: [K: V] = (multi.tvos ?? [:])
-            let tvos: [K: AttrSet<V>] = Dictionary<K, AttrSet<V>>(tuples: tvosDict.map { k, v in
-                (k, AttrSet<V>(multi: MultiPlatform(tvos: v)))
-            })
-
-            return acc <> ios <> osx <> watch <> tvos
+            let inner: [K: AttrSet<V>]? = multi |>
+                MultiPlatform<[K:V]>.lens.viewAll{ (dict: [K:V]) -> [K: AttrSet<V>] in
+                    Dictionary<K, AttrSet<V>>(tuples: dict.map{ k, v in
+                    (k, AttrSet<V>(multi: MultiPlatform(ios: v)))
+                }) }
+            
+            return acc <> inner.denormalize()
+        })
+    }
+    
+    /// A sequence operation takes something of the form `F<G<?>>` and turns it into a `G<F<?>>` for some F and G
+    /// In this case, `F = AttrSet`, `G = some Sequence S` (and since Swift is limited in it's expressiveness, we'll return an array)
+    /// So we're turning an `AttrSet<S<?>>` into an `[AttrSet<?>]` where the `[]` are morally the `S`
+    static func sequenceSeq<S: Sequence, T: AttrSetConstraint>(attrSet attrOfArr: AttrSet<S>) -> [AttrSet<T>]
+	    where S.Iterator.Element == T, S.Iterator.Element: Monoid, S.Iterator.Element: EmptyAwareness {
+        return attrOfArr.fold(basic: { (arr: S?) -> [AttrSet<T>] in
+            let arr: [T] = Array(arr ?? S.empty)
+            return arr.map{ (t: T) -> AttrSet<T> in AttrSet<T>(basic: t) }
+        }, multi: { (arrOfAttr: [AttrSet<T>], multiOfArr: MultiPlatform<S>) -> [AttrSet<T>] in
+            let ios: [AttrSet<T>] = multiOfArr.ios.denormalize().map{ (t: T) -> AttrSet<T> in AttrSet<T>(multi: MultiPlatform<T>(ios: t)) }
+            let osx: [AttrSet<T>] = multiOfArr.osx.denormalize().map{ (t: T) -> AttrSet<T> in AttrSet<T>(multi: MultiPlatform<T>(osx: t)) }
+            let tvos: [AttrSet<T>] = multiOfArr.tvos.denormalize().map{ (t: T) -> AttrSet<T> in AttrSet<T>(multi: MultiPlatform<T>(tvos: t)) }
+            let watchos: [AttrSet<T>] = multiOfArr.watchos.denormalize().map{ (t: T) -> AttrSet<T> in AttrSet<T>(multi: MultiPlatform<T>(watchos: t)) }
+            
+            return arrOfAttr <> ios <> osx <> watchos <> tvos
         })
     }
 }
@@ -258,10 +335,20 @@ extension MultiPlatform where T == [String] {
         return lhs.ios == rhs.ios && lhs.osx == rhs.osx && lhs.watchos == rhs.watchos && lhs.tvos == rhs.tvos
     }
 }
+extension MultiPlatform where T == Set<String> {
+	 static func == (lhs: MultiPlatform, rhs: MultiPlatform) -> Bool {
+        return lhs.ios == rhs.ios && lhs.osx == rhs.osx && lhs.watchos == rhs.watchos && lhs.tvos == rhs.tvos
+    }   
+}
 extension AttrSet where T == [String] {
     static func == (lhs: AttrSet, rhs: AttrSet) -> Bool {
         return lhs.basic == rhs.basic && lhs.multi == rhs.multi
     }
+}
+extension AttrSet where T == Set<String> {
+	 static func == (lhs: AttrSet, rhs: AttrSet) -> Bool {
+        return lhs.basic == rhs.basic && lhs.multi == rhs.multi
+    }   
 }
 
 // for extracting attr sets

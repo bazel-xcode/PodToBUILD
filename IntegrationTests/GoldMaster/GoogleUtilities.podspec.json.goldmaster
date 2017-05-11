@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+GoogleUtilities_source_headers = [
+
+]
+GoogleUtilities_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+GoogleUtilities_headers = GoogleUtilities_source_headers + GoogleUtilities_extra_headers
 objc_library(
   name = "GoogleUtilities",
+  srcs = [
+
+  ],
+  hdrs = GoogleUtilities_headers,
+  pch = pch_with_name_hint(
+    "GoogleUtilities"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/GoogleUtilities/"
+  ],
   sdk_frameworks = [
     "AddressBook",
     "CoreGraphics"
@@ -21,9 +42,6 @@ objc_framework(
   framework_imports = glob(
     [
       "Frameworks/frameworks/GoogleUtilities.framework/**"
-    ],
-    exclude = [
-
     ],
     exclude_directories = 1
     ),

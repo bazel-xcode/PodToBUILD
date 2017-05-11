@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+Texture_source_headers = [
+
+]
+Texture_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Texture_headers = Texture_source_headers + Texture_extra_headers
 objc_library(
   name = "Texture",
+  srcs = [
+
+  ],
+  hdrs = Texture_headers,
+  pch = pch_with_name_hint(
+    "AsyncDisplayKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
+  ],
   weak_sdk_frameworks = [
     "Photos",
     "MapKit",
@@ -25,25 +46,28 @@ objc_library(
   )
 Texture_Core_source_headers = glob(
   [
-    "Source/**/*.h",
     "Base/*.h",
+    "Source/**/*.h",
     "Source/TextKit/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Texture_Core_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Texture_Core_headers = Texture_Core_source_headers + Texture_Core_extra_headers
 objc_library(
   name = "Texture_Core",
   srcs = glob(
     [
+      "Base/*.m",
       "Source/**/*.m",
-      "Source/**/*.mm",
-      "Base/*.m"
-    ]
+      "Source/**/*.mm"
+    ],
+    exclude_directories = 1
     ),
   hdrs = Texture_Core_headers,
   pch = pch_with_name_hint(
@@ -70,8 +94,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+Texture_PINRemoteImage_source_headers = [
+
+]
+Texture_PINRemoteImage_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Texture_PINRemoteImage_headers = Texture_PINRemoteImage_source_headers + Texture_PINRemoteImage_extra_headers
 objc_library(
   name = "Texture_PINRemoteImage",
+  srcs = [
+
+  ],
+  hdrs = Texture_PINRemoteImage_headers,
+  pch = pch_with_name_hint(
+    "AsyncDisplayKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
+  ],
   weak_sdk_frameworks = [
     "Photos",
     "MapKit",
@@ -93,8 +138,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+Texture_IGListKit_source_headers = [
+
+]
+Texture_IGListKit_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Texture_IGListKit_headers = Texture_IGListKit_source_headers + Texture_IGListKit_extra_headers
 objc_library(
   name = "Texture_IGListKit",
+  srcs = [
+
+  ],
+  hdrs = Texture_IGListKit_headers,
+  pch = pch_with_name_hint(
+    "AsyncDisplayKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
+  ],
   weak_sdk_frameworks = [
     "Photos",
     "MapKit",
@@ -115,8 +181,29 @@ objc_library(
     "//visibility:public"
   ]
   )
+Texture_Yoga_source_headers = [
+
+]
+Texture_Yoga_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Texture_Yoga_headers = Texture_Yoga_source_headers + Texture_Yoga_extra_headers
 objc_library(
   name = "Texture_Yoga",
+  srcs = [
+
+  ],
+  hdrs = Texture_Yoga_headers,
+  pch = pch_with_name_hint(
+    "AsyncDisplayKit"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/AsyncDisplayKit/"
+  ],
   weak_sdk_frameworks = [
     "Photos",
     "MapKit",

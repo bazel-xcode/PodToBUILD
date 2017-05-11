@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+Branch_source_headers = [
+
+]
+Branch_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Branch_headers = Branch_source_headers + Branch_extra_headers
 objc_library(
   name = "Branch",
+  srcs = [
+
+  ],
+  hdrs = Branch_headers,
+  pch = pch_with_name_hint(
+    "Branch"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Branch/"
+  ],
   deps = [
     ":Branch_Core",
     ":Branch_without_IDFA"
@@ -14,12 +35,14 @@ Branch_Core_source_headers = glob(
     "Branch-SDK/Branch-SDK/*.h",
     "Branch-SDK/Branch-SDK/Requests/*.h",
     "Branch-SDK/Fabric/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Branch_Core_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Branch_Core_headers = Branch_Core_source_headers + Branch_Core_extra_headers
 objc_library(
@@ -28,7 +51,8 @@ objc_library(
     [
       "Branch-SDK/Branch-SDK/*.m",
       "Branch-SDK/Branch-SDK/Requests/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Branch_Core_headers,
   pch = pch_with_name_hint(
@@ -52,12 +76,14 @@ Branch_without_IDFA_source_headers = glob(
     "Branch-SDK/Branch-SDK/*.h",
     "Branch-SDK/Branch-SDK/Requests/*.h",
     "Branch-SDK/Fabric/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Branch_without_IDFA_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Branch_without_IDFA_headers = Branch_without_IDFA_source_headers + Branch_without_IDFA_extra_headers
 objc_library(
@@ -66,7 +92,8 @@ objc_library(
     [
       "Branch-SDK/Branch-SDK/*.m",
       "Branch-SDK/Branch-SDK/Requests/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Branch_without_IDFA_headers,
   pch = pch_with_name_hint(

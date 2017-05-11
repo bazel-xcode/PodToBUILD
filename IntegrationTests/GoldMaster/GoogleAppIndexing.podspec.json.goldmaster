@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+GoogleAppIndexing_source_headers = [
+
+]
+GoogleAppIndexing_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+GoogleAppIndexing_headers = GoogleAppIndexing_source_headers + GoogleAppIndexing_extra_headers
 objc_library(
   name = "GoogleAppIndexing",
+  srcs = [
+
+  ],
+  hdrs = GoogleAppIndexing_headers,
+  pch = pch_with_name_hint(
+    "GoogleAppIndexing"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/GoogleAppIndexing/"
+  ],
   sdk_frameworks = [
     "CoreText",
     "SafariServices"
@@ -17,9 +38,6 @@ objc_framework(
   framework_imports = glob(
     [
       "Frameworks/GoogleAppIndexing.framework/**"
-    ],
-    exclude = [
-
     ],
     exclude_directories = 1
     ),

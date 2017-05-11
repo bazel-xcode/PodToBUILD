@@ -59,7 +59,7 @@ public indirect enum SkylarkNode {
     }
 }
 extension SkylarkNode: Monoid, EmptyAwareness {
-    public static var empty: SkylarkNode { return .skylark("") }
+    public static var empty: SkylarkNode { return .list([]) }
 
     // TODO(bkase): Annotate AttrSet with monoidal struct wrapper to get around this hack
     /// WARNING: This doesn't obey the laws :(.
@@ -69,7 +69,7 @@ extension SkylarkNode: Monoid, EmptyAwareness {
 
     public var isEmpty: Bool {
         switch self {
-        case .skylark(""): return true
+        case let .list(xs): return xs.isEmpty
         default: return false
         }
     }
@@ -81,6 +81,11 @@ func .+.(lhs: SkylarkNode, rhs: SkylarkNode) -> SkylarkNode {
     return .expr(lhs: lhs, op: "+", rhs: rhs)
 }
 
+infix operator .=.: AdditionPrecedence
+func .=.(lhs: SkylarkNode, rhs: SkylarkNode) -> SkylarkNode {
+    return .expr(lhs: lhs, op: "=", rhs: rhs)
+}
+
 public indirect enum SkylarkFunctionArgument {
     case basic(SkylarkNode)
     case named(name: String, value: SkylarkNode)
@@ -89,25 +94,78 @@ public indirect enum SkylarkFunctionArgument {
 
 struct GlobNode: SkylarkConvertible {
     // Bazel Glob function: glob(include, exclude=[], exclude_directories=1)
-    let include: AttrSet<[String]>
-    let exclude: AttrSet<[String]>
-    let excludeDirectories: Bool
+    let include: AttrSet<Set<String>>
+    let exclude: AttrSet<Set<String>>
+    let excludeDirectories: Bool = true
 
     func toSkylark() -> SkylarkNode {
-        /*
-         Below we render a Select function that will handle multi-platform glob arguments
-         */
-        let tupleSet: AttrSet<AttrTuple<[String], [String]>> = include.zip(exclude)
-        return tupleSet.map { tuple -> SkylarkNode in
-            let includes = tuple.first ?? Array<String>.empty
-            let excludes = tuple.second ?? Array<String>.empty
-            return SkylarkNode.functionCall(name: "glob",
-                                            arguments: [
-                                                .basic(includes.toSkylark()),
-                                                .named(name: "exclude", value: excludes.toSkylark()),
-                                                .named(name: "exclude_directories", value: .int(excludeDirectories ? 1 : 0))
-            ])
-        }.toSkylark()
+        let tupleSet: AttrSet<AttrTuple<Set<String>, Set<String>>> = include.zip(exclude)
+        
+        let atLeastList: AttrSet<SkylarkNode> = AttrSet(basic: .list([]))
+        
+        func render(includes: Set<String>, excludes: Set<String>) -> SkylarkNode {
+            guard !includes.isEmpty else { return .list([]) }
+	        return SkylarkNode.functionCall(name: "glob",
+                                        arguments: [
+                                            .basic(includes.toSkylark())
+                                            ] +
+                                            (excludes.isEmpty ? [] : [.named(name: "exclude", value: excludes.toSkylark())]) +
+                                            [ .named(name: "exclude_directories", value: .int(excludeDirectories ? 1 : 0))
+            ])    
+        }
+        
+        let basicIncludes = (tupleSet.basic?.first).denormalize()
+        let basicExcludes = (tupleSet.basic?.second).denormalize()
+        
+        let fromMulti: AttrSet<SkylarkNode> = AttrSet(multi: tupleSet.multi.map { tuple -> SkylarkNode in
+            return render(
+                includes: basicIncludes <> tuple.first.denormalize(),
+                excludes: basicExcludes <> tuple.second.denormalize()
+            )
+        })
+        
+        let justBasic: AttrSet<SkylarkNode> =
+            AttrSet(basic: render(
+                includes: basicIncludes,
+                excludes: basicExcludes
+	        ))
+        
+        // This could render three distinct ways
+        // 1. If there is nothing in basic or multiplatform, we need at least a list for valid skylark (that's the guard in the render)
+        // 2. If there is nothing in multiplatform, we just render the basic glob
+        // 3. Otherwise, we inline the basic parts into the multiplatform select (otherwise the glob semantics are broken)
+        
+        return (fromMulti.isEmpty ? justBasic : fromMulti).toSkylark()
+    }
+}
+
+extension GlobNode: Equatable {
+    public static func == (lhs: GlobNode, rhs: GlobNode) -> Bool {
+        return lhs.include == rhs.include && lhs.exclude == rhs.exclude && lhs.excludeDirectories == rhs.excludeDirectories
+    }
+}
+
+extension GlobNode: EmptyAwareness {
+    public var isEmpty: Bool { return include.isEmpty && exclude.isEmpty && !excludeDirectories }
+    
+    public static var empty: GlobNode {
+        return GlobNode(include: AttrSet.empty, exclude: AttrSet.empty)
+    }
+}
+
+extension GlobNode {
+    enum lens {
+        static let include: Lens<GlobNode, AttrSet<Set<String>>> = {
+            return Lens<GlobNode, AttrSet<Set<String>>>(view: { $0.include }, set: { include, globNode in
+                GlobNode(include: include, exclude: globNode.exclude)
+            })
+        }()
+        
+        static let exclude: Lens<GlobNode, AttrSet<Set<String>>> = {
+            return Lens<GlobNode, AttrSet<Set<String>>>(view: { $0.exclude }, set: { exclude, globNode in
+                GlobNode(include: globNode.include, exclude: exclude)
+            })
+        }()
     }
 }
 

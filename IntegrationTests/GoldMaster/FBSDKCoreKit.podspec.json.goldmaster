@@ -11,23 +11,86 @@ config_setting(
     "cpu": "powerpc3"
   }
   )
-FBSDKCoreKit_source_headers = glob(
-  [
-    "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
-  ]
+FBSDKCoreKit_source_headers = select(
+  {
+    "//conditions:default": glob(
+      [
+        "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+      ],
+      exclude = [
+        "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
+        "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h"
+      ],
+      exclude_directories = 1
+      ),
+    ":tvosCase": glob(
+      [
+        "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+      ],
+      exclude = [
+        "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.h",
+        "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.h",
+        "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h",
+        "FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h",
+        "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.h",
+        "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h"
+      ],
+      exclude_directories = 1
+      )
+  }
   )
 FBSDKCoreKit_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 FBSDKCoreKit_headers = FBSDKCoreKit_source_headers + FBSDKCoreKit_extra_headers
 objc_library(
   name = "FBSDKCoreKit",
-  srcs = glob(
-    [
-      "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
-    ]
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+        ],
+        exclude = [
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m"
+        ],
+        exclude_directories = 1
+        ),
+      ":tvosCase": glob(
+        [
+          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+        ],
+        exclude = [
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.m"
+        ],
+        exclude_directories = 1
+        )
+    }
     ),
   hdrs = FBSDKCoreKit_headers,
   pch = pch_with_name_hint(

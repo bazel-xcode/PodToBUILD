@@ -1,6 +1,27 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+Braintree_source_headers = [
+
+]
+Braintree_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+Braintree_headers = Braintree_source_headers + Braintree_extra_headers
 objc_library(
   name = "Braintree",
+  srcs = [
+
+  ],
+  hdrs = Braintree_headers,
+  pch = pch_with_name_hint(
+    "Braintree"
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/Braintree/"
+  ],
   deps = [
     ":Braintree_Core",
     ":Braintree_Apple_Pay",
@@ -30,12 +51,14 @@ objc_library(
 Braintree_Core_source_headers = glob(
   [
     "BraintreeCore/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_Core_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_Core_headers = Braintree_Core_source_headers + Braintree_Core_extra_headers
 objc_library(
@@ -43,7 +66,20 @@ objc_library(
   srcs = glob(
     [
       "BraintreeCore/**/*.m"
-    ]
+    ],
+    exclude = [
+      "Braintree3DSecure/**/*.m",
+      "BraintreeApplePay/**/*.m",
+      "BraintreeCard/**/*.m",
+      "BraintreeDataCollector/**/*.m",
+      "BraintreePayPal/*.m",
+      "BraintreePayPal/PayPalDataCollector/**/*.m",
+      "BraintreePayPal/PayPalOneTouch/**/*.m",
+      "BraintreeUI/**/*.m",
+      "BraintreeUnionPay/**/*.m",
+      "BraintreeVenmo/**/*.m"
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_Core_headers,
   pch = pch_with_name_hint(
@@ -69,12 +105,14 @@ objc_library(
 Braintree_Apple_Pay_source_headers = glob(
   [
     "BraintreeApplePay/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_Apple_Pay_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_Apple_Pay_headers = Braintree_Apple_Pay_source_headers + Braintree_Apple_Pay_extra_headers
 objc_library(
@@ -82,7 +120,8 @@ objc_library(
   srcs = glob(
     [
       "BraintreeApplePay/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_Apple_Pay_headers,
   pch = pch_with_name_hint(
@@ -108,12 +147,14 @@ objc_library(
 Braintree_Card_source_headers = glob(
   [
     "BraintreeCard/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_Card_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_Card_headers = Braintree_Card_source_headers + Braintree_Card_extra_headers
 objc_library(
@@ -121,7 +162,13 @@ objc_library(
   srcs = glob(
     [
       "BraintreeCard/**/*.m"
-    ]
+    ],
+    exclude = [
+      "Braintree3DSecure/**/*.m",
+      "BraintreeUI/**/*.m",
+      "BraintreeUnionPay/**/*.m"
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_Card_headers,
   pch = pch_with_name_hint(
@@ -144,12 +191,14 @@ objc_library(
 Braintree_DataCollector_source_headers = glob(
   [
     "BraintreeDataCollector/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_DataCollector_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_DataCollector_headers = Braintree_DataCollector_source_headers + Braintree_DataCollector_extra_headers
 objc_library(
@@ -157,7 +206,8 @@ objc_library(
   srcs = glob(
     [
       "BraintreeDataCollector/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_DataCollector_headers,
   pch = pch_with_name_hint(
@@ -188,12 +238,14 @@ Braintree_PayPal_source_headers = glob(
   [
     "BraintreePayPal/*.h",
     "BraintreePayPal/Public/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_PayPal_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_PayPal_headers = Braintree_PayPal_source_headers + Braintree_PayPal_extra_headers
 objc_library(
@@ -201,7 +253,8 @@ objc_library(
   srcs = glob(
     [
       "BraintreePayPal/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_PayPal_headers,
   pch = pch_with_name_hint(
@@ -225,12 +278,14 @@ objc_library(
 Braintree_Venmo_source_headers = glob(
   [
     "BraintreeVenmo/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_Venmo_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_Venmo_headers = Braintree_Venmo_source_headers + Braintree_Venmo_extra_headers
 objc_library(
@@ -238,7 +293,8 @@ objc_library(
   srcs = glob(
     [
       "BraintreeVenmo/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_Venmo_headers,
   pch = pch_with_name_hint(
@@ -265,9 +321,6 @@ objc_bundle_library(
     [
       "BraintreeUI/Localization/*.lproj"
     ],
-    exclude = [
-
-    ],
     exclude_directories = 1
     )
   )
@@ -277,21 +330,20 @@ objc_bundle_library(
     [
       "BraintreeUI/Drop-In/Localization/*.lproj"
     ],
-    exclude = [
-
-    ],
     exclude_directories = 1
     )
   )
 Braintree_UI_source_headers = glob(
   [
     "BraintreeUI/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_UI_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_UI_headers = Braintree_UI_source_headers + Braintree_UI_extra_headers
 objc_library(
@@ -299,7 +351,8 @@ objc_library(
   srcs = glob(
     [
       "BraintreeUI/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_UI_headers,
   pch = pch_with_name_hint(
@@ -330,12 +383,14 @@ objc_library(
 Braintree_UnionPay_source_headers = glob(
   [
     "BraintreeUnionPay/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_UnionPay_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_UnionPay_headers = Braintree_UnionPay_source_headers + Braintree_UnionPay_extra_headers
 objc_library(
@@ -343,7 +398,8 @@ objc_library(
   srcs = glob(
     [
       "BraintreeUnionPay/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_UnionPay_headers,
   pch = pch_with_name_hint(
@@ -373,21 +429,20 @@ objc_bundle_library(
     [
       "Braintree3DSecure/Localization/*.lproj"
     ],
-    exclude = [
-
-    ],
     exclude_directories = 1
     )
   )
 Braintree_3D_Secure_source_headers = glob(
   [
     "Braintree3DSecure/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_3D_Secure_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_3D_Secure_headers = Braintree_3D_Secure_source_headers + Braintree_3D_Secure_extra_headers
 objc_library(
@@ -395,7 +450,8 @@ objc_library(
   srcs = glob(
     [
       "Braintree3DSecure/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_3D_Secure_headers,
   pch = pch_with_name_hint(
@@ -425,12 +481,14 @@ objc_library(
 Braintree_PayPalOneTouch_source_headers = glob(
   [
     "BraintreePayPal/PayPalOneTouch/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_PayPalOneTouch_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_PayPalOneTouch_headers = Braintree_PayPalOneTouch_source_headers + Braintree_PayPalOneTouch_extra_headers
 objc_library(
@@ -438,7 +496,11 @@ objc_library(
   srcs = glob(
     [
       "BraintreePayPal/PayPalOneTouch/**/*.m"
-    ]
+    ],
+    exclude = [
+      "BraintreePayPal/*.m"
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_PayPalOneTouch_headers,
   pch = pch_with_name_hint(
@@ -469,12 +531,14 @@ objc_library(
 Braintree_PayPalDataCollector_source_headers = glob(
   [
     "BraintreePayPal/PayPalDataCollector/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_PayPalDataCollector_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_PayPalDataCollector_headers = Braintree_PayPalDataCollector_source_headers + Braintree_PayPalDataCollector_extra_headers
 objc_library(
@@ -482,7 +546,13 @@ objc_library(
   srcs = glob(
     [
       "BraintreePayPal/PayPalDataCollector/**/*.m"
-    ]
+    ],
+    exclude = [
+      "BraintreePayPal/*.m",
+      "BraintreePayPal/PayPalOneTouch/**/*.m",
+      "BraintreeVenmo/**/*.m"
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_PayPalDataCollector_headers,
   pch = pch_with_name_hint(
@@ -519,12 +589,14 @@ objc_import(
 Braintree_PayPalUtils_source_headers = glob(
   [
     "BraintreePayPal/PayPalUtils/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_PayPalUtils_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
-  ]
+  ],
+  exclude_directories = 1
   )
 Braintree_PayPalUtils_headers = Braintree_PayPalUtils_source_headers + Braintree_PayPalUtils_extra_headers
 objc_library(
@@ -532,7 +604,14 @@ objc_library(
   srcs = glob(
     [
       "BraintreePayPal/PayPalUtils/**/*.m"
-    ]
+    ],
+    exclude = [
+      "BraintreePayPal/*.m",
+      "BraintreePayPal/PayPalDataCollector/**/*.m",
+      "BraintreePayPal/PayPalOneTouch/**/*.m",
+      "BraintreeVenmo/**/*.m"
+    ],
+    exclude_directories = 1
     ),
   hdrs = Braintree_PayPalUtils_headers,
   pch = pch_with_name_hint(

@@ -94,6 +94,7 @@ public struct PodBuildFile {
         var output: [SkylarkConvertible] = configs + [rootLib as BazelTarget] + subspecTargets + extraDeps
         // Execute transforms manually
         // Don't use unneeded abstractions to make a few function calls
+        // (bkase) but this is isomorphic to `BuildOptions -> Endo<SkylarkConvertible>` which means we *could* make a monoid out of it http://swift.sandbox.bluemix.net/#/repl/59090e9f9def327b2a45b255
         output = UserConfigurableTransform.transform(convertibles: output, options: buildOptions)
         output = RedundantCompiledSourceTransform.transform(convertibles: output, options: buildOptions)
         return output
