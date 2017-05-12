@@ -22,7 +22,8 @@ class BuildFileTests: XCTestCase {
                     sdkDylibs: AttrSet.empty,
                     deps: AttrSet.empty,
                     copts: AttrSet.empty,
-                    bundles: AttrSet.empty)
+                    bundles: AttrSet.empty,
+                    resources: AttrSet.empty)
     }
 
     let zoomToInclude: Lens<ObjcLibrary, AttrSet<Set<String>>> =

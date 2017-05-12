@@ -134,6 +134,9 @@ objc_library(
       ]
     }
     ),
+  resources = [
+    "FacebookSDKStrings.bundle"
+  ],
   visibility = [
     "//visibility:public"
   ]

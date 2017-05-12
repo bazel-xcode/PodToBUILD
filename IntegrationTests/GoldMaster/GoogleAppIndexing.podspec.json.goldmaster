@@ -32,6 +32,9 @@ objc_library(
   deps = [
     ":GoogleAppIndexing_VendoredFrameworks"
   ],
+  resources = [
+    "Resources/GoogleAppIndexingResources.bundle"
+  ],
   visibility = [
     "//visibility:public"
   ]

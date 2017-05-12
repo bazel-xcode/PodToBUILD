@@ -37,6 +37,9 @@ objc_library(
     "@GoogleToolboxForMac//:GoogleToolboxForMac_NSDictionary_URLArguments",
     "@GTMSessionFetcher//:GTMSessionFetcher_Core"
   ],
+  resources = [
+    "Resources/GoogleSignIn.bundle"
+  ],
   visibility = [
     "//visibility:public"
   ]

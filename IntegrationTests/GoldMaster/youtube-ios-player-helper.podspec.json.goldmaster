@@ -1,0 +1,96 @@
+load('//:build_extensions.bzl', 'pch_with_name_hint')
+config_setting(
+  name = "iosCase",
+  values = {
+    "cpu": "powerpc1"
+  }
+  )
+config_setting(
+  name = "osxCase",
+  values = {
+    "cpu": "powerpc2"
+  }
+  )
+youtube-ios-player-helper_source_headers = select(
+  {
+    ":osxCase": glob(
+      [
+        "Classes/**/*.h"
+      ],
+      exclude = [
+        "Classes/ios/**/*.h"
+      ],
+      exclude_directories = 1
+      ),
+    "//conditions:default": glob(
+      [
+        "Classes/**/*.h"
+      ],
+      exclude = [
+        "Classes/osx/**/*.h"
+      ],
+      exclude_directories = 1
+      )
+  }
+  )
+youtube-ios-player-helper_extra_headers = glob(
+  [
+    "bazel_support/Headers/Public/**/*.h"
+  ],
+  exclude_directories = 1
+  )
+youtube-ios-player-helper_headers = youtube-ios-player-helper_source_headers + youtube-ios-player-helper_extra_headers
+objc_library(
+  name = "youtube-ios-player-helper",
+  srcs = select(
+    {
+      ":osxCase": glob(
+        [
+          "Classes/**/*.c",
+          "Classes/**/*.cpp",
+          "Classes/**/*.m",
+          "Classes/**/*.mm"
+        ],
+        exclude = [
+          "Classes/ios/**/*.c",
+          "Classes/ios/**/*.cpp",
+          "Classes/ios/**/*.m",
+          "Classes/ios/**/*.mm"
+        ],
+        exclude_directories = 1
+        ),
+      "//conditions:default": glob(
+        [
+          "Classes/**/*.c",
+          "Classes/**/*.cpp",
+          "Classes/**/*.m",
+          "Classes/**/*.mm"
+        ],
+        exclude = [
+          "Classes/osx/**/*.c",
+          "Classes/osx/**/*.cpp",
+          "Classes/osx/**/*.m",
+          "Classes/osx/**/*.mm"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
+  hdrs = youtube-ios-player-helper_headers,
+  pch = pch_with_name_hint(
+    "youtube-ios-player-helper",
+    [
+      "Classes/**/*.pch"
+    ]
+    ),
+  includes = [
+    "bazel_support/Headers/Public/",
+    "bazel_support/Headers/Public/youtube-ios-player-helper/"
+  ],
+  resources = [
+    "youtube-ios-player-helper/Assets.bundle"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )

@@ -136,6 +136,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     let sdkDylibs: AttrSet<[String]>
     let deps: AttrSet<[String]>
     let bundles: AttrSet<[String]>
+    let resources: AttrSet<[String]>
 
     // "var" properties are user configurable so we need mutation here
     var excludedSource = [String]()
@@ -153,7 +154,8 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         sdkDylibs: AttrSet<[String]>,
         deps: AttrSet<[String]>,
         copts: AttrSet<[String]>,
-        bundles: AttrSet<[String]>) {
+        bundles: AttrSet<[String]>,
+        resources: AttrSet<[String]>) {
         self.name = name
         self.externalName = externalName
         self.headerName = headerName
@@ -165,6 +167,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.deps = deps
         self.copts = copts
         self.bundles = bundles
+        self.resources = resources
     }
 
     static func bazelLabel(fromString string: String) -> String {
@@ -210,6 +213,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.sdkDylibs = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.libraries))
         self.deps = AttrSet(basic: extraDeps.map{ ":\($0)" }.map(ObjcLibrary.bazelLabel)) <> (spec ^* liftToAttr(PodSpec.lens.dependencies .. ReadonlyLens(fixDependencyNames(rootName: rootName))))
         self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
+        self.resources = spec ^* liftToAttr(PodSpec.lens.resources)
         self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.name)_Bundle_\(k)" }.map(ObjcLibrary.bazelLabel) })
     }
 
@@ -366,9 +370,14 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             ))
         }
 
+        if !lib.resources.isEmpty {
+            libArguments.append(.named(name: "resources",
+                                       value: lib.resources.toSkylark()))
+        }
+
         if !lib.bundles.isEmpty {
             libArguments.append(.named(name: "bundles",
-                                       value: bundles.toSkylark()))
+                                       value: lib.bundles.toSkylark()))
         }
         libArguments.append(.named(
             name: "visibility",
@@ -382,13 +391,13 @@ extension ObjcLibrary {
     enum lens {
         static let sourceFiles: Lens<ObjcLibrary, GlobNode> = {
             return Lens(view: { $0.sourceFiles }, set: { sourceFiles, lib  in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles)
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources)
             })
         }()
         
         static let deps: Lens<ObjcLibrary, AttrSet<[String]>> = {
             return Lens(view: { $0.deps }, set: { deps, lib in
-		        ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles)
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources)
             })
         }()
         

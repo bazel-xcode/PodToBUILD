@@ -31,6 +31,10 @@ objc_library(
     "bazel_support/Headers/Public/",
     "bazel_support/Headers/Public/PaymentKit/"
   ],
+  resources = [
+    "PaymentKit/Resources/Cards/*.png",
+    "PaymentKit/Resources/*.png"
+  ],
   visibility = [
     "//visibility:public"
   ]

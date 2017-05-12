@@ -104,6 +104,7 @@ public enum PodSpecField: String {
     case libraries
     case dependencies
     case resourceBundles = "resource_bundles"
+    case resources = "resources"
     case subspecs
     case source
     case podTargetXcconfig = "pod_target_xcconfig"
@@ -133,6 +134,7 @@ protocol PodSpecRepresentable {
     var source: PodSpecSource? { get }
     var libraries: [String] { get }
     var resourceBundles: [String: [String]] { get }
+    var resources: [String] { get }
     var vendoredFrameworks: [String] { get }
     var vendoredLibraries: [String] { get }
     var headerDirectory: String? { get }
@@ -162,6 +164,7 @@ public struct PodSpec: PodSpecRepresentable {
 
     // TODO: Support resource / resources properties as well
     let resourceBundles: [String: [String]]
+    let resources: [String]
 
     let podTargetXcconfig: [String: String]?
     let userTargetXcconfig: [String: String]?
@@ -217,6 +220,8 @@ public struct PodSpec: PodSpecRepresentable {
         } else {
             resourceBundles = [:]
         }
+
+        resources = strings(fromJSON: fieldMap[.resources])
 
         if let JSONPodSubspecs = fieldMap[.subspecs] as? [JSONDict] {
             subspecs = try JSONPodSubspecs.map { try PodSpec(JSONPodspec: $0) }
@@ -332,6 +337,10 @@ extension PodSpec {
         }()
         static let resourceBundles: Lens<PodSpecRepresentable, [String: [String]]> = {
             ReadonlyLens { $0.resourceBundles }
+        }()
+
+        static let resources: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.resources }
         }()
 
         static let ios: Lens<PodSpec, PodSpecRepresentable?> = {

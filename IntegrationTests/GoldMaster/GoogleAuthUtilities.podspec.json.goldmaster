@@ -34,6 +34,9 @@ objc_library(
     "@GoogleSymbolUtilities//:GoogleSymbolUtilities",
     "@GoogleNetworkingUtilities//:GoogleNetworkingUtilities"
   ],
+  resources = [
+    "Frameworks/frameworks/GoogleAuthUtilities.framework/Resources/GTMOAuth2ViewTouch.xib"
+  ],
   visibility = [
     "//visibility:public"
   ]
