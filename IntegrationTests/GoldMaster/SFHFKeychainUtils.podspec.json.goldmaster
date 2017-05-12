@@ -25,7 +25,10 @@ objc_library(
     ),
   hdrs = SFHFKeychainUtils_headers,
   pch = pch_with_name_hint(
-    "SFHFKeychainUtils"
+    "SFHFKeychainUtils",
+    [
+      "security/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

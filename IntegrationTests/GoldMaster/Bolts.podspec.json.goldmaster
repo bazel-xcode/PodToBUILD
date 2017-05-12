@@ -40,7 +40,10 @@ objc_library(
   ],
   hdrs = Bolts_headers,
   pch = pch_with_name_hint(
-    "Bolts"
+    "Bolts",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -71,7 +74,10 @@ objc_library(
   ],
   hdrs = Bolts_Tasks_headers,
   pch = pch_with_name_hint(
-    "Bolts"
+    "Bolts",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -98,7 +104,10 @@ objc_library(
   ],
   hdrs = Bolts_AppLinks_headers,
   pch = pch_with_name_hint(
-    "Bolts"
+    "Bolts",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

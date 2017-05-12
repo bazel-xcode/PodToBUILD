@@ -13,9 +13,10 @@ class BuildFileTests: XCTestCase {
 
     func lib(name: String, externalName: String) -> ObjcLibrary {
 	    return ObjcLibrary(name: name,
-                    externalName: AttrSet(basic: externalName),
+                    externalName: externalName,
                     sourceFiles: GlobNode.empty,
                     headers: GlobNode.empty,
+                    headerName: AttrSet(basic: externalName),
                     sdkFrameworks: AttrSet.empty,
                     weakSdkFrameworks: AttrSet.empty,
                     sdkDylibs: AttrSet.empty,

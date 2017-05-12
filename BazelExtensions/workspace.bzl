@@ -12,29 +12,24 @@ def _extension(f):
 # Build extensions is a collection of bazel extensions that are loaded into an
 # external repository's BUILD file
 build_extensions = """
-# Insertion sort based on the len() function
-def _len_ins_sort(k):
-    for i in range(1,len(k)):
-        j = i
-        # There is no while True in Skylark so do a few clicks
-        # of insertion sort
-        for itr in range(1, 9999999):
-            if j > 0 and len(k[j]) < len(k[j - 1]):
-                k[j], k[j - 1] = k[j - 1], k[j]
-                j = j - 1
-            else:
-                break
-    return k
+#
+# pch_with_name_hint
+#   Take in a name hint and return the PCH with that name
+#
+# Parameters
+#
+#   hint - Suggestion of pch file name. If any part of this is in a PCH
+#   filename it will match
+#
+#   sources - a list of source file patterns with pch extensions to search
 
-# Take in a name hint and return the PCH with that name
-def pch_with_name_hint(hint):
-    # Recursive glob over all the files
-    candidates = native.glob(["**/*.pch"], exclude=[".pch_ignore/**/*.pch"])
+def pch_with_name_hint(hint, sources):
+    # Recursive glob the sources directories and the root directory
+    candidates = native.glob(["*.pch"] + sources)
     if len(candidates) == 0:
         return None
 
     # We want to get the candidates in order of lowest to highest
-    candidates = _len_ins_sort(candidates)
     for candidate in candidates:
         if hint in candidate:
             return candidate

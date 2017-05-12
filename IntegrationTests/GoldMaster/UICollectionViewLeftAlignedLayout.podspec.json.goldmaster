@@ -25,7 +25,10 @@ objc_library(
     ),
   hdrs = UICollectionViewLeftAlignedLayout_headers,
   pch = pch_with_name_hint(
-    "UICollectionViewLeftAlignedLayout"
+    "UICollectionViewLeftAlignedLayout",
+    [
+      "UICollectionViewLeftAlignedLayout/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

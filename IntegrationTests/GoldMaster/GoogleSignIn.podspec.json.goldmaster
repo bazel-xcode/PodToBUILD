@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = GoogleSignIn_headers,
   pch = pch_with_name_hint(
-    "GoogleSignIn"
+    "GoogleSignIn",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

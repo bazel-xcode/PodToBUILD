@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = ColorCube_headers,
   pch = pch_with_name_hint(
-    "ColorCube"
+    "ColorCube",
+    [
+      "ColorCube/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

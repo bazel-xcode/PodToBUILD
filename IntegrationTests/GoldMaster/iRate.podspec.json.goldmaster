@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = iRate_headers,
   pch = pch_with_name_hint(
-    "iRate"
+    "iRate",
+    [
+      "iRate/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

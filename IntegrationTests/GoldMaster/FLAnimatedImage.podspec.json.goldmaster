@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = FLAnimatedImage_headers,
   pch = pch_with_name_hint(
-    "FLAnimatedImage"
+    "FLAnimatedImage",
+    [
+      "FLAnimatedImage/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

@@ -19,7 +19,10 @@ objc_library(
   ],
   hdrs = Smartling_headers,
   pch = pch_with_name_hint(
-    "Smartling"
+    "Smartling",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

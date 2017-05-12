@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = KVOController_headers,
   pch = pch_with_name_hint(
-    "KVOController"
+    "KVOController",
+    [
+      "FBKVOController/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

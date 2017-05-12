@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = RadarKit_headers,
   pch = pch_with_name_hint(
-    "RadarKit"
+    "RadarKit",
+    [
+      "RadarKit/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

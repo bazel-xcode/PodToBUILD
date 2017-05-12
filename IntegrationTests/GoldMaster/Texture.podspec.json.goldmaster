@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = Texture_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "Texture",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -71,7 +74,11 @@ objc_library(
     ),
   hdrs = Texture_Core_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "Texture",
+    [
+      "Source/**/*.pch",
+      "Base/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -111,7 +118,10 @@ objc_library(
   ],
   hdrs = Texture_PINRemoteImage_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "Texture",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -155,7 +165,10 @@ objc_library(
   ],
   hdrs = Texture_IGListKit_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "Texture",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -198,7 +211,10 @@ objc_library(
   ],
   hdrs = Texture_Yoga_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "Texture",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

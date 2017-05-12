@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = PINRemoteImage_headers,
   pch = pch_with_name_hint(
-    "PINRemoteImage"
+    "PINRemoteImage",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -66,7 +69,10 @@ objc_library(
     ),
   hdrs = PINRemoteImage_Core_headers,
   pch = pch_with_name_hint(
-    "PINRemoteImage"
+    "PINRemoteImage",
+    [
+      "Source/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -100,7 +106,10 @@ objc_library(
   ],
   hdrs = PINRemoteImage_iOS_headers,
   pch = pch_with_name_hint(
-    "PINRemoteImage"
+    "PINRemoteImage",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -133,7 +142,10 @@ objc_library(
   ],
   hdrs = PINRemoteImage_OSX_headers,
   pch = pch_with_name_hint(
-    "PINRemoteImage"
+    "PINRemoteImage",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -167,7 +179,10 @@ objc_library(
   ],
   hdrs = PINRemoteImage_tvOS_headers,
   pch = pch_with_name_hint(
-    "PINRemoteImage"
+    "PINRemoteImage",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -203,7 +218,10 @@ objc_library(
     ),
   hdrs = PINRemoteImage_FLAnimatedImage_headers,
   pch = pch_with_name_hint(
-    "PINRemoteImage"
+    "PINRemoteImage",
+    [
+      "Source/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -234,7 +252,10 @@ objc_library(
   ],
   hdrs = PINRemoteImage_WebP_headers,
   pch = pch_with_name_hint(
-    "PINRemoteImage"
+    "PINRemoteImage",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -274,7 +295,10 @@ objc_library(
     ),
   hdrs = PINRemoteImage_PINCache_headers,
   pch = pch_with_name_hint(
-    "PINRemoteImage"
+    "PINRemoteImage",
+    [
+      "Source/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = SPUserResizableView+Pion_headers,
   pch = pch_with_name_hint(
-    "SPUserResizableView+Pion"
+    "SPUserResizableView+Pion",
+    [
+      "SPUserResizableView/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

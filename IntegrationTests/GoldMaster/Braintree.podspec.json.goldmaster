@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = Braintree_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -83,7 +86,10 @@ objc_library(
     ),
   hdrs = Braintree_Core_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreeCore/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -125,7 +131,10 @@ objc_library(
     ),
   hdrs = Braintree_Apple_Pay_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreeApplePay/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -172,7 +181,10 @@ objc_library(
     ),
   hdrs = Braintree_Card_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreeCard/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -211,7 +223,10 @@ objc_library(
     ),
   hdrs = Braintree_DataCollector_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreeDataCollector/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -258,7 +273,10 @@ objc_library(
     ),
   hdrs = Braintree_PayPal_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreePayPal/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -298,7 +316,10 @@ objc_library(
     ),
   hdrs = Braintree_Venmo_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreeVenmo/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -356,7 +377,10 @@ objc_library(
     ),
   hdrs = Braintree_UI_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreeUI/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -403,7 +427,10 @@ objc_library(
     ),
   hdrs = Braintree_UnionPay_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreeUnionPay/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -455,7 +482,10 @@ objc_library(
     ),
   hdrs = Braintree_3D_Secure_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "Braintree3DSecure/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -504,7 +534,10 @@ objc_library(
     ),
   hdrs = Braintree_PayPalOneTouch_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreePayPal/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -556,7 +589,10 @@ objc_library(
     ),
   hdrs = Braintree_PayPalDataCollector_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreePayPal/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -615,7 +651,10 @@ objc_library(
     ),
   hdrs = Braintree_PayPalUtils_headers,
   pch = pch_with_name_hint(
-    "Braintree"
+    "Braintree",
+    [
+      "BraintreePayPal/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

@@ -28,7 +28,10 @@ objc_library(
   ],
   hdrs = PINCache_headers,
   pch = pch_with_name_hint(
-    "PINCache"
+    "PINCache",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -81,7 +84,10 @@ objc_library(
     ),
   hdrs = PINCache_Core_headers,
   pch = pch_with_name_hint(
-    "PINCache"
+    "PINCache",
+    [
+      "Source/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -127,7 +133,10 @@ objc_library(
     ),
   hdrs = PINCache_Arc_exception_safe_headers,
   pch = pch_with_name_hint(
-    "PINCache"
+    "PINCache",
+    [
+      "Source/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

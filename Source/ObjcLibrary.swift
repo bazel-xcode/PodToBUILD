@@ -128,9 +128,10 @@ enum ObjcLibraryConfigurableKeys : String {
 // ObjcLibrary is an intermediate rep of an objc library
 struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     let name: String
-    let externalName: AttrSet<String>
+    let externalName: String
     let sourceFiles: GlobNode
     let headers: GlobNode
+    let headerName: AttrSet<String>
     let weakSdkFrameworks: AttrSet<[String]>
     let sdkDylibs: AttrSet<[String]>
     let deps: AttrSet<[String]>
@@ -143,9 +144,10 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     static let xcconfigTransformer = XCConfigTransformer.defaultTransformer()
 
     init(name: String,
-        externalName: AttrSet<String>,
+        externalName: String,
         sourceFiles: GlobNode,
         headers: GlobNode,
+        headerName: AttrSet<String>,
         sdkFrameworks: AttrSet<[String]>,
         weakSdkFrameworks: AttrSet<[String]>,
         sdkDylibs: AttrSet<[String]>,
@@ -154,6 +156,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         bundles: AttrSet<[String]>) {
         self.name = name
         self.externalName = externalName
+        self.headerName = headerName
         self.sourceFiles = sourceFiles
         self.headers = headers
         self.sdkFrameworks = sdkFrameworks
@@ -185,6 +188,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let rootName =  ComposedSpec.create(fromSpecs: [spec, rootSpec].flatMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
 
         self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(rootName)_\(spec.name)")
+        self.externalName = rootName
 
         let moduleName = AttrSet<String>(
             value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
@@ -192,7 +196,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let headerDirectoryName: AttrSet<String?> = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.headerDirectory))
 
-        self.externalName = (moduleName.isEmpty ? nil : moduleName) ??
+        self.headerName = (moduleName.isEmpty ? nil : moduleName) ??
                             (headerDirectoryName.basic == nil ? nil : headerDirectoryName.denormalize()) ??
                             AttrSet<String>(value: rootName)
         self.sourceFiles = GlobNode(
@@ -276,17 +280,46 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             ))
 
 
+
+            func buildPCHList(sources: [String]) -> [String] {
+                let nestedComponents = sources
+                    .map { URL(fileURLWithPath: $0) }
+                    .map { $0.deletingPathExtension() }
+                    .map { $0.appendingPathExtension("pch") }
+                    .map { $0.relativePath }
+                    .map { $0.components(separatedBy: "/") }
+                    .flatMap { $0.count > 1 ? $0.first : nil }
+                    .map { [$0, "**", "*.pch"].joined(separator: "/") }
+
+                return nestedComponents
+            }
+
+            let pchSourcePaths = lib.sourceFiles.include.fold(basic: {
+                if let basic = $0 {
+                    return buildPCHList(sources: Array(basic))
+                }
+                return []
+            }, multi: { (arr: [String], multi: MultiPlatform<Set<String>>) -> [String] in
+                return arr + buildPCHList(sources: [multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 }.flatMap { Array($0) })
+            })
+
+
+//            let pchSourcePaths = lib.sourceFiles.include.map { Array($0) }.map(buildPCHList).map { Set($0) }
+
             libArguments.append(.named(
                 name: "pch",
                 value:.functionCall(
                     // Call internal function to find a PCH.
                     // @see workspace.bzl
                     name: "pch_with_name_hint",
-                    arguments: [.basic(.string(lib.externalName.basic!))]
+                    arguments: [
+                        .basic(.string(lib.externalName)),
+                        .basic(Array(Set(pchSourcePaths)).toSkylark())
+                    ]
                 )
             ))
 
-            let headerDirs = lib.externalName.map { "bazel_support/Headers/Public/\($0)/" }
+            let headerDirs = lib.headerName.map { "bazel_support/Headers/Public/\($0)/" }
             let headerSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
                                       multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
                                         return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
@@ -349,13 +382,13 @@ extension ObjcLibrary {
     enum lens {
         static let sourceFiles: Lens<ObjcLibrary, GlobNode> = {
             return Lens(view: { $0.sourceFiles }, set: { sourceFiles, lib  in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles)
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles)
             })
         }()
         
         static let deps: Lens<ObjcLibrary, AttrSet<[String]>> = {
             return Lens(view: { $0.deps }, set: { deps, lib in
-		        ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles)
+		        ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles)
             })
         }()
         

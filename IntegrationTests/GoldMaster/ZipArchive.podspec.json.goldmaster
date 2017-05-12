@@ -32,7 +32,10 @@ objc_library(
     ),
   hdrs = ZipArchive_headers,
   pch = pch_with_name_hint(
-    "ZipArchive"
+    "ZipArchive",
+    [
+      "minizip/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

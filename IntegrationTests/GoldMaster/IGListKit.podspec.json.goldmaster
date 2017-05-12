@@ -34,7 +34,10 @@ objc_library(
   ],
   hdrs = IGListKit_headers,
   pch = pch_with_name_hint(
-    "IGListKit"
+    "IGListKit",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -111,7 +114,10 @@ objc_library(
     ),
   hdrs = IGListKit_Diffing_headers,
   pch = pch_with_name_hint(
-    "IGListKit"
+    "IGListKit",
+    [
+      "Source/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -186,7 +192,10 @@ objc_library(
     ),
   hdrs = IGListKit_Default_headers,
   pch = pch_with_name_hint(
-    "IGListKit"
+    "IGListKit",
+    [
+      "Source/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

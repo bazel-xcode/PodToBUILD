@@ -28,7 +28,10 @@ objc_library(
   ],
   hdrs = Adjust_headers,
   pch = pch_with_name_hint(
-    "Adjust"
+    "Adjust",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -88,7 +91,10 @@ objc_library(
     ),
   hdrs = Adjust_Core_headers,
   pch = pch_with_name_hint(
-    "Adjust"
+    "Adjust",
+    [
+      "Adjust/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -135,7 +141,10 @@ objc_library(
     ),
   hdrs = Adjust_Sociomantic_headers,
   pch = pch_with_name_hint(
-    "Adjust"
+    "Adjust",
+    [
+      "plugin/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -185,7 +194,10 @@ objc_library(
     ),
   hdrs = Adjust_Criteo_headers,
   pch = pch_with_name_hint(
-    "Adjust"
+    "Adjust",
+    [
+      "plugin/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -235,7 +247,10 @@ objc_library(
     ),
   hdrs = Adjust_Trademob_headers,
   pch = pch_with_name_hint(
-    "Adjust"
+    "Adjust",
+    [
+      "plugin/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

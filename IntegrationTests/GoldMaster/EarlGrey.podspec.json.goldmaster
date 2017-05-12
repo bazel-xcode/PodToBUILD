@@ -22,7 +22,10 @@ objc_library(
   ],
   hdrs = EarlGrey_headers,
   pch = pch_with_name_hint(
-    "EarlGrey"
+    "EarlGrey",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = FMDB_headers,
   pch = pch_with_name_hint(
-    "FMDB"
+    "FMDB",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -59,7 +62,10 @@ objc_library(
     ),
   hdrs = FMDB_standard_headers,
   pch = pch_with_name_hint(
-    "FMDB"
+    "FMDB",
+    [
+      "src/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -95,7 +101,10 @@ objc_library(
     ),
   hdrs = FMDB_FTS_headers,
   pch = pch_with_name_hint(
-    "FMDB"
+    "FMDB",
+    [
+      "src/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -125,7 +134,10 @@ objc_library(
   ],
   hdrs = FMDB_standalone_headers,
   pch = pch_with_name_hint(
-    "FMDB"
+    "FMDB",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -164,7 +176,10 @@ objc_library(
     ),
   hdrs = FMDB_SQLCipher_headers,
   pch = pch_with_name_hint(
-    "FMDB"
+    "FMDB",
+    [
+      "src/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

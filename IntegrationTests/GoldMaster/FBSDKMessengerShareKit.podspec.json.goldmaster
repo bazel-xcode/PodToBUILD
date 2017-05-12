@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = FBSDKMessengerShareKit_headers,
   pch = pch_with_name_hint(
-    "FBSDKMessengerShareKit"
+    "FBSDKMessengerShareKit",
+    [
+      "FBSDKMessengerShareKit/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

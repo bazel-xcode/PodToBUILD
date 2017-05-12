@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = GoogleSymbolUtilities_headers,
   pch = pch_with_name_hint(
-    "GoogleSymbolUtilities"
+    "GoogleSymbolUtilities",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

@@ -19,7 +19,10 @@ objc_library(
   ],
   hdrs = Weixin_headers,
   pch = pch_with_name_hint(
-    "Weixin"
+    "Weixin",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

@@ -24,7 +24,10 @@ objc_library(
     ),
   hdrs = pop_headers,
   pch = pch_with_name_hint(
-    "pop"
+    "pop",
+    [
+      "pop/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

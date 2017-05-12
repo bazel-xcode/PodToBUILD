@@ -23,7 +23,10 @@ objc_library(
     ),
   hdrs = PINOperation_headers,
   pch = pch_with_name_hint(
-    "PINOperation"
+    "PINOperation",
+    [
+      "Source/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

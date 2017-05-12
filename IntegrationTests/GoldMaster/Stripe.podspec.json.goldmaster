@@ -29,7 +29,10 @@ objc_library(
     ),
   hdrs = Stripe_headers,
   pch = pch_with_name_hint(
-    "Stripe"
+    "Stripe",
+    [
+      "Stripe/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

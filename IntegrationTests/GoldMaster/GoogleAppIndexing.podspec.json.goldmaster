@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = GoogleAppIndexing_headers,
   pch = pch_with_name_hint(
-    "GoogleAppIndexing"
+    "GoogleAppIndexing",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

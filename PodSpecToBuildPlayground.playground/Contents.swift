@@ -38,3 +38,25 @@ buildFileTextView.string = buildFileOut
 view.addSubview(jsonpodTextView)
 view.addSubview(buildFileTextView)
 PlaygroundPage.current.liveView = view
+
+
+let components = URL(fileURLWithPath: "bazel_support/Headers/Public/**/*.h").deletingPathExtension().appendingPathExtension("pch").relativePath.components(separatedBy: "/")
+
+func buildList(coms: [String]) -> [String] {
+    let prefixes = coms.reduce([]) { result, part -> [String] in
+        guard !part.contains("*")  else { return result }
+        if let lastResult = result.last {
+            return result + [[lastResult, part].joined(separator: "/")]
+        } else {
+            return [part]
+        }
+    }
+    return prefixes.map { [$0, "**", "*.pch"].joined(separator: "/") }
+}
+
+
+buildList(coms: components)
+
+
+
+

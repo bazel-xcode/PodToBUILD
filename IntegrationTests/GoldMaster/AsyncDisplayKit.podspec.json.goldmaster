@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = AsyncDisplayKit_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "AsyncDisplayKit",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -71,7 +74,11 @@ objc_library(
     ),
   hdrs = AsyncDisplayKit_Core_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "AsyncDisplayKit",
+    [
+      "Base/**/*.pch",
+      "AsyncDisplayKit/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -111,7 +118,10 @@ objc_library(
   ],
   hdrs = AsyncDisplayKit_PINRemoteImage_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "AsyncDisplayKit",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -156,7 +166,10 @@ objc_library(
   ],
   hdrs = AsyncDisplayKit_IGListKit_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "AsyncDisplayKit",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -200,7 +213,10 @@ objc_library(
   ],
   hdrs = AsyncDisplayKit_Yoga_headers,
   pch = pch_with_name_hint(
-    "AsyncDisplayKit"
+    "AsyncDisplayKit",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

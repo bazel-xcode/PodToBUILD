@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = KakaoOpenSDK_headers,
   pch = pch_with_name_hint(
-    "KakaoOpenSDK"
+    "KakaoOpenSDK",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -53,7 +56,10 @@ objc_library(
   ],
   hdrs = KakaoOpenSDK_KakaoOpenSDK_headers,
   pch = pch_with_name_hint(
-    "KakaoOpenSDK"
+    "KakaoOpenSDK",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -100,7 +106,10 @@ objc_library(
   ],
   hdrs = KakaoOpenSDK_KakaoNavi_headers,
   pch = pch_with_name_hint(
-    "KakaoOpenSDK"
+    "KakaoOpenSDK",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -146,7 +155,10 @@ objc_library(
   ],
   hdrs = KakaoOpenSDK_KakaoLink_headers,
   pch = pch_with_name_hint(
-    "KakaoOpenSDK"
+    "KakaoOpenSDK",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -192,7 +204,10 @@ objc_library(
   ],
   hdrs = KakaoOpenSDK_KakaoS2_headers,
   pch = pch_with_name_hint(
-    "KakaoOpenSDK"
+    "KakaoOpenSDK",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

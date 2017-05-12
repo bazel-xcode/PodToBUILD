@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = FLEX_headers,
   pch = pch_with_name_hint(
-    "FLEX"
+    "FLEX",
+    [
+      "Classes/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

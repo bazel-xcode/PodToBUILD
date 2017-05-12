@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = SevenSwitch_headers,
   pch = pch_with_name_hint(
-    "SevenSwitch"
+    "SevenSwitch",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

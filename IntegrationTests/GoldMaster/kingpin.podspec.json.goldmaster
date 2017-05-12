@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = kingpin_headers,
   pch = pch_with_name_hint(
-    "kingpin"
+    "kingpin",
+    [
+      "kingpin/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

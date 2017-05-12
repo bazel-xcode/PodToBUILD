@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = PaymentKit_headers,
   pch = pch_with_name_hint(
-    "PaymentKit"
+    "PaymentKit",
+    [
+      "PaymentKit/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

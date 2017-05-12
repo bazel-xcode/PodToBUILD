@@ -40,7 +40,10 @@ objc_library(
     ),
   hdrs = Masonry_headers,
   pch = pch_with_name_hint(
-    "Masonry"
+    "Masonry",
+    [
+      "Masonry/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

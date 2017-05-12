@@ -19,7 +19,10 @@ objc_library(
   ],
   hdrs = CardIO_headers,
   pch = pch_with_name_hint(
-    "CardIO"
+    "CardIO",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

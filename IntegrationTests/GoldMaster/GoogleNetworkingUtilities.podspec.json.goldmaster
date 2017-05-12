@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = GoogleNetworkingUtilities_headers,
   pch = pch_with_name_hint(
-    "GoogleNetworkingUtilities"
+    "GoogleNetworkingUtilities",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

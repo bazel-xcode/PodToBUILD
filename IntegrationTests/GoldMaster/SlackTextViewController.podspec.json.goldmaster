@@ -22,7 +22,10 @@ objc_library(
     ),
   hdrs = SlackTextViewController_headers,
   pch = pch_with_name_hint(
-    "SlackTextViewController"
+    "SlackTextViewController",
+    [
+      "Source/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

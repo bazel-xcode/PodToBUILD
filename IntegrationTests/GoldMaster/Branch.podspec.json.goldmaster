@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = Branch_headers,
   pch = pch_with_name_hint(
-    "Branch"
+    "Branch",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -56,7 +59,10 @@ objc_library(
     ),
   hdrs = Branch_Core_headers,
   pch = pch_with_name_hint(
-    "Branch"
+    "Branch",
+    [
+      "Branch-SDK/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -97,7 +103,10 @@ objc_library(
     ),
   hdrs = Branch_without_IDFA_headers,
   pch = pch_with_name_hint(
-    "Branch"
+    "Branch",
+    [
+      "Branch-SDK/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

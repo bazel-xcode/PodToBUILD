@@ -22,7 +22,10 @@ objc_library(
   ],
   hdrs = Calabash_headers,
   pch = pch_with_name_hint(
-    "Calabash"
+    "Calabash",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

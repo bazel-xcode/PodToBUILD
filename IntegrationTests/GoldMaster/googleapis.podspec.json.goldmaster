@@ -16,7 +16,10 @@ objc_library(
   ],
   hdrs = googleapis_headers,
   pch = pch_with_name_hint(
-    "googleapis"
+    "googleapis",
+    [
+
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -60,7 +63,10 @@ objc_library(
     ),
   hdrs = googleapis_Messages_headers,
   pch = pch_with_name_hint(
-    "googleapis"
+    "googleapis",
+    [
+      "google/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
@@ -99,7 +105,10 @@ objc_library(
     ),
   hdrs = googleapis_Services_headers,
   pch = pch_with_name_hint(
-    "googleapis"
+    "googleapis",
+    [
+      "google/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",

@@ -94,7 +94,10 @@ objc_library(
     ),
   hdrs = FBSDKCoreKit_headers,
   pch = pch_with_name_hint(
-    "FBSDKCoreKit"
+    "FBSDKCoreKit",
+    [
+      "FBSDKCoreKit/**/*.pch"
+    ]
     ),
   includes = [
     "bazel_support/Headers/Public/",
