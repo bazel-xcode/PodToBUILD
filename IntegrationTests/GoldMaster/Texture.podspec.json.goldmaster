@@ -1,22 +1,22 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
-Texture_source_headers = [
+AsyncDisplayKit_source_headers = [
 
 ]
-Texture_extra_headers = glob(
+AsyncDisplayKit_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
   ],
   exclude_directories = 1
   )
-Texture_headers = Texture_source_headers + Texture_extra_headers
+AsyncDisplayKit_headers = AsyncDisplayKit_source_headers + AsyncDisplayKit_extra_headers
 objc_library(
-  name = "Texture",
+  name = "AsyncDisplayKit",
   srcs = [
 
   ],
-  hdrs = Texture_headers,
+  hdrs = AsyncDisplayKit_headers,
   pch = pch_with_name_hint(
-    "Texture",
+    "AsyncDisplayKit",
     [
 
     ]
@@ -34,10 +34,10 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":Texture_Core",
-    ":Texture_PINRemoteImage",
-    ":Texture_IGListKit",
-    ":Texture_Yoga"
+    ":AsyncDisplayKit_Core",
+    ":AsyncDisplayKit_PINRemoteImage",
+    ":AsyncDisplayKit_IGListKit",
+    ":AsyncDisplayKit_Yoga"
   ],
   copts = [
     "-stdlib=c++11",
@@ -47,7 +47,7 @@ objc_library(
     "//visibility:public"
   ]
   )
-Texture_Core_source_headers = glob(
+AsyncDisplayKit_Core_source_headers = glob(
   [
     "Base/*.h",
     "Source/**/*.h",
@@ -55,15 +55,15 @@ Texture_Core_source_headers = glob(
   ],
   exclude_directories = 1
   )
-Texture_Core_extra_headers = glob(
+AsyncDisplayKit_Core_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
   ],
   exclude_directories = 1
   )
-Texture_Core_headers = Texture_Core_source_headers + Texture_Core_extra_headers
+AsyncDisplayKit_Core_headers = AsyncDisplayKit_Core_source_headers + AsyncDisplayKit_Core_extra_headers
 objc_library(
-  name = "Texture_Core",
+  name = "AsyncDisplayKit_Core",
   srcs = glob(
     [
       "Base/*.m",
@@ -72,9 +72,9 @@ objc_library(
     ],
     exclude_directories = 1
     ),
-  hdrs = Texture_Core_headers,
+  hdrs = AsyncDisplayKit_Core_headers,
   pch = pch_with_name_hint(
-    "Texture",
+    "AsyncDisplayKit",
     [
       "Source/**/*.pch",
       "Base/**/*.pch"
@@ -101,24 +101,24 @@ objc_library(
     "//visibility:public"
   ]
   )
-Texture_PINRemoteImage_source_headers = [
+AsyncDisplayKit_PINRemoteImage_source_headers = [
 
 ]
-Texture_PINRemoteImage_extra_headers = glob(
+AsyncDisplayKit_PINRemoteImage_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
   ],
   exclude_directories = 1
   )
-Texture_PINRemoteImage_headers = Texture_PINRemoteImage_source_headers + Texture_PINRemoteImage_extra_headers
+AsyncDisplayKit_PINRemoteImage_headers = AsyncDisplayKit_PINRemoteImage_source_headers + AsyncDisplayKit_PINRemoteImage_extra_headers
 objc_library(
-  name = "Texture_PINRemoteImage",
+  name = "AsyncDisplayKit_PINRemoteImage",
   srcs = [
 
   ],
-  hdrs = Texture_PINRemoteImage_headers,
+  hdrs = AsyncDisplayKit_PINRemoteImage_headers,
   pch = pch_with_name_hint(
-    "Texture",
+    "AsyncDisplayKit",
     [
 
     ]
@@ -137,7 +137,7 @@ objc_library(
   ],
   deps = [
     "@PINRemoteImage//:PINRemoteImage_PINCache",
-    ":Texture_Core",
+    ":AsyncDisplayKit_Core",
     "@PINRemoteImage//:PINRemoteImage_iOS"
   ],
   copts = [
@@ -148,24 +148,24 @@ objc_library(
     "//visibility:public"
   ]
   )
-Texture_IGListKit_source_headers = [
+AsyncDisplayKit_IGListKit_source_headers = [
 
 ]
-Texture_IGListKit_extra_headers = glob(
+AsyncDisplayKit_IGListKit_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
   ],
   exclude_directories = 1
   )
-Texture_IGListKit_headers = Texture_IGListKit_source_headers + Texture_IGListKit_extra_headers
+AsyncDisplayKit_IGListKit_headers = AsyncDisplayKit_IGListKit_source_headers + AsyncDisplayKit_IGListKit_extra_headers
 objc_library(
-  name = "Texture_IGListKit",
+  name = "AsyncDisplayKit_IGListKit",
   srcs = [
 
   ],
-  hdrs = Texture_IGListKit_headers,
+  hdrs = AsyncDisplayKit_IGListKit_headers,
   pch = pch_with_name_hint(
-    "Texture",
+    "AsyncDisplayKit",
     [
 
     ]
@@ -183,7 +183,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":Texture_Core",
+    ":AsyncDisplayKit_Core",
     "@IGListKit//:IGListKit"
   ],
   copts = [
@@ -194,24 +194,24 @@ objc_library(
     "//visibility:public"
   ]
   )
-Texture_Yoga_source_headers = [
+AsyncDisplayKit_Yoga_source_headers = [
 
 ]
-Texture_Yoga_extra_headers = glob(
+AsyncDisplayKit_Yoga_extra_headers = glob(
   [
     "bazel_support/Headers/Public/**/*.h"
   ],
   exclude_directories = 1
   )
-Texture_Yoga_headers = Texture_Yoga_source_headers + Texture_Yoga_extra_headers
+AsyncDisplayKit_Yoga_headers = AsyncDisplayKit_Yoga_source_headers + AsyncDisplayKit_Yoga_extra_headers
 objc_library(
-  name = "Texture_Yoga",
+  name = "AsyncDisplayKit_Yoga",
   srcs = [
 
   ],
-  hdrs = Texture_Yoga_headers,
+  hdrs = AsyncDisplayKit_Yoga_headers,
   pch = pch_with_name_hint(
-    "Texture",
+    "AsyncDisplayKit",
     [
 
     ]
@@ -229,7 +229,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":Texture_Core",
+    ":AsyncDisplayKit_Core",
     "@Yoga//:Yoga"
   ],
   copts = [

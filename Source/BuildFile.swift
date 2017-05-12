@@ -35,26 +35,19 @@ public struct PodBuildFile {
     private static func bundleLibraries(withPodSpec spec: PodSpec) -> [BazelTarget] {
         let resourceBundleAttrSet: AttrSet<[String: [String]]> = spec ^* liftToAttr(PodSpec.lens.resourceBundles)
 
-//        let resourcesAttrSet = (spec ^* liftToAttr(PodSpec.lens.resources)).map { arr -> [String] in
-//            guard let nonOptArr = arr else { return [] }
-//            return nonOptArr
-//        }
-        // Resources specified using the "resources" key in the Podspec.
-//        let defaultResources: [BazelTarget] = spec.resources == nil ? [] :  [ObjcBundleLibrary(name: "\(spec.name)_Bundle", resources: resourcesAttrSet)]
-
         return AttrSet<[String: [String]]>.sequence(attrSet: resourceBundleAttrSet).map { k, v in
-            ObjcBundleLibrary(name: "\(spec.name)_Bundle_\(k)", resources: v)
+            ObjcBundleLibrary(name: "\(spec.moduleName ?? spec.name)_Bundle_\(k)", resources: v)
         }
     }
 
     private static func vendoredFrameworks(withPodspec spec: PodSpec) -> [BazelTarget] {
         let frameworks  = spec ^* liftToAttr(PodSpec.lens.vendoredFrameworks)
-        return frameworks.isEmpty ? [] : [ObjcFramework(name: "\(spec.name)_VendoredFrameworks", frameworkImports: frameworks)]
+        return frameworks.isEmpty ? [] : [ObjcFramework(name: "\(spec.moduleName ?? spec.name)_VendoredFrameworks", frameworkImports: frameworks)]
     }
 
     private static func vendoredLibraries(withPodspec spec: PodSpec) -> [BazelTarget] {
         let libraries  = spec ^* liftToAttr(PodSpec.lens.vendoredLibraries)
-        return libraries.isEmpty ? [] : [ObjcImport(name: "\(spec.name)_VendoredLibraries", archives: libraries)]
+        return libraries.isEmpty ? [] : [ObjcImport(name: "\(spec.moduleName ?? spec.name)_VendoredLibraries", archives: libraries)]
     }
 
     public static func makeConvertables(fromPodspec podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions()) -> [SkylarkConvertible] {

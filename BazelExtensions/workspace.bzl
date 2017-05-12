@@ -12,7 +12,6 @@ def _extension(f):
 # Build extensions is a collection of bazel extensions that are loaded into an
 # external repository's BUILD file
 build_extensions = """
-#
 # pch_with_name_hint
 #   Take in a name hint and return the PCH with that name
 #

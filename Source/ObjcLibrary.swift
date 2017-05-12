@@ -47,7 +47,7 @@ struct ConfigSetting: BazelTarget {
 }
 
 /// rootName -> names -> fixedNames
-func fixDependencyNames(rootName: String) -> ([String]) -> [String]  {
+func fixDependencyNames(rootName: String, moduleName: String?) -> ([String]) -> [String]  {
     return { $0.map { depName in
             // Build up dependencies. Versions are ignored!
             // When a given dependency is locally speced, it should
@@ -56,7 +56,7 @@ func fixDependencyNames(rootName: String) -> ([String]) -> [String]  {
             if results.count > 1 && results[0] == rootName {
                 // This is a local subspec reference
                 let join = results[1 ... results.count - 1].joined(separator: "/")
-                return ":\(rootName)_\(ObjcLibrary.bazelLabel(fromString: join))"
+                return ":\(moduleName ?? rootName)_\(ObjcLibrary.bazelLabel(fromString: join))"
             } else {
                 if results.count > 1, let podname = results.first {
                     // This is a reference to an external podspec's subspec
@@ -188,9 +188,10 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.xcconfig))))
 
         // We are not using the fallback spec here since
-        let rootName =  ComposedSpec.create(fromSpecs: [spec, rootSpec].flatMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
+        let fallbackName = ComposedSpec.create(fromSpecs: [spec, rootSpec].flatMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
+        let rootName = fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName)) ?? fallbackName
 
-        self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(rootName)_\(spec.name)")
+        self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(rootName)_\(spec.moduleName ?? spec.name)")
         self.externalName = rootName
 
         let moduleName = AttrSet<String>(
@@ -202,19 +203,29 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.headerName = (moduleName.isEmpty ? nil : moduleName) ??
                             (headerDirectoryName.basic == nil ? nil : headerDirectoryName.denormalize()) ??
                             AttrSet<String>(value: rootName)
+
         self.sourceFiles = GlobNode(
             include: extract(sources: allSourceFiles).map{ Set($0) },
             exclude: extract(sources: allExcludes).map{ Set($0) })
+
         self.headers = GlobNode(
             include: extract(headers: allSourceFiles).map{ Set($0) },
             exclude: extract(headers: allExcludes).map{ Set($0) })
+
         self.sdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.frameworks))
+
         self.weakSdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.weakFrameworks))
+
         self.sdkDylibs = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.libraries))
-        self.deps = AttrSet(basic: extraDeps.map{ ":\($0)" }.map(ObjcLibrary.bazelLabel)) <> (spec ^* liftToAttr(PodSpec.lens.dependencies .. ReadonlyLens(fixDependencyNames(rootName: rootName))))
+
+        let extraDepsSet = AttrSet(basic: extraDeps.map{ ":\($0)" }.map(ObjcLibrary.bazelLabel))
+        self.deps = extraDepsSet <> (spec ^* liftToAttr(PodSpec.lens.dependencies .. ReadonlyLens(fixDependencyNames(rootName: fallbackName, moduleName: rootName))))
+
         self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
+
         self.resources = spec ^* liftToAttr(PodSpec.lens.resources)
-        self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.name)_Bundle_\(k)" }.map(ObjcLibrary.bazelLabel) })
+
+        self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }.map(ObjcLibrary.bazelLabel) })
     }
 
     mutating func add(configurableKey: String, value: Any) {
@@ -306,9 +317,6 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             }, multi: { (arr: [String], multi: MultiPlatform<Set<String>>) -> [String] in
                 return arr + buildPCHList(sources: [multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 }.flatMap { Array($0) })
             })
-
-
-//            let pchSourcePaths = lib.sourceFiles.include.map { Array($0) }.map(buildPCHList).map { Set($0) }
 
             libArguments.append(.named(
                 name: "pch",
