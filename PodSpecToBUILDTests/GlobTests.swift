@@ -14,6 +14,13 @@ class GlobTests: XCTestCase {
         let path = "Garbage/Source/*.{h,m}"
         XCTAssertFalse(glob(pattern: path, contains: ""))
     }
+    
+    func testIteration() {
+        XCTAssertTrue(glob(pattern: "A", contains: "A"))
+        XCTAssertTrue(glob(pattern: "A/Some", contains: "A/Some"))
+        XCTAssertFalse(glob(pattern: "A/Some/Source", contains: "A/Some/**"))
+        XCTAssertTrue(glob(pattern: "A/Some/**", contains: "A/Some/Source"))
+    }
 
     func testGlobMatchingNoMatch() {
         let testPattern = "^*.[h]"
@@ -29,7 +36,7 @@ class GlobTests: XCTestCase {
         let testPattern = NSRegularExpression.pattern(withGlobPattern: "Source/Classes/**/*.{h,m}")
         XCTAssertEqual(testPattern, "Source/Classes/.*.*/.*.[h,m]")
     }
-
+    
     func testNaievePatternBuilding() {
         let testPattern = pattern(fromPattern: "Source/Classes/**/*.{h,m}", includingFileType: "h")
         XCTAssertEqual(testPattern, "Source/Classes/**/*.h")
@@ -53,6 +60,14 @@ class GlobTests: XCTestCase {
     func testNaievePatternBuildingMismatch() {
         let testPattern = pattern(fromPattern: "Source/Classes/**/*.{h}", includingFileType: "m")
         XCTAssertNil(testPattern)
+    }
+    
+    func testBoltsStylePattern() {
+        let sources = pattern(fromPattern: "Source/Classes/**/*.[hm]", includingFileType: "m")
+        XCTAssertEqual(sources, "Source/Classes/**/*.m")
+        
+        let headers = pattern(fromPattern: "Source/Classes/**/*.[hm]", includingFileType: "h")
+        XCTAssertEqual(headers, "Source/Classes/**/*.h")
     }
 
     func testPatternsEndingInAlphanumericCharactersYieldGlob() {

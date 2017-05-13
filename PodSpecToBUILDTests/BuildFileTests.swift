@@ -23,7 +23,10 @@ class BuildFileTests: XCTestCase {
                     deps: AttrSet.empty,
                     copts: AttrSet.empty,
                     bundles: AttrSet.empty,
-                    resources: AttrSet.empty)
+                    resources: AttrSet.empty,
+			        nonArcSrcs: GlobNode.empty,
+			        requiresArc: true
+        )
     }
 
     let zoomToInclude: Lens<ObjcLibrary, AttrSet<Set<String>>> =

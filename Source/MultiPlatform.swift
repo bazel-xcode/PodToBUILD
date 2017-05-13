@@ -354,7 +354,7 @@ extension AttrSet where T == Set<String> {
 // for extracting attr sets
 func liftToAttr<Part>(_ lens: Lens<PodSpecRepresentable, Part>) -> Lens<PodSpec, AttrSet<Part>>
     where Part: Monoid & SkylarkConvertible & EmptyAwareness {
-        let optLens = liftOpt(lens)
+        let optLens = lens.opt
         return ReadonlyLens { (spec: PodSpec) -> AttrSet<Part> in
             AttrSet(basic: spec ^* lens) <> AttrSet(multi: MultiPlatform(
                 ios: spec ^* (PodSpec.lens.ios >•> optLens),

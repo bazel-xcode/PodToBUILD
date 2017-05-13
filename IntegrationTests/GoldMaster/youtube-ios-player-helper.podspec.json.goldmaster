@@ -11,35 +11,6 @@ config_setting(
     "cpu": "powerpc2"
   }
   )
-youtube-ios-player-helper_source_headers = select(
-  {
-    ":osxCase": glob(
-      [
-        "Classes/**/*.h"
-      ],
-      exclude = [
-        "Classes/ios/**/*.h"
-      ],
-      exclude_directories = 1
-      ),
-    "//conditions:default": glob(
-      [
-        "Classes/**/*.h"
-      ],
-      exclude = [
-        "Classes/osx/**/*.h"
-      ],
-      exclude_directories = 1
-      )
-  }
-  )
-youtube-ios-player-helper_extra_headers = glob(
-  [
-    "bazel_support/Headers/Public/**/*.h"
-  ],
-  exclude_directories = 1
-  )
-youtube-ios-player-helper_headers = youtube-ios-player-helper_source_headers + youtube-ios-player-helper_extra_headers
 objc_library(
   name = "youtube-ios-player-helper",
   srcs = select(
@@ -76,7 +47,30 @@ objc_library(
         )
     }
     ),
-  hdrs = youtube-ios-player-helper_headers,
+  hdrs = select(
+    {
+      ":osxCase": glob(
+        [
+          "Classes/**/*.h",
+          "bazel_support/Headers/Public/**/*.h"
+        ],
+        exclude = [
+          "Classes/ios/**/*.h"
+        ],
+        exclude_directories = 1
+        ),
+      "//conditions:default": glob(
+        [
+          "Classes/**/*.h",
+          "bazel_support/Headers/Public/**/*.h"
+        ],
+        exclude = [
+          "Classes/osx/**/*.h"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
   pch = pch_with_name_hint(
     "youtube-ios-player-helper",
     [

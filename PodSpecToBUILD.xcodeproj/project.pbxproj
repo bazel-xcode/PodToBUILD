@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09F194B61EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
+		09F194B71EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
+		09F194B81EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
+		09F194B91EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
+		09F194BA1EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
 		09FD9B641EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
 		09FD9B651EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
 		09FD9B661EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
@@ -193,6 +198,7 @@
 
 /* Begin PBXFileReference section */
 		0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagmasTests.swift; sourceTree = "<group>"; };
+		09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SplitArcAndNoArcTransform.swift; path = Source/SplitArcAndNoArcTransform.swift; sourceTree = SOURCE_ROOT; };
 		09FD9B631EB3B70700272A01 /* Lens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Lens.swift; path = Source/Lens.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		09FD9B691EB3C01500272A01 /* MultiPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultiPlatform.swift; path = Source/MultiPlatform.swift; sourceTree = SOURCE_ROOT; };
 		09FD9B6F1EB3C08000272A01 /* Magmas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Magmas.swift; path = Source/Magmas.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -342,6 +348,7 @@
 				C4893A581EB90FC600A44D1F /* UserConfigurable.swift */,
 				C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */,
 				C4893A661EB9149700A44D1F /* BasicBuildOptions.swift */,
+				09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */,
 			);
 			name = Source;
 			path = PodSpecToBUILD;
@@ -647,6 +654,7 @@
 				811187E21EB00D1800CB5BA2 /* PodSpec.swift in Sources */,
 				C4893A651EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
 				C41448F31EBAB25200C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */,
+				09F194BA1EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				811187E71EB00D1800CB5BA2 /* SkylarkConvertible.swift in Sources */,
 				811187E31EB00D1800CB5BA2 /* Workspace.swift in Sources */,
 				811187E41EB00D1800CB5BA2 /* Skylark.swift in Sources */,
@@ -670,6 +678,7 @@
 				C42E02761EA189EF009B091A /* BuildFile.swift in Sources */,
 				C4893A671EB9149700A44D1F /* BasicBuildOptions.swift in Sources */,
 				C4E5BC841EA8564200954EB8 /* SkylarkConvertible.swift in Sources */,
+				09F194B61EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				C4FA7E161EA56749005C8B70 /* PodSpec.swift in Sources */,
 				C4FA7E441EA6B4DB005C8B70 /* GlobUtils.swift in Sources */,
 				C4FA7E131EA53E29005C8B70 /* Skylark.swift in Sources */,
@@ -707,6 +716,7 @@
 				C4893A681EB9149700A44D1F /* BasicBuildOptions.swift in Sources */,
 				C4893A6D1EB914AD00A44D1F /* BasicBuildOptionsTest.swift in Sources */,
 				C4893A5A1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
+				09F194B71EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				09FD9B651EB3B70700272A01 /* Lens.swift in Sources */,
 				C4FA7E451EA6B4DB005C8B70 /* GlobUtils.swift in Sources */,
 				C4E5BC851EA8564200954EB8 /* SkylarkConvertible.swift in Sources */,
@@ -724,6 +734,7 @@
 				C4E5BC9E1EAA7AFA00954EB8 /* PodSpec.swift in Sources */,
 				C4893A6A1EB9149700A44D1F /* BasicBuildOptions.swift in Sources */,
 				C4E5BCA01EAA7B1F00954EB8 /* SkylarkConvertible.swift in Sources */,
+				09F194B91EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				C4E5BCA11EAA7B3B00954EB8 /* Workspace.swift in Sources */,
 				C4E5BC9F1EAA7B1200954EB8 /* Skylark.swift in Sources */,
 				C4E5BCA21EAA7B4E00954EB8 /* BuildFile.swift in Sources */,
@@ -751,6 +762,7 @@
 				C4FA7E241EA56AEA005C8B70 /* main.swift in Sources */,
 				C4FA7E461EA6B4DB005C8B70 /* GlobUtils.swift in Sources */,
 				C4FA7E2B1EA56C02005C8B70 /* BuildFile.swift in Sources */,
+				09F194B81EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				09FD9B6C1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
 				09FD9B661EB3B70700272A01 /* Lens.swift in Sources */,
 				C4FA7E2A1EA56BFF005C8B70 /* PodSpec.swift in Sources */,

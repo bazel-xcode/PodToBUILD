@@ -176,8 +176,17 @@ func const<A, B>(_ b: @autoclosure @escaping () -> B) -> (A) -> B {
 precedencegroup PipeForward {
     associativity: left
     lowerThan: TernaryPrecedence
+    higherThan: AssignmentPrecedence
 }
 infix operator |>: PipeForward
 func |><T,U>(x: T, f: (T) -> U) -> U {
     return f(x)
+}
+
+/// Function composition (g • f)(x) = g(f(x))
+/// Use this to combine functions when you don't have the target yet
+/// If you have the target of the function prefer using |>
+infix operator •: MultiplicationPrecedence
+func •<A,B,C>(lhs: @escaping (B) -> C, rhs: @escaping (A) -> B) -> (A) -> C {
+    return { a in lhs(rhs(a)) }
 }

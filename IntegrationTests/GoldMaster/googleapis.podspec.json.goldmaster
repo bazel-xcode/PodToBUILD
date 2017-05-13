@@ -1,20 +1,12 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
-googleapis_source_headers = [
-
-]
-googleapis_extra_headers = glob(
-  [
-    "bazel_support/Headers/Public/**/*.h"
-  ],
-  exclude_directories = 1
-  )
-googleapis_headers = googleapis_source_headers + googleapis_extra_headers
 objc_library(
   name = "googleapis",
-  srcs = [
-
-  ],
-  hdrs = googleapis_headers,
+  hdrs = glob(
+    [
+      "bazel_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
   pch = pch_with_name_hint(
     "googleapis",
     [
@@ -37,22 +29,9 @@ objc_library(
     "//visibility:public"
   ]
   )
-googleapis_Messages_source_headers = glob(
-  [
-    "google/**/*.pbobjc.h"
-  ],
-  exclude_directories = 1
-  )
-googleapis_Messages_extra_headers = glob(
-  [
-    "bazel_support/Headers/Public/**/*.h"
-  ],
-  exclude_directories = 1
-  )
-googleapis_Messages_headers = googleapis_Messages_source_headers + googleapis_Messages_extra_headers
 objc_library(
   name = "googleapis_Messages",
-  srcs = glob(
+  non_arc_srcs = glob(
     [
       "google/**/*.pbobjc.m"
     ],
@@ -61,7 +40,13 @@ objc_library(
     ],
     exclude_directories = 1
     ),
-  hdrs = googleapis_Messages_headers,
+  hdrs = glob(
+    [
+      "bazel_support/Headers/Public/**/*.h",
+      "google/**/*.pbobjc.h"
+    ],
+    exclude_directories = 1
+    ),
   pch = pch_with_name_hint(
     "googleapis",
     [
@@ -82,19 +67,6 @@ objc_library(
     "//visibility:public"
   ]
   )
-googleapis_Services_source_headers = glob(
-  [
-    "google/**/*.pbrpc.h"
-  ],
-  exclude_directories = 1
-  )
-googleapis_Services_extra_headers = glob(
-  [
-    "bazel_support/Headers/Public/**/*.h"
-  ],
-  exclude_directories = 1
-  )
-googleapis_Services_headers = googleapis_Services_source_headers + googleapis_Services_extra_headers
 objc_library(
   name = "googleapis_Services",
   srcs = glob(
@@ -103,7 +75,13 @@ objc_library(
     ],
     exclude_directories = 1
     ),
-  hdrs = googleapis_Services_headers,
+  hdrs = glob(
+    [
+      "bazel_support/Headers/Public/**/*.h",
+      "google/**/*.pbrpc.h"
+    ],
+    exclude_directories = 1
+    ),
   pch = pch_with_name_hint(
     "googleapis",
     [

@@ -1,20 +1,15 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
-SevenSwitch_source_headers = [
-
-]
-SevenSwitch_extra_headers = glob(
-  [
-    "bazel_support/Headers/Public/**/*.h"
-  ],
-  exclude_directories = 1
-  )
-SevenSwitch_headers = SevenSwitch_source_headers + SevenSwitch_extra_headers
 objc_library(
   name = "SevenSwitch",
-  srcs = [
-
-  ],
-  hdrs = SevenSwitch_headers,
+  hdrs = glob(
+    [
+      "bazel_support/Headers/Public/**/*.h"
+    ],
+    exclude = [
+      "Classes/Exclude/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
   pch = pch_with_name_hint(
     "SevenSwitch",
     [

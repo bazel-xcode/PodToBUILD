@@ -11,56 +11,6 @@ config_setting(
     "cpu": "powerpc3"
   }
   )
-FBSDKShareKit_source_headers = select(
-  {
-    "//conditions:default": glob(
-      [
-        "FBSDKShareKit/FBSDKShareKit/**/*.h"
-      ],
-      exclude = [
-        "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h"
-      ],
-      exclude_directories = 1
-      ),
-    ":tvosCase": glob(
-      [
-        "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareMediaContent.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphContent.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphObject.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphValueContainer.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKSharePhoto.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKSharePhotoContent.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareVideo.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKShareVideoContent.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKSharing.h",
-        "FBSDKShareKit/FBSDKShareKit/FBSDKSharingContent.h",
-        "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareDefines.h",
-        "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareError.h",
-        "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareLinkContent+Internal.h",
-        "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareOpenGraphValueContainer+Internal.h",
-        "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareUtility.h",
-        "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.h"
-      ],
-      exclude_directories = 1
-      )
-  }
-  )
-FBSDKShareKit_extra_headers = glob(
-  [
-    "bazel_support/Headers/Public/**/*.h"
-  ],
-  exclude_directories = 1
-  )
-FBSDKShareKit_headers = FBSDKShareKit_source_headers + FBSDKShareKit_extra_headers
 objc_library(
   name = "FBSDKShareKit",
   srcs = select(
@@ -100,7 +50,51 @@ objc_library(
         )
     }
     ),
-  hdrs = FBSDKShareKit_headers,
+  hdrs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "FBSDKShareKit/FBSDKShareKit/**/*.h",
+          "bazel_support/Headers/Public/**/*.h"
+        ],
+        exclude = [
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h"
+        ],
+        exclude_directories = 1
+        ),
+      ":tvosCase": glob(
+        [
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareMediaContent.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphContent.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphObject.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphValueContainer.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKSharePhoto.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKSharePhotoContent.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareVideo.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareVideoContent.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKSharing.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKSharingContent.h",
+          "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareDefines.h",
+          "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareError.h",
+          "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareLinkContent+Internal.h",
+          "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareOpenGraphValueContainer+Internal.h",
+          "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareUtility.h",
+          "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.h",
+          "bazel_support/Headers/Public/**/*.h"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
   pch = pch_with_name_hint(
     "FBSDKShareKit",
     [

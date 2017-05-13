@@ -118,6 +118,7 @@ public enum PodSpecField: String {
     case vendoredLibraries = "vendored_libraries"
     case moduleName = "module_name"
     case headerDirectory = "header_dir"
+    case requiresArc = "requires_arc"
 }
 
 protocol PodSpecRepresentable {
@@ -140,6 +141,7 @@ protocol PodSpecRepresentable {
     var headerDirectory: String? { get }
     var xcconfig: [String: String]? { get }
     var moduleName: String? { get }
+    var requiresArc: Bool? { get } // [String] { get }
 }
 
 public struct PodSpec: PodSpecRepresentable {
@@ -156,6 +158,7 @@ public struct PodSpec: PodSpecRepresentable {
 
     let headerDirectory: String?
     let moduleName: String?
+    let requiresArc: Bool? // [String]
 
     let publicHeaders: [String]
 
@@ -206,6 +209,9 @@ public struct PodSpec: PodSpecRepresentable {
 
         headerDirectory = fieldMap[.headerDirectory] as? String
         moduleName = fieldMap[.moduleName] as? String
+        requiresArc =
+            ((fieldMap[.requiresArc] as? Bool).map{ $0 /*? ["**"] : []*/ })
+                // ?? strings(fromJSON: fieldMap[.requiresArc])
 
         if let podSubspecDependencies = fieldMap[.dependencies] as? JSONDict {
             dependencies = Array(podSubspecDependencies.keys)
@@ -287,23 +293,24 @@ extension ComposedSpec {
         static func fallback<E: EmptyAwareness & Monoid>(_ lens: Lens<PodSpec, E>) -> Lens<ComposedSpec, E> {
             return ReadonlyLens{ mostChildSpec in
                 func loop(_ currentParent: Lens<ComposedSpec, ComposedSpec?>) -> E {
-                    let childValue: E? = mostChildSpec ^* (currentParent >•> liftOpt(ComposedSpec.lens.child) >•> liftOpt(lens))
+                    let childValue: E? = mostChildSpec ^* (currentParent >•> ComposedSpec.lens.child.opt >•> lens.opt)
                     if let childValue = childValue {
                         return childValue.isEmpty ? loop(currentParent >•> ComposedSpec.lens.parent) : childValue
                     } else {
                         return childValue.denormalize()
                     }
                 }
-                return loop(liftOpt(identityLens()))
+                return loop(identityLens().opt)
             }
         }
     }
 }
 
 
+// TODO(bkase): Lenses that are readonly are not lenses!!
+//          Fix this and add setters to everything!
 extension PodSpec {
     enum lens {
-
         static let name: Lens<PodSpecRepresentable, String> = {
             ReadonlyLens { $0.name }
         }()
@@ -337,6 +344,9 @@ extension PodSpec {
         }()
         static let resourceBundles: Lens<PodSpecRepresentable, [String: [String]]> = {
             ReadonlyLens { $0.resourceBundles }
+        }()
+        static let requiresArc: Lens<PodSpecRepresentable, Bool?> = {
+            ReadonlyLens { $0.requiresArc }
         }()
 
         static let resources: Lens<PodSpecRepresentable, [String]> = {

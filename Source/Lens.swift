@@ -150,8 +150,11 @@ public func unimplementedSet<Whole, Part>(part: Part, whole: Whole) -> Whole {
     fatalError("Unimplemented")
 }
 
-public func liftOpt<Whole, Part>(_ lens: Lens<Whole, Part>) -> Lens<Whole, Part?> {
-    return ReadonlyLens { .some($0 ^* lens) }
+extension Lens {
+    // TODO: This is bad
+    var opt: Lens<Whole, Part?> {
+	    return ReadonlyLens { .some($0 ^* self) }
+	}
 }
 
 public func ReadonlyLens<Whole, Part>(_ f: @escaping (Whole) -> Part) -> Lens<Whole, Part> {

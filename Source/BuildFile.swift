@@ -90,13 +90,16 @@ public struct PodBuildFile {
                 .map(const([ ConfigSetting(name: SelectCase.watchos.rawValue,
                                            values: ["cpu": "powerpc4"]) ]))
         ) ?? []
-
+        
         var output: [SkylarkConvertible] = configs + [rootLib as BazelTarget] + subspecTargets + extraDeps
         // Execute transforms manually
         // Don't use unneeded abstractions to make a few function calls
         // (bkase) but this is isomorphic to `BuildOptions -> Endo<SkylarkConvertible>` which means we *could* make a monoid out of it http://swift.sandbox.bluemix.net/#/repl/59090e9f9def327b2a45b255
         output = UserConfigurableTransform.transform(convertibles: output, options: buildOptions)
         output = RedundantCompiledSourceTransform.transform(convertibles: output, options: buildOptions)
+        // print("Before sources \(output.map{ ($0 as? ObjcLibrary) }.filter{ $0?.name == "IGListKit_Default" }.map{ ($0?.name, $0?.sourceFiles, $0?.requiresArc) })")
+        output = SplitArcAndNoArcTransform.transform(convertibles: output, options: buildOptions)
+        // print("After \(output.map{ ($0 as? ObjcLibrary) }.filter{ $0?.name == "IGListKit_Default" }.map{ ($0?.name, $0?.sourceFiles, $0?.requiresArc) })")
         return output
     }
 }

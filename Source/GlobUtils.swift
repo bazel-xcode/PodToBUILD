@@ -268,35 +268,39 @@ func pattern(fromPattern pattern: String, includingFileType fileType: String) ->
         fileExtensions.insert(fileExtension)
 
         // Pattern Substitution
-        var inPattern = false
-        func exitPattern() {
+        var inEitherOrPattern = false
+        var inSetPattern = false
+        func exitPattern(pattern: inout Bool) {
             if fileType == patternComponent {
                 result += patternComponent
                 matches.append(patternComponent)
             }
             patternComponent = ""
-            inPattern = false
+            pattern = false
         }
-        func enterPattern() {
-            inPattern = true
+        func enterEitherOr() {
+            inEitherOrPattern = true
+        }
+        func enterSet() {
+            inSetPattern = true
         }
 
         for (_, strIdx) in fileExtension.characters.indices.enumerated() {
             let c = fileExtension[strIdx]
             if c == "[" {
-                enterPattern()
+                enterSet()
                 continue
             } else if c == "{" {
-                enterPattern()
+                enterEitherOr()
                 continue
             } else if c == "}" {
-                exitPattern()
+                exitPattern(pattern: &inEitherOrPattern)
                 if matches.count > 0 {
                     break
                 }
                 continue
             } else if c == "]" {
-                exitPattern()
+                exitPattern(pattern: &inSetPattern)
                 if matches.count > 0 {
                     break
                 }
@@ -310,8 +314,17 @@ func pattern(fromPattern pattern: String, includingFileType fileType: String) ->
                 patternComponent = ""
                 continue
             }
-            if inPattern {
+            if inEitherOrPattern {
                 patternComponent += String(c)
+                continue
+            }
+            if inSetPattern {
+                patternComponent += String(c)
+                if fileType == patternComponent {
+                    result += patternComponent
+                    matches.append(patternComponent)
+                }
+                patternComponent = ""
                 continue
             }
             result += String(c)

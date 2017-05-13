@@ -138,8 +138,12 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     let bundles: AttrSet<[String]>
     let resources: AttrSet<[String]>
 
+    let nonArcSrcs: GlobNode
+    
+    // only used later in transforms
+    let requiresArc: Bool
+    
     // "var" properties are user configurable so we need mutation here
-    var excludedSource = [String]()
     var sdkFrameworks: AttrSet<[String]>
     var copts: AttrSet<[String]>
     static let xcconfigTransformer = XCConfigTransformer.defaultTransformer()
@@ -155,7 +159,10 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         deps: AttrSet<[String]>,
         copts: AttrSet<[String]>,
         bundles: AttrSet<[String]>,
-        resources: AttrSet<[String]>) {
+        resources: AttrSet<[String]>,
+        nonArcSrcs: GlobNode,
+        requiresArc: Bool
+    ) {
         self.name = name
         self.externalName = externalName
         self.headerName = headerName
@@ -168,6 +175,8 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.copts = copts
         self.bundles = bundles
         self.resources = resources
+        self.nonArcSrcs = nonArcSrcs
+        self.requiresArc = requiresArc
     }
 
     static func bazelLabel(fromString string: String) -> String {
@@ -180,8 +189,23 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].flatMap { $0 })
 
         let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
+        let implFiles = extract(sources: allSourceFiles).map{ Set($0) }
         let allExcludes = spec ^* liftToAttr(PodSpec.lens.excludeFiles)
-
+        let implExcludes = extract(sources: allExcludes).map{ Set($0) }
+        
+        // TODO: Invoke intersectPatterns (i.e. don't use the bool)
+        // TODO: Handle multiplatform overrides of requiresArc
+        /*let needArcPatterns = (spec ^* liftToAttr(PodSpec.lens.requiresArc)).map{ Set($0) }
+        let trueArcPatterns = GlobNode(
+            include: intersectPatterns(attrSet: implFiles, attrSet2: needArcPatterns),
+            exclude: implExcludes
+        )
+        let trueNoArcPatterns = GlobNode(
+            include: implFiles,
+            exclude: needArcPatterns <> implExcludes
+        )*/
+        self.requiresArc = (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.requiresArc))) ?? true
+        
         let xcconfigFlags =
             ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
             ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.userTargetXcconfig)))) +
@@ -205,13 +229,12 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                             AttrSet<String>(value: rootName)
 
         self.sourceFiles = GlobNode(
-            include: extract(sources: allSourceFiles).map{ Set($0) },
-            exclude: extract(sources: allExcludes).map{ Set($0) })
-
+            include: implFiles,
+            exclude: implExcludes)
         self.headers = GlobNode(
             include: extract(headers: allSourceFiles).map{ Set($0) },
             exclude: extract(headers: allExcludes).map{ Set($0) })
-
+        self.nonArcSrcs = GlobNode.empty
         self.sdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.frameworks))
 
         self.weakSdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.weakFrameworks))
@@ -250,11 +273,11 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     }
     
     var alreadyExcluded: AttrSet<Set<String>> {
-        return self ^* (ObjcLibrary.lens.sourceFiles .. GlobNode.lens.exclude)
+        return self ^* ObjcLibrary.lens.excludeFiles
     }
 
     mutating func addExcluded(sourceFiles: AttrSet<Set<String>>) {
-        self = (ObjcLibrary.lens.excludeFiles %~ { oldExclude in oldExclude <> sourceFiles })(self)
+        self = self |> ObjcLibrary.lens.excludeFiles <>~ sourceFiles
     }
 
     // MARK: - Bazel Rendering
@@ -267,83 +290,74 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         var libArguments = [SkylarkFunctionArgument]()
 
         libArguments.append(nameArgument)
-        if !lib.sourceFiles.isEmpty {
+        if !lib.sourceFiles.include.isEmpty {
             libArguments.append(.named(
                 name: "srcs",
                 value: lib.sourceFiles.toSkylark()
             ))
         }
-
-        if !lib.headers.isEmpty {
-            // Generate header logic
-            // source_headers = glob(["Source/*.h"])
-            // extra_headers = glob(["bazel_support/Headers/Public/**/*.h"])
-            // hdrs = source_headers + extra_headers
-            // HACK! There is no assignment in Skylark Imp
-            inlineSkylark += [
-                .skylark("\(lib.name)_source_headers") .=. headers.toSkylark(),
-                .skylark("\(lib.name)_extra_headers") .=. GlobNode(
-                    include: AttrSet<Set<String>>(basic: ["bazel_support/Headers/Public/**/*.h"]),
-                    exclude: AttrSet.empty
-                ).toSkylark(),
-                .skylark("\(lib.name)_headers") .=. .skylark("\(lib.name)_source_headers + \(lib.name)_extra_headers")
-            ]
-
+        if !lib.nonArcSrcs.include.isEmpty {
             libArguments.append(.named(
-                name: "hdrs",
-                value: .skylark("\(lib.name)_headers")
-            ))
-
-
-
-            func buildPCHList(sources: [String]) -> [String] {
-                let nestedComponents = sources
-                    .map { URL(fileURLWithPath: $0) }
-                    .map { $0.deletingPathExtension() }
-                    .map { $0.appendingPathExtension("pch") }
-                    .map { $0.relativePath }
-                    .map { $0.components(separatedBy: "/") }
-                    .flatMap { $0.count > 1 ? $0.first : nil }
-                    .map { [$0, "**", "*.pch"].joined(separator: "/") }
-
-                return nestedComponents
-            }
-
-            let pchSourcePaths = lib.sourceFiles.include.fold(basic: {
-                if let basic = $0 {
-                    return buildPCHList(sources: Array(basic))
-                }
-                return []
-            }, multi: { (arr: [String], multi: MultiPlatform<Set<String>>) -> [String] in
-                return arr + buildPCHList(sources: [multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 }.flatMap { Array($0) })
-            })
-
-            libArguments.append(.named(
-                name: "pch",
-                value:.functionCall(
-                    // Call internal function to find a PCH.
-                    // @see workspace.bzl
-                    name: "pch_with_name_hint",
-                    arguments: [
-                        .basic(.string(lib.externalName)),
-                        .basic(Array(Set(pchSourcePaths)).toSkylark())
-                    ]
-                )
-            ))
-
-            let headerDirs = lib.headerName.map { "bazel_support/Headers/Public/\($0)/" }
-            let headerSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
-                                      multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
-                                        return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
-                                    })
-
-            // Include the public headers which are symlinked in
-            // All includes are bubbled up automatically
-            libArguments.append(.named(
-                name: "includes",
-                value: (["bazel_support/Headers/Public/"] + headerSearchPaths).toSkylark()
+                name: "non_arc_srcs",
+                value: lib.nonArcSrcs.toSkylark()
             ))
         }
+
+        func buildPCHList(sources: [String]) -> [String] {
+            let nestedComponents = sources
+                .map { URL(fileURLWithPath: $0) }
+                .map { $0.deletingPathExtension() }
+                .map { $0.appendingPathExtension("pch") }
+                .map { $0.relativePath }
+                .map { $0.components(separatedBy: "/") }
+                .flatMap { $0.count > 1 ? $0.first : nil }
+                .map { [$0, "**", "*.pch"].joined(separator: "/") }
+
+            return nestedComponents
+        }
+
+        let pchSourcePaths = (lib.sourceFiles.include <> lib.nonArcSrcs.include).fold(basic: {
+            if let basic = $0 {
+                return buildPCHList(sources: Array(basic))
+            }
+            return []
+        }, multi: { (arr: [String], multi: MultiPlatform<Set<String>>) -> [String] in
+            return arr + buildPCHList(sources: [multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 }.flatMap { Array($0) })
+        })
+
+        let headerDirs = lib.headerName.map { "bazel_support/Headers/Public/\($0)/" }
+        let headerSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
+                                  multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
+                                    return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
+                                })
+
+        libArguments.append(.named(
+            name: "hdrs",
+            value: (headers |>
+                GlobNode.lens.include <>~ AttrSet<Set<String>>(basic: ["bazel_support/Headers/Public/**/*.h"])
+            ).toSkylark()
+        ))
+        
+        libArguments.append(.named(
+            name: "pch",
+            value:.functionCall(
+                // Call internal function to find a PCH.
+                // @see workspace.bzl
+                name: "pch_with_name_hint",
+                arguments: [
+                    .basic(.string(lib.externalName)),
+                    .basic(Array(Set(pchSourcePaths)).toSkylark())
+                ]
+            )
+        ))
+
+        // Include the public headers which are symlinked in
+        // All includes are bubbled up automatically
+        libArguments.append(.named(
+            name: "includes",
+            value: (["bazel_support/Headers/Public/"] + headerSearchPaths).toSkylark()
+        ))
+        
         if !lib.sdkFrameworks.isEmpty {
             libArguments.append(.named(
                 name: "sdk_frameworks",
@@ -398,15 +412,27 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 extension ObjcLibrary {
     enum lens {
         static let sourceFiles: Lens<ObjcLibrary, GlobNode> = {
-            return Lens(view: { $0.sourceFiles }, set: { sourceFiles, lib  in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources)
+            return Lens<ObjcLibrary, GlobNode>(view: { $0.sourceFiles }, set: { sourceFiles, lib in
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
+            })
+        }()
+        
+        static let nonArcSrcs: Lens<ObjcLibrary, GlobNode> = {
+            return Lens(view: { $0.nonArcSrcs }, set: { nonArcSrcs, lib  in
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, nonArcSrcs: nonArcSrcs, requiresArc: lib.requiresArc)
             })
         }()
         
         static let deps: Lens<ObjcLibrary, AttrSet<[String]>> = {
             return Lens(view: { $0.deps }, set: { deps, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources)
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
             })
+        }()
+        
+        static let requiresArc: Lens<ObjcLibrary, Bool> = {
+	        return Lens(view: { $0.requiresArc }, set: { requiresArc, lib in
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, nonArcSrcs: lib.nonArcSrcs, requiresArc: requiresArc)
+            })    
         }()
         
         /// Not a real property -- digs into the glob node

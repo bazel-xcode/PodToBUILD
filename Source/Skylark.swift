@@ -97,14 +97,23 @@ struct GlobNode: SkylarkConvertible {
     let include: AttrSet<Set<String>>
     let exclude: AttrSet<Set<String>>
     let excludeDirectories: Bool = true
-
+    
+    init(include: AttrSet<Set<String>>, exclude: AttrSet<Set<String>>) {
+        self.include = include
+        self.exclude = exclude
+    }
+    
     func toSkylark() -> SkylarkNode {
         let tupleSet: AttrSet<AttrTuple<Set<String>, Set<String>>> = include.zip(exclude)
         
         let atLeastList: AttrSet<SkylarkNode> = AttrSet(basic: .list([]))
         
         func render(includes: Set<String>, excludes: Set<String>) -> SkylarkNode {
+            // including nothing means excludes won't do anything
             guard !includes.isEmpty else { return .list([]) }
+            // if includes are excludes, then this is the same as a no-op
+            // guard includes == excludes else { return .list([]) }
+            // otherwise we glob
 	        return SkylarkNode.functionCall(name: "glob",
                                         arguments: [
                                             .basic(includes.toSkylark())
@@ -146,7 +155,7 @@ extension GlobNode: Equatable {
 }
 
 extension GlobNode: EmptyAwareness {
-    public var isEmpty: Bool { return include.isEmpty && exclude.isEmpty && !excludeDirectories }
+    public var isEmpty: Bool { return include.isEmpty && exclude.isEmpty }
     
     public static var empty: GlobNode {
         return GlobNode(include: AttrSet.empty, exclude: AttrSet.empty)
