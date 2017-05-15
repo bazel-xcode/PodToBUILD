@@ -190,3 +190,15 @@ infix operator •: MultiplicationPrecedence
 func •<A,B,C>(lhs: @escaping (B) -> C, rhs: @escaping (A) -> B) -> (A) -> C {
     return { a in lhs(rhs(a)) }
 }
+
+enum Either<T,U> {
+    case left(T)
+    case right(U)
+    
+    func fold<R>(left: (T) -> R, right: (U) -> R) -> R {
+        switch self {
+        case let .left(t): return left(t)
+        case let .right(u): return right(u)
+        }
+    }
+}

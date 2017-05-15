@@ -25,7 +25,7 @@ class BuildFileTests: XCTestCase {
                     bundles: AttrSet.empty,
                     resources: AttrSet.empty,
 			        nonArcSrcs: GlobNode.empty,
-			        requiresArc: true
+			        requiresArc: .left(true)
         )
     }
 

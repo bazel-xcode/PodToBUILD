@@ -11,9 +11,23 @@ import Foundation
 /// Cocoapods tells us if we have files that require arc
 /// Bazel needs us to partition the files so we don't get duplicate symbols
 struct SplitArcAndNoArcTransform : SkylarkConvertibleTransform {
+    private static func fixIncomplete(pattern: String) -> [String] {
+        // a little hacky, but this logic works for FBSDKCoreKit, the one pod we depend on that needs array requires
+        if pattern.hasSuffix("**") {
+            return ["/*.m", "/*.mm"].map{ pattern + $0 }
+        } else if pattern.hasSuffix("*") {
+            return [".m", ".mm"].map{ pattern + $0 }
+        } else {
+            return [pattern]
+        }
+    }
+    
     private static func arcifySourceFiles(lib: ObjcLibrary) -> (/*srcs: */GlobNode) -> GlobNode {
         return { srcs in
-	        let needArcPatterns = lib.requiresArc ? srcs.include : AttrSet.empty
+            let needArcPatterns: AttrSet<Set<String>> = lib.requiresArc.fold(
+                left: { $0 ? srcs.include : AttrSet.empty },
+                right: { AttrSet(basic: Set($0.flatMap(fixIncomplete))) }
+            )
 	        return GlobNode(
 	            include: needArcPatterns,
 	            exclude: srcs.exclude)
@@ -22,9 +36,12 @@ struct SplitArcAndNoArcTransform : SkylarkConvertibleTransform {
     
     private static func noArcifyNonArcSrcs(oldLib: ObjcLibrary) -> (/*nonArcSrcs: */GlobNode, /*newLib: */ObjcLibrary) -> GlobNode {
         return { nonArcSrcs, newLib in
-	        let needArcPatterns = oldLib.requiresArc ? AttrSet.empty : oldLib.sourceFiles.include
+            let noNeedArcPatterns: AttrSet<Set<String>> = oldLib.requiresArc.fold(
+                left: { $0 ? AttrSet.empty : oldLib.sourceFiles.include },
+                right: { _ in oldLib.sourceFiles.include }
+            )
 	        return GlobNode(
-	            include: needArcPatterns, // if we required arc, then take all the old files
+	            include: noNeedArcPatterns, // if we required arc, then take all the old files
                 // exclude the files included earlier in addition to the other excludes so that we have a partition
 	            exclude: newLib.sourceFiles.include <> oldLib.sourceFiles.exclude)
         }

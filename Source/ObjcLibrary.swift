@@ -137,11 +137,11 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     let deps: AttrSet<[String]>
     let bundles: AttrSet<[String]>
     let resources: AttrSet<[String]>
-
+    let publicHeaders: AttrSet<Set<String>>
     let nonArcSrcs: GlobNode
     
     // only used later in transforms
-    let requiresArc: Bool
+    let requiresArc: Either<Bool, [String]>
     
     // "var" properties are user configurable so we need mutation here
     var sdkFrameworks: AttrSet<[String]>
@@ -160,8 +160,9 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         copts: AttrSet<[String]>,
         bundles: AttrSet<[String]>,
         resources: AttrSet<[String]>,
+        publicHeaders: AttrSet<Set<String>>,
         nonArcSrcs: GlobNode,
-        requiresArc: Bool
+        requiresArc: Either<Bool, [String]>
     ) {
         self.name = name
         self.externalName = externalName
@@ -176,6 +177,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.bundles = bundles
         self.resources = resources
         self.nonArcSrcs = nonArcSrcs
+        self.publicHeaders = publicHeaders
         self.requiresArc = requiresArc
     }
 
@@ -204,7 +206,9 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             include: implFiles,
             exclude: needArcPatterns <> implExcludes
         )*/
-        self.requiresArc = (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.requiresArc))) ?? true
+        self.requiresArc = (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.requiresArc))) ?? .left(true)
+        
+        self.publicHeaders = (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.publicHeaders))).map{ Set($0) }
         
         let xcconfigFlags =
             ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
@@ -413,25 +417,25 @@ extension ObjcLibrary {
     enum lens {
         static let sourceFiles: Lens<ObjcLibrary, GlobNode> = {
             return Lens<ObjcLibrary, GlobNode>(view: { $0.sourceFiles }, set: { sourceFiles, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
             })
         }()
         
         static let nonArcSrcs: Lens<ObjcLibrary, GlobNode> = {
             return Lens(view: { $0.nonArcSrcs }, set: { nonArcSrcs, lib  in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, nonArcSrcs: nonArcSrcs, requiresArc: lib.requiresArc)
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: nonArcSrcs, requiresArc: lib.requiresArc)
             })
         }()
         
         static let deps: Lens<ObjcLibrary, AttrSet<[String]>> = {
             return Lens(view: { $0.deps }, set: { deps, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
             })
         }()
         
-        static let requiresArc: Lens<ObjcLibrary, Bool> = {
+        static let requiresArc: Lens<ObjcLibrary, Either<Bool, [String]>> = {
 	        return Lens(view: { $0.requiresArc }, set: { requiresArc, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, nonArcSrcs: lib.nonArcSrcs, requiresArc: requiresArc)
+                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs, requiresArc: requiresArc)
             })    
         }()
         

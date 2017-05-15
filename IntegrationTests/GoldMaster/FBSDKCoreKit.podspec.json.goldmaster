@@ -17,7 +17,10 @@ objc_library(
     {
       "//conditions:default": glob(
         [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+          "FBSDKCoreKit/FBSDKCoreKit/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm"
         ],
         exclude = [
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
@@ -27,7 +30,10 @@ objc_library(
         ),
       ":tvosCase": glob(
         [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+          "FBSDKCoreKit/FBSDKCoreKit/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm"
         ],
         exclude = [
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.m",
@@ -35,6 +41,49 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.m",
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.m",
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.m"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
+  non_arc_srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+        ],
+        exclude = [
+          "FBSDKCoreKit/FBSDKCoreKit/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm"
+        ],
+        exclude_directories = 1
+        ),
+      ":tvosCase": glob(
+        [
+          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+        ],
+        exclude = [
+          "FBSDKCoreKit/FBSDKCoreKit/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.m",

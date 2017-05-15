@@ -141,7 +141,8 @@ protocol PodSpecRepresentable {
     var headerDirectory: String? { get }
     var xcconfig: [String: String]? { get }
     var moduleName: String? { get }
-    var requiresArc: Bool? { get } // [String] { get }
+    var requiresArc: Either<Bool, [String]>? { get }
+    var publicHeaders: [String] { get }
 }
 
 public struct PodSpec: PodSpecRepresentable {
@@ -158,7 +159,10 @@ public struct PodSpec: PodSpecRepresentable {
 
     let headerDirectory: String?
     let moduleName: String?
-    let requiresArc: Bool? // [String]
+    // requiresArc can be a bool
+    // or it could be a list of pattern
+    // or it could be omitted (in which case we need to fallback)
+    let requiresArc: Either<Bool, [String]>?
 
     let publicHeaders: [String]
 
@@ -209,9 +213,8 @@ public struct PodSpec: PodSpecRepresentable {
 
         headerDirectory = fieldMap[.headerDirectory] as? String
         moduleName = fieldMap[.moduleName] as? String
-        requiresArc =
-            ((fieldMap[.requiresArc] as? Bool).map{ $0 /*? ["**"] : []*/ })
-                // ?? strings(fromJSON: fieldMap[.requiresArc])
+        requiresArc = (fieldMap[.requiresArc] as? Bool).map{ .left($0) } ?? // try a bool
+	        stringsStrict(fromJSON: fieldMap[.requiresArc]).map{ .right($0) } // try a string
 
         if let podSubspecDependencies = fieldMap[.dependencies] as? JSONDict {
             dependencies = Array(podSubspecDependencies.keys)
@@ -345,7 +348,10 @@ extension PodSpec {
         static let resourceBundles: Lens<PodSpecRepresentable, [String: [String]]> = {
             ReadonlyLens { $0.resourceBundles }
         }()
-        static let requiresArc: Lens<PodSpecRepresentable, Bool?> = {
+        static let publicHeaders: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.publicHeaders }
+        }()
+        static let requiresArc: Lens<PodSpecRepresentable, Either<Bool, [String]>?> = {
             ReadonlyLens { $0.requiresArc }
         }()
 
@@ -459,5 +465,15 @@ fileprivate func strings(fromJSON JSONValue: Any? = nil) -> [String] {
         return array
     }
     return [String]()
+}
+
+fileprivate func stringsStrict(fromJSON JSONValue: Any? = nil) -> [String]? {
+    if let str = JSONValue as? String {
+        return [str]
+    }
+    if let array = JSONValue as? [String] {
+        return array
+    }
+    return nil
 }
 
