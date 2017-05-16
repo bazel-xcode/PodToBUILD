@@ -1,14 +1,19 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
 objc_library(
   name = "ZipArchive",
-  non_arc_srcs = glob(
+  srcs = glob(
     [
-      "*.m",
       "minizip/crypt.c",
       "minizip/ioapi.c",
       "minizip/mztools.c",
       "minizip/unzip.c",
       "minizip/zip.c"
+    ],
+    exclude_directories = 1
+    ),
+  non_arc_srcs = glob(
+    [
+      "*.m"
     ],
     exclude_directories = 1
     ),

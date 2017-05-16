@@ -1,10 +1,15 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
 objc_library(
   name = "SFHFKeychainUtils",
-  non_arc_srcs = glob(
+  srcs = glob(
     [
       "security/**/*.c",
-      "security/**/*.cpp",
+      "security/**/*.cpp"
+    ],
+    exclude_directories = 1
+    ),
+  non_arc_srcs = glob(
+    [
       "security/**/*.m",
       "security/**/*.mm"
     ],

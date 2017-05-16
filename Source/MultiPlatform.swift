@@ -205,8 +205,18 @@ struct AttrSet<T: AttrSetConstraint>: Monoid, SkylarkConvertible, EmptyAwareness
         self.multi = multi
     }
 
+    func partition(predicate: @escaping (T) -> Bool) -> (AttrSet<T>, AttrSet<T>) {
+        return (self.filter(predicate), self.filter((!) • predicate))
+    }
+
     func map<U: AttrSetConstraint>(_ transform: (T) -> U) -> AttrSet<U> {
         return AttrSet<U>(basic: basic.map(transform), multi: multi.map(transform))
+    }
+
+    func filter(_ predicate: (T) -> Bool) -> AttrSet<T> {
+        let basicPass = self.basic.map { predicate($0) ? $0 : T.empty }
+        let multiPass = self.multi.map { predicate($0) ? $0 : T.empty }
+        return AttrSet<T>(basic: basicPass, multi: multiPass)
     }
     
     func fold<U>(basic: (T?) -> U, multi: (U, MultiPlatform<T>) -> U) -> U {

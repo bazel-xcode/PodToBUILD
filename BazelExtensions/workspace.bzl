@@ -22,7 +22,7 @@ build_extensions = """
 
 def pch_with_name_hint(hint, sources):
     # Recursive glob the sources directories and the root directory
-    candidates = native.glob(["*.pch"] + sources)
+    candidates = native.glob(["*.pch", hint + "/*.pch"] + sources)
     if len(candidates) == 0:
         return None
 

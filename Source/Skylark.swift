@@ -102,7 +102,19 @@ struct GlobNode: SkylarkConvertible {
         self.include = include
         self.exclude = exclude
     }
-    
+
+    // Partitions Self into two GlobNodes where the first evaluates to true for the 
+    // predicate function.
+    func partition(by predicate: @escaping (String) -> Bool) -> (GlobNode, GlobNode) {
+        let excludePredicate = (!) • predicate
+        return (
+            GlobNode(include: self.include.map { $0.filter(predicate) }.map { Set($0) },
+                     exclude: self.exclude.map { $0.filter(predicate) }.map { Set($0) }),
+            GlobNode(include: self.include.map { $0.filter(excludePredicate) }.map { Set($0) },
+                     exclude: self.exclude.map { $0.filter(excludePredicate) }.map { Set($0) })
+        )
+    }
+
     func toSkylark() -> SkylarkNode {
         let tupleSet: AttrSet<AttrTuple<Set<String>, Set<String>>> = include.zip(exclude)
         
@@ -159,6 +171,15 @@ extension GlobNode: EmptyAwareness {
     
     public static var empty: GlobNode {
         return GlobNode(include: AttrSet.empty, exclude: AttrSet.empty)
+    }
+}
+
+extension GlobNode: Monoid {
+    public static func <> (lhs: GlobNode, rhs: GlobNode) -> GlobNode {
+        return GlobNode(
+            include: lhs.include <> rhs.include,
+            exclude: lhs.exclude <> rhs.exclude
+        )
     }
 }
 
