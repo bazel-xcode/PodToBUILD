@@ -12,10 +12,15 @@ class BasicBuildOptionsTest: XCTestCase {
     func testUserOptions() {
         let CLIArgs = ["./path/to/Pod",
                        "Pod",
+                       "init",
                        "--user_option",
                        "Foo.bar = -bang"
         ]
-        let options = BasicBuildOptions.parse(args: CLIArgs)
+        let action = SerializedRepoToolsAction.parse(args: CLIArgs)
+        guard case let .initialize(options) = action else {
+           XCTFail()
+           return
+        }
         XCTAssertEqual(options.podName, "Pod")
         XCTAssertEqual(options.userOptions[0], "Foo.bar = -bang")
     }
@@ -23,12 +28,17 @@ class BasicBuildOptionsTest: XCTestCase {
     func testMultipleUserOptions() {
         let CLIArgs = ["./path/to/Pod",
                        "Pod",
+                       "init",
                        "--user_option",
                        "Foo.bar = -bang",
                        "--user_option",
                        "Foo.bash = -crash"
         ]
-        let options = BasicBuildOptions.parse(args: CLIArgs)
+        let action = SerializedRepoToolsAction.parse(args: CLIArgs)
+        guard case let .initialize(options) = action else {
+           XCTFail() 
+           return
+        }
         XCTAssertEqual(options.podName, "Pod")
         XCTAssertEqual(options.userOptions[0], "Foo.bar = -bang")
         XCTAssertEqual(options.userOptions[1], "Foo.bash = -crash")

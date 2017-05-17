@@ -60,11 +60,6 @@
 		C4893A631EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A601EB9114900A44D1F /* SkylarkConvertibleTransform.swift */; };
 		C4893A641EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A601EB9114900A44D1F /* SkylarkConvertibleTransform.swift */; };
 		C4893A651EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A601EB9114900A44D1F /* SkylarkConvertibleTransform.swift */; };
-		C4893A671EB9149700A44D1F /* BasicBuildOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A661EB9149700A44D1F /* BasicBuildOptions.swift */; };
-		C4893A681EB9149700A44D1F /* BasicBuildOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A661EB9149700A44D1F /* BasicBuildOptions.swift */; };
-		C4893A691EB9149700A44D1F /* BasicBuildOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A661EB9149700A44D1F /* BasicBuildOptions.swift */; };
-		C4893A6A1EB9149700A44D1F /* BasicBuildOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A661EB9149700A44D1F /* BasicBuildOptions.swift */; };
-		C4893A6B1EB9149700A44D1F /* BasicBuildOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A661EB9149700A44D1F /* BasicBuildOptions.swift */; };
 		C4893A6D1EB914AD00A44D1F /* BasicBuildOptionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A6C1EB914AD00A44D1F /* BasicBuildOptionsTest.swift */; };
 		C49C630D1EB001C000F17E47 /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = C49C630C1EB001C000F17E47 /* CrashReporter.m */; };
 		C4B8A3961EB2A58D00859B73 /* XCConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8A3951EB2A58D00859B73 /* XCConfig.swift */; };
@@ -73,6 +68,23 @@
 		C4B8A3991EB2A58D00859B73 /* XCConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8A3951EB2A58D00859B73 /* XCConfig.swift */; };
 		C4B95C8C1EA18FF50033C7FA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B95C8B1EA18FF50033C7FA /* main.swift */; };
 		C4B95C8E1EA1B04E0033C7FA /* BuildFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */; };
+		C4C1BF971ECA807D00B42EB2 /* LogicalShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */; };
+		C4C1BF981ECA807D00B42EB2 /* ShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */; };
+		C4C1BF9A1ECA80C900B42EB2 /* PodStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF991ECA80C900B42EB2 /* PodStoreTests.swift */; };
+		C4C1BFA31ECA810F00B42EB2 /* LogicalShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */; };
+		C4C1BFA41ECA810F00B42EB2 /* ShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */; };
+		C4C1BFA51ECA811400B42EB2 /* LogicalShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */; };
+		C4C1BFA61ECA811500B42EB2 /* LogicalShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */; };
+		C4C1BFA71ECA811600B42EB2 /* LogicalShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */; };
+		C4C1BFAB1ECA811D00B42EB2 /* ShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */; };
+		C4C1BFAC1ECA811E00B42EB2 /* ShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */; };
+		C4C1BFAD1ECA811F00B42EB2 /* ShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */; };
+		C4C1BFAE1ECA812500B42EB2 /* PodSpecToBUILD-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = C4C1BF911ECA807D00B42EB2 /* PodSpecToBUILD-Bridging-Header.h */; };
+		C4C1BFB01ECA813F00B42EB2 /* RepoActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */; };
+		C4C1BFB11ECA820100B42EB2 /* RepoActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */; };
+		C4C1BFB21ECA820200B42EB2 /* RepoActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */; };
+		C4C1BFB31ECA820300B42EB2 /* RepoActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */; };
+		C4C1BFB41ECA820400B42EB2 /* RepoActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */; };
 		C4E5BC811EA8564200954EB8 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
 		C4E5BC821EA8564200954EB8 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
 		C4E5BC831EA8564200954EB8 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
@@ -218,7 +230,6 @@
 		C4893A581EB90FC600A44D1F /* UserConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserConfigurable.swift; path = Source/UserConfigurable.swift; sourceTree = SOURCE_ROOT; };
 		C4893A5E1EB9108100A44D1F /* UserConfigurableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserConfigurableTests.swift; sourceTree = "<group>"; };
 		C4893A601EB9114900A44D1F /* SkylarkConvertibleTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SkylarkConvertibleTransform.swift; path = Source/SkylarkConvertibleTransform.swift; sourceTree = SOURCE_ROOT; };
-		C4893A661EB9149700A44D1F /* BasicBuildOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BasicBuildOptions.swift; path = Source/BasicBuildOptions.swift; sourceTree = SOURCE_ROOT; };
 		C4893A6C1EB914AD00A44D1F /* BasicBuildOptionsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicBuildOptionsTest.swift; sourceTree = "<group>"; };
 		C49C630A1EB001BF00F17E47 /* RepoTools-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RepoTools-Bridging-Header.h"; sourceTree = "<group>"; };
 		C49C630B1EB001C000F17E47 /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReporter.h; sourceTree = "<group>"; };
@@ -226,6 +237,13 @@
 		C4B8A3951EB2A58D00859B73 /* XCConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCConfig.swift; path = Source/XCConfig.swift; sourceTree = SOURCE_ROOT; };
 		C4B95C8B1EA18FF50033C7FA /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = Source/main.swift; sourceTree = SOURCE_ROOT; };
 		C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildFileTests.swift; sourceTree = "<group>"; };
+		C4C1BF911ECA807D00B42EB2 /* PodSpecToBUILD-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PodSpecToBUILD-Bridging-Header.h"; sourceTree = "<group>"; };
+		C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogicalShellContext.swift; path = Source/LogicalShellContext.swift; sourceTree = SOURCE_ROOT; };
+		C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShellContext.swift; path = Source/ShellContext.swift; sourceTree = SOURCE_ROOT; };
+		C4C1BF991ECA80C900B42EB2 /* PodStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodStoreTests.swift; sourceTree = "<group>"; };
+		C4C1BF9B1ECA80E100B42EB2 /* PodSpecToBUILDTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PodSpecToBUILDTests-Bridging-Header.h"; path = "PodSpecToBUILD/PodSpecToBUILDTests-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		C4C1BF9C1ECA80F000B42EB2 /* WorkspaceTools-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WorkspaceTools-Bridging-Header.h"; path = "PodSpecToBUILD/WorkspaceTools-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepoActions.swift; sourceTree = "<group>"; };
 		C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ObjcLibrary.swift; path = Source/ObjcLibrary.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = SkylarkConvertible.swift; path = Source/SkylarkConvertible.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C4E5BC971EAA7AD700954EB8 /* WorkspaceTools */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WorkspaceTools; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -347,8 +365,10 @@
 				09FD9B6F1EB3C08000272A01 /* Magmas.swift */,
 				C4893A581EB90FC600A44D1F /* UserConfigurable.swift */,
 				C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */,
-				C4893A661EB9149700A44D1F /* BasicBuildOptions.swift */,
 				09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */,
+				C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */,
+				C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */,
+				C4C1BF911ECA807D00B42EB2 /* PodSpecToBUILD-Bridging-Header.h */,
 			);
 			name = Source;
 			path = PodSpecToBUILD;
@@ -366,7 +386,9 @@
 			isa = PBXGroup;
 			children = (
 				C42E026D1EA150B0009B091A /* SkylarkTests.swift */,
+				C4C1BF991ECA80C900B42EB2 /* PodStoreTests.swift */,
 				C4893A6C1EB914AD00A44D1F /* BasicBuildOptionsTest.swift */,
+				C4C1BF9B1ECA80E100B42EB2 /* PodSpecToBUILDTests-Bridging-Header.h */,
 				C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */,
 				C4893A5E1EB9108100A44D1F /* UserConfigurableTests.swift */,
 				C4FA7E3F1EA6A81E005C8B70 /* GlobTests.swift */,
@@ -382,6 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				C4E5BC991EAA7AD700954EB8 /* main.swift */,
+				C4C1BF9C1ECA80F000B42EB2 /* WorkspaceTools-Bridging-Header.h */,
 			);
 			path = WorkspaceTools;
 			sourceTree = "<group>";
@@ -390,6 +413,7 @@
 			isa = PBXGroup;
 			children = (
 				C4FA7E231EA56AEA005C8B70 /* main.swift */,
+				C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */,
 				C49C630B1EB001C000F17E47 /* CrashReporter.h */,
 				C49C630C1EB001C000F17E47 /* CrashReporter.m */,
 				C49C630A1EB001BF00F17E47 /* RepoTools-Bridging-Header.h */,
@@ -404,6 +428,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4C1BFAE1ECA812500B42EB2 /* PodSpecToBUILD-Bridging-Header.h in Headers */,
 				811187DC1EB00CF600CB5BA2 /* PodSpecToBUILD-Framework.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -533,7 +558,7 @@
 					};
 					C42E02041EA1454B009B091A = {
 						CreatedOnToolsVersion = 8.2.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					C42E02471EA14876009B091A = {
@@ -650,6 +675,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4C1BFA31ECA810F00B42EB2 /* LogicalShellContext.swift in Sources */,
 				09FD9B6E1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
 				811187E21EB00D1800CB5BA2 /* PodSpec.swift in Sources */,
 				C4893A651EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
@@ -658,7 +684,7 @@
 				811187E71EB00D1800CB5BA2 /* SkylarkConvertible.swift in Sources */,
 				811187E31EB00D1800CB5BA2 /* Workspace.swift in Sources */,
 				811187E41EB00D1800CB5BA2 /* Skylark.swift in Sources */,
-				C4893A6B1EB9149700A44D1F /* BasicBuildOptions.swift in Sources */,
+				C4C1BFA41ECA810F00B42EB2 /* ShellContext.swift in Sources */,
 				C4893A5D1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
 				811187E51EB00D1800CB5BA2 /* GlobUtils.swift in Sources */,
 				09FD9B681EB3B70700272A01 /* Lens.swift in Sources */,
@@ -667,6 +693,7 @@
 				811187E01EB00D1800CB5BA2 /* BuildFile.swift in Sources */,
 				811187E61EB00D1800CB5BA2 /* ObjcLibrary.swift in Sources */,
 				09FD9B741EB3C08000272A01 /* Magmas.swift in Sources */,
+				C4C1BFB21ECA820200B42EB2 /* RepoActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,15 +701,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4C1BF971ECA807D00B42EB2 /* LogicalShellContext.swift in Sources */,
 				C41448CE1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */,
 				C42E02761EA189EF009B091A /* BuildFile.swift in Sources */,
-				C4893A671EB9149700A44D1F /* BasicBuildOptions.swift in Sources */,
 				C4E5BC841EA8564200954EB8 /* SkylarkConvertible.swift in Sources */,
 				09F194B61EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				C4FA7E161EA56749005C8B70 /* PodSpec.swift in Sources */,
 				C4FA7E441EA6B4DB005C8B70 /* GlobUtils.swift in Sources */,
 				C4FA7E131EA53E29005C8B70 /* Skylark.swift in Sources */,
 				C4B8A3961EB2A58D00859B73 /* XCConfig.swift in Sources */,
+				C4C1BF981ECA807D00B42EB2 /* ShellContext.swift in Sources */,
 				C42E02791EA18AA4009B091A /* Workspace.swift in Sources */,
 				C4B95C8C1EA18FF50033C7FA /* main.swift in Sources */,
 				C4893A591EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
@@ -691,6 +719,7 @@
 				09FD9B6A1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
 				C4893A611EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
 				C4E5BC811EA8564200954EB8 /* ObjcLibrary.swift in Sources */,
+				C4C1BFB41ECA820400B42EB2 /* RepoActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -702,9 +731,11 @@
 				C4FA7E401EA6A81E005C8B70 /* GlobTests.swift in Sources */,
 				C4893A621EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
 				C4E5BCAA1EAA8A9B00954EB8 /* TestUtils.swift in Sources */,
+				C4C1BF9A1ECA80C900B42EB2 /* PodStoreTests.swift in Sources */,
 				09FD9B6B1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
 				C41448E51EBAA6D500C5DDF6 /* MagmasTests.swift in Sources */,
 				C4B95C8E1EA1B04E0033C7FA /* BuildFileTests.swift in Sources */,
+				C4C1BFA51ECA811400B42EB2 /* LogicalShellContext.swift in Sources */,
 				C4E5BC821EA8564200954EB8 /* ObjcLibrary.swift in Sources */,
 				C4FA7E171EA5674B005C8B70 /* main.swift in Sources */,
 				C4E5BCA81EAA871E00954EB8 /* WorkspaceTests.swift in Sources */,
@@ -713,12 +744,13 @@
 				C4893A5F1EB9108100A44D1F /* UserConfigurableTests.swift in Sources */,
 				C4B8A3971EB2A58D00859B73 /* XCConfig.swift in Sources */,
 				C42E026E1EA150B0009B091A /* SkylarkTests.swift in Sources */,
-				C4893A681EB9149700A44D1F /* BasicBuildOptions.swift in Sources */,
 				C4893A6D1EB914AD00A44D1F /* BasicBuildOptionsTest.swift in Sources */,
 				C4893A5A1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
 				09F194B71EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				09FD9B651EB3B70700272A01 /* Lens.swift in Sources */,
+				C4C1BFAD1ECA811F00B42EB2 /* ShellContext.swift in Sources */,
 				C4FA7E451EA6B4DB005C8B70 /* GlobUtils.swift in Sources */,
+				C4C1BFB31ECA820300B42EB2 /* RepoActions.swift in Sources */,
 				C4E5BC851EA8564200954EB8 /* SkylarkConvertible.swift in Sources */,
 				09FD9B711EB3C08000272A01 /* Magmas.swift in Sources */,
 				C4FA7E181EA56759005C8B70 /* PodSpec.swift in Sources */,
@@ -732,14 +764,15 @@
 			files = (
 				C41448F21EBAB25200C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */,
 				C4E5BC9E1EAA7AFA00954EB8 /* PodSpec.swift in Sources */,
-				C4893A6A1EB9149700A44D1F /* BasicBuildOptions.swift in Sources */,
 				C4E5BCA01EAA7B1F00954EB8 /* SkylarkConvertible.swift in Sources */,
 				09F194B91EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				C4E5BCA11EAA7B3B00954EB8 /* Workspace.swift in Sources */,
 				C4E5BC9F1EAA7B1200954EB8 /* Skylark.swift in Sources */,
 				C4E5BCA21EAA7B4E00954EB8 /* BuildFile.swift in Sources */,
 				C4B8A3991EB2A58D00859B73 /* XCConfig.swift in Sources */,
+				C4C1BFA71ECA811600B42EB2 /* LogicalShellContext.swift in Sources */,
 				C4E5BC9A1EAA7AD700954EB8 /* main.swift in Sources */,
+				C4C1BFAB1ECA811D00B42EB2 /* ShellContext.swift in Sources */,
 				C4E5BCA31EAA7B5C00954EB8 /* ObjcLibrary.swift in Sources */,
 				C4893A5C1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
 				09FD9B731EB3C08000272A01 /* Magmas.swift in Sources */,
@@ -747,6 +780,7 @@
 				09FD9B6D1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
 				C4893A641EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
 				C4E5BCA41EAA7B7200954EB8 /* GlobUtils.swift in Sources */,
+				C4C1BFB11ECA820100B42EB2 /* RepoActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -754,8 +788,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4893A691EB9149700A44D1F /* BasicBuildOptions.swift in Sources */,
+				C4C1BFA61ECA811500B42EB2 /* LogicalShellContext.swift in Sources */,
 				C4FA7E291EA56BFA005C8B70 /* Workspace.swift in Sources */,
+				C4C1BFB01ECA813F00B42EB2 /* RepoActions.swift in Sources */,
 				C4893A5B1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
 				C41448EC1EBAB25100C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */,
 				C4E5BC861EA8564200954EB8 /* SkylarkConvertible.swift in Sources */,
@@ -772,6 +807,7 @@
 				C4893A631EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
 				C4B8A3981EB2A58D00859B73 /* XCConfig.swift in Sources */,
 				C4E5BC831EA8564200954EB8 /* ObjcLibrary.swift in Sources */,
+				C4C1BFAC1ECA811E00B42EB2 /* ShellContext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -933,6 +969,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PodSpecToBUILD/PodSpecToBUILD-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -944,6 +981,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PodSpecToBUILD/PodSpecToBUILD-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -980,6 +1018,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Pinterest.PodSpecToBUILDTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "PodSpecToBUILD/PodSpecToBUILDTests-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -992,6 +1031,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Pinterest.PodSpecToBUILDTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PodSpecToBUILD/PodSpecToBUILDTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};

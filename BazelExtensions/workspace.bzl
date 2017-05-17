@@ -3,11 +3,9 @@ def _exec(repository_ctx, transformed_command):
         print("__EXEC", transformed_command)
     output = repository_ctx.execute(transformed_command)
     if repository_ctx.attr.trace:
-        print("__OUTPUT", output.stdout, output.stderr)
-
-def _extension(f):
-  parts = f.split('/')
-  return parts[len(parts) - 1]
+        print("__OUTPUT", output.return_code, output.stdout, output.stderr)
+    
+    return output
 
 # Build extensions is a collection of bazel extensions that are loaded into an
 # external repository's BUILD file
@@ -52,23 +50,6 @@ def _impl(repository_ctx):
     # after the source code has been fetched
     target_name = repository_ctx.attr.target_name
     url = repository_ctx.attr.url
-    download = _extension(url)
-    _exec(repository_ctx, ["curl", "-LOk", url])
-    if url.lower().endswith("zip"):
-        _exec(repository_ctx, ["unzip", download])
-    elif url.lower().endswith("tar.gz"):
-        _exec(repository_ctx, ["tar", "-xzvf", download])
-    strip_prefix = repository_ctx.attr.strip_prefix
-
-    # TODO: Jerry remove strip_prefix from the public API.
-    # We should automatically find the .podspec according to CocoaPod semantics
-    # rather than dealing with the overhead of trying to figure it out for each
-    # pod and URL.
-    if strip_prefix and len(strip_prefix) > 0:
-        _exec(repository_ctx, ["ditto", strip_prefix + "/", "."])
-
-    _exec(repository_ctx, ["mkdir", "-p", "external/" + target_name])
-
     repo_tools_labels = repository_ctx.attr.repo_tools_labels
     command_dict = repository_ctx.attr.command_dict
     tool_bin_by_name = {}
@@ -79,7 +60,25 @@ def _impl(repository_ctx):
             tool_name = repo_tool_dict[str(tool_label)]
             tool_bin_by_name[tool_name] = repository_ctx.path(tool_label)
 
-    ## This seems to be needed here
+    fetch_cmd = [
+        tool_bin_by_name["RepoTool"],
+        target_name,
+        "fetch",
+        "--url",
+        url,
+        "--sub_dir",
+        repository_ctx.attr.strip_prefix,
+        "--trace",
+        "true" if repository_ctx.attr.trace else "no"
+    ]
+
+    fetch_output = _exec(repository_ctx, fetch_cmd)
+    if fetch_output.return_code != 0:
+        fail("Could not retrieve pod " + target_name)
+
+    # This seems needed
+    _exec(repository_ctx, ["mkdir", "-p", "external/" + target_name])
+
     idx = 0
     cmd_len = len(command_dict)
     for some in command_dict:
@@ -93,6 +92,7 @@ def _impl(repository_ctx):
         # Set the first argument for RepoTool to "target_name"
         if cmd_path == "RepoTool":
             transformed_command.append(target_name)
+            transformed_command.append("init")
             for user_option in repository_ctx.attr.user_options:
                 transformed_command.append("--user_option")
                 transformed_command.append(user_option)
@@ -175,7 +175,7 @@ def new_pod_repository(name,
                        build_file_content = "",
                        cmds = { "0" : ["RepoTool"] },
                        repo_tools = { "//tools/PodSpecToBUILD/bin:RepoTools"  : "RepoTool" },
-                       trace = False
+                       trace = True
                        ):
     tool_labels = []
     for tool in repo_tools:
