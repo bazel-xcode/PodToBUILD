@@ -4,7 +4,7 @@ pushd "$SCRIPTPATH/../.." > /dev/null
 cd $SCRIPTPATH/../
 echo $PWD
 
-make releases
+make compiler
 CMD=bin/PodSpecToBUILD
 
 # Loop through all the examples and compare outputs

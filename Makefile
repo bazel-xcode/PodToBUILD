@@ -3,6 +3,7 @@
 	releases \
 	goldmaster \
 	test \
+	unit-test \
 	integration-test \
 	workspace-tools
 
@@ -15,6 +16,14 @@ build:
 
 clean:
 	rm -rf tmp_build_dir
+
+compiler:
+	xcodebuild  \
+	-project PodSpecToBUILD.xcodeproj \
+	-scheme PodSpecToBUILD \
+	-configuration Release \
+	-derivedDataPath tmp_build_dir
+	ditto tmp_build_dir/Build/Products/Release/PodSpecToBUILD bin/
 
 repo-tools:
 	xcodebuild  \
@@ -41,13 +50,16 @@ goldmaster:
 	./MakeGoldMaster.sh
 
 # Unit tests
-test:
+unit-test:
 	xcodebuild  \
 	-project PodSpecToBUILD.xcodeproj \
 	-scheme PodSpecToBUILDTests \
-	-configuration Debug \
+	-configuration Release \
 	test
 
 integration-test:
 	./IntegrationTests/RunTests.sh
+
+test: unit-test integration-test
+
 
