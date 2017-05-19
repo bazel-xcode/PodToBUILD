@@ -4,7 +4,7 @@ def _exec(repository_ctx, transformed_command):
     output = repository_ctx.execute(transformed_command)
     if repository_ctx.attr.trace:
         print("__OUTPUT", output.return_code, output.stdout, output.stderr)
-    
+
     return output
 
 # Build extensions is a collection of bazel extensions that are loaded into an
@@ -175,7 +175,7 @@ def new_pod_repository(name,
                        build_file_content = "",
                        cmds = { "0" : ["RepoTool"] },
                        repo_tools = { "//tools/PodSpecToBUILD/bin:RepoTools"  : "RepoTool" },
-                       trace = True
+                       trace = False
                        ):
     tool_labels = []
     for tool in repo_tools:

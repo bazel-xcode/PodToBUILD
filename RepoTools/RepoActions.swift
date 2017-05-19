@@ -295,9 +295,11 @@ enum RepoActions {
 
         let url  = NSURL(fileURLWithPath: urlString)
         let fileName = url.lastPathComponent!
-        let download = downloadsDir + "/" + podName + "-" + fileName
-        let curlOutput = shell.command("/usr/bin/curl", arguments: ["-Lk", urlString, "-o", download])
-        assertCommandOutput(curlOutput, message: "Downlad of \(podName) failed")
+        let download = downloadsDir + "/" + podName + "-" + fileName        
+        guard let wwwUrl = NSURL(string: urlString).map({ $0 as URL }),
+            shell.download(url: wwwUrl, toFile: download) else {
+            fatalError("Download of \(podName) failed")
+        }
         
         // Extract the downloaded archive
         let extractDir = escape("/tmp/bazel_pod_download-" + podName)

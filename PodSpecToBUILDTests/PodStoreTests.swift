@@ -21,14 +21,9 @@ class PodStoreTests: XCTestCase {
         return escape(PodStoreCacheDir + "dls")
     }
     
-	var download: String {
+	var downloadPath: String {
         return downloads + "/" + testPodName + "-" + "foo.zip"
     }   
-        
-    var curl: ShellInvocation {
-        return MakeShellInvocation("/usr/bin/curl", arguments: ["-Lk",
-                    "http://pinner.com/foo.zip", "-o", download], value: true)
-    }
         
     var hasDir: ShellInvocation {
         return MakeShellInvocation("/bin/[", arguments: ["-e", cacheRoot(forPod:
@@ -41,16 +36,17 @@ class PodStoreTests: XCTestCase {
 
 	func testURLDownloading() {
         let shell = LogicalShellContext(commandInvocations: [
-            hasDir,
-            curl
+            hasDir
             ])
         RepoActions.fetch(shell: shell, fetchOptions: fetchOpts)
-        XCTAssertTrue(shell.executed(encodedCommand: curl.0))
+        XCTAssertTrue(
+            shell.executed(encodedCommand:
+                LogicalShellContext.encodeDownload(url: URL(string: fetchOpts.url)!, toFile: downloadPath)
+            )
+        )
     }
     
     func testZipExtraction() {
-        let curl =  MakeShellInvocation("/usr/bin/curl", arguments: ["-Lk",
-                "http://pinner.com/foo.zip", "-o", download], value: true)
         let hasDir =  MakeShellInvocation("/bin/[", arguments: ["-e",
                 cacheRoot(forPod: testPodName, url: "http://pinner.com/foo.zip"),
                 "]"], exitCode: 1)
@@ -59,30 +55,31 @@ class PodStoreTests: XCTestCase {
         let extract = MakeShellInvocation("/bin/sh", 
                 arguments: ["-c", RepoActions.unzipTransaction(
                     rootDir: escape(extractDir),
-                    fileName: escape(download)
+                    fileName: escape(downloadPath)
                     )
                 ],
                 exitCode: 0)
         let shell = LogicalShellContext(commandInvocations: [
             hasDir,
-            curl,
             extract
             ])
 
         RepoActions.fetch(shell: shell, fetchOptions: fetchOpts)
-        XCTAssertTrue(shell.executed(encodedCommand: curl.0))
+        XCTAssertTrue(shell.executed(encodedCommand:
+                LogicalShellContext.encodeDownload(url: URL(string: fetchOpts.url)!, toFile: downloadPath)
+        ))
         XCTAssertTrue(shell.executed(encodedCommand: extract.0))
     }
 
     func testCachedDownload() {
-        let curl =  MakeShellInvocation("/usr/bin/curl", arguments: ["-LOk", "http://pinner.com/foo.zip"], value: true)
         let hasDir =  MakeShellInvocation("/bin/[", arguments: ["-e", cacheRoot(forPod: testPodName, url: "http://pinner.com/foo.zip"), "]"], value: 0)
         let shell = LogicalShellContext(commandInvocations: [
             hasDir,
-            curl,
             ])
         
         RepoActions.fetch(shell: shell, fetchOptions: fetchOpts)
-        XCTAssertFalse(shell.executed(encodedCommand: curl.0))
+        XCTAssertFalse(shell.executed(encodedCommand:
+                LogicalShellContext.encodeDownload(url: URL(string: fetchOpts.url)!, toFile: downloadPath)
+        ))
     }
 }
