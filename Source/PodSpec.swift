@@ -119,6 +119,7 @@ public enum PodSpecField: String {
     case moduleName = "module_name"
     case headerDirectory = "header_dir"
     case requiresArc = "requires_arc"
+    case defaultSubspecs = "default_subspecs"
 }
 
 protocol PodSpecRepresentable {
@@ -143,6 +144,7 @@ protocol PodSpecRepresentable {
     var moduleName: String? { get }
     var requiresArc: Either<Bool, [String]>? { get }
     var publicHeaders: [String] { get }
+    var defaultSubspecs: [String] { get }
 }
 
 public struct PodSpec: PodSpecRepresentable {
@@ -156,6 +158,7 @@ public struct PodSpec: PodSpecRepresentable {
     let compilerFlags: [String]
     let source: PodSpecSource?
     let libraries: [String]
+    let defaultSubspecs: [String]
 
     let headerDirectory: String?
     let moduleName: String?
@@ -207,6 +210,8 @@ public struct PodSpec: PodSpecRepresentable {
         publicHeaders = strings(fromJSON: fieldMap[.publicHeaders])
         compilerFlags = strings(fromJSON: fieldMap[.compilerFlags])
         libraries = strings(fromJSON: fieldMap[.libraries])
+
+        defaultSubspecs = strings(fromJSON: fieldMap[.defaultSubspecs])
 
         vendoredFrameworks = strings(fromJSON: fieldMap[.vendoredFrameworks])
         vendoredLibraries = strings(fromJSON: fieldMap[.vendoredLibraries])
@@ -333,6 +338,11 @@ extension PodSpec {
         static let subspecs: Lens<PodSpecRepresentable, [PodSpec]> = {
             ReadonlyLens { $0.subspecs }
         }()
+
+        static let defaultSubspecs: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.defaultSubspecs }
+        }()
+
         static let dependencies: Lens<PodSpecRepresentable, [String]> = {
             ReadonlyLens { $0.dependencies }
         }()

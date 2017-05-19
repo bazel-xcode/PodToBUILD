@@ -9,7 +9,7 @@ import PodSpecToBUILD
  */
 
 
-let podName = "pop"
+let podName = "Braintree"
 let pod = examplePodSpecNamed(name: podName)
 let options = BasicBuildOptions(podName: "", userOptions: [String](), globalCopts: [], trace: true)
 let jsonPodSpec = try! JSONSerialization.jsonObject(with: try! Data(contentsOf: URL(fileURLWithPath: examplePodSpecFilePath(name: podName)), options: .uncached))

@@ -18,12 +18,7 @@ objc_library(
     "bazel_support/Headers/Public/PINRemoteImage/"
   ],
   deps = [
-    ":PINRemoteImage_Core",
-    ":PINRemoteImage_iOS",
-    ":PINRemoteImage_OSX",
-    ":PINRemoteImage_tvOS",
     ":PINRemoteImage_FLAnimatedImage",
-    ":PINRemoteImage_WebP",
     ":PINRemoteImage_PINCache"
   ],
   visibility = [

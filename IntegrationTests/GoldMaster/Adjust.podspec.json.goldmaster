@@ -44,10 +44,7 @@ objc_library(
     }
     ),
   deps = [
-    ":Adjust_Core",
-    ":Adjust_Sociomantic",
-    ":Adjust_Criteo",
-    ":Adjust_Trademob"
+    ":Adjust_Core"
   ],
   visibility = [
     "//visibility:public"

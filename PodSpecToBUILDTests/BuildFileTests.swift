@@ -176,12 +176,23 @@ class BuildFileTests: XCTestCase {
         XCTAssertEqual(lib.name, podspec.name)
     }
 
-    func testDependOnSubspecs() {
+
+    func testDependOnDefaultSubspecs() {
         let podspec = examplePodSpecNamed(name: "IGListKit")
         let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
 
         XCTAssert(
-            AttrSet(basic: [":IGListKit_Diffing", ":IGListKit_Default"]) ==
+            AttrSet(basic: [":IGListKit_Default"]) ==
+                (convs.flatMap{ $0 as? ObjcLibrary}.first!).deps
+        )
+    }
+
+    func testDependOnSubspecs() {
+        let podspec = examplePodSpecNamed(name: "PINCache")
+        let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
+
+        XCTAssert(
+            AttrSet(basic: [":PINCache_Core", ":PINCache_Arc_exception_safe"]) ==
                 (convs.flatMap{ $0 as? ObjcLibrary}.first!).deps
         )
     }

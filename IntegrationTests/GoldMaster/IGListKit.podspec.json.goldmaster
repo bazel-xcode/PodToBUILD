@@ -52,7 +52,6 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":IGListKit_Diffing",
     ":IGListKit_Default"
   ],
   copts = [

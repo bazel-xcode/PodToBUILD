@@ -19,22 +19,9 @@ objc_library(
   ],
   deps = [
     ":Braintree_Core",
-    ":Braintree_Apple_Pay",
     ":Braintree_Card",
-    ":Braintree_DataCollector",
-    ":DataCollector_VendoredLibraries",
     ":Braintree_PayPal",
-    ":Braintree_Venmo",
-    ":UI_Bundle_Braintree_UI_Localization",
-    ":UI_Bundle_Braintree_Drop_In_Localization",
-    ":Braintree_UI",
-    ":Braintree_UnionPay",
-    ":3D_Secure_Bundle_Braintree_3D_Secure_Localization",
-    ":Braintree_3D_Secure",
-    ":Braintree_PayPalOneTouch",
-    ":Braintree_PayPalDataCollector",
-    ":PayPalDataCollector_VendoredLibraries",
-    ":Braintree_PayPalUtils"
+    ":Braintree_UI"
   ],
   copts = [
     "-Wall -Werror -Wextra"

@@ -62,9 +62,22 @@ public struct PodBuildFile {
             vendoredFrameworks(withPodspec: spec)
         }
 
+
+        let defaultSubspecs = Set(podSpec.defaultSubspecs)
+
+        let filteredSpecs = podSpec.subspecs
+            .filter { defaultSubspecs.contains($0.name) }
+            .map { ObjcLibrary(rootSpec: podSpec, spec: $0, extraDeps: [])}
+            .map { $0.name }
+            .reduce(Set()) { result, name in result.union([name]) }
+
+        let defaultSubspecTargets = subspecTargets.reduce([]) { result, target in
+            return result + (filteredSpecs.contains(target.name) ? [target] : [])
+        }
+
         let extraDeps = bundleLibraries(withPodSpec: podSpec) + vendoredFrameworks(withPodspec: podSpec) + vendoredLibraries(withPodspec: podSpec)
         let rootLib = ObjcLibrary(spec: podSpec,
-                                  extraDeps: (subspecTargets + extraDeps).map{ $0.name })
+                                  extraDeps: ((defaultSubspecTargets.isEmpty ? subspecTargets : defaultSubspecTargets) + extraDeps).map{ $0.name })
 
         // We don't care about the values here
         // So we just lens to an arbitrary monoid that we can <+>

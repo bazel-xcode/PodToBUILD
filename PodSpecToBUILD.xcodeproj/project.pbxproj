@@ -37,6 +37,7 @@
 		811187E61EB00D1800CB5BA2 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
 		811187E71EB00D1800CB5BA2 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
 		81537BE11EB82052006D10AD /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */; };
+		81B7A9701ECF984300CB3168 /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = C49C630C1EB001C000F17E47 /* CrashReporter.m */; };
 		C41448CE1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448CF1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448E51EBAA6D500C5DDF6 /* MagmasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */; };
@@ -692,6 +693,7 @@
 				09FD9B751EB3FCD300272A01 /* XCConfig.swift in Sources */,
 				811187E01EB00D1800CB5BA2 /* BuildFile.swift in Sources */,
 				811187E61EB00D1800CB5BA2 /* ObjcLibrary.swift in Sources */,
+				81B7A9701ECF984300CB3168 /* CrashReporter.m in Sources */,
 				09FD9B741EB3C08000272A01 /* Magmas.swift in Sources */,
 				C4C1BFB21ECA820200B42EB2 /* RepoActions.swift in Sources */,
 			);
@@ -842,6 +844,7 @@
 				PRODUCT_NAME = PodSpecToBUILD;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "PodSpecToBUILD/PodSpecToBUILD-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -867,6 +870,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pinterest.PodSpecToBUILD-Framework";
 				PRODUCT_NAME = PodSpecToBUILD;
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PodSpecToBUILD/PodSpecToBUILD-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";

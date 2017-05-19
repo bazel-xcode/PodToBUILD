@@ -186,7 +186,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                      .replacingOccurrences(of: "-", with: "_")
                      .replacingOccurrences(of: "+", with: "_")
     }
-    
+
     init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = []) {
         let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].flatMap { $0 })
 
