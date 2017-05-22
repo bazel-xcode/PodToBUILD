@@ -290,9 +290,7 @@ enum RepoActions {
             return
         }
         
-        let downloadsDir = escape(PodStoreCacheDir + "dls")
-        _ = shell.command(CommandBinary.mkdir, arguments: ["-p", downloadsDir])
-
+        let downloadsDir = shell.tmpdir()
         let url  = NSURL(fileURLWithPath: urlString)
         let fileName = url.lastPathComponent!
         let download = downloadsDir + "/" + podName + "-" + fileName        
@@ -302,7 +300,7 @@ enum RepoActions {
         }
         
         // Extract the downloaded archive
-        let extractDir = escape("/tmp/bazel_pod_download-" + podName)
+        let extractDir = shell.tmpdir()
         func extract() -> CommandOutput {
             let lowercasedFileName = fileName.lowercased()
             if lowercasedFileName.hasSuffix("zip") {
@@ -332,8 +330,9 @@ enum RepoActions {
                         "mkdir -p " + podCacheRoot + " && " +
                         "mv OUT/* " + podCacheRoot
                     ])
+        _ = shell.command(CommandBinary.rm, arguments: ["-rf", extractDir])
         if export.terminationStatus != 0 {
-            _ = shell.command("/bin/rm", arguments: ["-rf", podCacheRoot])
+            _ = shell.command(CommandBinary.rm, arguments: ["-rf", podCacheRoot])
             fatalError("Filesystem is in an invalid state")
         }
         exportArchive(shell: shell, podCacheRoot: podCacheRoot,

@@ -229,6 +229,11 @@ struct SystemShellContext : ShellContext {
         log("CREATE TMPDIR")
         return command(CommandBinary.mktemp, arguments: ["-d"]).standardOutputAsString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
+    
+    func tmpdir() -> String {
+        log("CREATE TMPDIR")
+        return command(CommandBinary.mktemp, arguments: ["-d"]).standardOutputAsString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+    }
 
     // MARK: - Private
 

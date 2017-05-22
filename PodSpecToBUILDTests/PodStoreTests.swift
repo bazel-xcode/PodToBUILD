@@ -18,7 +18,11 @@ let fetchOpts = FetchOptions(podName: testPodName,
 class PodStoreTests: XCTestCase {
 
     var downloads: String {
-        return escape(PodStoreCacheDir + "dls")
+        return "%TMP%"
+    }
+    
+    var extractDir: String {
+        return "%TMP%"
     }
     
 	var downloadPath: String {
@@ -51,14 +55,13 @@ class PodStoreTests: XCTestCase {
                 cacheRoot(forPod: testPodName, url: "http://pinner.com/foo.zip"),
                 "]"], exitCode: 1)
 
-        let extractDir = escape("/tmp/bazel_pod_download-" + testPodName)
-        let extract = MakeShellInvocation("/bin/sh", 
-                arguments: ["-c", RepoActions.unzipTransaction(
-                    rootDir: escape(extractDir),
-                    fileName: escape(downloadPath)
-                    )
-                ],
-                exitCode: 0)
+        
+        let extract = MakeShellInvocation("/bin/sh",
+                                          arguments: ["-c", RepoActions.unzipTransaction(
+                                            rootDir: escape(extractDir),
+                                            fileName: escape(downloadPath)
+                                            )],
+                                          exitCode: 0)
         let shell = LogicalShellContext(commandInvocations: [
             hasDir,
             extract
