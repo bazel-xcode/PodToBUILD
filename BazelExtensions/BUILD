@@ -1,3 +1,11 @@
-# This is a blank file. In Bazel, it is a convention and requirement to have a
-# blank file if you want to reference some path.
-# The reason this exists, is because this directory is referenced by workspaces
+# Process bundles created by PodSpecToBUILD
+# Move a bundle of the convention in Pods
+# PackageName_Bundle_BundleName
+# @see process_ipa.py
+py_binary(
+    name = "ipa_process",
+    main = "process_ipa.py",
+    srcs = ["process_ipa.py"],
+    visibility = ["//visibility:public"]
+)
+
