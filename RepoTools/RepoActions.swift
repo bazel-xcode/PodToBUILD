@@ -158,7 +158,7 @@ extension String {
 }
 
 func cacheRoot(forPod pod: String, url: String) -> String{
-    return PodStoreCacheDir + pod + "-" + pod.sha256() + "/"
+    return PodStoreCacheDir + pod + "-" + url.sha256() + "/"
 }
 
 extension ShellContext {
