@@ -173,7 +173,8 @@ enum RepoActions {
     /// - Compile a build file based on the PodSpec
     /// - Create a symlinked header structure to support angle bracket includes
     static func initializeRepository(shell: ShellContext, buildOptions: BasicBuildOptions) {
-        let whichPod = shell.command("/bin/bash", arguments: ["-l", "-c", "which pod"]).standardOutputAsString
+        // This uses the current environment's cocoapods installation.
+        let whichPod = shell.shellOut("which pod").standardOutputAsString
         if whichPod.isEmpty {
             fatalError("RepoTools requires a cocoapod installation on host")
         }

@@ -2,7 +2,10 @@ def _exec(repository_ctx, transformed_command):
     if repository_ctx.attr.trace:
         print("__EXEC", transformed_command)
     output = repository_ctx.execute(transformed_command)
-    if repository_ctx.attr.trace:
+    if output.return_code != 0:
+        print("__OUTPUT", output.return_code, output.stdout, output.stderr)
+        fail("Could not exec command " + " ".join(transformed_command))
+    elif repository_ctx.attr.trace:
         print("__OUTPUT", output.return_code, output.stdout, output.stderr)
 
     return output
