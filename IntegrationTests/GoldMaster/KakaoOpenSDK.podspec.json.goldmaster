@@ -1,4 +1,14 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://bazel.build/versions/master/docs/bazel-user-manual.html
+native.config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+  )
 objc_library(
   name = "KakaoOpenSDK",
   hdrs = glob(
@@ -27,6 +37,18 @@ objc_library(
     ":KakaoOpenSDK_KakaoS2",
     ":KakaoS2_VendoredFrameworks"
   ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -56,6 +78,18 @@ objc_library(
   deps = [
     ":KakaoOpenSDK_VendoredFrameworks"
   ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -97,6 +131,18 @@ objc_library(
   deps = [
     ":KakaoNavi_VendoredFrameworks"
   ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -138,6 +184,18 @@ objc_library(
   deps = [
     ":KakaoLink_VendoredFrameworks"
   ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -179,6 +237,18 @@ objc_library(
   deps = [
     ":KakaoS2_VendoredFrameworks"
   ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]

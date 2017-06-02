@@ -1,4 +1,14 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://bazel.build/versions/master/docs/bazel-user-manual.html
+native.config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+  )
 objc_library(
   name = "AsyncDisplayKit",
   hdrs = glob(
@@ -31,7 +41,16 @@ objc_library(
   copts = [
     "-stdlib=c++11",
     "-stdlib=libc++"
-  ],
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -78,7 +97,16 @@ objc_library(
     "-stdlib=c++11",
     "-stdlib=libc++",
     ""
-  ],
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -118,7 +146,16 @@ objc_library(
     "-stdlib=c++11",
     "-stdlib=libc++",
     "-DPIN_REMOTE_IMAGE=1"
-  ],
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -157,7 +194,16 @@ objc_library(
     "-stdlib=c++11",
     "-stdlib=libc++",
     "-DIG_LIST_KIT=1"
-  ],
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -196,7 +242,16 @@ objc_library(
     "-stdlib=c++11",
     "-stdlib=libc++",
     "-DYOGA=1"
-  ],
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]

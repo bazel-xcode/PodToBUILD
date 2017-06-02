@@ -40,10 +40,23 @@ def pch_with_name_hint(hint, sources):
     return None
 """
 
+# Compiler Options
+
 global_copts = [
     # Disable all warnings
     "-Wno-everything",
-    "-fmodules"
+    "-g",
+    "-stdlib=libc++",
+    "-DCOCOAPODS=1",
+    "-DNS_BLOCK_ASSERTIONS=1",
+    "-DOBJC_OLD_DISPATCH_PROTOTYPES=0",
+    "-fdiagnostics-show-note-include-stack",
+    "-fno-common",
+    "-fembed-bitcode-marker",
+    "-fmessage-length=0",
+    "-fpascal-strings",
+    "-fstrict-aliasing",
+    "-fmodules",
 ]
 
 def _impl(repository_ctx):

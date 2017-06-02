@@ -40,7 +40,7 @@ public indirect enum SkylarkNode {
 
     /// Lines are a bunch of nodes that we will render as separate lines
     case lines([SkylarkNode])
-    
+
     /// Flatten nested lines to a single array of lines
     func canonicalize() -> SkylarkNode {
         // at the inner layer we just strip the .lines
@@ -58,12 +58,13 @@ public indirect enum SkylarkNode {
         }
     }
 }
+
 extension SkylarkNode: Monoid, EmptyAwareness {
     public static var empty: SkylarkNode { return .list([]) }
 
     // TODO(bkase): Annotate AttrSet with monoidal struct wrapper to get around this hack
     /// WARNING: This doesn't obey the laws :(.
-    public static func <> (lhs: SkylarkNode, rhs: SkylarkNode) -> SkylarkNode {
+    public static func<>(lhs: SkylarkNode, rhs: SkylarkNode) -> SkylarkNode {
         return lhs .+. rhs
     }
 
@@ -186,25 +187,50 @@ extension GlobNode: Monoid {
 extension GlobNode {
     enum lens {
         static let include: Lens<GlobNode, AttrSet<Set<String>>> = {
-            return Lens<GlobNode, AttrSet<Set<String>>>(view: { $0.include }, set: { include, globNode in
+            Lens<GlobNode, AttrSet<Set<String>>>(view: { $0.include }, set: { include, globNode in
                 GlobNode(include: include, exclude: globNode.exclude)
             })
         }()
-        
+
         static let exclude: Lens<GlobNode, AttrSet<Set<String>>> = {
-            return Lens<GlobNode, AttrSet<Set<String>>>(view: { $0.exclude }, set: { exclude, globNode in
+            Lens<GlobNode, AttrSet<Set<String>>>(view: { $0.exclude }, set: { exclude, globNode in
                 GlobNode(include: globNode.include, exclude: exclude)
             })
         }()
     }
 }
 
+/// Config Setting Nodes
+/// Write Build dependent COPTS.
+/// @note We consume this as an expression in ObjCLibrary
+public func makeConfigSettingNodes() -> SkylarkNode {
+    let comment = [
+        "# Add a config setting release for compilation mode",
+        "# Assume that people are using `opt` for release mode",
+        "# see the bazel user manual for more information",
+        "# https://bazel.build/versions/master/docs/bazel-user-manual.html",
+    ].map { SkylarkNode.skylark($0) }
+    let releaseConfig = SkylarkNode.functionCall(name: "native.config_setting",
+                                                 arguments: [
+                                                     .named(name: "name", value: .string("release")),
+                                                     .named(name: "values",
+                                                            value:
+                                                            [
+                                                            "compilation_mode": "opt"
+                                                            ].toSkylark()
+                                                     ),
+    ])
+
+    return .lines([.lines(comment), releaseConfig])
+}
 
 // Make Nodes to be inserted at the beginning of skylark output
 // public for test purposes
 public func makePrefixNodes() -> SkylarkNode {
-    let loadPCHFunctionNode = SkylarkNode.skylark("load('//:build_extensions.bzl', 'pch_with_name_hint')")
-    return loadPCHFunctionNode
+    return .lines([
+        .skylark("load('//:build_extensions.bzl', 'pch_with_name_hint')"),
+        makeConfigSettingNodes(),
+    ])
 }
 
 // MARK: - SkylarkCompiler

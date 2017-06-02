@@ -1,4 +1,14 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://bazel.build/versions/master/docs/bazel-user-manual.html
+native.config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+  )
 config_setting(
   name = "iosCase",
   values = {
@@ -57,7 +67,16 @@ objc_library(
   copts = [
     "-stdlib=c++11",
     "-stdlib=libc++"
-  ],
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -126,7 +145,16 @@ objc_library(
   copts = [
     "-stdlib=c++11",
     "-stdlib=libc++"
-  ],
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]
@@ -201,7 +229,16 @@ objc_library(
   copts = [
     "-stdlib=c++11",
     "-stdlib=libc++"
-  ],
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   visibility = [
     "//visibility:public"
   ]

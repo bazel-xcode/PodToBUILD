@@ -13,7 +13,6 @@ protocol BazelTarget: SkylarkConvertible {
     var name: String { get }
 }
 
-
 // https://bazel.build/versions/master/docs/be/objective-c.html#objc_bundle_library
 struct ObjcBundleLibrary: BazelTarget {
     let name: String
@@ -389,12 +388,24 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 value: lib.deps.toSkylark()
             ))
         }
-        if !lib.copts.isEmpty {
-            libArguments.append(.named(
-                name: "copts",
-                value: lib.copts.toSkylark()
-            ))
-        }
+
+        let buildConfigDependenctCOpts =
+            SkylarkNode.functionCall(name: "select",
+                                     arguments: [
+                                         .basic(
+                                             [
+                                                 ":release":
+                                                    ["-DPOD_CONFIGURATION_RELEASE=1"],
+                                                 "//conditions:default":
+                                                    ["-DPOD_CONFIGURATION_RELEASE=0"]
+                                             ].toSkylark()
+                                             )
+                                     ]
+            )
+        libArguments.append(.named(
+            name: "copts",
+            value: lib.copts.toSkylark() .+. buildConfigDependenctCOpts
+        ))
 
         if !lib.resources.isEmpty {
             libArguments.append(.named(name: "resources",

@@ -1,4 +1,14 @@
 load('//:build_extensions.bzl', 'pch_with_name_hint')
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://bazel.build/versions/master/docs/bazel-user-manual.html
+native.config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+  )
 objc_library(
   name = "GoogleSignIn",
   hdrs = glob(
@@ -29,6 +39,18 @@ objc_library(
     "@GoogleToolboxForMac//:GoogleToolboxForMac_NSDictionary_URLArguments",
     "@GTMSessionFetcher//:GTMSessionFetcher_Core"
   ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+    ),
   resources = [
     "Resources/GoogleSignIn.bundle"
   ],
