@@ -67,7 +67,7 @@ struct ObjcBundleLibrary: BazelTarget {
 struct ConfigSetting: BazelTarget {
     let name: String
     let values: [String: String]
-    
+
     func toSkylark() -> SkylarkNode {
         return .functionCall(
             name: "config_setting",
@@ -178,10 +178,10 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     let resources: AttrSet<[String]>
     let publicHeaders: AttrSet<Set<String>>
     let nonArcSrcs: GlobNode
-    
+
     // only used later in transforms
     let requiresArc: Either<Bool, [String]>
-    
+
     // "var" properties are user configurable so we need mutation here
     var sdkFrameworks: AttrSet<[String]>
     var copts: AttrSet<[String]>
@@ -234,7 +234,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let implFiles = extract(sources: allSourceFiles).map{ Set($0) }
         let allExcludes = spec ^* liftToAttr(PodSpec.lens.excludeFiles)
         let implExcludes = extract(sources: allExcludes).map{ Set($0) }
-        
+
         // TODO: Invoke intersectPatterns (i.e. don't use the bool)
         // TODO: Handle multiplatform overrides of requiresArc
         /*let needArcPatterns = (spec ^* liftToAttr(PodSpec.lens.requiresArc)).map{ Set($0) }
@@ -247,9 +247,9 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             exclude: needArcPatterns <> implExcludes
         )*/
         self.requiresArc = (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.requiresArc))) ?? .left(true)
-        
+
         self.publicHeaders = (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.publicHeaders))).map{ Set($0) }
-        
+
         let xcconfigFlags =
             ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
             ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.userTargetXcconfig)))) +
@@ -320,7 +320,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     var excludableSourceFiles: AttrSet<Set<String>> {
         return self ^* (ObjcLibrary.lens.sourceFiles .. GlobNode.lens.include)
     }
-    
+
     var alreadyExcluded: AttrSet<Set<String>> {
         return self ^* ObjcLibrary.lens.excludeFiles
     }
@@ -401,7 +401,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 GlobNode.lens.include <>~ AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*.h"])
             ).toSkylark()
         ))
-        
+
         libArguments.append(.named(
             name: "pch",
             value:.functionCall(
@@ -421,7 +421,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             name: "includes",
             value: ([PodSupportSystemPublicHeaderDir] + headerSearchPaths).toSkylark()
         ))
-        
+
         if !lib.sdkFrameworks.isEmpty {
             libArguments.append(.named(
                 name: "sdk_frameworks",
@@ -465,8 +465,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             )
         libArguments.append(.named(
             name: "copts",
-            value: lib.copts.toSkylark() .+. buildConfigDependenctCOpts
-        ))
+            value: lib.copts.toSkylark() .+. buildConfigDependenctCOpts))
 
         if !lib.resources.isEmpty {
             libArguments.append(.named(name: "resources",
@@ -492,25 +491,25 @@ extension ObjcLibrary {
                 ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
             })
         }()
-        
+
         static let nonArcSrcs: Lens<ObjcLibrary, GlobNode> = {
             return Lens(view: { $0.nonArcSrcs }, set: { nonArcSrcs, lib  in
                 ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: nonArcSrcs, requiresArc: lib.requiresArc)
             })
         }()
-        
+
         static let deps: Lens<ObjcLibrary, AttrSet<[String]>> = {
             return Lens(view: { $0.deps }, set: { deps, lib in
                 ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
             })
         }()
-        
+
         static let requiresArc: Lens<ObjcLibrary, Either<Bool, [String]>> = {
 	        return Lens(view: { $0.requiresArc }, set: { requiresArc, lib in
                 ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs, requiresArc: requiresArc)
-            })    
+            })
         }()
-        
+
         /// Not a real property -- digs into the glob node
         static let excludeFiles: Lens<ObjcLibrary, AttrSet<Set<String>>> = {
            return ObjcLibrary.lens.sourceFiles .. GlobNode.lens.exclude
