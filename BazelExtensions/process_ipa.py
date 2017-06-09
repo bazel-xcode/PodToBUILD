@@ -12,8 +12,7 @@ def main(argv):
         if bundle_token in split_dir[len(split_dir) - 1]:
             bundle_namespace = dirname.split(bundle_token)[1]
             base_dir = "/".join(split_dir[0: len(split_dir) - 1])
-            new_name = bundle_namespace + ".bundle"
-            new_path = base_dir + "/" + new_name
+            new_path = base_dir + "/" + bundle_namespace
             os.system("mv " + dirname + " " + new_path)
 
 if __name__ == '__main__':
