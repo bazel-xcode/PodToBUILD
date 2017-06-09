@@ -35,8 +35,9 @@ struct TestTarget : BazelTarget, UserConfigurable {
                 if let value = value as? String {
                     self.sdkFrameworks = self.sdkFrameworks <> AttrSet(basic: [value])
                 }
+            default:
+                fatalError()
             }
-
         }
     }
     

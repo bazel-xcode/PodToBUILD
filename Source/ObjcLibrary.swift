@@ -121,6 +121,7 @@ struct ObjcImport: BazelTarget {
 
 enum ObjcLibraryConfigurableKeys : String {
     case copts
+    case deps
     case sdkFrameworks = "sdk_frameworks"
 }
 
@@ -133,7 +134,6 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     let headerName: AttrSet<String>
     let weakSdkFrameworks: AttrSet<[String]>
     let sdkDylibs: AttrSet<[String]>
-    let deps: AttrSet<[String]>
     let bundles: AttrSet<[String]>
     let resources: AttrSet<[String]>
     let publicHeaders: AttrSet<Set<String>>
@@ -145,6 +145,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     // "var" properties are user configurable so we need mutation here
     var sdkFrameworks: AttrSet<[String]>
     var copts: AttrSet<[String]>
+    var deps: AttrSet<[String]>
     static let xcconfigTransformer = XCConfigTransformer.defaultTransformer()
 
     init(name: String,
@@ -265,7 +266,12 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 if let value = value as? String {
                     self.sdkFrameworks = self.sdkFrameworks <> AttrSet(basic: [value])
                 }
+            case .deps:
+                if let value = value as? String {
+                    self.deps = self.deps <> AttrSet(basic: [value])
+                }
             }
+
         }
     }
 
