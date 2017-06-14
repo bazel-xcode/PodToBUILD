@@ -59,6 +59,42 @@ global_copts = [
     "-fmodules",
 ]
 
+def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
+    fetch_cmd = [
+        repo_tool_bin,
+        target_name,
+        "fetch",
+        "--url",
+        url,
+        "--sub_dir",
+        repository_ctx.attr.strip_prefix,
+        "--trace",
+        "true" if repository_ctx.attr.trace else "false"
+    ]
+
+    fetch_output = _exec(repository_ctx, fetch_cmd)
+    if fetch_output.return_code != 0:
+        fail("Could not retrieve pod " + target_name)
+
+# Link a local repository into external/__TARGET_NAME__
+def _link_local_repo(repository_ctx, target_name, url):
+    cd = _exec(repository_ctx, ["pwd"]).stdout.split("\n")[0]
+    from_dir = url + "/"
+    to_dir = cd + "/"
+    all_files = _exec(repository_ctx, ["ls", url]).stdout.split("\n")
+    # Link all of the files at the root directly
+    # ln -s url/* doesn't work.
+    for repo_file in all_files:
+        if len(repo_file) == 0:
+            continue
+        link_cmd = [
+            "ln",
+            "-sf",
+            from_dir + repo_file,
+            to_dir + repo_file
+            ]
+        _exec(repository_ctx, link_cmd)
+
 def _impl(repository_ctx):
     if repository_ctx.attr.trace:
         print("__RUN with repository_ctx", repository_ctx.attr)
@@ -76,21 +112,10 @@ def _impl(repository_ctx):
             tool_name = repo_tool_dict[str(tool_label)]
             tool_bin_by_name[tool_name] = repository_ctx.path(tool_label)
 
-    fetch_cmd = [
-        tool_bin_by_name["RepoTool"],
-        target_name,
-        "fetch",
-        "--url",
-        url,
-        "--sub_dir",
-        repository_ctx.attr.strip_prefix,
-        "--trace",
-        "true" if repository_ctx.attr.trace else "no"
-    ]
-
-    fetch_output = _exec(repository_ctx, fetch_cmd)
-    if fetch_output.return_code != 0:
-        fail("Could not retrieve pod " + target_name)
+    if url.startswith("http") or url.startswith("https"):
+        _fetch_remote_repo(repository_ctx, tool_bin_by_name["RepoTool"], target_name, url)
+    else:
+        _link_local_repo(repository_ctx, target_name, url)
 
     # This seems needed
     _exec(repository_ctx, ["mkdir", "-p", "external/" + target_name])
