@@ -107,6 +107,7 @@ public enum PodSpecField: String {
     case resources = "resources"
     case subspecs
     case source
+    case license
     case podTargetXcconfig = "pod_target_xcconfig"
     case userTargetXcconfig = "user_target_xcconfig"
     case xcconfig // Legacy
@@ -157,6 +158,7 @@ public struct PodSpec: PodSpecRepresentable {
     let dependencies: [String]
     let compilerFlags: [String]
     let source: PodSpecSource?
+    let license: PodSpecLicense
     let libraries: [String]
     let defaultSubspecs: [String]
 
@@ -248,6 +250,8 @@ public struct PodSpec: PodSpecRepresentable {
         } else {
             source = nil
         }
+
+        license = PodSpecLicense.license(fromJSON: fieldMap[.license])
 
         xcconfig = try? ExtractValue(fromJSON: fieldMap[.xcconfig])
         podTargetXcconfig = try? ExtractValue(fromJSON: fieldMap[.podTargetXcconfig])
@@ -446,6 +450,32 @@ public enum PodSpecSource {
         } else {
             fatalError("Unsupported source for PodSpec - \(dict)")
         }
+    }
+}
+
+public struct PodSpecLicense {
+    /// The type of the license.
+    /// @note it's primarily used for the UI
+    let type: String?
+
+    /// A license can either be a file or a text license
+    /// If there is no explict license, the LICENSE(.*) is implicitly
+    /// used
+    let text: String?
+    let file: String?
+
+    static func license(fromJSON value: Any?) -> PodSpecLicense {
+        if let licenseJSON = value as? JSONDict {
+            return PodSpecLicense(
+                    type: try? ExtractValue(fromJSON: licenseJSON["type"]),
+                    text: try? ExtractValue(fromJSON: licenseJSON["text"]),
+                    file: try? ExtractValue(fromJSON: licenseJSON["file"])
+                    )
+        }
+        if let licenseString = value as? String {
+            return PodSpecLicense(type: licenseString, text: nil, file: nil)
+        }
+        return PodSpecLicense(type: nil, text: nil, file: nil)
     }
 }
 

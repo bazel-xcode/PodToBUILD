@@ -79,7 +79,7 @@ struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
         }       
     }
 
-    public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions) ->  [SkylarkConvertible] {
+    public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions, podSpec: PodSpec) ->  [SkylarkConvertible] {
         // Needed
         func toSourceExcludable(_ input: SkylarkConvertible) -> SourceExcludable? {
             return input as? SourceExcludable

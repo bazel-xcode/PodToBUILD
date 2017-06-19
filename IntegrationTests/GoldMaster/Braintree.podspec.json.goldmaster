@@ -1,4 +1,5 @@
-load('//:build_extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -13,7 +14,7 @@ objc_library(
   name = "Braintree",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -24,8 +25,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   deps = [
     ":Braintree_Core",
@@ -47,6 +48,15 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "Braintree_acknowledgement",
+  deps = [
+    ":Braintree_Core_acknowledgement",
+    ":Braintree_PayPal_acknowledgement",
+    ":Braintree_Card_acknowledgement",
+    ":Braintree_UI_acknowledgement"
   ]
   )
 objc_library(
@@ -72,7 +82,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreeCore/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -83,8 +93,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   sdk_frameworks = [
     "AddressBook"
@@ -108,6 +118,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_Core_acknowledgement",
+  deps = [
+
+  ]
+  )
 objc_library(
   name = "Braintree_Apple_Pay",
   srcs = glob(
@@ -119,7 +135,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreeApplePay/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -130,8 +146,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   sdk_frameworks = [
     "PassKit"
@@ -155,6 +171,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_Apple_Pay_acknowledgement",
+  deps = [
+    ":Braintree_Core_acknowledgement"
+  ]
+  )
 objc_library(
   name = "Braintree_Card",
   srcs = glob(
@@ -171,7 +193,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreeCard/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -182,8 +204,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   deps = [
     ":Braintree_Core"
@@ -204,6 +226,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_Card_acknowledgement",
+  deps = [
+    ":Braintree_Core_acknowledgement"
+  ]
+  )
 objc_library(
   name = "Braintree_DataCollector",
   srcs = glob(
@@ -215,7 +243,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreeDataCollector/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -226,8 +254,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   deps = [
     ":DataCollector_VendoredLibraries",
@@ -249,10 +277,23 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_DataCollector_acknowledgement",
+  deps = [
+    ":Braintree_Core_acknowledgement",
+    ":DataCollector_VendoredLibraries_acknowledgement"
+  ]
+  )
 objc_import(
   name = "DataCollector_VendoredLibraries",
   archives = [
     "BraintreeDataCollector/Kount/libDeviceCollectorLibrary.a"
+  ]
+  )
+acknowledged_target(
+  name = "DataCollector_VendoredLibraries_acknowledgement",
+  deps = [
+
   ]
   )
 objc_library(
@@ -267,7 +308,7 @@ objc_library(
     [
       "BraintreePayPal/*.h",
       "BraintreePayPal/Public/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -278,8 +319,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   deps = [
     ":Braintree_PayPalOneTouch",
@@ -301,6 +342,13 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_PayPal_acknowledgement",
+  deps = [
+    ":Braintree_Core_acknowledgement",
+    ":Braintree_PayPalOneTouch_acknowledgement"
+  ]
+  )
 objc_library(
   name = "Braintree_Venmo",
   srcs = glob(
@@ -312,7 +360,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreeVenmo/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -323,8 +371,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   deps = [
     ":Braintree_PayPalDataCollector",
@@ -346,6 +394,13 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_Venmo_acknowledgement",
+  deps = [
+    ":Braintree_Core_acknowledgement",
+    ":Braintree_PayPalDataCollector_acknowledgement"
+  ]
+  )
 objc_bundle_library(
   name = "UI_Bundle_Braintree_UI_Localization",
   resources = glob(
@@ -355,6 +410,12 @@ objc_bundle_library(
     exclude_directories = 1
     )
   )
+acknowledged_target(
+  name = "UI_Bundle_Braintree_UI_Localization_acknowledgement",
+  deps = [
+
+  ]
+  )
 objc_bundle_library(
   name = "UI_Bundle_Braintree_Drop_In_Localization",
   resources = glob(
@@ -363,6 +424,12 @@ objc_bundle_library(
     ],
     exclude_directories = 1
     )
+  )
+acknowledged_target(
+  name = "UI_Bundle_Braintree_Drop_In_Localization_acknowledgement",
+  deps = [
+
+  ]
   )
 objc_library(
   name = "Braintree_UI",
@@ -375,7 +442,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreeUI/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -386,8 +453,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   sdk_frameworks = [
     "UIKit"
@@ -416,6 +483,13 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_UI_acknowledgement",
+  deps = [
+    ":Braintree_Card_acknowledgement",
+    ":Braintree_Core_acknowledgement"
+  ]
+  )
 objc_library(
   name = "Braintree_UnionPay",
   srcs = glob(
@@ -427,7 +501,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreeUnionPay/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -438,8 +512,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   sdk_frameworks = [
     "UIKit"
@@ -464,6 +538,13 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_UnionPay_acknowledgement",
+  deps = [
+    ":Braintree_Card_acknowledgement",
+    ":Braintree_Core_acknowledgement"
+  ]
+  )
 objc_bundle_library(
   name = "3D_Secure_Bundle_Braintree_3D_Secure_Localization",
   resources = glob(
@@ -472,6 +553,12 @@ objc_bundle_library(
     ],
     exclude_directories = 1
     )
+  )
+acknowledged_target(
+  name = "3D_Secure_Bundle_Braintree_3D_Secure_Localization_acknowledgement",
+  deps = [
+
+  ]
   )
 objc_library(
   name = "Braintree_3D_Secure",
@@ -484,7 +571,7 @@ objc_library(
   hdrs = glob(
     [
       "Braintree3DSecure/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -495,8 +582,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   sdk_frameworks = [
     "UIKit"
@@ -524,6 +611,13 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_3D_Secure_acknowledgement",
+  deps = [
+    ":Braintree_Card_acknowledgement",
+    ":Braintree_Core_acknowledgement"
+  ]
+  )
 objc_library(
   name = "Braintree_PayPalOneTouch",
   srcs = glob(
@@ -538,7 +632,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreePayPal/PayPalOneTouch/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -549,8 +643,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   sdk_frameworks = [
     "UIKit"
@@ -579,6 +673,14 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_PayPalOneTouch_acknowledgement",
+  deps = [
+    ":Braintree_PayPalUtils_acknowledgement",
+    ":Braintree_Core_acknowledgement",
+    ":Braintree_PayPalDataCollector_acknowledgement"
+  ]
+  )
 objc_library(
   name = "Braintree_PayPalDataCollector",
   srcs = glob(
@@ -595,7 +697,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreePayPal/PayPalDataCollector/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -606,8 +708,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   sdk_frameworks = [
     "MessageUI",
@@ -636,10 +738,24 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "Braintree_PayPalDataCollector_acknowledgement",
+  deps = [
+    ":PayPalDataCollector_VendoredLibraries_acknowledgement",
+    ":Braintree_PayPalUtils_acknowledgement",
+    ":Braintree_Core_acknowledgement"
+  ]
+  )
 objc_import(
   name = "PayPalDataCollector_VendoredLibraries",
   archives = [
     "BraintreePayPal/PayPalDataCollector/Risk/libPPRiskComponent.a"
+  ]
+  )
+acknowledged_target(
+  name = "PayPalDataCollector_VendoredLibraries_acknowledgement",
+  deps = [
+
   ]
   )
 objc_library(
@@ -659,7 +775,7 @@ objc_library(
   hdrs = glob(
     [
       "BraintreePayPal/PayPalUtils/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -670,8 +786,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Braintree/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Braintree/"
   ],
   sdk_frameworks = [
     "MessageUI",
@@ -693,5 +809,11 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "Braintree_PayPalUtils_acknowledgement",
+  deps = [
+
   ]
   )

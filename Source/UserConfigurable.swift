@@ -68,7 +68,7 @@ extension UserConfigurable {
 }
 
 enum UserConfigurableTransform : SkylarkConvertibleTransform {
-    public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions) ->  [SkylarkConvertible] {
+    public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions, podSpec: PodSpec) -> [SkylarkConvertible] {
         let attributes = UserConfigurableTargetAttributes(buildOptions: options)
         return UserConfigurableTransform.executeUserOptionsTransform(onConvertibles: convertibles, copts: options.globalCopts, userAttributes: attributes)
     }

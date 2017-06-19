@@ -1,4 +1,5 @@
-load('//:build_extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -13,7 +14,7 @@ objc_library(
   name = "FMDB",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -24,8 +25,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/FMDB/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/FMDB/"
   ],
   deps = [
     ":FMDB_standard"
@@ -46,6 +47,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "FMDB_acknowledgement",
+  deps = [
+    ":FMDB_standard_acknowledgement"
+  ]
+  )
 objc_library(
   name = "FMDB_standard",
   srcs = glob(
@@ -60,7 +67,7 @@ objc_library(
     ),
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h",
+      "pod_support/Headers/Public/**/*.h",
       "src/fmdb/FM*.h"
     ],
     exclude_directories = 1
@@ -72,8 +79,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/FMDB/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/FMDB/"
   ],
   sdk_dylibs = [
     "sqlite3"
@@ -94,6 +101,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "FMDB_standard_acknowledgement",
+  deps = [
+
+  ]
+  )
 objc_library(
   name = "FMDB_FTS",
   srcs = glob(
@@ -104,7 +117,7 @@ objc_library(
     ),
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h",
+      "pod_support/Headers/Public/**/*.h",
       "src/extra/fts3/*.h"
     ],
     exclude_directories = 1
@@ -116,8 +129,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/FMDB/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/FMDB/"
   ],
   deps = [
     ":FMDB_standard"
@@ -138,11 +151,17 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "FMDB_FTS_acknowledgement",
+  deps = [
+    ":FMDB_standard_acknowledgement"
+  ]
+  )
 objc_library(
   name = "FMDB_standalone",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -153,8 +172,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/FMDB/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/FMDB/"
   ],
   copts = [
     "-DFMDB_SQLITE_STANDALONE"
@@ -172,6 +191,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "FMDB_standalone_acknowledgement",
+  deps = [
+
+  ]
+  )
 objc_library(
   name = "FMDB_SQLCipher",
   srcs = glob(
@@ -185,7 +210,7 @@ objc_library(
     ),
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h",
+      "pod_support/Headers/Public/**/*.h",
       "src/fmdb/FM*.h"
     ],
     exclude_directories = 1
@@ -197,8 +222,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/FMDB/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/FMDB/"
   ],
   deps = [
     "@SQLCipher//:SQLCipher"
@@ -218,5 +243,11 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "FMDB_SQLCipher_acknowledgement",
+  deps = [
+    "@SQLCipher//:SQLCipher_acknowledgement"
   ]
   )

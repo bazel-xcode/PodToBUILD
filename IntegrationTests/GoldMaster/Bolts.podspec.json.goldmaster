@@ -1,4 +1,5 @@
-load('//:build_extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -37,7 +38,7 @@ objc_library(
   name = "Bolts",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -48,8 +49,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Bolts/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Bolts/"
   ],
   deps = [
     ":Bolts_Tasks",
@@ -69,6 +70,13 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "Bolts_acknowledgement",
+  deps = [
+    ":Bolts_Tasks_acknowledgement",
+    ":Bolts_AppLinks_acknowledgement"
   ]
   )
 objc_library(
@@ -109,28 +117,28 @@ objc_library(
       ":osxCase": glob(
         [
           "Bolts/Common/*.h",
-          "bazel_support/Headers/Public/**/*.h"
+          "pod_support/Headers/Public/**/*.h"
         ],
         exclude_directories = 1
         ),
       "//conditions:default": glob(
         [
           "Bolts/Common/*.h",
-          "bazel_support/Headers/Public/**/*.h"
+          "pod_support/Headers/Public/**/*.h"
         ],
         exclude_directories = 1
         ),
       ":watchosCase": glob(
         [
           "Bolts/Common/*.h",
-          "bazel_support/Headers/Public/**/*.h"
+          "pod_support/Headers/Public/**/*.h"
         ],
         exclude_directories = 1
         ),
       ":tvosCase": glob(
         [
           "Bolts/Common/*.h",
-          "bazel_support/Headers/Public/**/*.h"
+          "pod_support/Headers/Public/**/*.h"
         ],
         exclude_directories = 1
         )
@@ -143,8 +151,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Bolts/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Bolts/"
   ],
   copts = [
 
@@ -160,6 +168,12 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "Bolts_Tasks_acknowledgement",
+  deps = [
+
   ]
   )
 objc_library(
@@ -179,7 +193,7 @@ objc_library(
       "//conditions:default": glob(
         [
           "Bolts/iOS/**/*.h",
-          "bazel_support/Headers/Public/**/*.h"
+          "pod_support/Headers/Public/**/*.h"
         ],
         exclude_directories = 1
         )
@@ -192,8 +206,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/Bolts/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/Bolts/"
   ],
   deps = [
     ":Bolts_Tasks"
@@ -212,5 +226,11 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "Bolts_AppLinks_acknowledgement",
+  deps = [
+    ":Bolts_Tasks_acknowledgement"
   ]
   )

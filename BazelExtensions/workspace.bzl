@@ -10,37 +10,8 @@ def _exec(repository_ctx, transformed_command):
 
     return output
 
-# Build extensions is a collection of bazel extensions that are loaded into an
-# external repository's BUILD file
-build_extensions = """
-# pch_with_name_hint
-#   Take in a name hint and return the PCH with that name
-#
-# Parameters
-#
-#   hint - Suggestion of pch file name. If any part of this is in a PCH
-#   filename it will match
-#
-#   sources - a list of source file patterns with pch extensions to search
-
-def pch_with_name_hint(hint, sources):
-    # Recursive glob the sources directories and the root directory
-    candidates = native.glob(["*.pch", hint + "/*.pch"] + sources)
-    if len(candidates) == 0:
-        return None
-
-    # We want to get the candidates in order of lowest to highest
-    for candidate in candidates:
-        if hint in candidate:
-            return candidate
-    # It is a convention in iOS/OSX development to use a PCH
-    # with the name of the target.
-    # This is a hack because, the recursive glob may find some
-    # arbitrary PCH.
-    return None
-"""
-
 # Compiler Options
+
 
 global_copts = [
     # Disable all warnings
@@ -58,6 +29,7 @@ global_copts = [
     "-fstrict-aliasing",
     "-fmodules",
 ]
+
 
 def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
     fetch_cmd = [
@@ -77,6 +49,8 @@ def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
         fail("Could not retrieve pod " + target_name)
 
 # Link a local repository into external/__TARGET_NAME__
+
+
 def _link_local_repo(repository_ctx, target_name, url):
     cd = _exec(repository_ctx, ["pwd"]).stdout.split("\n")[0]
     from_dir = url + "/"
@@ -92,8 +66,9 @@ def _link_local_repo(repository_ctx, target_name, url):
             "-sf",
             from_dir + repo_file,
             to_dir + repo_file
-            ]
+        ]
         _exec(repository_ctx, link_cmd)
+
 
 def _impl(repository_ctx):
     if repository_ctx.attr.trace:
@@ -113,7 +88,8 @@ def _impl(repository_ctx):
             tool_bin_by_name[tool_name] = repository_ctx.path(tool_label)
 
     if url.startswith("http") or url.startswith("https"):
-        _fetch_remote_repo(repository_ctx, tool_bin_by_name["RepoTool"], target_name, url)
+        _fetch_remote_repo(
+            repository_ctx, tool_bin_by_name["RepoTool"], target_name, url)
     else:
         _link_local_repo(repository_ctx, target_name, url)
 
@@ -150,21 +126,20 @@ def _impl(repository_ctx):
         # Write the build file
         repository_ctx.file("BUILD", repository_ctx.attr.build_file_content)
 
-    repository_ctx.file("build_extensions.bzl", build_extensions)
 
 pod_repo_ = repository_rule(
-    implementation = _impl,
-    local = True,
-    attrs = {
-            "target_name": attr.string(mandatory=True),
-            "url": attr.string(mandatory=True),
-            "strip_prefix": attr.string(),
-            "user_options": attr.string_list(),
-            "build_file_content": attr.string(mandatory=True),
-            "repo_tools_labels": attr.label_list(),
-            "repo_tool_dict": attr.string_dict(),
-            "command_dict": attr.string_list_dict(),
-            "trace": attr.bool(default=False, mandatory=True)
+    implementation=_impl,
+    local=True,
+    attrs={
+        "target_name": attr.string(mandatory=True),
+        "url": attr.string(mandatory=True),
+        "strip_prefix": attr.string(),
+        "user_options": attr.string_list(),
+        "build_file_content": attr.string(mandatory=True),
+        "repo_tools_labels": attr.label_list(),
+        "repo_tool_dict": attr.string_dict(),
+        "command_dict": attr.string_list_dict(),
+        "trace": attr.bool(default=False, mandatory=True)
     }
 )
 
@@ -208,29 +183,30 @@ pod_repo_ = repository_rule(
 #
 # @param trace: dump out useful debug info
 
+
 def new_pod_repository(name,
                        url,
                        owner,
-                       strip_prefix = "",
-                       user_options = [],
-                       build_file_content = "",
-                       cmds = { "0" : ["RepoTool"] },
-                       repo_tools = { "//tools/PodSpecToBUILD/bin:RepoTools"  : "RepoTool" },
-                       trace = False
+                       strip_prefix="",
+                       user_options=[],
+                       build_file_content="",
+                       cmds={"0": ["RepoTool"]},
+                       repo_tools={
+                           "//tools/PodSpecToBUILD/bin:RepoTools": "RepoTool"},
+                       trace=False
                        ):
     tool_labels = []
     for tool in repo_tools:
         tool_labels.append(tool)
     pod_repo_(
-            name = name,
-            target_name = name,
-            url = url,
-            user_options = user_options,
-            strip_prefix = strip_prefix,
-            build_file_content =  build_file_content,
-            command_dict = cmds,
-            repo_tools_labels = tool_labels,
-            repo_tool_dict = repo_tools,
-            trace = trace
+        name=name,
+        target_name=name,
+        url=url,
+        user_options=user_options,
+        strip_prefix=strip_prefix,
+        build_file_content=build_file_content,
+        command_dict=cmds,
+        repo_tools_labels=tool_labels,
+        repo_tool_dict=repo_tools,
+        trace=trace
     )
-

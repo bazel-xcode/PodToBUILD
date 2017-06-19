@@ -1,4 +1,5 @@
-load('//:build_extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -13,7 +14,7 @@ objc_library(
   name = "PINRemoteImage",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -24,8 +25,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/PINRemoteImage/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/PINRemoteImage/"
   ],
   deps = [
     ":PINRemoteImage_FLAnimatedImage",
@@ -47,6 +48,13 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "PINRemoteImage_acknowledgement",
+  deps = [
+    ":PINRemoteImage_FLAnimatedImage_acknowledgement",
+    ":PINRemoteImage_PINCache_acknowledgement"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_Core",
   srcs = glob(
@@ -62,7 +70,7 @@ objc_library(
   hdrs = glob(
     [
       "Source/Classes/**/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude = [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
@@ -77,8 +85,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/PINRemoteImage/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/PINRemoteImage/"
   ],
   sdk_frameworks = [
     "ImageIO",
@@ -103,11 +111,17 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "PINRemoteImage_Core_acknowledgement",
+  deps = [
+    "@PINOperation//:PINOperation_acknowledgement"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_iOS",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -118,8 +132,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/PINRemoteImage/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/PINRemoteImage/"
   ],
   sdk_frameworks = [
     "UIKit"
@@ -143,11 +157,17 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "PINRemoteImage_iOS_acknowledgement",
+  deps = [
+    ":PINRemoteImage_Core_acknowledgement"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_OSX",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -158,8 +178,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/PINRemoteImage/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/PINRemoteImage/"
   ],
   sdk_frameworks = [
     "Cocoa",
@@ -184,11 +204,17 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "PINRemoteImage_OSX_acknowledgement",
+  deps = [
+    ":PINRemoteImage_Core_acknowledgement"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_tvOS",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -199,8 +225,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/PINRemoteImage/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/PINRemoteImage/"
   ],
   deps = [
     ":PINRemoteImage_iOS"
@@ -221,6 +247,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "PINRemoteImage_tvOS_acknowledgement",
+  deps = [
+    ":PINRemoteImage_iOS_acknowledgement"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_FLAnimatedImage",
   srcs = glob(
@@ -232,7 +264,7 @@ objc_library(
   hdrs = glob(
     [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -243,8 +275,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/PINRemoteImage/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/PINRemoteImage/"
   ],
   deps = [
     ":PINRemoteImage_Core",
@@ -266,11 +298,18 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "PINRemoteImage_FLAnimatedImage_acknowledgement",
+  deps = [
+    ":PINRemoteImage_Core_acknowledgement",
+    "@FLAnimatedImage//:FLAnimatedImage_acknowledgement"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_WebP",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -281,8 +320,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/PINRemoteImage/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/PINRemoteImage/"
   ],
   deps = [
     ":PINRemoteImage_Core",
@@ -304,6 +343,13 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "PINRemoteImage_WebP_acknowledgement",
+  deps = [
+    ":PINRemoteImage_Core_acknowledgement",
+    "@libwebp//:libwebp_acknowledgement"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_PINCache",
   srcs = glob(
@@ -315,7 +361,7 @@ objc_library(
   hdrs = glob(
     [
       "Source/Classes/PINCache/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -326,8 +372,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/PINRemoteImage/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/PINRemoteImage/"
   ],
   deps = [
     "@PINCache//:PINCache",
@@ -347,5 +393,12 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "PINRemoteImage_PINCache_acknowledgement",
+  deps = [
+    "@PINCache//:PINCache_acknowledgement",
+    ":PINRemoteImage_Core_acknowledgement"
   ]
   )

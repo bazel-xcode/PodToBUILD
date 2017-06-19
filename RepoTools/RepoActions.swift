@@ -211,8 +211,9 @@ enum RepoActions {
             fatalError("Cant read in podspec")
         }
         
-        shell.dir("bazel_support/Headers/Public")
-        shell.dir("bazel_support/Headers/Private/")
+        shell.dir(PodSupportSystemPublicHeaderDir)
+        shell.dir(PodSupportDir + "Headers/Private/")
+        shell.dir(PodSupportBuidableDir)
         
         let searchPaths = { (spec: ComposedSpec) -> Set<String> in
             let fallbackSpec = spec
@@ -236,7 +237,7 @@ enum RepoActions {
         let customHeaderSearchPaths = Set([podSpec.name]).union(searchPaths(ComposedSpec.composed(child: podSpec, parent: nil)))
             .union(podSpec.subspecs.reduce(Set<String>(), { (result, subspec) in
                 result.union(searchPaths(ComposedSpec.composed(child: subspec, parent: ComposedSpec.composed(child: podSpec, parent: nil))))
-            })).map { "bazel_support/Headers/Public/\($0)/" }
+            })).map { PodSupportSystemPublicHeaderDir + "\($0)/" }
         
         customHeaderSearchPaths.forEach(shell.dir)
         
@@ -261,13 +262,53 @@ enum RepoActions {
                     shell.symLink(from: "\(pwd)/\(globResult)", to: searchPath)
                 }
         }
-        // Run the compiler
-        let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.skylarkConvertibles.flatMap { $0.toSkylark() })
+
+        // Write out contents of PodSupportBuildableDir
+
+        // Write out the acknowledgement entry plist
+        let entry = RenderAcknowledgmentEntry(entry: AcknowledgmentEntry(forPodspec: podSpec))
+        let acknowledgementFilePath = URL(
+                fileURLWithPath: PodSupportBuidableDir + "acknowledgement.plist",
+                relativeTo: URL(fileURLWithPath: pwd)
+                )
+        shell.write(value: entry, toPath: acknowledgementFilePath)
+
+        // assume _PATH_TO_SOME/bin/RepoTools
+        let assetRoot = RepoActions.assetRoot()
+        let buildExtensions = assetRoot.appendingPathComponent("extensions")
+                                       .appendingPathExtension("bzl")
+        let buildExtensionsFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "extensions.bzl",
+                                          relativeTo: URL(fileURLWithPath: pwd))
+        shell.symLink(from: buildExtensions.path, to: buildExtensionsFilePath.path)
+
+        let licenseMergeScript = assetRoot.appendingPathComponent("acknowledgement_merger")
+                                          .appendingPathExtension("py")
+        let licenseMergeScriptFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "acknowledgement_merger.py",
+                                             relativeTo: URL(fileURLWithPath: pwd))
+        shell.symLink(from: licenseMergeScript.path, to: licenseMergeScriptFilePath.path)
+
+        let supportBUILDFile = assetRoot.appendingPathComponent("support")
+                                        .appendingPathExtension("BUILD")
+        let supportBUILDFileFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "BUILD", relativeTo: URL(fileURLWithPath: pwd))
+        shell.symLink(from: supportBUILDFile.path, to: supportBUILDFileFilePath.path)
+
+        // Write the root BUILD file
+        let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
         let buildFileOut = buildFileSkylarkCompiler.run()
         let buildFilePath = URL(fileURLWithPath: "BUILD", relativeTo: URL(fileURLWithPath: pwd))
         shell.write(value: buildFileOut, toPath: buildFilePath)
     }
-    
+
+    // Assume the directory structure relative to this file
+    private static func assetRoot() -> URL {
+        let binary = CommandLine.arguments[0]
+        let binURL = URL(fileURLWithPath: binary)
+        let assetRoot = binURL.deletingLastPathComponent()
+                              .deletingLastPathComponent()
+                              .appendingPathComponent("BazelExtensions")
+        return assetRoot
+    }
+
     /// Fetch pods from urls.
     /// - Fetch the URL
     /// - Store pod artifacts in the users home directory to prevent

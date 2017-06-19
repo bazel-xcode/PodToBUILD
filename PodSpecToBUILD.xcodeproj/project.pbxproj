@@ -38,6 +38,12 @@
 		811187E71EB00D1800CB5BA2 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
 		81537BE11EB82052006D10AD /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */; };
 		81B7A9701ECF984300CB3168 /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = C49C630C1EB001C000F17E47 /* CrashReporter.m */; };
+		C40AD54C1EF84F2500BCFD99 /* AcknowledgementEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */; };
+		C40AD5521EF84F2C00BCFD99 /* AcknowledgementEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */; };
+		C40AD5531EF84F2D00BCFD99 /* AcknowledgementEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */; };
+		C40AD5541EF84F2D00BCFD99 /* AcknowledgementEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */; };
+		C40AD5551EF84F2E00BCFD99 /* AcknowledgementEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */; };
+		C40AD5571EF853CC00BCFD99 /* AcknowledgementPlistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD5561EF853CC00BCFD99 /* AcknowledgementPlistTests.swift */; };
 		C41448CE1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448CF1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */; };
 		C41448E51EBAA6D500C5DDF6 /* MagmasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */; };
@@ -218,6 +224,8 @@
 		811187D81EB00CF600CB5BA2 /* PodSpecToBUILD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PodSpecToBUILD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		811187DA1EB00CF600CB5BA2 /* PodSpecToBUILD-Framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PodSpecToBUILD-Framework.h"; sourceTree = "<group>"; };
 		811187DB1EB00CF600CB5BA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AcknowledgementEntry.swift; sourceTree = "<group>"; };
+		C40AD5561EF853CC00BCFD99 /* AcknowledgementPlistTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AcknowledgementPlistTests.swift; sourceTree = "<group>"; };
 		C41448CD1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RedundantCompiledSourceTransform.swift; sourceTree = SOURCE_ROOT; };
 		C41448D01EBAA6C400C5DDF6 /* SwiftCheck.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftCheck.xcodeproj; path = SwiftCheck/SwiftCheck.xcodeproj; sourceTree = "<group>"; };
 		C42E02051EA1454B009B091A /* PodSpecToBUILD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PodSpecToBUILD; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -388,6 +396,7 @@
 			children = (
 				C42E026D1EA150B0009B091A /* SkylarkTests.swift */,
 				C4C1BF991ECA80C900B42EB2 /* PodStoreTests.swift */,
+				C40AD5561EF853CC00BCFD99 /* AcknowledgementPlistTests.swift */,
 				C4893A6C1EB914AD00A44D1F /* BasicBuildOptionsTest.swift */,
 				C4C1BF9B1ECA80E100B42EB2 /* PodSpecToBUILDTests-Bridging-Header.h */,
 				C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */,
@@ -415,6 +424,7 @@
 			children = (
 				C4FA7E231EA56AEA005C8B70 /* main.swift */,
 				C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */,
+				C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */,
 				C49C630B1EB001C000F17E47 /* CrashReporter.h */,
 				C49C630C1EB001C000F17E47 /* CrashReporter.m */,
 				C49C630A1EB001BF00F17E47 /* RepoTools-Bridging-Header.h */,
@@ -684,6 +694,7 @@
 				09F194BA1EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				811187E71EB00D1800CB5BA2 /* SkylarkConvertible.swift in Sources */,
 				811187E31EB00D1800CB5BA2 /* Workspace.swift in Sources */,
+				C40AD5551EF84F2E00BCFD99 /* AcknowledgementEntry.swift in Sources */,
 				811187E41EB00D1800CB5BA2 /* Skylark.swift in Sources */,
 				C4C1BFA41ECA810F00B42EB2 /* ShellContext.swift in Sources */,
 				C4893A5D1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
@@ -719,6 +730,7 @@
 				09FD9B701EB3C08000272A01 /* Magmas.swift in Sources */,
 				09FD9B641EB3B70700272A01 /* Lens.swift in Sources */,
 				09FD9B6A1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
+				C40AD5521EF84F2C00BCFD99 /* AcknowledgementEntry.swift in Sources */,
 				C4893A611EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
 				C4E5BC811EA8564200954EB8 /* ObjcLibrary.swift in Sources */,
 				C4C1BFB41ECA820400B42EB2 /* RepoActions.swift in Sources */,
@@ -743,8 +755,10 @@
 				C4E5BCA81EAA871E00954EB8 /* WorkspaceTests.swift in Sources */,
 				C42E027A1EA18AA4009B091A /* Workspace.swift in Sources */,
 				C41448CF1EBA94C000C5DDF6 /* RedundantCompiledSourceTransform.swift in Sources */,
+				C40AD5571EF853CC00BCFD99 /* AcknowledgementPlistTests.swift in Sources */,
 				C4893A5F1EB9108100A44D1F /* UserConfigurableTests.swift in Sources */,
 				C4B8A3971EB2A58D00859B73 /* XCConfig.swift in Sources */,
+				C40AD5531EF84F2D00BCFD99 /* AcknowledgementEntry.swift in Sources */,
 				C42E026E1EA150B0009B091A /* SkylarkTests.swift in Sources */,
 				C4893A6D1EB914AD00A44D1F /* BasicBuildOptionsTest.swift in Sources */,
 				C4893A5A1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
@@ -780,6 +794,7 @@
 				09FD9B731EB3C08000272A01 /* Magmas.swift in Sources */,
 				09FD9B671EB3B70700272A01 /* Lens.swift in Sources */,
 				09FD9B6D1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
+				C40AD5541EF84F2D00BCFD99 /* AcknowledgementEntry.swift in Sources */,
 				C4893A641EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
 				C4E5BCA41EAA7B7200954EB8 /* GlobUtils.swift in Sources */,
 				C4C1BFB11ECA820100B42EB2 /* RepoActions.swift in Sources */,
@@ -799,6 +814,7 @@
 				C4FA7E241EA56AEA005C8B70 /* main.swift in Sources */,
 				C4FA7E461EA6B4DB005C8B70 /* GlobUtils.swift in Sources */,
 				C4FA7E2B1EA56C02005C8B70 /* BuildFile.swift in Sources */,
+				C40AD54C1EF84F2500BCFD99 /* AcknowledgementEntry.swift in Sources */,
 				09F194B81EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
 				09FD9B6C1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
 				09FD9B661EB3B70700272A01 /* Lens.swift in Sources */,

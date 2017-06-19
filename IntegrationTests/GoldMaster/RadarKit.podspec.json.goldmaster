@@ -1,4 +1,5 @@
-load('//:build_extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -20,7 +21,7 @@ objc_library(
   hdrs = glob(
     [
       "RadarKit/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -31,8 +32,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/RadarKit/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/RadarKit/"
   ],
   sdk_frameworks = [
     "Foundation",
@@ -52,5 +53,11 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "RadarKit_acknowledgement",
+  deps = [
+
   ]
   )

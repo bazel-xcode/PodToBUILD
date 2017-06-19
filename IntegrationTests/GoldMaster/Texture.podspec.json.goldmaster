@@ -1,4 +1,5 @@
-load('//:build_extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -13,7 +14,7 @@ objc_library(
   name = "AsyncDisplayKit",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -24,8 +25,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/AsyncDisplayKit/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/AsyncDisplayKit/"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -55,6 +56,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "AsyncDisplayKit_acknowledgement",
+  deps = [
+    ":AsyncDisplayKit_PINRemoteImage_acknowledgement"
+  ]
+  )
 objc_library(
   name = "AsyncDisplayKit_Core",
   srcs = glob(
@@ -70,7 +77,7 @@ objc_library(
       "Base/*.h",
       "Source/**/*.h",
       "Source/TextKit/*.h",
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -82,8 +89,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/AsyncDisplayKit/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/AsyncDisplayKit/"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -111,11 +118,17 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "AsyncDisplayKit_Core_acknowledgement",
+  deps = [
+
+  ]
+  )
 objc_library(
   name = "AsyncDisplayKit_PINRemoteImage",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -126,8 +139,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/AsyncDisplayKit/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/AsyncDisplayKit/"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -159,11 +172,19 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "AsyncDisplayKit_PINRemoteImage_acknowledgement",
+  deps = [
+    "@PINRemoteImage//:PINRemoteImage_PINCache_acknowledgement",
+    "@PINRemoteImage//:PINRemoteImage_iOS_acknowledgement",
+    ":AsyncDisplayKit_Core_acknowledgement"
+  ]
+  )
 objc_library(
   name = "AsyncDisplayKit_IGListKit",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -174,8 +195,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/AsyncDisplayKit/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/AsyncDisplayKit/"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -206,11 +227,18 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "AsyncDisplayKit_IGListKit_acknowledgement",
+  deps = [
+    "@IGListKit//:IGListKit_acknowledgement",
+    ":AsyncDisplayKit_Core_acknowledgement"
+  ]
+  )
 objc_library(
   name = "AsyncDisplayKit_Yoga",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -221,8 +249,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/AsyncDisplayKit/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/AsyncDisplayKit/"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -252,5 +280,12 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "AsyncDisplayKit_Yoga_acknowledgement",
+  deps = [
+    "@Yoga//:Yoga_acknowledgement",
+    ":AsyncDisplayKit_Core_acknowledgement"
   ]
   )

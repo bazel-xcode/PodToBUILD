@@ -19,7 +19,7 @@ func main() {
     }
 
     let buildFile = PodBuildFile.with(podSpec: podSpec)
-    let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.skylarkConvertibles.flatMap { $0.toSkylark() })
+    let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
     print(buildFileSkylarkCompiler.run())
 }
 

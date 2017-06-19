@@ -8,15 +8,48 @@
 
 import Foundation
 
+
+/// Pod Support Buildable Dir is a directory which is recognized by the build system.
+/// it may contain BUILD files, Skylark Extensions, etc.
+public let PodSupportBuidableDir = "pod_support_buildable/"
+
+/// Pod Support Dir is the root directory for supporting Pod files
+/// It may *not* contain a BUILD file. When a directory contains a BUILD file
+/// it must follow all of Bazel's rules including visibility, which adds too
+/// much complexity.
+public let PodSupportDir = "pod_support/"
+
+/// Pod Support System Public Header Dir is a directory which contains Public
+/// headers for a given target. The convention is __Target__/Header.h, which
+/// makes it easy to handle angle includes in clang. In the repository
+/// initialization phase, all Public headers are symlinked into this directory.
+public let PodSupportSystemPublicHeaderDir = "pod_support/Headers/Public/"
+
 /// Law: Names must be valid bazel names; see the spec
 protocol BazelTarget: SkylarkConvertible {
     var name: String { get }
+    var acknowledgedDeps: [String]? { get }
+    var acknowledged: Bool { get }
+}
+
+extension BazelTarget {
+    var acknowledgedDeps: [String]? {
+        return nil 
+    }
+
+    var acknowledged: Bool {
+        return false
+    }
 }
 
 // https://bazel.build/versions/master/docs/be/objective-c.html#objc_bundle_library
 struct ObjcBundleLibrary: BazelTarget {
     let name: String
     let resources: AttrSet<[String]>
+
+    var acknowledged: Bool {
+        return true
+    }
 
     func toSkylark() -> SkylarkNode {
         return .functionCall(
@@ -74,6 +107,9 @@ struct ObjcFramework: BazelTarget {
     let name: String // A unique name for this rule.
     let frameworkImports: AttrSet<[String]> // The list of files under a .framework directory which are provided to Objective-C targets that depend on this target.
 
+    var acknowledged: Bool {
+        return true
+    }
 
     // objc_framework(
     //     name = "OCMock",
@@ -106,6 +142,10 @@ struct ObjcFramework: BazelTarget {
 struct ObjcImport: BazelTarget {
     let name: String // A unique name for this rule.
     let archives: AttrSet<[String]> // The list of .a files provided to Objective-C targets that depend on this target.
+
+    var acknowledged: Bool {
+        return true
+    }
 
     func toSkylark() -> SkylarkNode {
         return SkylarkNode.functionCall(
@@ -289,6 +329,21 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self = self |> ObjcLibrary.lens.excludeFiles <>~ sourceFiles
     }
 
+    // MARK: BazelTarget
+
+    var acknowledgedDeps: [String]? {
+        let basic = deps.basic ?? [String]()
+        let multiios = deps.multi.ios ?? [String]()
+        let multiosx = deps.multi.osx ?? [String]()
+        let multitvos = deps.multi.tvos ?? [String]()
+        
+        return Array(Set(basic + multiios + multiosx + multitvos))
+    }
+
+    var acknowledged: Bool {
+        return true
+    }
+
     // MARK: - Bazel Rendering
 
     func toSkylark() -> SkylarkNode {
@@ -334,7 +389,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             return arr + buildPCHList(sources: [multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 }.flatMap { Array($0) })
         })
 
-        let headerDirs = lib.headerName.map { "bazel_support/Headers/Public/\($0)/" }
+        let headerDirs = lib.headerName.map { PodSupportSystemPublicHeaderDir + "\($0)/" }
         let headerSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
                                   multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
                                     return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
@@ -343,7 +398,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         libArguments.append(.named(
             name: "hdrs",
             value: (headers |>
-                GlobNode.lens.include <>~ AttrSet<Set<String>>(basic: ["bazel_support/Headers/Public/**/*.h"])
+                GlobNode.lens.include <>~ AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*.h"])
             ).toSkylark()
         ))
         
@@ -364,7 +419,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         // All includes are bubbled up automatically
         libArguments.append(.named(
             name: "includes",
-            value: (["bazel_support/Headers/Public/"] + headerSearchPaths).toSkylark()
+            value: ([PodSupportSystemPublicHeaderDir] + headerSearchPaths).toSkylark()
         ))
         
         if !lib.sdkFrameworks.isEmpty {

@@ -1,4 +1,5 @@
-load('//:build_extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -13,7 +14,7 @@ objc_library(
   name = "GoogleSignIn",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -24,8 +25,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/GoogleSignIn/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/GoogleSignIn/"
   ],
   sdk_frameworks = [
     "CoreText",
@@ -58,6 +59,16 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "GoogleSignIn_acknowledgement",
+  deps = [
+    ":GoogleSignIn_VendoredFrameworks_acknowledgement",
+    "@GoogleToolboxForMac//:GoogleToolboxForMac_NSDictionary_URLArguments_acknowledgement",
+    "@GTMSessionFetcher//:GTMSessionFetcher_Core_acknowledgement",
+    "@GoogleToolboxForMac//:GoogleToolboxForMac_NSString_URLArguments_acknowledgement",
+    "@GTMOAuth2//:GTMOAuth2_acknowledgement"
+  ]
+  )
 objc_framework(
   name = "GoogleSignIn_VendoredFrameworks",
   framework_imports = glob(
@@ -69,5 +80,11 @@ objc_framework(
   is_dynamic = 1,
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "GoogleSignIn_VendoredFrameworks_acknowledgement",
+  deps = [
+
   ]
   )

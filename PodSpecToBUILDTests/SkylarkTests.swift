@@ -48,7 +48,6 @@ class PodSpecToBUILDTests: XCTestCase {
     }
 
     func compilerOutput(_ values: [String]) -> String {
-        // capture the prefix always
-        return ([SkylarkCompiler([]).run()] <> values).joined(separator: "\n")
+        return values.joined(separator: "\n")
     }
 }

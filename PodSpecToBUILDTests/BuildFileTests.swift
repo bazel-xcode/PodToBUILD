@@ -146,7 +146,10 @@ class BuildFileTests: XCTestCase {
                                      userOptions: [String](),
                                      globalCopts: [String](),
                                      trace: false)
-        let transformed  = RedundantCompiledSourceTransform.transform(convertibles: libs, options: opts)
+        let transformed = RedundantCompiledSourceTransform.transform(convertibles: libs,
+                                                   options: opts,
+                                                   podSpec: try! PodSpec(JSONPodspec: JSONDict())
+                          )
         var libByName = [String: ObjcLibrary]()
         transformed.forEach {
                 let t = ($0 as! ObjcLibrary)

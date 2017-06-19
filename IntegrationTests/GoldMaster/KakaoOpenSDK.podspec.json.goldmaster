@@ -1,4 +1,5 @@
-load('//:build_extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -13,7 +14,7 @@ objc_library(
   name = "KakaoOpenSDK",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -24,8 +25,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/KakaoOpenSDK/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/KakaoOpenSDK/"
   ],
   deps = [
     ":KakaoOpenSDK_KakaoOpenSDK",
@@ -53,11 +54,24 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "KakaoOpenSDK_acknowledgement",
+  deps = [
+    ":KakaoOpenSDK_KakaoLink_acknowledgement",
+    ":KakaoOpenSDK_KakaoOpenSDK_acknowledgement",
+    ":KakaoS2_VendoredFrameworks_acknowledgement",
+    ":KakaoOpenSDK_KakaoNavi_acknowledgement",
+    ":KakaoOpenSDK_VendoredFrameworks_acknowledgement",
+    ":KakaoNavi_VendoredFrameworks_acknowledgement",
+    ":KakaoLink_VendoredFrameworks_acknowledgement",
+    ":KakaoOpenSDK_KakaoS2_acknowledgement"
+  ]
+  )
 objc_library(
   name = "KakaoOpenSDK_KakaoOpenSDK",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -68,8 +82,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/KakaoOpenSDK/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/KakaoOpenSDK/"
   ],
   sdk_frameworks = [
     "UIKit",
@@ -94,6 +108,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "KakaoOpenSDK_KakaoOpenSDK_acknowledgement",
+  deps = [
+    ":KakaoOpenSDK_VendoredFrameworks_acknowledgement"
+  ]
+  )
 objc_framework(
   name = "KakaoOpenSDK_VendoredFrameworks",
   framework_imports = glob(
@@ -107,11 +127,17 @@ objc_framework(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "KakaoOpenSDK_VendoredFrameworks_acknowledgement",
+  deps = [
+
+  ]
+  )
 objc_library(
   name = "KakaoOpenSDK_KakaoNavi",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -122,8 +148,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/KakaoOpenSDK/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/KakaoOpenSDK/"
   ],
   sdk_frameworks = [
     "UIKit"
@@ -147,6 +173,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "KakaoOpenSDK_KakaoNavi_acknowledgement",
+  deps = [
+    ":KakaoNavi_VendoredFrameworks_acknowledgement"
+  ]
+  )
 objc_framework(
   name = "KakaoNavi_VendoredFrameworks",
   framework_imports = glob(
@@ -160,11 +192,17 @@ objc_framework(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "KakaoNavi_VendoredFrameworks_acknowledgement",
+  deps = [
+
+  ]
+  )
 objc_library(
   name = "KakaoOpenSDK_KakaoLink",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -175,8 +213,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/KakaoOpenSDK/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/KakaoOpenSDK/"
   ],
   sdk_frameworks = [
     "UIKit"
@@ -200,6 +238,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "KakaoOpenSDK_KakaoLink_acknowledgement",
+  deps = [
+    ":KakaoLink_VendoredFrameworks_acknowledgement"
+  ]
+  )
 objc_framework(
   name = "KakaoLink_VendoredFrameworks",
   framework_imports = glob(
@@ -213,11 +257,17 @@ objc_framework(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "KakaoLink_VendoredFrameworks_acknowledgement",
+  deps = [
+
+  ]
+  )
 objc_library(
   name = "KakaoOpenSDK_KakaoS2",
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -228,8 +278,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/KakaoOpenSDK/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/KakaoOpenSDK/"
   ],
   sdk_frameworks = [
     "Foundation"
@@ -253,6 +303,12 @@ objc_library(
     "//visibility:public"
   ]
   )
+acknowledged_target(
+  name = "KakaoOpenSDK_KakaoS2_acknowledgement",
+  deps = [
+    ":KakaoS2_VendoredFrameworks_acknowledgement"
+  ]
+  )
 objc_framework(
   name = "KakaoS2_VendoredFrameworks",
   framework_imports = glob(
@@ -264,5 +320,11 @@ objc_framework(
   is_dynamic = 1,
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "KakaoS2_VendoredFrameworks_acknowledgement",
+  deps = [
+
   ]
   )

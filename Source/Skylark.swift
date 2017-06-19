@@ -200,39 +200,6 @@ extension GlobNode {
     }
 }
 
-/// Config Setting Nodes
-/// Write Build dependent COPTS.
-/// @note We consume this as an expression in ObjCLibrary
-public func makeConfigSettingNodes() -> SkylarkNode {
-    let comment = [
-        "# Add a config setting release for compilation mode",
-        "# Assume that people are using `opt` for release mode",
-        "# see the bazel user manual for more information",
-        "# https://bazel.build/versions/master/docs/bazel-user-manual.html",
-    ].map { SkylarkNode.skylark($0) }
-    let releaseConfig = SkylarkNode.functionCall(name: "native.config_setting",
-                                                 arguments: [
-                                                     .named(name: "name", value: .string("release")),
-                                                     .named(name: "values",
-                                                            value:
-                                                            [
-                                                            "compilation_mode": "opt"
-                                                            ].toSkylark()
-                                                     ),
-    ])
-
-    return .lines([.lines(comment), releaseConfig])
-}
-
-// Make Nodes to be inserted at the beginning of skylark output
-// public for test purposes
-public func makePrefixNodes() -> SkylarkNode {
-    return .lines([
-        .skylark("load('//:build_extensions.bzl', 'pch_with_name_hint')"),
-        makeConfigSettingNodes(),
-    ])
-}
-
 // MARK: - SkylarkCompiler
 
 public struct SkylarkCompiler {
@@ -245,8 +212,7 @@ public struct SkylarkCompiler {
     }
 
     public init(_ root: SkylarkNode, indent: Int = 0) {
-        let fixed: SkylarkNode = .lines([makePrefixNodes(), root])
-        self.root = fixed.canonicalize()
+        self.root = root.canonicalize()
         self.indent = indent
         whitespace = SkylarkCompiler.white(indent: indent)
     }

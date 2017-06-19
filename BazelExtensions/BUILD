@@ -9,3 +9,9 @@ py_binary(
     visibility = ["//visibility:public"]
 )
 
+py_binary(
+    name = "acknowledgement_merger",
+    srcs = ["acknowledgement_merger.py"],
+    visibility = ["//visibility:public"]
+)
+

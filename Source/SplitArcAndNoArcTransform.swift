@@ -71,7 +71,7 @@ struct SplitArcAndNoArcTransform : SkylarkConvertibleTransform {
         return valid
     }
 
-    static func transform(convertibles: [SkylarkConvertible], options: BuildOptions) -> [SkylarkConvertible] {
+    static func transform(convertibles: [SkylarkConvertible], options: BuildOptions, podSpec: PodSpec) -> [SkylarkConvertible] {
         return convertibles.map{ convertible in
             (convertible as? ObjcLibrary).map{ objcLibrary in
                 objcLibrary |>
@@ -80,6 +80,6 @@ struct SplitArcAndNoArcTransform : SkylarkConvertibleTransform {
                     (ObjcLibrary.lens.sourceFiles %~~ appendNoArcCFiles) |>
                     (ObjcLibrary.lens.nonArcSrcs %~~ deleteNoArcCFiles)
             } ?? convertible
-        }
+       }
     }
 }

@@ -1,4 +1,5 @@
-load('//:build_extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
+load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -21,7 +22,7 @@ objc_library(
     ),
   hdrs = glob(
     [
-      "bazel_support/Headers/Public/**/*.h",
+      "pod_support/Headers/Public/**/*.h",
       "pop/**/*.h"
     ],
     exclude_directories = 1
@@ -33,8 +34,8 @@ objc_library(
     ]
     ),
   includes = [
-    "bazel_support/Headers/Public/",
-    "bazel_support/Headers/Public/pop/"
+    "pod_support/Headers/Public/",
+    "pod_support/Headers/Public/pop/"
   ],
   sdk_dylibs = [
     "c++"
@@ -54,5 +55,11 @@ objc_library(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "pop_acknowledgement",
+  deps = [
+
   ]
   )
