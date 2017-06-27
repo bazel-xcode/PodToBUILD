@@ -8,6 +8,11 @@ import sys
 bundle_token = "_Bundle_"
 def main(argv):
     for dirname, dirnames, filenames in os.walk(argv[1]):
+        # Do not embed Frameworks. These should be linked into the executable
+        # per the linker semantics.
+        if dirname.endswith(".framework"):
+            os.system("rm -rf " + dirname)
+
         split_dir = dirname.split('/')
         if bundle_token in split_dir[len(split_dir) - 1]:
             bundle_namespace = dirname.split(bundle_token)[1]
