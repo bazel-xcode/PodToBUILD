@@ -54,6 +54,14 @@ class GlobTests: XCTestCase {
         let testPattern = pattern(fromPattern: "Source/Classes/**/*.{h,m}", includingFileType: "m")
         XCTAssertEqual(testPattern, "Source/Classes/**/*.m")
     }
+    
+    /* TODO: Uncomment when fixing https://jira.pinadmin.com/browse/CXIOS-2061
+    func testCurlysInMiddle() {
+        let testPattern = pattern(fromPattern: "Source/{Classes,Glasses}/**/*.m", includingFileType: "m")
+        XCTAssertEqual(testPattern, "Source/Classes/**/*.m")
+        XCTAssertEqual(testPattern, "Source/Glasses/**/*.m")
+    }
+    */
 
     func testNaievePatternBuildingBar() {
         let testPattern = pattern(fromPattern: "Source/Classes/**/*.{h|m}", includingFileType: "m")
