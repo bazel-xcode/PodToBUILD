@@ -68,7 +68,7 @@ objc_framework(
     ],
     exclude_directories = 1
     ),
-  is_dynamic = 1,
+  is_dynamic = 0,
   visibility = [
     "//visibility:public"
   ]

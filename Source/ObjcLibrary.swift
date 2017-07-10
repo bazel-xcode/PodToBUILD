@@ -131,7 +131,11 @@ struct ObjcFramework: BazelTarget {
                                 },
 	                           exclude: AttrSet.empty
                             ).toSkylark()),
-                    .named(name: "is_dynamic", value: 1),
+                     // FIXME: provide an API for this.
+                     // Assume that every framework is not dynamic.
+                     // Typically CocoaPods supports either dynamic or static,
+                     // so for the most part, this should be fine.
+                    .named(name: "is_dynamic", value: 0),
                     .named(name: "visibility", value: .list(["//visibility:public"]))
                 ]
         )
