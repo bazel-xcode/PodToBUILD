@@ -12,6 +12,7 @@ native.config_setting(
   )
 objc_library(
   name = "CardIO",
+  enable_modules = 1,
   hdrs = glob(
     [
       "CardIO/*.h",

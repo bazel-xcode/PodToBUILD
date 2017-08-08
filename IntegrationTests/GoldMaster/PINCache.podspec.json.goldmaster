@@ -24,6 +24,7 @@ config_setting(
   )
 objc_library(
   name = "PINCache",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -82,6 +83,7 @@ acknowledged_target(
   )
 objc_library(
   name = "PINCache_Core",
+  enable_modules = 1,
   srcs = glob(
     [
       "Source/*.m"
@@ -148,6 +150,7 @@ acknowledged_target(
   )
 objc_library(
   name = "PINCache_Arc_exception_safe",
+  enable_modules = 1,
   srcs = glob(
     [
       "Source/PINDiskCache.m"

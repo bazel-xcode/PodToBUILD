@@ -30,6 +30,7 @@ config_setting(
   )
 objc_library(
   name = "Masonry",
+  enable_modules = 1,
   srcs = glob(
     [
       "Masonry/*.m"

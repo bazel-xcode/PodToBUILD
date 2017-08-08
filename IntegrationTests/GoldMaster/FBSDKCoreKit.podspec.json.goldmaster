@@ -24,6 +24,7 @@ config_setting(
   )
 objc_library(
   name = "FBSDKCoreKit",
+  enable_modules = 1,
   srcs = select(
     {
       "//conditions:default": glob(

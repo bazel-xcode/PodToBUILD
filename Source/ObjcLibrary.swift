@@ -358,6 +358,9 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         var libArguments = [SkylarkFunctionArgument]()
 
         libArguments.append(nameArgument)
+        let enableModules = SkylarkFunctionArgument.named(name: "enable_modules",
+                                                          value: .int(1))
+        libArguments.append(enableModules)
         if !lib.sourceFiles.include.isEmpty {
             libArguments.append(.named(
                 name: "srcs",

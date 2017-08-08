@@ -24,6 +24,7 @@ config_setting(
   )
 objc_library(
   name = "Adjust",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -81,6 +82,7 @@ acknowledged_target(
   )
 objc_library(
   name = "Adjust_Core",
+  enable_modules = 1,
   srcs = glob(
     [
       "Adjust/*.m",
@@ -149,6 +151,7 @@ acknowledged_target(
   )
 objc_library(
   name = "Adjust_Sociomantic",
+  enable_modules = 1,
   srcs = glob(
     [
       "plugin/Sociomantic/*.m"
@@ -213,6 +216,7 @@ acknowledged_target(
   )
 objc_library(
   name = "Adjust_Criteo",
+  enable_modules = 1,
   srcs = glob(
     [
       "plugin/Criteo/*.m"
@@ -277,6 +281,7 @@ acknowledged_target(
   )
 objc_library(
   name = "Adjust_Trademob",
+  enable_modules = 1,
   srcs = glob(
     [
       "plugin/Trademob/*.m"

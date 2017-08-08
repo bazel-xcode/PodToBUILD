@@ -24,6 +24,7 @@ config_setting(
   )
 objc_library(
   name = "youtube-ios-player-helper",
+  enable_modules = 1,
   srcs = select(
     {
       ":osxCase": glob(

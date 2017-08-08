@@ -12,6 +12,7 @@ native.config_setting(
   )
 objc_library(
   name = "ColorCube",
+  enable_modules = 1,
   srcs = glob(
     [
       "ColorCube/ColorCube/*.m"

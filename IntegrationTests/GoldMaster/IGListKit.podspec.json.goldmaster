@@ -30,6 +30,7 @@ config_setting(
   )
 objc_library(
   name = "IGListKit",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -90,6 +91,7 @@ acknowledged_target(
   )
 objc_library(
   name = "IGListKit_Diffing",
+  enable_modules = 1,
   srcs = select(
     {
       "//conditions:default": glob(
@@ -174,6 +176,7 @@ acknowledged_target(
   )
 objc_library(
   name = "IGListKit_Default",
+  enable_modules = 1,
   srcs = select(
     {
       "//conditions:default": glob(

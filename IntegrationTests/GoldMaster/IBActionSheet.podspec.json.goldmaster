@@ -12,6 +12,7 @@ native.config_setting(
   )
 objc_library(
   name = "IBActionSheet",
+  enable_modules = 1,
   srcs = glob(
     [
       "IBActionSheetSample/IBActionSheetSample/IBActionSheet.m"

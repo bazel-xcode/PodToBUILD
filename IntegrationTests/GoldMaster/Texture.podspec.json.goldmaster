@@ -12,6 +12,7 @@ native.config_setting(
   )
 objc_library(
   name = "AsyncDisplayKit",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -64,6 +65,7 @@ acknowledged_target(
   )
 objc_library(
   name = "AsyncDisplayKit_Core",
+  enable_modules = 1,
   srcs = glob(
     [
       "Base/*.m",
@@ -126,6 +128,7 @@ acknowledged_target(
   )
 objc_library(
   name = "AsyncDisplayKit_PINRemoteImage",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -182,6 +185,7 @@ acknowledged_target(
   )
 objc_library(
   name = "AsyncDisplayKit_IGListKit",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -236,6 +240,7 @@ acknowledged_target(
   )
 objc_library(
   name = "AsyncDisplayKit_Yoga",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"

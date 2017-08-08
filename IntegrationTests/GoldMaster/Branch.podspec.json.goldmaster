@@ -12,6 +12,7 @@ native.config_setting(
   )
 objc_library(
   name = "Branch",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -57,6 +58,7 @@ acknowledged_target(
   )
 objc_library(
   name = "Branch_Core",
+  enable_modules = 1,
   srcs = glob(
     [
       "Branch-SDK/Branch-SDK/*.m",
@@ -112,6 +114,7 @@ acknowledged_target(
   )
 objc_library(
   name = "Branch_without_IDFA",
+  enable_modules = 1,
   srcs = glob(
     [
       "Branch-SDK/Branch-SDK/*.m",

@@ -12,6 +12,7 @@ native.config_setting(
   )
 objc_library(
   name = "PINRemoteImage",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -57,6 +58,7 @@ acknowledged_target(
   )
 objc_library(
   name = "PINRemoteImage_Core",
+  enable_modules = 1,
   srcs = glob(
     [
       "Source/Classes/**/*.m"
@@ -119,6 +121,7 @@ acknowledged_target(
   )
 objc_library(
   name = "PINRemoteImage_iOS",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -165,6 +168,7 @@ acknowledged_target(
   )
 objc_library(
   name = "PINRemoteImage_OSX",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -212,6 +216,7 @@ acknowledged_target(
   )
 objc_library(
   name = "PINRemoteImage_tvOS",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -255,6 +260,7 @@ acknowledged_target(
   )
 objc_library(
   name = "PINRemoteImage_FLAnimatedImage",
+  enable_modules = 1,
   srcs = glob(
     [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m"
@@ -307,6 +313,7 @@ acknowledged_target(
   )
 objc_library(
   name = "PINRemoteImage_WebP",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -352,6 +359,7 @@ acknowledged_target(
   )
 objc_library(
   name = "PINRemoteImage_PINCache",
+  enable_modules = 1,
   srcs = glob(
     [
       "Source/Classes/PINCache/*.m"

@@ -12,6 +12,7 @@ native.config_setting(
   )
 objc_library(
   name = "KakaoOpenSDK",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -69,6 +70,7 @@ acknowledged_target(
   )
 objc_library(
   name = "KakaoOpenSDK_KakaoOpenSDK",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -135,6 +137,7 @@ acknowledged_target(
   )
 objc_library(
   name = "KakaoOpenSDK_KakaoNavi",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -200,6 +203,7 @@ acknowledged_target(
   )
 objc_library(
   name = "KakaoOpenSDK_KakaoLink",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
@@ -265,6 +269,7 @@ acknowledged_target(
   )
 objc_library(
   name = "KakaoOpenSDK_KakaoS2",
+  enable_modules = 1,
   hdrs = glob(
     [
       "pod_support/Headers/Public/**/*.h"

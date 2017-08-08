@@ -12,6 +12,7 @@ native.config_setting(
   )
 objc_library(
   name = "ZipArchive",
+  enable_modules = 1,
   srcs = glob(
     [
       "minizip/crypt.c",

@@ -12,6 +12,7 @@ native.config_setting(
   )
 objc_library(
   name = "KVOController",
+  enable_modules = 1,
   srcs = glob(
     [
       "FBKVOController/*.m"
