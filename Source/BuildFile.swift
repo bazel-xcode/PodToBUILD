@@ -117,9 +117,30 @@ public struct PodBuildFile: SkylarkConvertible {
     private static func bundleLibraries(withPodSpec spec: PodSpec) -> [BazelTarget] {
         let resourceBundleAttrSet: AttrSet<[String: [String]]> = spec ^* liftToAttr(PodSpec.lens.resourceBundles)
 
-        return AttrSet<[String: [String]]>.sequence(attrSet: resourceBundleAttrSet).map { k, v in
-            ObjcBundleLibrary(name: "\(spec.moduleName ?? spec.name)_Bundle_\(k)", resources: v)
+        // See if the Podspec specifies a prebuilt .bundle file
+        let bundleResources = (spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
+            strArr.filter({ (str: String) -> Bool in
+                str.hasSuffix(".bundle")
+            })
         }
+
+        // For all prebuilt bundles we found, create an ObjcBundle target. This target differs from ObjCBundleLibrary
+        // because it is stricter about keeping the structure of the bundle contents intact.
+        let bundleTargets = bundleResources.map { (strArr: [String]) -> [BazelTarget] in
+            strArr.map { (bundlePath: String) -> BazelTarget in
+                let bundleName = ObjcBundle.extractBundleName(fromPath: bundlePath)
+                let name = "\(spec.moduleName ?? spec.name)_Bundle_\(bundleName)"
+                let bundleImports = AttrSet<[String]>(basic: ["\(bundlePath)/**"])
+                return ObjcBundle(name: name, bundleImports: bundleImports)
+            }
+        }
+
+
+        let resourceBundles =   (AttrSet<[String: [String]]>.sequence(attrSet: resourceBundleAttrSet).map { k, v in
+            ObjcBundleLibrary(name: "\(spec.moduleName ?? spec.name)_Bundle_\(k)", resources: v) as BazelTarget
+        })
+
+        return resourceBundles + (bundleTargets.basic ?? [])
     }
 
     private static func vendoredFrameworks(withPodspec spec: PodSpec) -> [BazelTarget] {

@@ -36,6 +36,9 @@ objc_library(
     "pod_support/Headers/Public/",
     "pod_support/Headers/Public/iRate/"
   ],
+  deps = [
+    ":iRate_Bundle_iRate"
+  ],
   copts = [
 
   ] + select(
@@ -48,8 +51,8 @@ objc_library(
       ]
     }
     ),
-  resources = [
-    "iRate/iRate.bundle"
+  bundles = [
+    ":iRate_Bundle_iRate"
   ],
   visibility = [
     "//visibility:public"
@@ -57,6 +60,21 @@ objc_library(
   )
 acknowledged_target(
   name = "iRate_acknowledgement",
+  deps = [
+    ":iRate_Bundle_iRate_acknowledgement"
+  ]
+  )
+objc_bundle(
+  name = "iRate_Bundle_iRate",
+  bundle_imports = glob(
+    [
+      "iRate/iRate.bundle/**"
+    ],
+    exclude_directories = 1
+    )
+  )
+acknowledged_target(
+  name = "iRate_Bundle_iRate_acknowledgement",
   deps = [
 
   ]
