@@ -182,9 +182,7 @@ objc_library(
       ]
     }
     ),
-  deps = [
-    ":FBSDKCoreKit_Bundle_FacebookSDKStrings"
-  ] + select(
+  deps = select(
     {
       "//conditions:default": [
         "@Bolts//:Bolts"
@@ -203,8 +201,8 @@ objc_library(
       ]
     }
     ),
-  bundles = [
-    ":FBSDKCoreKit_Bundle_FacebookSDKStrings"
+  resources = [
+    "FacebookSDKStrings.bundle"
   ],
   visibility = [
     "//visibility:public"
@@ -213,22 +211,6 @@ objc_library(
 acknowledged_target(
   name = "FBSDKCoreKit_acknowledgement",
   deps = [
-    "@Bolts//:Bolts_acknowledgement",
-    ":FBSDKCoreKit_Bundle_FacebookSDKStrings_acknowledgement"
-  ]
-  )
-objc_bundle(
-  name = "FBSDKCoreKit_Bundle_FacebookSDKStrings",
-  bundle_imports = glob(
-    [
-      "FacebookSDKStrings.bundle/**"
-    ],
-    exclude_directories = 1
-    )
-  )
-acknowledged_target(
-  name = "FBSDKCoreKit_Bundle_FacebookSDKStrings_acknowledgement",
-  deps = [
-
+    "@Bolts//:Bolts_acknowledgement"
   ]
   )

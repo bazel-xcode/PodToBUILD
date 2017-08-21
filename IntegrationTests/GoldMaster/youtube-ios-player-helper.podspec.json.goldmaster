@@ -93,9 +93,6 @@ objc_library(
     "pod_support/Headers/Public/",
     "pod_support/Headers/Public/youtube-ios-player-helper/"
   ],
-  deps = [
-    ":youtube_ios_player_helper_Bundle_Assets"
-  ],
   copts = [
 
   ] + select(
@@ -108,8 +105,8 @@ objc_library(
       ]
     }
     ),
-  bundles = [
-    ":youtube_ios_player_helper_Bundle_Assets"
+  resources = [
+    "youtube-ios-player-helper/Assets.bundle"
   ],
   visibility = [
     "//visibility:public"
@@ -117,21 +114,6 @@ objc_library(
   )
 acknowledged_target(
   name = "youtube_ios_player_helper_acknowledgement",
-  deps = [
-    ":youtube_ios_player_helper_Bundle_Assets_acknowledgement"
-  ]
-  )
-objc_bundle(
-  name = "youtube_ios_player_helper_Bundle_Assets",
-  bundle_imports = glob(
-    [
-      "youtube-ios-player-helper/Assets.bundle/**"
-    ],
-    exclude_directories = 1
-    )
-  )
-acknowledged_target(
-  name = "youtube_ios_player_helper_Bundle_Assets_acknowledgement",
   deps = [
 
   ]

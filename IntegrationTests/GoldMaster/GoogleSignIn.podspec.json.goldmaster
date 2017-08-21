@@ -35,7 +35,6 @@ objc_library(
     "Security"
   ],
   deps = [
-    ":GoogleSignIn_Bundle_GoogleSignIn",
     ":GoogleSignIn_VendoredFrameworks",
     "@GoogleToolboxForMac//:GoogleToolboxForMac_NSString_URLArguments",
     "@GTMOAuth2//:GTMOAuth2",
@@ -54,8 +53,8 @@ objc_library(
       ]
     }
     ),
-  bundles = [
-    ":GoogleSignIn_Bundle_GoogleSignIn"
+  resources = [
+    "Resources/GoogleSignIn.bundle"
   ],
   visibility = [
     "//visibility:public"
@@ -66,25 +65,9 @@ acknowledged_target(
   deps = [
     ":GoogleSignIn_VendoredFrameworks_acknowledgement",
     "@GoogleToolboxForMac//:GoogleToolboxForMac_NSDictionary_URLArguments_acknowledgement",
-    ":GoogleSignIn_Bundle_GoogleSignIn_acknowledgement",
     "@GTMSessionFetcher//:GTMSessionFetcher_Core_acknowledgement",
     "@GoogleToolboxForMac//:GoogleToolboxForMac_NSString_URLArguments_acknowledgement",
     "@GTMOAuth2//:GTMOAuth2_acknowledgement"
-  ]
-  )
-objc_bundle(
-  name = "GoogleSignIn_Bundle_GoogleSignIn",
-  bundle_imports = glob(
-    [
-      "Resources/GoogleSignIn.bundle/**"
-    ],
-    exclude_directories = 1
-    )
-  )
-acknowledged_target(
-  name = "GoogleSignIn_Bundle_GoogleSignIn_acknowledgement",
-  deps = [
-
   ]
   )
 objc_framework(
