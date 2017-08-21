@@ -42,6 +42,34 @@ extension BazelTarget {
     }
 }
 
+// https://docs.bazel.build/versions/master/be/objective-c.html#objc_bundle
+struct ObjcBundle: BazelTarget {
+    let name: String
+    let bundleImports: AttrSet<[String]>
+
+    var acknowledged: Bool {
+        return true
+    }
+
+    func toSkylark() -> SkylarkNode {
+        return .functionCall(
+            name: "objc_bundle",
+            arguments: [
+                .named(name: "name", value: ObjcLibrary.bazelLabel(fromString: name).toSkylark()),
+                .named(name: "bundle_imports",
+                       value: GlobNode(include: bundleImports.map{ Set($0) },
+                                       exclude: AttrSet.empty).toSkylark()),
+                ])
+    }
+
+    static func extractBundleName(fromPath path: String) -> String {
+        return path.components(separatedBy: "/").map { (s: String) in
+            s.hasSuffix(".bundle") ? s : ""
+            }.reduce("", +).replacingOccurrences(of: ".bundle", with: "")
+    }
+
+}
+
 // https://bazel.build/versions/master/docs/be/objective-c.html#objc_bundle_library
 struct ObjcBundleLibrary: BazelTarget {
     let name: String
@@ -294,9 +322,20 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
 
-        self.resources = spec ^* liftToAttr(PodSpec.lens.resources)
+        // Select resources that are not prebuilt bundles
+        self.resources = (spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
+            strArr.filter({ (str: String) -> Bool in
+                !str.hasSuffix(".bundle")
+            })
+        }
 
-        self.bundles = spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }.map(ObjcLibrary.bazelLabel) })
+        let prebuiltBundles = spec ^* liftToAttr(PodSpec.lens.resources .. ReadonlyLens {
+            $0.filter { s in s.hasSuffix(".bundle") }
+              .map(ObjcBundle.extractBundleName)
+              .map { k in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }
+              .map(ObjcLibrary.bazelLabel)})
+
+        self.bundles = prebuiltBundles <> (spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }.map(ObjcLibrary.bazelLabel) }))
     }
 
     mutating func add(configurableKey: String, value: Any) {

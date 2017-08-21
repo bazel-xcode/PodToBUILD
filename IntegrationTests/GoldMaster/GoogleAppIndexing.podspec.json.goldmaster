@@ -34,6 +34,7 @@ objc_library(
     "SafariServices"
   ],
   deps = [
+    ":GoogleAppIndexing_Bundle_GoogleAppIndexingResources",
     ":GoogleAppIndexing_VendoredFrameworks"
   ],
   copts = [
@@ -48,8 +49,8 @@ objc_library(
       ]
     }
     ),
-  resources = [
-    "Resources/GoogleAppIndexingResources.bundle"
+  bundles = [
+    ":GoogleAppIndexing_Bundle_GoogleAppIndexingResources"
   ],
   visibility = [
     "//visibility:public"
@@ -58,7 +59,23 @@ objc_library(
 acknowledged_target(
   name = "GoogleAppIndexing_acknowledgement",
   deps = [
+    ":GoogleAppIndexing_Bundle_GoogleAppIndexingResources_acknowledgement",
     ":GoogleAppIndexing_VendoredFrameworks_acknowledgement"
+  ]
+  )
+objc_bundle(
+  name = "GoogleAppIndexing_Bundle_GoogleAppIndexingResources",
+  bundle_imports = glob(
+    [
+      "Resources/GoogleAppIndexingResources.bundle/**"
+    ],
+    exclude_directories = 1
+    )
+  )
+acknowledged_target(
+  name = "GoogleAppIndexing_Bundle_GoogleAppIndexingResources_acknowledgement",
+  deps = [
+
   ]
   )
 objc_framework(
