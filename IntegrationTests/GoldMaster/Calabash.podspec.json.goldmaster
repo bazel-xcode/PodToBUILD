@@ -43,7 +43,9 @@ objc_library(
     }
     ),
   copts = [
-
+    "-ObjC",
+    "-force_load",
+    ""$(PODS_ROOT)/Calabash/calabash.framework/calabash""
   ] + select(
     {
       "//conditions:default": [

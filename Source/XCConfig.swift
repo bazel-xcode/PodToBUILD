@@ -47,7 +47,9 @@ struct XCConfigTransformer {
 
     public static func defaultTransformer() -> XCConfigTransformer {
         return XCConfigTransformer(transformers: [
-            OtherCFlagsTransformer(),
+            PassthroughTransformer(xcconfigKey: "OTHER_CFLAGS"),
+            PassthroughTransformer(xcconfigKey: "OTHER_LDFLAGS"),
+            PassthroughTransformer(xcconfigKey: "OTHER_CPLUSPLUSFLAGS"),
             PreprocessorDefinesTransformer(),
             AllowNonModularIncludesInFrameworkModulesTransformer(),
             CXXLibraryTransformer(),
@@ -67,15 +69,23 @@ struct XCConfigTransformer {
 
 //  MARK: - Value Transformers
 
-struct OtherCFlagsTransformer: XCConfigValueTransformer {
+// Struct for creating transformers instances that simply return their values
+struct PassthroughTransformer: XCConfigValueTransformer {
+    private let key: String
+
     var xcconfigKey: String {
-        return "OTHER_CFLAGS"
+        return self.key
+    }
+
+    init(xcconfigKey: String) {
+        self.key = xcconfigKey
     }
 
     func string(forXCConfigValue value: String) -> String {
         return value
     }
 }
+
 
 struct PreCompilePrefixHeaderTransformer: XCConfigValueTransformer {
     var xcconfigKey: String {
@@ -114,7 +124,7 @@ struct CXXLanguageStandardTransformer: XCConfigValueTransformer {
     }
 
     func string(forXCConfigValue value: String) -> String {
-        return "-stdlib=\(value)"
+        return "-std=\(value)"
     }
 }
 

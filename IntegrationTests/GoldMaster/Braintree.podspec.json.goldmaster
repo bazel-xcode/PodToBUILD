@@ -669,6 +669,8 @@ objc_library(
     ":Braintree_Core"
   ],
   copts = [
+    "-ObjC",
+    "-lc++",
     "-Wall -Werror -Wextra"
   ] + select(
     {

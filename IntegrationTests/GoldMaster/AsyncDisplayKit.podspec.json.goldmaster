@@ -41,7 +41,7 @@ objc_library(
     ":AsyncDisplayKit_PINRemoteImage"
   ],
   copts = [
-    "-stdlib=c++11",
+    "-std=c++11",
     "-stdlib=libc++"
   ] + select(
     {
@@ -103,7 +103,7 @@ objc_library(
     "c++"
   ],
   copts = [
-    "-stdlib=c++11",
+    "-std=c++11",
     "-stdlib=libc++",
     ""
   ] + select(
@@ -159,7 +159,7 @@ objc_library(
     "@PINRemoteImage//:PINRemoteImage_iOS"
   ],
   copts = [
-    "-stdlib=c++11",
+    "-std=c++11",
     "-stdlib=libc++",
     "-DPIN_REMOTE_IMAGE=1"
   ] + select(
@@ -216,7 +216,7 @@ objc_library(
     "@IGListKit//:IGListKit"
   ],
   copts = [
-    "-stdlib=c++11",
+    "-std=c++11",
     "-stdlib=libc++",
     "-DIG_LIST_KIT=1"
   ] + select(
@@ -272,7 +272,7 @@ objc_library(
     "@Yoga//:Yoga"
   ],
   copts = [
-    "-stdlib=c++11",
+    "-std=c++11",
     "-stdlib=libc++",
     "-DYOGA=1"
   ] + select(
