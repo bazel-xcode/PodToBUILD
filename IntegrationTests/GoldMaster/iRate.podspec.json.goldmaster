@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,22 +11,43 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+filegroup(
+  name = "iRate_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "iRate",
+  "iRate_module_map",
+  "iRate",
+  [
+    "iRate_hdrs"
+  ]
+  )
 objc_library(
   name = "iRate",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "iRate/iRate.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "iRate/iRate.h",
-      "pod_support/Headers/Public/**/*.h"
+      "iRate/iRate.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "iRate_hdrs"
+  ],
   pch = pch_with_name_hint(
     "iRate",
     [
@@ -34,7 +56,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/iRate/"
+    "iRate_module_map"
   ],
   deps = [
     ":iRate_Bundle_iRate"
@@ -51,7 +73,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/iRate/pod_support/Headers/Public/iRate/",
+    "-iquote",
+    "external/iRate/pod_support/Headers/Public/iRate/"
+  ] + [
+    "-fmodule-name=iRate_pod_module"
+  ],
   bundles = [
     ":iRate_Bundle_iRate"
   ],

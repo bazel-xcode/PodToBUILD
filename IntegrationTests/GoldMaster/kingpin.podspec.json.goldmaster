@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,22 +11,43 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+filegroup(
+  name = "kingpin_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "kingpin",
+  "kingpin_module_map",
+  "kingpin",
+  [
+    "kingpin_hdrs"
+  ]
+  )
 objc_library(
   name = "kingpin",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "kingpin/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "kingpin/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "kingpin/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "kingpin_hdrs"
+  ],
   pch = pch_with_name_hint(
     "kingpin",
     [
@@ -34,7 +56,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/kingpin/"
+    "kingpin_module_map"
   ],
   sdk_frameworks = [
     "MapKit",
@@ -52,7 +74,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/kingpin/pod_support/Headers/Public/kingpin/",
+    "-iquote",
+    "external/kingpin/pod_support/Headers/Public/kingpin/"
+  ] + [
+    "-fmodule-name=kingpin_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

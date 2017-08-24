@@ -12,7 +12,7 @@ import Foundation
 /// Only public for testing!
 let PodStoreCacheDir = "\(NSHomeDirectory())/.bazel_pod_store/"
 
-enum RepoToolsActionValue : String {
+enum RepoToolsActionValue: String {
     case fetch
     case initialize = "init"
 }
@@ -27,18 +27,38 @@ public struct FetchOptions {
 
 /// Parse in Command Line arguments
 /// Example: PodName --user_option Opt1
-public struct BasicBuildOptions : BuildOptions {
+public struct BasicBuildOptions: BuildOptions {
     public let podName: String
     public let userOptions: [String]
     public let globalCopts: [String]
     public let trace: Bool
 
-    public init(podName: String, userOptions: [String], globalCopts: [String], trace: Bool) {
+    public let enableModules: Bool
+    public let generateModuleMap: Bool
+    public let headerVisibility: String
+
+    public init(podName: String,
+                userOptions: [String],
+                globalCopts: [String],
+                trace: Bool,
+                enableModules: Bool = false,
+                generateModuleMap: Bool = false,
+                headerVisibility: String = ""
+    ) {
         self.podName = podName
         self.userOptions = userOptions
         self.globalCopts = globalCopts
         self.trace = trace
+        self.enableModules = enableModules
+        self.generateModuleMap = generateModuleMap
+        self.headerVisibility = headerVisibility
     }
+}
+
+enum CLIArgumentType {
+    case bool
+    case stringList
+    case string
 }
 
 enum SerializedRepoToolsAction {
@@ -66,35 +86,38 @@ enum SerializedRepoToolsAction {
         guard args.count >= 2,
             /// This is a bit insane ( the argument is --url )
             let url = UserDefaults.standard.string(forKey: "-url")
-            else {
+        else {
             print("Usage: PodSpecName <action> --url <URL> --trace <trace>")
-                exit(0)
+            exit(0)
         }
 
         let name = args[1]
         let trace = UserDefaults.standard.bool(forKey: "-trace")
         let subDir = UserDefaults.standard.string(forKey: "-sub_dir")
         let fetchOpts = FetchOptions(podName: name, url: url, trace: trace,
-                subDir: subDir)
+                                     subDir: subDir)
         return fetchOpts
     }
 
     static func tryParseInit(args: [String]) -> BasicBuildOptions {
         // First arg is the path, we don't care about it
         // The right most option will be the winner.
-        var multiOptions = [
-            "--user_option" : Set<String>(),
-            "--global_copt" : Set<String>(),
-            "--trace" : Set<String>()
+        var options: [String: CLIArgumentType] = [
+            "--user_option": .stringList,
+            "--global_copt": .string,
+            "--trace": .bool,
+            "--enable_modules": .bool,
+            "--generate_module_map": .bool,
+            "--header_visibility": .string,
         ]
 
         var idx = 0
         func error() {
-            let optsInfo = multiOptions.keys.map{ $0 }.joined(separator: " ")
+            let optsInfo = options.keys.map { $0 }.joined(separator: " ")
             print("Usage: PodspecName " + optsInfo)
             exit(0)
         }
-        
+
         func nextArg() -> String {
             if idx + 1 < args.count {
                 idx += 1
@@ -103,26 +126,43 @@ enum SerializedRepoToolsAction {
             }
             return args[idx]
         }
-        
+
         // There is no flag for the podName of the Pod
         let podName = nextArg()
+        var parsed = [String: [Any]]()
         _ = nextArg()
-        while (true) {
+        while true {
             idx += 1
             if (idx < args.count) == false {
                 break
             }
-            if let _ = multiOptions[args[idx]] {
-                multiOptions[args[idx]]!.insert(nextArg())
+            let arg = args[idx]
+            if let argTy = options[arg] {
+                var collected: [Any] = parsed[arg] ?? [Any]()
+                let argValue = nextArg()
+                switch argTy {
+                case .bool:
+                    let value = argValue == "true"
+                    collected.append(value)
+                case .stringList:
+                    fallthrough
+                case .string:
+                    collected.append(argValue)
+                }
+                parsed[arg] = collected
             } else {
+                print("Invalid Arg: " + arg)
                 error()
             }
         }
-        
+
         return BasicBuildOptions(podName: podName,
-                                 userOptions: Array(multiOptions["--user_option"]!),
-                                 globalCopts: Array(multiOptions["--global_copt"]!),
-                                 trace: multiOptions["--trace"] != nil
+                                 userOptions: parsed["--user_option"] as? [String] ?? [String](),
+                                 globalCopts: parsed["--global_copt"] as? [String] ?? [String](),
+                                 trace: parsed["--trace"]?.first as? Bool ?? false,
+                                 enableModules: parsed["--enable_modules"]?.first as? Bool ?? false,
+                                 generateModuleMap: parsed["--generate_module_map"]?.first as? Bool ?? false,
+                                 headerVisibility: parsed["--header_visibility"]?.first as? String ?? ""
         )
     }
 }
@@ -130,48 +170,48 @@ enum SerializedRepoToolsAction {
 /// Helper code compliments of SO:
 /// http://stackoverflow.com/questions/25388747/sha256-in-swift
 extension String {
-    func sha256() -> String{
+    func sha256() -> String {
         if let stringData = self.data(using: .utf8) {
             return hexStringFromData(input: digest(input: stringData as NSData))
         }
         return ""
     }
-    
-    private func digest(input : NSData) -> NSData {
+
+    private func digest(input: NSData) -> NSData {
         let digestLength = Int(CC_SHA256_DIGEST_LENGTH)
         var hash = [UInt8](repeating: 0, count: digestLength)
         CC_SHA256(input.bytes, UInt32(input.length), &hash)
         return NSData(bytes: hash, length: digestLength)
     }
-    
-    private  func hexStringFromData(input: NSData) -> String {
+
+    private func hexStringFromData(input: NSData) -> String {
         var bytes = [UInt8](repeating: 0, count: input.length)
         input.getBytes(&bytes, length: input.length)
-        
+
         var hexString = ""
         for byte in bytes {
-            hexString += String(format:"%02x", UInt8(byte))
+            hexString += String(format: "%02x", UInt8(byte))
         }
-        
+
         return hexString
     }
 }
 
-func cacheRoot(forPod pod: String, url: String) -> String{
+func cacheRoot(forPod pod: String, url: String) -> String {
     return PodStoreCacheDir + pod + "-" + url.sha256() + "/"
 }
 
 extension ShellContext {
     func hasDir(_ dirName: String) -> Bool {
         return command("/bin/[", arguments: ["-e", dirName, "]"]).terminationStatus == 0
-    }   
+    }
 }
 
 enum RepoActions {
     /// Initialize a pod repository.
     /// - Get the IPC JSON PodSpec
     /// - Compile a build file based on the PodSpec
-    /// - Create a symlinked header structure to support angle bracket includes
+    /// - Create a hardlinked header structure to support angle bracket includes
     static func initializeRepository(shell: ShellContext, buildOptions: BasicBuildOptions) {
         // This uses the current environment's cocoapods installation.
         let whichPod = shell.shellOut("which pod").standardOutputAsString
@@ -180,9 +220,9 @@ enum RepoActions {
         }
         let podspecName = CommandLine.arguments[1]
         let pwd = shell.command(CommandBinary.pwd, arguments: [String]()).standardOutputAsString.components(separatedBy: "\n")[0]
-        
+
         // make json data
-        let jsonData: Data;
+        let jsonData: Data
         let hasFile: (String) -> Bool = { file in
             // did you know that [ is the name of the binary that tests stuff!
             shell.command("/bin/[",
@@ -190,7 +230,7 @@ enum RepoActions {
         }
         let hasPodspec: () -> Bool = { hasFile(podspecName + ".podspec") }
         let hasPodspecJson: () -> Bool = { hasFile(podspecName + ".podspec.json") }
-        
+
         if hasPodspec() {
             let podBin = whichPod.components(separatedBy: "\n")[0]
             jsonData = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"]).standardOutputData
@@ -199,22 +239,22 @@ enum RepoActions {
         } else {
             fatalError("Missing podspec!")
         }
-        
+
         guard let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
             JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
             let JSONPodspec = JSONFile as? JSONDict
-            else {
-                fatalError("Invalid JSON Podspec")
+        else {
+            fatalError("Invalid JSON Podspec")
         }
-        
+
         guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
             fatalError("Cant read in podspec")
         }
-        
+
         shell.dir(PodSupportSystemPublicHeaderDir)
         shell.dir(PodSupportDir + "Headers/Private/")
         shell.dir(PodSupportBuidableDir)
-        
+
         let searchPaths = { (spec: ComposedSpec) -> Set<String> in
             let fallbackSpec = spec
             let moduleName = AttrSet<String>(
@@ -223,24 +263,24 @@ enum RepoActions {
             let headerDirectoryName: AttrSet<String?> = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.headerDirectory))
             guard let externalName = (moduleName.isEmpty ? nil : moduleName) ??
                 (headerDirectoryName.isEmpty ? nil : headerDirectoryName.denormalize()) else {
-                    return Set<String>()
+                return Set<String>()
             }
-            
+
             let headerDirs = externalName.map { $0 }
             let customHeaderSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
                                                                        multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
-                                                                        return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
+                                                                           result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
             })
             return customHeaderSearchPaths
         }
-        
+
         let customHeaderSearchPaths = Set([podSpec.name]).union(searchPaths(ComposedSpec.composed(child: podSpec, parent: nil)))
-            .union(podSpec.subspecs.reduce(Set<String>(), { (result, subspec) in
+            .union(podSpec.subspecs.reduce(Set<String>(), { result, subspec in
                 result.union(searchPaths(ComposedSpec.composed(child: subspec, parent: ComposedSpec.composed(child: podSpec, parent: nil))))
             })).map { PodSupportSystemPublicHeaderDir + "\($0)/" }
-        
+
         customHeaderSearchPaths.forEach(shell.dir)
-        
+
         // Create a directory structure condusive to <> imports
         // - Get all of the paths matching wild card imports
         // - Put them into the public header directory
@@ -249,48 +289,48 @@ enum RepoActions {
             .flatMap { $0.headers }
             .flatMap { globNode in
                 globNode.include.fold(basic: { (patterns: Set<String>?) -> Set<String> in
-                    let s: Set<String> = Set(patterns.map{ $0.flatMap(podGlob) } ?? [])
+                    let s: Set<String> = Set(patterns.map { $0.flatMap(podGlob) } ?? [])
                     return s
                 }, multi: { (set: Set<String>, multi: MultiPlatform<Set<String>>) -> Set<String> in
                     let inner: Set<String>? = multi |>
-                        MultiPlatform<Set<String>>.lens.viewAll{ Set($0.flatMap(podGlob)) }
+                        MultiPlatform<Set<String>>.lens.viewAll { Set($0.flatMap(podGlob)) }
                     return set.union(inner.denormalize())
                 })
             }
             .forEach { globResult in
                 customHeaderSearchPaths.forEach { searchPath in
-                    shell.symLink(from: "\(pwd)/\(globResult)", to: searchPath)
+                    shell.hardLink(from: "\(pwd)/\(globResult)", to: searchPath)
                 }
-        }
+            }
 
         // Write out contents of PodSupportBuildableDir
 
         // Write out the acknowledgement entry plist
         let entry = RenderAcknowledgmentEntry(entry: AcknowledgmentEntry(forPodspec: podSpec))
         let acknowledgementFilePath = URL(
-                fileURLWithPath: PodSupportBuidableDir + "acknowledgement.plist",
-                relativeTo: URL(fileURLWithPath: pwd)
-                )
+            fileURLWithPath: PodSupportBuidableDir + "acknowledgement.plist",
+            relativeTo: URL(fileURLWithPath: pwd)
+        )
         shell.write(value: entry, toPath: acknowledgementFilePath)
 
         // assume _PATH_TO_SOME/bin/RepoTools
         let assetRoot = RepoActions.assetRoot()
         let buildExtensions = assetRoot.appendingPathComponent("extensions")
-                                       .appendingPathExtension("bzl")
+            .appendingPathExtension("bzl")
         let buildExtensionsFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "extensions.bzl",
                                           relativeTo: URL(fileURLWithPath: pwd))
         shell.symLink(from: buildExtensions.path, to: buildExtensionsFilePath.path)
 
         let licenseMergeScript = assetRoot.appendingPathComponent("acknowledgement_merger")
-                                          .appendingPathExtension("py")
+            .appendingPathExtension("py")
         let licenseMergeScriptFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "acknowledgement_merger.py",
                                              relativeTo: URL(fileURLWithPath: pwd))
-        shell.symLink(from: licenseMergeScript.path, to: licenseMergeScriptFilePath.path)
+        shell.hardLink(from: licenseMergeScript.path, to: licenseMergeScriptFilePath.path)
 
         let supportBUILDFile = assetRoot.appendingPathComponent("support")
-                                        .appendingPathExtension("BUILD")
+            .appendingPathExtension("BUILD")
         let supportBUILDFileFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "BUILD", relativeTo: URL(fileURLWithPath: pwd))
-        shell.symLink(from: supportBUILDFile.path, to: supportBUILDFileFilePath.path)
+        shell.hardLink(from: supportBUILDFile.path, to: supportBUILDFileFilePath.path)
 
         // Write the root BUILD file
         let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
@@ -304,8 +344,8 @@ enum RepoActions {
         let binary = CommandLine.arguments[0]
         let binURL = URL(fileURLWithPath: binary)
         let assetRoot = binURL.deletingLastPathComponent()
-                              .deletingLastPathComponent()
-                              .appendingPathComponent("BazelExtensions")
+            .deletingLastPathComponent()
+            .appendingPathComponent("BazelExtensions")
         return assetRoot
     }
 
@@ -328,36 +368,38 @@ enum RepoActions {
         let podCacheRoot = escape(cacheRoot(forPod: podName, url: urlString))
         if shell.hasDir(podCacheRoot) {
             exportArchive(shell: shell, podCacheRoot: podCacheRoot,
-                    fetchOptions: fetchOptions)
+                          fetchOptions: fetchOptions)
             return
         }
-        
+
         let downloadsDir = shell.tmpdir()
-        let url  = NSURL(fileURLWithPath: urlString)
+        let url = NSURL(fileURLWithPath: urlString)
         let fileName = url.lastPathComponent!
-        let download = downloadsDir + "/" + podName + "-" + fileName        
+        let download = downloadsDir + "/" + podName + "-" + fileName
         guard let wwwUrl = NSURL(string: urlString).map({ $0 as URL }),
             shell.download(url: wwwUrl, toFile: download) else {
             fatalError("Download of \(podName) failed")
         }
-        
+
         // Extract the downloaded archive
         let extractDir = shell.tmpdir()
         func extract() -> CommandOutput {
             let lowercasedFileName = fileName.lowercased()
             if lowercasedFileName.hasSuffix("zip") {
-                return shell.command(CommandBinary.sh, arguments: ["-c",
-                        unzipTransaction(
-                            rootDir: extractDir,
-                            fileName: escape(download)
-                            )
+                return shell.command(CommandBinary.sh, arguments: [
+                    "-c",
+                    unzipTransaction(
+                        rootDir: extractDir,
+                        fileName: escape(download)
+                    ),
                 ])
             } else if lowercasedFileName.hasSuffix("tar.gz") {
-                return shell.command(CommandBinary.sh, arguments: ["-c",
-                        untarTransaction(
-                            rootDir: extractDir,
-                            fileName: escape(download)
-                            )
+                return shell.command(CommandBinary.sh, arguments: [
+                    "-c",
+                    untarTransaction(
+                        rootDir: extractDir,
+                        fileName: escape(download)
+                    ),
                 ])
             }
             fatalError("Cannot extract files other than .zip or .tar")
@@ -366,27 +408,28 @@ enum RepoActions {
         assertCommandOutput(extract(), message: "Extraction of \(podName) failed")
 
         // Save artifacts to cache root
-        let export = shell.command("/bin/sh", arguments: ["-c",
-                        "mkdir -p " + extractDir + " && " +
-                        "cd " + extractDir + " && " + 
-                        "mkdir -p " + podCacheRoot + " && " +
-                        "mv OUT/* " + podCacheRoot
-                    ])
+        let export = shell.command("/bin/sh", arguments: [
+            "-c",
+            "mkdir -p " + extractDir + " && " +
+                "cd " + extractDir + " && " +
+                "mkdir -p " + podCacheRoot + " && " +
+                "mv OUT/* " + podCacheRoot,
+        ])
         _ = shell.command(CommandBinary.rm, arguments: ["-rf", extractDir])
         if export.terminationStatus != 0 {
             _ = shell.command(CommandBinary.rm, arguments: ["-rf", podCacheRoot])
             fatalError("Filesystem is in an invalid state")
         }
         exportArchive(shell: shell, podCacheRoot: podCacheRoot,
-                fetchOptions: fetchOptions)
+                      fetchOptions: fetchOptions)
     }
 
     static func exportArchive(shell: ShellContext, podCacheRoot: String,
-            fetchOptions: FetchOptions) {
+                              fetchOptions: FetchOptions) {
         let fileManager = FileManager.default
         let path: String
         let fetchOptionsSubDir = fetchOptions.subDir?.isEmpty == false ?
-        fetchOptions.subDir : nil
+            fetchOptions.subDir : nil
         if let subDir = fetchOptionsSubDir ?? githubMagicSubDir(fetchOptions: fetchOptions) {
             path = podCacheRoot + subDir
         } else {
@@ -415,11 +458,11 @@ enum RepoActions {
         let unicode = fileName.unicodeScalars
         let secondUnicode = unicode[unicode.index(unicode.startIndex, offsetBy:
                 1)]
-        if fileName.contains(".") 
-            && fileName[fileName.startIndex] == "v" 
-            && CharacterSet.decimalDigits.contains(secondUnicode)  {
+        if fileName.contains(".")
+            && fileName[fileName.startIndex] == "v"
+            && CharacterSet.decimalDigits.contains(secondUnicode) {
             fileName = fileName.substring(from:
-                    fileName.index(fileName.startIndex, offsetBy: 1))
+                fileName.index(fileName.startIndex, offsetBy: 1))
         }
         let magicDir = components[components.count - 3] + "-" + fileName
         return magicDir

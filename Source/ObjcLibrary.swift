@@ -100,8 +100,8 @@ struct ConfigSetting: BazelTarget {
         return .functionCall(
             name: "config_setting",
             arguments: [
-		        .named(name: "name", value: name.toSkylark()),
-		        .named(name: "values", value: values.toSkylark())
+                .named(name: "name", value: name.toSkylark()),
+                .named(name: "values", value: values.toSkylark())
             ])
     }
 }
@@ -157,7 +157,7 @@ struct ObjcFramework: BazelTarget {
                                 include: frameworkImports.map {
                                     Set($0.map { $0 + "/**" })
                                 },
-	                           exclude: AttrSet.empty
+                                exclude: AttrSet.empty
                             ).toSkylark()),
                      // FIXME: provide an API for this.
                      // Assume that every framework is not dynamic.
@@ -389,7 +389,22 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
     // MARK: - Bazel Rendering
 
+    func bazelModuleName() -> String {
+        if let headerName = headerName.basic {
+            return headerName
+        }
+        return externalName
+    }
+    
     func toSkylark() -> SkylarkNode {
+        let options = GetBuildOptions()
+
+        // Modules
+        let enableModules = options.enableModules
+        //let enableModules = false
+        let generateModuleMap = options.generateModuleMap
+        let headerVisibility = options.headerVisibility
+
         let lib = self
         let nameArgument = SkylarkFunctionArgument.named(name: "name", value: .string(lib.name))
 
@@ -397,14 +412,83 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         var libArguments = [SkylarkFunctionArgument]()
 
         libArguments.append(nameArgument)
-        let enableModules = SkylarkFunctionArgument.named(name: "enable_modules",
-                                                          value: .int(1))
-        libArguments.append(enableModules)
+        
+        let enableModulesSkylark = SkylarkFunctionArgument.named(name: "enable_modules",
+                                                          value: enableModules ? .int(1) : .int(0))
+        libArguments.append(enableModulesSkylark)
+
+        let moduleName = bazelModuleName()
+        
+        // Generate a module map for the target matching the package name.
+        let isTopLevelTarget = name == moduleName
+
+        // FIXME: Vendored
+        let depHdrs = deps.map { $0.filter { $0.hasPrefix(":") && $0.contains("Vendored") == false && $0.contains("_Bundle") == false }.map { ($0 + "_hdrs").toSkylark() } }
+       
+        let allModuleInternalHeaders = headers.toSkylark() .+. depHdrs.toSkylark()
+
+        let podSupportHeaders = GlobNode(include: AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*.h"]),
+                                                         exclude: AttrSet<Set<String>>.empty).toSkylark()
+        
+        if isTopLevelTarget {
+            var exposedHeaders: SkylarkNode = podSupportHeaders
+            // By Default we don't propage the headers anymore
+            // come up with a way to expose this
+            if headerVisibility == "everything" {
+                exposedHeaders = exposedHeaders .+. headers.toSkylark()
+            }
+            
+            inlineSkylark.append(.functionCall(
+                name: "filegroup",
+                arguments: [
+                    .named(name: "name", value: (name + "_hdrs").toSkylark()),
+                    .named(name: "srcs", value: exposedHeaders),
+                    .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
+                    ]
+                ))   
+            
+        } else {
+            inlineSkylark.append(.functionCall(
+                name: "filegroup",
+                arguments: [
+                    .named(name: "name", value: (name + "_hdrs").toSkylark()),
+                    .named(name: "srcs", value: headers.toSkylark()),
+                    .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
+                    ]
+                ))           
+        }
+
+        let headerGlobNode = headers
+        var moduleMapName = externalName + "_module_map"
+        if isTopLevelTarget {
+            inlineSkylark.append(.functionCall(
+                name: "gen_module_map",
+                arguments: [
+                    .basic(externalName.toSkylark()),
+                    .basic(moduleMapName.toSkylark()),
+                    .basic(headerName.basic.toSkylark()),
+                    .basic([name + "_hdrs"].toSkylark())
+                ]
+                ))
+        }
+        
         if !lib.sourceFiles.include.isEmpty {
-            libArguments.append(.named(
-                name: "srcs",
-                value: lib.sourceFiles.toSkylark()
-            ))
+            if generateModuleMap {
+                // Assume that there is going to be headers if we are compiling a module
+                libArguments.append(.named(
+                    name: "srcs",
+                    value: lib.sourceFiles.toSkylark() .+. allModuleInternalHeaders
+                    ))
+            } else {
+                // Workaround: we should be able to add all of the headers here, but in some cases
+                // the file group is empty
+                // if the header visibility is everything, then the headers will be in hdrs
+                let additionalNonPropagatedHdrs: SkylarkNode = (headers.include.isEmpty || headerVisibility == "everything") ? SkylarkNode.empty : headers.toSkylark()
+                libArguments.append(.named(
+                    name: "srcs",
+                    value: lib.sourceFiles.toSkylark() .+. additionalNonPropagatedHdrs
+                    ))
+            }
         }
         if !lib.nonArcSrcs.include.isEmpty {
             libArguments.append(.named(
@@ -436,17 +520,22 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         })
 
         let headerDirs = lib.headerName.map { PodSupportSystemPublicHeaderDir + "\($0)/" }
-        let headerSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
+        let headerSearchPaths: Set<String> = Set(headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
                                   multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
                                     return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
-                                })
-
-        libArguments.append(.named(
-            name: "hdrs",
-            value: (headers |>
-                GlobNode.lens.include <>~ AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*.h"])
-            ).toSkylark()
-        ))
+                                }))
+        
+        if generateModuleMap {
+            libArguments.append(.named(
+                name: "hdrs",
+                value: [moduleMapName + "_module_map_file"].toSkylark() .+. ([moduleName + "_hdrs"]).toSkylark()
+                ))
+        } else {
+            libArguments.append(.named(
+                name: "hdrs",
+                value: ([moduleName + "_hdrs"]).toSkylark()
+                ))
+        }
 
         libArguments.append(.named(
             name: "pch",
@@ -465,7 +554,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         // All includes are bubbled up automatically
         libArguments.append(.named(
             name: "includes",
-            value: ([PodSupportSystemPublicHeaderDir] + headerSearchPaths).toSkylark()
+            value: ([PodSupportSystemPublicHeaderDir] + [ moduleMapName ]).toSkylark()
         ))
 
         if !lib.sdkFrameworks.isEmpty {
@@ -509,9 +598,24 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                                              )
                                      ]
             )
+
+        // Include headders
+        var iquotes = [String]()
+        for searchPath in headerSearchPaths {
+            // This external directory is wrong, along with a few others
+            var externalDir: String = externalName
+            if externalName == "AsyncDisplayKit" {
+                externalDir = "Texture"
+            }
+            iquotes.append("-I" + "external/" + externalDir + "/" + searchPath)
+            iquotes.append("-iquote")
+            iquotes.append("external/" + externalDir + "/" + searchPath)
+        }
+
         libArguments.append(.named(
             name: "copts",
-            value: lib.copts.toSkylark() .+. buildConfigDependenctCOpts))
+            value: (lib.copts.toSkylark() .+. buildConfigDependenctCOpts .+.
+                iquotes.toSkylark()) <> ["-fmodule-name=" + moduleName + "_pod_module"].toSkylark()))
 
         if !lib.resources.isEmpty {
             libArguments.append(.named(name: "resources",

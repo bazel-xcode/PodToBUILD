@@ -223,17 +223,6 @@ class BuildFileTests: XCTestCase {
         )
     }
 
-    func testDontOutputConfig() {
-        let podspec = try! PodSpec(JSONPodspec: [
-            "name": "Foo"
-        ])
-        let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
-
-        XCTAssert(
-            convs.flatMap{ $0 as? ConfigSetting }.count == 0
-        )
-    }
-
     // MARK: - Source File Extraction Tests
 
     func testHeaderExtraction() {
@@ -321,6 +310,6 @@ class BuildFileTests: XCTestCase {
             "CLANG_CXX_LIBRARY": "libc++",
         ]
         let compilerFlags = XCConfigTransformer.defaultTransformer().compilerFlags(forXCConfig: config)
-        XCTAssertEqual(compilerFlags, ["-stdlib=c++11", "-stdlib=libc++"])
+        XCTAssertEqual(compilerFlags, ["-std=c++11", "-stdlib=libc++"])
     }
 }

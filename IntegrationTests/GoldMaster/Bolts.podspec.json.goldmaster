@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -34,15 +35,32 @@ config_setting(
     "cpu": "powerpc4"
   }
   )
-objc_library(
-  name = "Bolts",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "Bolts_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "Bolts",
+  "Bolts_module_map",
+  "Bolts",
+  [
+    "Bolts_hdrs"
+  ]
+  )
+objc_library(
+  name = "Bolts",
+  enable_modules = 0,
+  hdrs = [
+    "Bolts_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Bolts",
     [
@@ -51,7 +69,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Bolts/"
+    "Bolts_module_map"
   ],
   deps = [
     ":Bolts_Tasks",
@@ -69,7 +87,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Bolts/pod_support/Headers/Public/Bolts/",
+    "-iquote",
+    "external/Bolts/pod_support/Headers/Public/Bolts/"
+  ] + [
+    "-fmodule-name=Bolts_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -81,9 +105,43 @@ acknowledged_target(
     ":Bolts_AppLinks_acknowledgement"
   ]
   )
+filegroup(
+  name = "Bolts_Tasks_hdrs",
+  srcs = select(
+    {
+      ":osxCase": glob(
+        [
+          "Bolts/Common/*.h"
+        ],
+        exclude_directories = 1
+        ),
+      "//conditions:default": glob(
+        [
+          "Bolts/Common/*.h"
+        ],
+        exclude_directories = 1
+        ),
+      ":watchosCase": glob(
+        [
+          "Bolts/Common/*.h"
+        ],
+        exclude_directories = 1
+        ),
+      ":tvosCase": glob(
+        [
+          "Bolts/Common/*.h"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "Bolts_Tasks",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = select(
     {
       ":osxCase": glob(
@@ -114,39 +172,37 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ),
-  hdrs = select(
+    ) + select(
     {
       ":osxCase": glob(
         [
-          "Bolts/Common/*.h",
-          "pod_support/Headers/Public/**/*.h"
+          "Bolts/Common/*.h"
         ],
         exclude_directories = 1
         ),
       "//conditions:default": glob(
         [
-          "Bolts/Common/*.h",
-          "pod_support/Headers/Public/**/*.h"
+          "Bolts/Common/*.h"
         ],
         exclude_directories = 1
         ),
       ":watchosCase": glob(
         [
-          "Bolts/Common/*.h",
-          "pod_support/Headers/Public/**/*.h"
+          "Bolts/Common/*.h"
         ],
         exclude_directories = 1
         ),
       ":tvosCase": glob(
         [
-          "Bolts/Common/*.h",
-          "pod_support/Headers/Public/**/*.h"
+          "Bolts/Common/*.h"
         ],
         exclude_directories = 1
         )
     }
     ),
+  hdrs = [
+    "Bolts_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Bolts",
     [
@@ -155,7 +211,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Bolts/"
+    "Bolts_module_map"
   ],
   copts = [
 
@@ -169,7 +225,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Bolts/pod_support/Headers/Public/Bolts/",
+    "-iquote",
+    "external/Bolts/pod_support/Headers/Public/Bolts/"
+  ] + [
+    "-fmodule-name=Bolts_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -180,9 +242,25 @@ acknowledged_target(
 
   ]
   )
+filegroup(
+  name = "Bolts_AppLinks_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Bolts/iOS/**/*.h"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "Bolts_AppLinks",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = select(
     {
       "//conditions:default": glob(
@@ -192,18 +270,19 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ),
-  hdrs = select(
+    ) + select(
     {
       "//conditions:default": glob(
         [
-          "Bolts/iOS/**/*.h",
-          "pod_support/Headers/Public/**/*.h"
+          "Bolts/iOS/**/*.h"
         ],
         exclude_directories = 1
         )
     }
     ),
+  hdrs = [
+    "Bolts_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Bolts",
     [
@@ -212,7 +291,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Bolts/"
+    "Bolts_module_map"
   ],
   deps = [
     ":Bolts_Tasks"
@@ -229,7 +308,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Bolts/pod_support/Headers/Public/Bolts/",
+    "-iquote",
+    "external/Bolts/pod_support/Headers/Public/Bolts/"
+  ] + [
+    "-fmodule-name=Bolts_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

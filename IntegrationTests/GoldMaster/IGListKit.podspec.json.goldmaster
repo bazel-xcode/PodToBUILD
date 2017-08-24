@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -28,15 +29,32 @@ config_setting(
     "cpu": "powerpc3"
   }
   )
-objc_library(
-  name = "IGListKit",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "IGListKit_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "IGListKit",
+  "IGListKit_module_map",
+  "IGListKit",
+  [
+    "IGListKit_hdrs"
+  ]
+  )
+objc_library(
+  name = "IGListKit",
+  enable_modules = 0,
+  hdrs = [
+    "IGListKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "IGListKit",
     [
@@ -45,7 +63,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/IGListKit/"
+    "IGListKit_module_map"
   ],
   sdk_frameworks = select(
     {
@@ -79,7 +97,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/IGListKit/pod_support/Headers/Public/IGListKit/",
+    "-iquote",
+    "external/IGListKit/pod_support/Headers/Public/IGListKit/"
+  ] + [
+    "-fmodule-name=IGListKit_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -90,9 +114,21 @@ acknowledged_target(
     ":IGListKit_Default_acknowledgement"
   ]
   )
+filegroup(
+  name = "IGListKit_Diffing_hdrs",
+  srcs = glob(
+    [
+      "Source/Common/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "IGListKit_Diffing",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = select(
     {
       "//conditions:default": glob(
@@ -118,14 +154,15 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "Source/Common/**/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Source/Common/**/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "IGListKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "IGListKit",
     [
@@ -134,7 +171,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/IGListKit/"
+    "IGListKit_module_map"
   ],
   sdk_frameworks = select(
     {
@@ -165,7 +202,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/IGListKit/pod_support/Headers/Public/IGListKit/",
+    "-iquote",
+    "external/IGListKit/pod_support/Headers/Public/IGListKit/"
+  ] + [
+    "-fmodule-name=IGListKit_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -176,9 +219,31 @@ acknowledged_target(
 
   ]
   )
+filegroup(
+  name = "IGListKit_Default_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Source/**/*.h"
+        ],
+        exclude_directories = 1
+        ),
+      ":tvosCase": glob(
+        [
+          "Source/**/*.h"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "IGListKit_Default",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = select(
     {
       "//conditions:default": glob(
@@ -196,25 +261,25 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ),
-  hdrs = select(
+    ) + select(
     {
       "//conditions:default": glob(
         [
-          "Source/**/*.h",
-          "pod_support/Headers/Public/**/*.h"
+          "Source/**/*.h"
         ],
         exclude_directories = 1
         ),
       ":tvosCase": glob(
         [
-          "Source/**/*.h",
-          "pod_support/Headers/Public/**/*.h"
+          "Source/**/*.h"
         ],
         exclude_directories = 1
         )
     }
     ),
+  hdrs = [
+    "IGListKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "IGListKit",
     [
@@ -223,7 +288,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/IGListKit/"
+    "IGListKit_module_map"
   ],
   sdk_frameworks = select(
     {
@@ -257,7 +322,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/IGListKit/pod_support/Headers/Public/IGListKit/",
+    "-iquote",
+    "external/IGListKit/pod_support/Headers/Public/IGListKit/"
+  ] + [
+    "-fmodule-name=IGListKit_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

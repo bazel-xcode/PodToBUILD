@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,15 +11,32 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
-objc_library(
-  name = "PINRemoteImage",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "PINRemoteImage_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "PINRemoteImage",
+  "PINRemoteImage_module_map",
+  "PINRemoteImage",
+  [
+    "PINRemoteImage_hdrs"
+  ]
+  )
+objc_library(
+  name = "PINRemoteImage",
+  enable_modules = 0,
+  hdrs = [
+    "PINRemoteImage_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
     [
@@ -27,7 +45,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINRemoteImage/"
+    "PINRemoteImage_module_map"
   ],
   deps = [
     ":PINRemoteImage_FLAnimatedImage",
@@ -45,7 +63,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
+    "-iquote",
+    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+  ] + [
+    "-fmodule-name=PINRemoteImage_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -57,9 +81,25 @@ acknowledged_target(
     ":PINRemoteImage_PINCache_acknowledgement"
   ]
   )
+filegroup(
+  name = "PINRemoteImage_Core_hdrs",
+  srcs = glob(
+    [
+      "Source/Classes/**/*.h"
+    ],
+    exclude = [
+      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
+      "Source/Classes/PINCache/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_Core",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "Source/Classes/**/*.m"
@@ -69,11 +109,9 @@ objc_library(
       "Source/Classes/PINCache/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "Source/Classes/**/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Source/Classes/**/*.h"
     ],
     exclude = [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
@@ -81,6 +119,9 @@ objc_library(
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "PINRemoteImage_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
     [
@@ -89,7 +130,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINRemoteImage/"
+    "PINRemoteImage_module_map"
   ],
   sdk_frameworks = [
     "ImageIO",
@@ -110,7 +151,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
+    "-iquote",
+    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+  ] + [
+    "-fmodule-name=PINRemoteImage_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -121,15 +168,21 @@ acknowledged_target(
     "@PINOperation//:PINOperation_acknowledgement"
   ]
   )
+filegroup(
+  name = "PINRemoteImage_iOS_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_iOS",
-  enable_modules = 1,
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  enable_modules = 0,
+  hdrs = [
+    "PINRemoteImage_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
     [
@@ -138,7 +191,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINRemoteImage/"
+    "PINRemoteImage_module_map"
   ],
   sdk_frameworks = [
     "UIKit"
@@ -158,7 +211,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
+    "-iquote",
+    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+  ] + [
+    "-fmodule-name=PINRemoteImage_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -169,15 +228,21 @@ acknowledged_target(
     ":PINRemoteImage_Core_acknowledgement"
   ]
   )
+filegroup(
+  name = "PINRemoteImage_OSX_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_OSX",
-  enable_modules = 1,
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  enable_modules = 0,
+  hdrs = [
+    "PINRemoteImage_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
     [
@@ -186,7 +251,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINRemoteImage/"
+    "PINRemoteImage_module_map"
   ],
   sdk_frameworks = [
     "Cocoa",
@@ -207,7 +272,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
+    "-iquote",
+    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+  ] + [
+    "-fmodule-name=PINRemoteImage_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -218,15 +289,21 @@ acknowledged_target(
     ":PINRemoteImage_Core_acknowledgement"
   ]
   )
+filegroup(
+  name = "PINRemoteImage_tvOS_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_tvOS",
-  enable_modules = 1,
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  enable_modules = 0,
+  hdrs = [
+    "PINRemoteImage_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
     [
@@ -235,7 +312,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINRemoteImage/"
+    "PINRemoteImage_module_map"
   ],
   deps = [
     ":PINRemoteImage_iOS"
@@ -252,7 +329,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
+    "-iquote",
+    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+  ] + [
+    "-fmodule-name=PINRemoteImage_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -263,22 +346,35 @@ acknowledged_target(
     ":PINRemoteImage_iOS_acknowledgement"
   ]
   )
+filegroup(
+  name = "PINRemoteImage_FLAnimatedImage_hdrs",
+  srcs = glob(
+    [
+      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_FLAnimatedImage",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "PINRemoteImage_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
     [
@@ -287,7 +383,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINRemoteImage/"
+    "PINRemoteImage_module_map"
   ],
   deps = [
     ":PINRemoteImage_Core",
@@ -305,7 +401,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
+    "-iquote",
+    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+  ] + [
+    "-fmodule-name=PINRemoteImage_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -317,15 +419,21 @@ acknowledged_target(
     "@FLAnimatedImage//:FLAnimatedImage_acknowledgement"
   ]
   )
+filegroup(
+  name = "PINRemoteImage_WebP_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_WebP",
-  enable_modules = 1,
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  enable_modules = 0,
+  hdrs = [
+    "PINRemoteImage_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
     [
@@ -334,7 +442,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINRemoteImage/"
+    "PINRemoteImage_module_map"
   ],
   deps = [
     ":PINRemoteImage_Core",
@@ -352,7 +460,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
+    "-iquote",
+    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+  ] + [
+    "-fmodule-name=PINRemoteImage_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -364,22 +478,35 @@ acknowledged_target(
     "@libwebp//:libwebp_acknowledgement"
   ]
   )
+filegroup(
+  name = "PINRemoteImage_PINCache_hdrs",
+  srcs = glob(
+    [
+      "Source/Classes/PINCache/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "PINRemoteImage_PINCache",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "Source/Classes/PINCache/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "Source/Classes/PINCache/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Source/Classes/PINCache/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "PINRemoteImage_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
     [
@@ -388,7 +515,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINRemoteImage/"
+    "PINRemoteImage_module_map"
   ],
   deps = [
     "@PINCache//:PINCache",
@@ -406,7 +533,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
+    "-iquote",
+    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+  ] + [
+    "-fmodule-name=PINRemoteImage_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

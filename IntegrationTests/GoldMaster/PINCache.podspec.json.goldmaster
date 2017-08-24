@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -22,15 +23,32 @@ config_setting(
     "cpu": "powerpc2"
   }
   )
-objc_library(
-  name = "PINCache",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "PINCache_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "PINCache",
+  "PINCache_module_map",
+  "PINCache",
+  [
+    "PINCache_hdrs"
+  ]
+  )
+objc_library(
+  name = "PINCache",
+  enable_modules = 0,
+  hdrs = [
+    "PINCache_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINCache",
     [
@@ -39,7 +57,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINCache/"
+    "PINCache_module_map"
   ],
   sdk_frameworks = [
     "Foundation"
@@ -70,7 +88,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINCache/pod_support/Headers/Public/PINCache/",
+    "-iquote",
+    "external/PINCache/pod_support/Headers/Public/PINCache/"
+  ] + [
+    "-fmodule-name=PINCache_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -82,9 +106,21 @@ acknowledged_target(
     ":PINCache_Arc_exception_safe_acknowledgement"
   ]
   )
+filegroup(
+  name = "PINCache_Core_hdrs",
+  srcs = glob(
+    [
+      "Source/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "PINCache_Core",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "Source/*.m"
@@ -93,14 +129,15 @@ objc_library(
       "Source/PINDiskCache.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "Source/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Source/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "PINCache_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINCache",
     [
@@ -109,7 +146,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINCache/"
+    "PINCache_module_map"
   ],
   sdk_frameworks = [
     "Foundation"
@@ -139,7 +176,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINCache/pod_support/Headers/Public/PINCache/",
+    "-iquote",
+    "external/PINCache/pod_support/Headers/Public/PINCache/"
+  ] + [
+    "-fmodule-name=PINCache_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -150,21 +193,29 @@ acknowledged_target(
     "@PINOperation//:PINOperation_acknowledgement"
   ]
   )
+filegroup(
+  name = "PINCache_Arc_exception_safe_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "PINCache_Arc_exception_safe",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "Source/PINDiskCache.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+    ) + [
+
+  ],
+  hdrs = [
+    "PINCache_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINCache",
     [
@@ -173,7 +224,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINCache/"
+    "PINCache_module_map"
   ],
   sdk_frameworks = [
     "Foundation"
@@ -203,7 +254,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINCache/pod_support/Headers/Public/PINCache/",
+    "-iquote",
+    "external/PINCache/pod_support/Headers/Public/PINCache/"
+  ] + [
+    "-fmodule-name=PINCache_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

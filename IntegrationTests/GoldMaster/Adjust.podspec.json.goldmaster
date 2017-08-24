@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -22,15 +23,32 @@ config_setting(
     "cpu": "powerpc3"
   }
   )
-objc_library(
-  name = "Adjust",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "Adjust_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "Adjust",
+  "Adjust_module_map",
+  "Adjust",
+  [
+    "Adjust_hdrs"
+  ]
+  )
+objc_library(
+  name = "Adjust",
+  enable_modules = 0,
+  hdrs = [
+    "Adjust_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Adjust",
     [
@@ -39,7 +57,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Adjust/"
+    "Adjust_module_map"
   ],
   sdk_frameworks = [
     "SystemConfiguration"
@@ -70,7 +88,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
+    "-iquote",
+    "external/Adjust/pod_support/Headers/Public/Adjust/"
+  ] + [
+    "-fmodule-name=Adjust_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -81,9 +105,22 @@ acknowledged_target(
     ":Adjust_Core_acknowledgement"
   ]
   )
+filegroup(
+  name = "Adjust_Core_hdrs",
+  srcs = glob(
+    [
+      "Adjust/*.h",
+      "Adjust/ADJAdditions/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "Adjust_Core",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "Adjust/*.m",
@@ -95,15 +132,16 @@ objc_library(
       "plugin/Trademob/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
       "Adjust/*.h",
-      "Adjust/ADJAdditions/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Adjust/ADJAdditions/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "Adjust_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Adjust",
     [
@@ -112,7 +150,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Adjust/"
+    "Adjust_module_map"
   ],
   sdk_frameworks = [
     "SystemConfiguration"
@@ -140,7 +178,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
+    "-iquote",
+    "external/Adjust/pod_support/Headers/Public/Adjust/"
+  ] + [
+    "-fmodule-name=Adjust_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -151,22 +195,35 @@ acknowledged_target(
 
   ]
   )
+filegroup(
+  name = "Adjust_Sociomantic_hdrs",
+  srcs = glob(
+    [
+      "plugin/Sociomantic/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "Adjust_Sociomantic",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "plugin/Sociomantic/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "plugin/Sociomantic/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "plugin/Sociomantic/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "Adjust_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Adjust",
     [
@@ -175,7 +232,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Adjust/"
+    "Adjust_module_map"
   ],
   sdk_frameworks = [
     "SystemConfiguration"
@@ -206,7 +263,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
+    "-iquote",
+    "external/Adjust/pod_support/Headers/Public/Adjust/"
+  ] + [
+    "-fmodule-name=Adjust_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -217,22 +280,35 @@ acknowledged_target(
     ":Adjust_Core_acknowledgement"
   ]
   )
+filegroup(
+  name = "Adjust_Criteo_hdrs",
+  srcs = glob(
+    [
+      "plugin/Criteo/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "Adjust_Criteo",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "plugin/Criteo/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "plugin/Criteo/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "plugin/Criteo/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "Adjust_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Adjust",
     [
@@ -241,7 +317,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Adjust/"
+    "Adjust_module_map"
   ],
   sdk_frameworks = [
     "SystemConfiguration"
@@ -272,7 +348,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
+    "-iquote",
+    "external/Adjust/pod_support/Headers/Public/Adjust/"
+  ] + [
+    "-fmodule-name=Adjust_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -283,22 +365,35 @@ acknowledged_target(
     ":Adjust_Core_acknowledgement"
   ]
   )
+filegroup(
+  name = "Adjust_Trademob_hdrs",
+  srcs = glob(
+    [
+      "plugin/Trademob/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "Adjust_Trademob",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "plugin/Trademob/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "plugin/Trademob/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "plugin/Trademob/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "Adjust_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Adjust",
     [
@@ -307,7 +402,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Adjust/"
+    "Adjust_module_map"
   ],
   sdk_frameworks = [
     "SystemConfiguration"
@@ -338,7 +433,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
+    "-iquote",
+    "external/Adjust/pod_support/Headers/Public/Adjust/"
+  ] + [
+    "-fmodule-name=Adjust_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

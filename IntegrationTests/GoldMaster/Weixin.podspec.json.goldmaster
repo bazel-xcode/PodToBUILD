@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,16 +11,32 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
-objc_library(
-  name = "Weixin",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "Weixin_hdrs",
+  srcs = glob(
     [
-      "SDK1.6.2/*.h",
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "Weixin",
+  "Weixin_module_map",
+  "Weixin",
+  [
+    "Weixin_hdrs"
+  ]
+  )
+objc_library(
+  name = "Weixin",
+  enable_modules = 0,
+  hdrs = [
+    "Weixin_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Weixin",
     [
@@ -28,7 +45,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Weixin/"
+    "Weixin_module_map"
   ],
   sdk_frameworks = [
     "CoreTelephony",
@@ -54,7 +71,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Weixin/pod_support/Headers/Public/Weixin/",
+    "-iquote",
+    "external/Weixin/pod_support/Headers/Public/Weixin/"
+  ] + [
+    "-fmodule-name=Weixin_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,18 +11,32 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
-objc_library(
-  name = "SevenSwitch",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "SevenSwitch_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
-    exclude = [
-      "Classes/Exclude/**/*.h"
-    ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "SevenSwitch",
+  "SevenSwitch_module_map",
+  "SevenSwitch",
+  [
+    "SevenSwitch_hdrs"
+  ]
+  )
+objc_library(
+  name = "SevenSwitch",
+  enable_modules = 0,
+  hdrs = [
+    "SevenSwitch_hdrs"
+  ],
   pch = pch_with_name_hint(
     "SevenSwitch",
     [
@@ -30,7 +45,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/SevenSwitch/"
+    "SevenSwitch_module_map"
   ],
   sdk_frameworks = [
     "UIKit",
@@ -48,7 +63,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/SevenSwitch/pod_support/Headers/Public/SevenSwitch/",
+    "-iquote",
+    "external/SevenSwitch/pod_support/Headers/Public/SevenSwitch/"
+  ] + [
+    "-fmodule-name=SevenSwitch_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

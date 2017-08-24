@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,9 +11,29 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+filegroup(
+  name = "UICollectionViewLeftAlignedLayout_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "UICollectionViewLeftAlignedLayout",
+  "UICollectionViewLeftAlignedLayout_module_map",
+  "UICollectionViewLeftAlignedLayout",
+  [
+    "UICollectionViewLeftAlignedLayout_hdrs"
+  ]
+  )
 objc_library(
   name = "UICollectionViewLeftAlignedLayout",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "UICollectionViewLeftAlignedLayout/**/*.c",
@@ -21,14 +42,15 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.mm"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "UICollectionViewLeftAlignedLayout/**/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "UICollectionViewLeftAlignedLayout/**/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "UICollectionViewLeftAlignedLayout_hdrs"
+  ],
   pch = pch_with_name_hint(
     "UICollectionViewLeftAlignedLayout",
     [
@@ -37,7 +59,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/"
+    "UICollectionViewLeftAlignedLayout_module_map"
   ],
   copts = [
 
@@ -51,7 +73,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/",
+    "-iquote",
+    "external/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/"
+  ] + [
+    "-fmodule-name=UICollectionViewLeftAlignedLayout_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

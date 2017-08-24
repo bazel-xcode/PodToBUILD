@@ -109,3 +109,66 @@ def pch_with_name_hint(hint, sources):
     # This is a hack because, the recursive glob may find some
     # arbitrary PCH.
     return None
+
+
+def _make_module_map(pod_name, module_name, hdr_providers):
+    # Up some dirs to the compilation root
+    # bazel-out/ios_x86_64-fastbuild/genfiles/external/__Pod__
+    relative_path = "../../../../../../"
+
+    template = "module " + module_name + " {\n"
+    template += "    export * \n"
+    for provider in hdr_providers:
+        for input_file in provider.files:
+            hdr = input_file
+            template += "    header \"%s%s\"\n" % (relative_path, hdr.path)
+    template += "}\n"
+    return template
+
+def _make_module_map_impl(ctx):
+  # We figure out how to build
+  out = _make_module_map(ctx.attr.pod_name, ctx.attr.module_name, ctx.attr.hdrs)
+  ctx.file_action(
+      content=out,
+      output=ctx.outputs.module_map
+  )
+  objc_provider = apple_common.new_objc_provider(
+      module_map=depset([ctx.outputs.module_map])
+  )
+  return struct(
+     files=depset([ctx.outputs.module_map]),
+     providers=[objc_provider],
+     objc=objc_provider,
+     headers=depset([ctx.outputs.module_map]),
+  )
+
+_gen_module_map = rule(
+    implementation=_make_module_map_impl,
+    output_to_genfiles=True,
+    attrs = {
+        "pod_name": attr.string(mandatory=True),
+        "hdrs": attr.label_list(mandatory=True),
+        "module_name": attr.string(mandatory=True),
+        "dir_name": attr.string(mandatory=True),
+        "module_map_name": attr.string(mandatory=True),
+    },
+    outputs = { "module_map": "%{dir_name}/%{module_map_name}" }
+)
+
+def gen_module_map(pod_name,
+                   dir_name,
+                   module_name,
+                   dep_hdrs=[],
+                   module_map_name="module.modulemap"):
+    """
+    Generate a module map based on a list of header file groups
+    """
+    # TODO:Modules change the name to dir_name -> pod_name
+    _gen_module_map(name = dir_name + "_module_map_file",
+                    pod_name=pod_name,
+                    dir_name=dir_name,
+                    module_name=module_name,
+                    hdrs=dep_hdrs,
+                    module_map_name=module_map_name,                    
+                    visibility = ["//visibility:public"])
+

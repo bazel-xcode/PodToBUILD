@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,15 +11,32 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
-objc_library(
-  name = "AsyncDisplayKit",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "AsyncDisplayKit_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "AsyncDisplayKit",
+  "AsyncDisplayKit_module_map",
+  "AsyncDisplayKit",
+  [
+    "AsyncDisplayKit_hdrs"
+  ]
+  )
+objc_library(
+  name = "AsyncDisplayKit",
+  enable_modules = 0,
+  hdrs = [
+    "AsyncDisplayKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",
     [
@@ -27,7 +45,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/AsyncDisplayKit/"
+    "AsyncDisplayKit_module_map"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -53,7 +71,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-iquote",
+    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+  ] + [
+    "-fmodule-name=AsyncDisplayKit_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -64,9 +88,23 @@ acknowledged_target(
     ":AsyncDisplayKit_PINRemoteImage_acknowledgement"
   ]
   )
+filegroup(
+  name = "AsyncDisplayKit_Core_hdrs",
+  srcs = glob(
+    [
+      "AsyncDisplayKit/**/*.h",
+      "AsyncDisplayKit/TextKit/*.h",
+      "Base/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "AsyncDisplayKit_Core",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "AsyncDisplayKit/**/*.m",
@@ -74,16 +112,17 @@ objc_library(
       "Base/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
       "AsyncDisplayKit/**/*.h",
       "AsyncDisplayKit/TextKit/*.h",
-      "Base/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Base/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "AsyncDisplayKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",
     [
@@ -93,7 +132,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/AsyncDisplayKit/"
+    "AsyncDisplayKit_module_map"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -117,7 +156,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-iquote",
+    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+  ] + [
+    "-fmodule-name=AsyncDisplayKit_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -128,15 +173,21 @@ acknowledged_target(
 
   ]
   )
+filegroup(
+  name = "AsyncDisplayKit_PINRemoteImage_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "AsyncDisplayKit_PINRemoteImage",
-  enable_modules = 1,
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  enable_modules = 0,
+  hdrs = [
+    "AsyncDisplayKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",
     [
@@ -145,7 +196,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/AsyncDisplayKit/"
+    "AsyncDisplayKit_module_map"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -174,7 +225,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-iquote",
+    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+  ] + [
+    "-fmodule-name=AsyncDisplayKit_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -187,15 +244,21 @@ acknowledged_target(
     ":AsyncDisplayKit_Core_acknowledgement"
   ]
   )
+filegroup(
+  name = "AsyncDisplayKit_IGListKit_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "AsyncDisplayKit_IGListKit",
-  enable_modules = 1,
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  enable_modules = 0,
+  hdrs = [
+    "AsyncDisplayKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",
     [
@@ -204,7 +267,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/AsyncDisplayKit/"
+    "AsyncDisplayKit_module_map"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -232,7 +295,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-iquote",
+    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+  ] + [
+    "-fmodule-name=AsyncDisplayKit_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -244,15 +313,21 @@ acknowledged_target(
     ":AsyncDisplayKit_Core_acknowledgement"
   ]
   )
+filegroup(
+  name = "AsyncDisplayKit_Yoga_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "AsyncDisplayKit_Yoga",
-  enable_modules = 1,
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  enable_modules = 0,
+  hdrs = [
+    "AsyncDisplayKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",
     [
@@ -261,7 +336,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/AsyncDisplayKit/"
+    "AsyncDisplayKit_module_map"
   ],
   weak_sdk_frameworks = [
     "Photos",
@@ -289,7 +364,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-iquote",
+    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+  ] + [
+    "-fmodule-name=AsyncDisplayKit_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

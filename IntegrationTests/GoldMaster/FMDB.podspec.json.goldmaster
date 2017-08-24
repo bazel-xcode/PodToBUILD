@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,15 +11,32 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
-objc_library(
-  name = "FMDB",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "FMDB_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "FMDB",
+  "FMDB_module_map",
+  "FMDB",
+  [
+    "FMDB_hdrs"
+  ]
+  )
+objc_library(
+  name = "FMDB",
+  enable_modules = 0,
+  hdrs = [
+    "FMDB_hdrs"
+  ],
   pch = pch_with_name_hint(
     "FMDB",
     [
@@ -27,7 +45,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/FMDB/"
+    "FMDB_module_map"
   ],
   deps = [
     ":FMDB_standard"
@@ -44,7 +62,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
+    "-iquote",
+    "external/FMDB/pod_support/Headers/Public/FMDB/"
+  ] + [
+    "-fmodule-name=FMDB_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -55,9 +79,21 @@ acknowledged_target(
     ":FMDB_standard_acknowledgement"
   ]
   )
+filegroup(
+  name = "FMDB_standard_hdrs",
+  srcs = glob(
+    [
+      "src/fmdb/FM*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "FMDB_standard",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "src/fmdb/FM*.m"
@@ -67,14 +103,15 @@ objc_library(
       "src/fmdb.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "pod_support/Headers/Public/**/*.h",
       "src/fmdb/FM*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "FMDB_hdrs"
+  ],
   pch = pch_with_name_hint(
     "FMDB",
     [
@@ -83,7 +120,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/FMDB/"
+    "FMDB_module_map"
   ],
   sdk_dylibs = [
     "sqlite3"
@@ -100,7 +137,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
+    "-iquote",
+    "external/FMDB/pod_support/Headers/Public/FMDB/"
+  ] + [
+    "-fmodule-name=FMDB_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -111,22 +154,35 @@ acknowledged_target(
 
   ]
   )
+filegroup(
+  name = "FMDB_FTS_hdrs",
+  srcs = glob(
+    [
+      "src/extra/fts3/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "FMDB_FTS",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "src/extra/fts3/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "pod_support/Headers/Public/**/*.h",
       "src/extra/fts3/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "FMDB_hdrs"
+  ],
   pch = pch_with_name_hint(
     "FMDB",
     [
@@ -135,7 +191,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/FMDB/"
+    "FMDB_module_map"
   ],
   deps = [
     ":FMDB_standard"
@@ -152,7 +208,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
+    "-iquote",
+    "external/FMDB/pod_support/Headers/Public/FMDB/"
+  ] + [
+    "-fmodule-name=FMDB_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -163,15 +225,21 @@ acknowledged_target(
     ":FMDB_standard_acknowledgement"
   ]
   )
+filegroup(
+  name = "FMDB_standalone_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "FMDB_standalone",
-  enable_modules = 1,
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  enable_modules = 0,
+  hdrs = [
+    "FMDB_hdrs"
+  ],
   pch = pch_with_name_hint(
     "FMDB",
     [
@@ -180,7 +248,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/FMDB/"
+    "FMDB_module_map"
   ],
   copts = [
     "-DFMDB_SQLITE_STANDALONE"
@@ -194,7 +262,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
+    "-iquote",
+    "external/FMDB/pod_support/Headers/Public/FMDB/"
+  ] + [
+    "-fmodule-name=FMDB_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -205,9 +279,21 @@ acknowledged_target(
 
   ]
   )
+filegroup(
+  name = "FMDB_SQLCipher_hdrs",
+  srcs = glob(
+    [
+      "src/fmdb/FM*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "FMDB_SQLCipher",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "src/fmdb/FM*.m"
@@ -216,14 +302,15 @@ objc_library(
       "src/fmdb.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "pod_support/Headers/Public/**/*.h",
       "src/fmdb/FM*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "FMDB_hdrs"
+  ],
   pch = pch_with_name_hint(
     "FMDB",
     [
@@ -232,7 +319,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/FMDB/"
+    "FMDB_module_map"
   ],
   deps = [
     "@SQLCipher//:SQLCipher"
@@ -250,7 +337,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
+    "-iquote",
+    "external/FMDB/pod_support/Headers/Public/FMDB/"
+  ] + [
+    "-fmodule-name=FMDB_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

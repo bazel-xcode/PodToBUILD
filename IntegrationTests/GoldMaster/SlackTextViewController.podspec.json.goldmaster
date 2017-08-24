@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,22 +11,43 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+filegroup(
+  name = "SlackTextViewController_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "SlackTextViewController",
+  "SlackTextViewController_module_map",
+  "SlackTextViewController",
+  [
+    "SlackTextViewController_hdrs"
+  ]
+  )
 objc_library(
   name = "SlackTextViewController",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "Source/**/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "Source/**/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Source/**/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "SlackTextViewController_hdrs"
+  ],
   pch = pch_with_name_hint(
     "SlackTextViewController",
     [
@@ -34,7 +56,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/SlackTextViewController/"
+    "SlackTextViewController_module_map"
   ],
   copts = [
 
@@ -48,7 +70,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/SlackTextViewController/pod_support/Headers/Public/SlackTextViewController/",
+    "-iquote",
+    "external/SlackTextViewController/pod_support/Headers/Public/SlackTextViewController/"
+  ] + [
+    "-fmodule-name=SlackTextViewController_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

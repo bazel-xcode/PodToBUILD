@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,13 +11,38 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+filegroup(
+  name = "SFHFKeychainUtils_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "SFHFKeychainUtils",
+  "SFHFKeychainUtils_module_map",
+  "SFHFKeychainUtils",
+  [
+    "SFHFKeychainUtils_hdrs"
+  ]
+  )
 objc_library(
   name = "SFHFKeychainUtils",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "security/**/*.c",
       "security/**/*.cpp"
+    ],
+    exclude_directories = 1
+    ) + glob(
+    [
+      "security/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -27,13 +53,9 @@ objc_library(
     ],
     exclude_directories = 1
     ),
-  hdrs = glob(
-    [
-      "pod_support/Headers/Public/**/*.h",
-      "security/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  hdrs = [
+    "SFHFKeychainUtils_hdrs"
+  ],
   pch = pch_with_name_hint(
     "SFHFKeychainUtils",
     [
@@ -42,7 +64,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/SFHFKeychainUtils/"
+    "SFHFKeychainUtils_module_map"
   ],
   sdk_frameworks = [
     "Security"
@@ -59,7 +81,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/SFHFKeychainUtils/pod_support/Headers/Public/SFHFKeychainUtils/",
+    "-iquote",
+    "external/SFHFKeychainUtils/pod_support/Headers/Public/SFHFKeychainUtils/"
+  ] + [
+    "-fmodule-name=SFHFKeychainUtils_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

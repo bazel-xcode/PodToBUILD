@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -22,9 +23,29 @@ config_setting(
     "cpu": "powerpc3"
   }
   )
+filegroup(
+  name = "FBSDKShareKit_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "FBSDKShareKit",
+  "FBSDKShareKit_module_map",
+  "FBSDKShareKit",
+  [
+    "FBSDKShareKit_hdrs"
+  ]
+  )
 objc_library(
   name = "FBSDKShareKit",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = select(
     {
       "//conditions:default": glob(
@@ -61,13 +82,11 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ),
-  hdrs = select(
+    ) + select(
     {
       "//conditions:default": glob(
         [
-          "FBSDKShareKit/FBSDKShareKit/**/*.h",
-          "pod_support/Headers/Public/**/*.h"
+          "FBSDKShareKit/FBSDKShareKit/**/*.h"
         ],
         exclude = [
           "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
@@ -100,13 +119,15 @@ objc_library(
           "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareLinkContent+Internal.h",
           "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareOpenGraphValueContainer+Internal.h",
           "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareUtility.h",
-          "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.h",
-          "pod_support/Headers/Public/**/*.h"
+          "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.h"
         ],
         exclude_directories = 1
         )
     }
     ),
+  hdrs = [
+    "FBSDKShareKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "FBSDKShareKit",
     [
@@ -115,7 +136,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/FBSDKShareKit/"
+    "FBSDKShareKit_module_map"
   ],
   weak_sdk_frameworks = select(
     {
@@ -156,7 +177,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/FBSDKShareKit/pod_support/Headers/Public/FBSDKShareKit/",
+    "-iquote",
+    "external/FBSDKShareKit/pod_support/Headers/Public/FBSDKShareKit/"
+  ] + [
+    "-fmodule-name=FBSDKShareKit_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

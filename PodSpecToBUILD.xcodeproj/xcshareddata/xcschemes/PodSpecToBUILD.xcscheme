@@ -61,6 +61,12 @@
             ReferencedContainer = "container:PodSpecToBUILD.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "/Users/jerry/Projects/bazel-pod-playground/tools/PodSpecToBUILD/Examples/PINRemoteImage.podspec.json"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

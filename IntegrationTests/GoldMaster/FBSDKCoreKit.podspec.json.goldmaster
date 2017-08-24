@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -22,9 +23,29 @@ config_setting(
     "cpu": "powerpc3"
   }
   )
+filegroup(
+  name = "FBSDKCoreKit_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "FBSDKCoreKit",
+  "FBSDKCoreKit_module_map",
+  "FBSDKCoreKit",
+  [
+    "FBSDKCoreKit_hdrs"
+  ]
+  )
 objc_library(
   name = "FBSDKCoreKit",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = select(
     {
       "//conditions:default": glob(
@@ -61,6 +82,42 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.m"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ) + select(
+    {
+      "//conditions:default": glob(
+        [
+          "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+        ],
+        exclude = [
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h"
+        ],
+        exclude_directories = 1
+        ),
+      ":tvosCase": glob(
+        [
+          "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+        ],
+        exclude = [
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.h",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.h",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.h",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h"
         ],
         exclude_directories = 1
         )
@@ -109,45 +166,9 @@ objc_library(
         )
     }
     ),
-  hdrs = select(
-    {
-      "//conditions:default": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
-          "pod_support/Headers/Public/**/*.h"
-        ],
-        exclude = [
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h"
-        ],
-        exclude_directories = 1
-        ),
-      ":tvosCase": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
-          "pod_support/Headers/Public/**/*.h"
-        ],
-        exclude = [
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h"
-        ],
-        exclude_directories = 1
-        )
-    }
-    ),
+  hdrs = [
+    "FBSDKCoreKit_hdrs"
+  ],
   pch = pch_with_name_hint(
     "FBSDKCoreKit",
     [
@@ -156,7 +177,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/FBSDKCoreKit/"
+    "FBSDKCoreKit_module_map"
   ],
   weak_sdk_frameworks = select(
     {
@@ -203,7 +224,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/",
+    "-iquote",
+    "external/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/"
+  ] + [
+    "-fmodule-name=FBSDKCoreKit_pod_module"
+  ],
   bundles = [
     ":FBSDKCoreKit_Bundle_FacebookSDKStrings"
   ],

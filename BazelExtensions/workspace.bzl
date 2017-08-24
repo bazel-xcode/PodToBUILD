@@ -14,6 +14,7 @@ def _exec(repository_ctx, transformed_command):
 
 
 global_copts = [
+    '-Wnon-modular-include-in-framework-module',
     "-g",
     "-stdlib=libc++",
     "-DCOCOAPODS=1",
@@ -24,13 +25,12 @@ global_copts = [
     "-fmessage-length=0",
     "-fpascal-strings",
     "-fstrict-aliasing",
-    "-fmodules",
+    "-Wno-error=nonportable-include-path"
 ]
 
 inhibit_warnings_global_copts = [
     "-Wno-everything",
 ]
-
 
 def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
     fetch_cmd = [
@@ -70,6 +70,10 @@ def _link_local_repo(repository_ctx, target_name, url):
         ]
         _exec(repository_ctx, link_cmd)
 
+def _cli_bool(b):
+    if b:
+        return "true"
+    return "false"
 
 def _impl(repository_ctx):
     if repository_ctx.attr.trace:
@@ -115,16 +119,27 @@ def _impl(repository_ctx):
             for user_option in repository_ctx.attr.user_options:
                 transformed_command.append("--user_option")
                 transformed_command.append(user_option)
-            for global_copt in global_copts:
-                transformed_command.append("--global_copt")
-                transformed_command.append(global_copt)
+
             if inhibit_warnings:
                 for global_copt in inhibit_warnings_global_copts:
                     transformed_command.append("--global_copt")
                     transformed_command.append(global_copt)
-            if repository_ctx.attr.trace:
-                transformed_command.append("--trace")
-                transformed_command.append("true")
+
+            for global_copt in global_copts:
+                transformed_command.append("--global_copt")
+                transformed_command.append(global_copt)
+
+            transformed_command.extend([
+                "--trace",
+                _cli_bool(repository_ctx.attr.trace),
+                "--enable_modules",
+                _cli_bool(repository_ctx.attr.enable_modules),
+                "--header_visibility",
+                repository_ctx.attr.header_visibility,
+                "--generate_module_map",
+                _cli_bool(repository_ctx.attr.generate_module_map)
+            ])
+
         _exec(repository_ctx, transformed_command)
         idx = idx + 1
     build_file_content = repository_ctx.attr.build_file_content
@@ -146,7 +161,10 @@ pod_repo_ = repository_rule(
         "repo_tool_dict": attr.string_dict(),
         "command_dict": attr.string_list_dict(),
         "inhibit_warnings": attr.bool(default=False, mandatory=True),
-        "trace": attr.bool(default=False, mandatory=True)
+        "trace": attr.bool(default=False, mandatory=True),
+        "enable_modules": attr.bool(default=True, mandatory=True),
+        "generate_module_map": attr.bool(default=True, mandatory=True),
+        "header_visibility": attr.string(),
     }
 )
 
@@ -201,8 +219,14 @@ def new_pod_repository(name,
                        repo_tools={
                            "//tools/PodSpecToBUILD/bin:RepoTools": "RepoTool"},
                        inhibit_warnings=False,
-                       trace=False
+                       trace=False,
+                       enable_modules=True,
+                       generate_module_map=None,
+                       header_visibility="pod_support",
                        ):
+    if generate_module_map == None:
+        generate_module_map = enable_modules
+
     tool_labels = []
     for tool in repo_tools:
         tool_labels.append(tool)
@@ -217,5 +241,8 @@ def new_pod_repository(name,
         repo_tools_labels=tool_labels,
         repo_tool_dict=repo_tools,
         inhibit_warnings=inhibit_warnings,
-        trace=trace
+        trace=trace,
+        enable_modules=enable_modules,
+        generate_module_map=generate_module_map,
+        header_visibility=header_visibility
     )

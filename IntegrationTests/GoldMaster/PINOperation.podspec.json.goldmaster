@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,23 +11,44 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+filegroup(
+  name = "PINOperation_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "PINOperation",
+  "PINOperation_module_map",
+  "PINOperation",
+  [
+    "PINOperation_hdrs"
+  ]
+  )
 objc_library(
   name = "PINOperation",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "Source/**/*.m",
       "Source/**/*.mm"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "Source/**/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Source/**/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "PINOperation_hdrs"
+  ],
   pch = pch_with_name_hint(
     "PINOperation",
     [
@@ -35,7 +57,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/PINOperation/"
+    "PINOperation_module_map"
   ],
   sdk_frameworks = [
     "Foundation"
@@ -52,7 +74,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/PINOperation/pod_support/Headers/Public/PINOperation/",
+    "-iquote",
+    "external/PINOperation/pod_support/Headers/Public/PINOperation/"
+  ] + [
+    "-fmodule-name=PINOperation_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

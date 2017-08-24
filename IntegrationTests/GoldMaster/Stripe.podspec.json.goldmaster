@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -16,23 +17,44 @@ config_setting(
     "cpu": "powerpc1"
   }
   )
+filegroup(
+  name = "Stripe_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "Stripe",
+  "Stripe_module_map",
+  "Stripe",
+  [
+    "Stripe_hdrs"
+  ]
+  )
 objc_library(
   name = "Stripe",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "Stripe/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
       "Stripe/*.h",
-      "Stripe/PublicHeaders/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "Stripe/PublicHeaders/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "Stripe_hdrs"
+  ],
   pch = pch_with_name_hint(
     "Stripe",
     [
@@ -41,7 +63,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/Stripe/"
+    "Stripe_module_map"
   ],
   sdk_frameworks = [
     "Foundation",
@@ -65,7 +87,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/Stripe/pod_support/Headers/Public/Stripe/",
+    "-iquote",
+    "external/Stripe/pod_support/Headers/Public/Stripe/"
+  ] + [
+    "-fmodule-name=Stripe_pod_module"
+  ],
   bundles = select(
     {
       "//conditions:default": [

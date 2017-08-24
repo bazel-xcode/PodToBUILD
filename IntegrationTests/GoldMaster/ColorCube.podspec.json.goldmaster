@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,22 +11,43 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+filegroup(
+  name = "ColorCube_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "ColorCube",
+  "ColorCube_module_map",
+  "ColorCube",
+  [
+    "ColorCube_hdrs"
+  ]
+  )
 objc_library(
   name = "ColorCube",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "ColorCube/ColorCube/*.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "ColorCube/ColorCube/*.h",
-      "pod_support/Headers/Public/**/*.h"
+      "ColorCube/ColorCube/*.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "ColorCube_hdrs"
+  ],
   pch = pch_with_name_hint(
     "ColorCube",
     [
@@ -34,7 +56,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/ColorCube/"
+    "ColorCube_module_map"
   ],
   copts = [
 
@@ -48,7 +70,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/ColorCube/pod_support/Headers/Public/ColorCube/",
+    "-iquote",
+    "external/ColorCube/pod_support/Headers/Public/ColorCube/"
+  ] + [
+    "-fmodule-name=ColorCube_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,15 +11,32 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
-objc_library(
-  name = "googleapis",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "googleapis_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "googleapis",
+  "googleapis_module_map",
+  "googleapis",
+  [
+    "googleapis_hdrs"
+  ]
+  )
+objc_library(
+  name = "googleapis",
+  enable_modules = 0,
+  hdrs = [
+    "googleapis_hdrs"
+  ],
   pch = pch_with_name_hint(
     "googleapis",
     [
@@ -27,7 +45,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/googleapis/"
+    "googleapis_module_map"
   ],
   deps = [
     ":googleapis_Messages",
@@ -46,7 +64,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/googleapis/pod_support/Headers/Public/googleapis/",
+    "-iquote",
+    "external/googleapis/pod_support/Headers/Public/googleapis/"
+  ] + [
+    "-fmodule-name=googleapis_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -59,9 +83,21 @@ acknowledged_target(
     ":googleapis_Services_acknowledgement"
   ]
   )
+filegroup(
+  name = "googleapis_Messages_hdrs",
+  srcs = glob(
+    [
+      "google/**/*.pbobjc.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "googleapis_Messages",
-  enable_modules = 1,
+  enable_modules = 0,
   non_arc_srcs = glob(
     [
       "google/**/*.pbobjc.m"
@@ -71,13 +107,9 @@ objc_library(
     ],
     exclude_directories = 1
     ),
-  hdrs = glob(
-    [
-      "google/**/*.pbobjc.h",
-      "pod_support/Headers/Public/**/*.h"
-    ],
-    exclude_directories = 1
-    ),
+  hdrs = [
+    "googleapis_hdrs"
+  ],
   pch = pch_with_name_hint(
     "googleapis",
     [
@@ -86,7 +118,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/googleapis/"
+    "googleapis_module_map"
   ],
   deps = [
     "@Protobuf//:Protobuf"
@@ -103,7 +135,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/googleapis/pod_support/Headers/Public/googleapis/",
+    "-iquote",
+    "external/googleapis/pod_support/Headers/Public/googleapis/"
+  ] + [
+    "-fmodule-name=googleapis_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -114,22 +152,35 @@ acknowledged_target(
     "@Protobuf//:Protobuf_acknowledgement"
   ]
   )
+filegroup(
+  name = "googleapis_Services_hdrs",
+  srcs = glob(
+    [
+      "google/**/*.pbrpc.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "googleapis_Services",
-  enable_modules = 1,
+  enable_modules = 0,
   srcs = glob(
     [
       "google/**/*.pbrpc.m"
     ],
     exclude_directories = 1
-    ),
-  hdrs = glob(
+    ) + glob(
     [
-      "google/**/*.pbrpc.h",
-      "pod_support/Headers/Public/**/*.h"
+      "google/**/*.pbrpc.h"
     ],
     exclude_directories = 1
     ),
+  hdrs = [
+    "googleapis_hdrs"
+  ],
   pch = pch_with_name_hint(
     "googleapis",
     [
@@ -138,7 +189,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/googleapis/"
+    "googleapis_module_map"
   ],
   deps = [
     ":googleapis_Messages",
@@ -156,7 +207,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/googleapis/pod_support/Headers/Public/googleapis/",
+    "-iquote",
+    "external/googleapis/pod_support/Headers/Public/googleapis/"
+  ] + [
+    "-fmodule-name=googleapis_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

@@ -1,5 +1,6 @@
 load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
 load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
+load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -10,15 +11,32 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
-objc_library(
-  name = "GoogleAppUtilities",
-  enable_modules = 1,
-  hdrs = glob(
+filegroup(
+  name = "GoogleAppUtilities_hdrs",
+  srcs = glob(
     [
       "pod_support/Headers/Public/**/*.h"
     ],
     exclude_directories = 1
     ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "GoogleAppUtilities",
+  "GoogleAppUtilities_module_map",
+  "GoogleAppUtilities",
+  [
+    "GoogleAppUtilities_hdrs"
+  ]
+  )
+objc_library(
+  name = "GoogleAppUtilities",
+  enable_modules = 0,
+  hdrs = [
+    "GoogleAppUtilities_hdrs"
+  ],
   pch = pch_with_name_hint(
     "GoogleAppUtilities",
     [
@@ -27,7 +45,7 @@ objc_library(
     ),
   includes = [
     "pod_support/Headers/Public/",
-    "pod_support/Headers/Public/GoogleAppUtilities/"
+    "GoogleAppUtilities_module_map"
   ],
   deps = [
     ":GoogleAppUtilities_VendoredFrameworks",
@@ -45,7 +63,13 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ),
+    ) + [
+    "-Iexternal/GoogleAppUtilities/pod_support/Headers/Public/GoogleAppUtilities/",
+    "-iquote",
+    "external/GoogleAppUtilities/pod_support/Headers/Public/GoogleAppUtilities/"
+  ] + [
+    "-fmodule-name=GoogleAppUtilities_pod_module"
+  ],
   visibility = [
     "//visibility:public"
   ]

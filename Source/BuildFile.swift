@@ -12,6 +12,13 @@ public protocol BuildOptions {
     var userOptions: [String] { get }
     var globalCopts: [String] { get }
     var trace: Bool { get }
+
+    // Frontend options
+
+    var enableModules: Bool { get }
+    var generateModuleMap: Bool { get }
+	// pod_support, everything, none
+    var headerVisibility: String { get }
 }
 
 // Nullability is the root of all evil
@@ -20,7 +27,17 @@ public struct EmptyBuildOptions: BuildOptions {
     public let globalCopts = [String]()
     public let trace: Bool = false
 
+    public let enableModules: Bool = false
+    public let generateModuleMap: Bool = false
+    public let headerVisibility: String = ""
+
     static let shared = EmptyBuildOptions()
+}
+
+private var sharedBuildOptions: BuildOptions = EmptyBuildOptions.shared
+
+public func GetBuildOptions() -> BuildOptions {
+    return sharedBuildOptions
 }
 
 /// Config Setting Nodes
@@ -53,6 +70,7 @@ public func makePrefixNodes() -> SkylarkNode {
     return .lines([
         .skylark("load('//:" + PodSupportBuidableDir + "extensions.bzl', 'pch_with_name_hint')"),
         .skylark("load('//:" + PodSupportBuidableDir + "extensions.bzl', 'acknowledged_target')"),
+        .skylark("load('//:" + PodSupportBuidableDir + "extensions.bzl', 'gen_module_map')"),
         makeConfigSettingNodes(),
     ])
 }
@@ -110,6 +128,7 @@ public struct PodBuildFile: SkylarkConvertible {
     }
 
     public static func with(podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions()) -> PodBuildFile {
+        sharedBuildOptions = buildOptions
         let libs = PodBuildFile.makeConvertables(fromPodspec: podSpec, buildOptions: buildOptions)
         return PodBuildFile(skylarkConvertibles: libs)
     }
