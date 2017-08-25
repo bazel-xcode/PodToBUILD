@@ -14,12 +14,9 @@ def _exec(repository_ctx, transformed_command):
 
 
 global_copts = [
-    # Disable all warnings
-    "-Wno-everything",
     "-g",
     "-stdlib=libc++",
     "-DCOCOAPODS=1",
-    "-DNS_BLOCK_ASSERTIONS=1",
     "-DOBJC_OLD_DISPATCH_PROTOTYPES=0",
     "-fdiagnostics-show-note-include-stack",
     "-fno-common",
@@ -28,6 +25,10 @@ global_copts = [
     "-fpascal-strings",
     "-fstrict-aliasing",
     "-fmodules",
+]
+
+inhibit_warnings_global_copts = [
+    "-Wno-everything",
 ]
 
 
@@ -81,6 +82,7 @@ def _impl(repository_ctx):
     command_dict = repository_ctx.attr.command_dict
     tool_bin_by_name = {}
     repo_tool_dict = repository_ctx.attr.repo_tool_dict
+    inhibit_warnings = repository_ctx.attr.inhibit_warnings
 
     if command_dict and repo_tools_labels:
         for tool_label in repo_tools_labels:
@@ -116,6 +118,10 @@ def _impl(repository_ctx):
             for global_copt in global_copts:
                 transformed_command.append("--global_copt")
                 transformed_command.append(global_copt)
+            if inhibit_warnings:
+                for global_copt in inhibit_warnings_global_copts:
+                    transformed_command.append("--global_copt")
+                    transformed_command.append(global_copt)
             if repository_ctx.attr.trace:
                 transformed_command.append("--trace")
                 transformed_command.append("true")
@@ -139,6 +145,7 @@ pod_repo_ = repository_rule(
         "repo_tools_labels": attr.label_list(),
         "repo_tool_dict": attr.string_dict(),
         "command_dict": attr.string_list_dict(),
+        "inhibit_warnings": attr.bool(default=False, mandatory=True),
         "trace": attr.bool(default=False, mandatory=True)
     }
 )
@@ -193,6 +200,7 @@ def new_pod_repository(name,
                        cmds={"0": ["RepoTool"]},
                        repo_tools={
                            "//tools/PodSpecToBUILD/bin:RepoTools": "RepoTool"},
+                       inhibit_warnings=False,
                        trace=False
                        ):
     tool_labels = []
@@ -208,5 +216,6 @@ def new_pod_repository(name,
         command_dict=cmds,
         repo_tools_labels=tool_labels,
         repo_tool_dict=repo_tools,
+        inhibit_warnings=inhibit_warnings,
         trace=trace
     )

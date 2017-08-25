@@ -502,7 +502,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                                          .basic(
                                              [
                                                  ":release":
-                                                    ["-DPOD_CONFIGURATION_RELEASE=1"],
+                                                    ["-DPOD_CONFIGURATION_RELEASE=1", "-DNS_BLOCK_ASSERTIONS=1"],
                                                  "//conditions:default":
                                                     ["-DPOD_CONFIGURATION_RELEASE=0"]
                                              ].toSkylark()
