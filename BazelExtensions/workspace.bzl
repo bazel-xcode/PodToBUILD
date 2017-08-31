@@ -135,7 +135,7 @@ def _impl(repository_ctx):
 
 pod_repo_ = repository_rule(
     implementation=_impl,
-    local=True,
+    local=False,
     attrs={
         "target_name": attr.string(mandatory=True),
         "url": attr.string(mandatory=True),
