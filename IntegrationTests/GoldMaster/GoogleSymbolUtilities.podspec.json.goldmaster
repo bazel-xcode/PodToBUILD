@@ -35,7 +35,7 @@ objc_library(
   name = "GoogleSymbolUtilities",
   enable_modules = 0,
   hdrs = [
-    "GoogleSymbolUtilities_hdrs"
+    ":GoogleSymbolUtilities_hdrs"
   ],
   pch = pch_with_name_hint(
     "GoogleSymbolUtilities",

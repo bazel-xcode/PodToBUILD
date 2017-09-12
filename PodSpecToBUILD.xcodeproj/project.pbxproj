@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		094A504C1F687F99002FA188 /* ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094A504B1F687F99002FA188 /* ParserTests.swift */; };
+		09C570271F630C5B00E9EB4D /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C570261F630C5B00E9EB4D /* Parser.swift */; };
+		09C5702D1F630D1A00E9EB4D /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C570261F630C5B00E9EB4D /* Parser.swift */; };
+		09C5702E1F630D1C00E9EB4D /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C570261F630C5B00E9EB4D /* Parser.swift */; };
+		09C5702F1F630D1F00E9EB4D /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C570261F630C5B00E9EB4D /* Parser.swift */; };
+		09C570301F6313F300E9EB4D /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C570261F630C5B00E9EB4D /* Parser.swift */; };
 		09F194B61EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
 		09F194B71EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
 		09F194B81EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
@@ -217,6 +223,8 @@
 
 /* Begin PBXFileReference section */
 		0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagmasTests.swift; sourceTree = "<group>"; };
+		094A504B1F687F99002FA188 /* ParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParserTests.swift; sourceTree = "<group>"; };
+		09C570261F630C5B00E9EB4D /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Parser.swift; path = Source/Parser.swift; sourceTree = SOURCE_ROOT; };
 		09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SplitArcAndNoArcTransform.swift; path = Source/SplitArcAndNoArcTransform.swift; sourceTree = SOURCE_ROOT; };
 		09FD9B631EB3B70700272A01 /* Lens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Lens.swift; path = Source/Lens.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		09FD9B691EB3C01500272A01 /* MultiPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultiPlatform.swift; path = Source/MultiPlatform.swift; sourceTree = SOURCE_ROOT; };
@@ -378,6 +386,7 @@
 				C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */,
 				C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */,
 				C4C1BF911ECA807D00B42EB2 /* PodSpecToBUILD-Bridging-Header.h */,
+				09C570261F630C5B00E9EB4D /* Parser.swift */,
 			);
 			name = Source;
 			path = PodSpecToBUILD;
@@ -406,6 +415,7 @@
 				C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */,
 				C42E026F1EA150B0009B091A /* Info.plist */,
 				0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */,
+				094A504B1F687F99002FA188 /* ParserTests.swift */,
 			);
 			path = PodSpecToBUILDTests;
 			sourceTree = "<group>";
@@ -706,6 +716,7 @@
 				811187E61EB00D1800CB5BA2 /* ObjcLibrary.swift in Sources */,
 				81B7A9701ECF984300CB3168 /* CrashReporter.m in Sources */,
 				09FD9B741EB3C08000272A01 /* Magmas.swift in Sources */,
+				09C5702D1F630D1A00E9EB4D /* Parser.swift in Sources */,
 				C4C1BFB21ECA820200B42EB2 /* RepoActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -725,6 +736,7 @@
 				C4B8A3961EB2A58D00859B73 /* XCConfig.swift in Sources */,
 				C4C1BF981ECA807D00B42EB2 /* ShellContext.swift in Sources */,
 				C42E02791EA18AA4009B091A /* Workspace.swift in Sources */,
+				09C570271F630C5B00E9EB4D /* Parser.swift in Sources */,
 				C4B95C8C1EA18FF50033C7FA /* main.swift in Sources */,
 				C4893A591EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
 				09FD9B701EB3C08000272A01 /* Magmas.swift in Sources */,
@@ -746,6 +758,7 @@
 				C4893A621EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
 				C4E5BCAA1EAA8A9B00954EB8 /* TestUtils.swift in Sources */,
 				C4C1BF9A1ECA80C900B42EB2 /* PodStoreTests.swift in Sources */,
+				094A504C1F687F99002FA188 /* ParserTests.swift in Sources */,
 				09FD9B6B1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
 				C41448E51EBAA6D500C5DDF6 /* MagmasTests.swift in Sources */,
 				C4B95C8E1EA1B04E0033C7FA /* BuildFileTests.swift in Sources */,
@@ -760,6 +773,7 @@
 				C4B8A3971EB2A58D00859B73 /* XCConfig.swift in Sources */,
 				C40AD5531EF84F2D00BCFD99 /* AcknowledgementEntry.swift in Sources */,
 				C42E026E1EA150B0009B091A /* SkylarkTests.swift in Sources */,
+				09C570301F6313F300E9EB4D /* Parser.swift in Sources */,
 				C4893A6D1EB914AD00A44D1F /* BasicBuildOptionsTest.swift in Sources */,
 				C4893A5A1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
 				09F194B71EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
@@ -790,6 +804,7 @@
 				C4E5BC9A1EAA7AD700954EB8 /* main.swift in Sources */,
 				C4C1BFAB1ECA811D00B42EB2 /* ShellContext.swift in Sources */,
 				C4E5BCA31EAA7B5C00954EB8 /* ObjcLibrary.swift in Sources */,
+				09C5702F1F630D1F00E9EB4D /* Parser.swift in Sources */,
 				C4893A5C1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
 				09FD9B731EB3C08000272A01 /* Magmas.swift in Sources */,
 				09FD9B671EB3B70700272A01 /* Lens.swift in Sources */,
@@ -826,6 +841,7 @@
 				C4B8A3981EB2A58D00859B73 /* XCConfig.swift in Sources */,
 				C4E5BC831EA8564200954EB8 /* ObjcLibrary.swift in Sources */,
 				C4C1BFAC1ECA811E00B42EB2 /* ShellContext.swift in Sources */,
+				09C5702E1F630D1C00E9EB4D /* Parser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -939,6 +955,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -980,6 +997,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

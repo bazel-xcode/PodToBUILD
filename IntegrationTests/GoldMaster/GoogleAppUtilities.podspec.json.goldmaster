@@ -35,7 +35,7 @@ objc_library(
   name = "GoogleAppUtilities",
   enable_modules = 0,
   hdrs = [
-    "GoogleAppUtilities_hdrs"
+    ":GoogleAppUtilities_hdrs"
   ],
   pch = pch_with_name_hint(
     "GoogleAppUtilities",

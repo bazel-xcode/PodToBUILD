@@ -244,7 +244,7 @@ enum RepoActions {
             JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
             let JSONPodspec = JSONFile as? JSONDict
         else {
-            fatalError("Invalid JSON Podspec")
+            fatalError("Invalid JSON Podspec: (look inside \(FileManager.default.currentDirectoryPath))")
         }
 
         guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
@@ -274,10 +274,35 @@ enum RepoActions {
             return customHeaderSearchPaths
         }
 
-        let customHeaderSearchPaths = Set([podSpec.name]).union(searchPaths(ComposedSpec.composed(child: podSpec, parent: nil)))
+        // Get the xcconfigHeaderSearchPaths
+        let podSpecs: [PodSpec] = podSpec.subspecs + [podSpec]
+        let xcconfigHeaderSearchPaths: Set<String> = Set(podSpecs
+            // Grab the search paths from xcconfig
+            .flatMap{ (spec: PodSpec) -> Set<String> in
+                Set([spec.xcconfig, spec.podTargetXcconfig, spec.userTargetXcconfig].flatMap{ (xcconfigDict: [String: String]?) -> [String] in
+                    let searchPathValue: String? = xcconfigDict?[HeaderSearchPathTransformer.xcconfigKey]
+                    return (searchPathValue.map{ [$0] }) ?? []
+                })
+            }
+            .reduce(Set<String>(), { $0.union(Set($1)) })
+            // Add the subdirectories in the search paths (as xcode does
+            .flatMap{ (searchPath: String) -> [String] in
+                // we're already cd-ed to this directory
+                // so we can just rip out the variable
+                let cleansedPath = searchPath.replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)/", with: "").replacingOccurrences(of: "\"", with: "")
+                let cmd = shell.command("/bin/ls", arguments: ["\(pwd)/" + cleansedPath])
+                return cmd.standardOutputAsString.components(separatedBy: "\n").map{ String($0) }
+            })
+        
+        // Get the rest of the header searchpaths
+        let customHeaderSearchPaths = Set([podSpec.name])
+            .union(searchPaths(ComposedSpec.composed(child: podSpec, parent: nil)))
             .union(podSpec.subspecs.reduce(Set<String>(), { result, subspec in
                 result.union(searchPaths(ComposedSpec.composed(child: subspec, parent: ComposedSpec.composed(child: podSpec, parent: nil))))
-            })).map { PodSupportSystemPublicHeaderDir + "\($0)/" }
+            }))
+            // and add the xcconfig header searchpaths here
+            .union(xcconfigHeaderSearchPaths)
+            .map { PodSupportSystemPublicHeaderDir + "\($0)/" }
 
         customHeaderSearchPaths.forEach(shell.dir)
 

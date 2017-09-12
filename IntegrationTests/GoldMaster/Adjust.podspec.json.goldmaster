@@ -47,7 +47,7 @@ objc_library(
   name = "Adjust",
   enable_modules = 0,
   hdrs = [
-    "Adjust_hdrs"
+    ":Adjust_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -140,7 +140,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Adjust_hdrs"
+    ":Adjust_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -222,7 +222,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Adjust_hdrs"
+    ":Adjust_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -307,7 +307,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Adjust_hdrs"
+    ":Adjust_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -392,7 +392,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Adjust_hdrs"
+    ":Adjust_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",

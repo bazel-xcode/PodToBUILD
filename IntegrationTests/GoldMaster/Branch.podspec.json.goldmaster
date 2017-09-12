@@ -35,7 +35,7 @@ objc_library(
   name = "Branch",
   enable_modules = 0,
   hdrs = [
-    "Branch_hdrs"
+    ":Branch_hdrs"
   ],
   pch = pch_with_name_hint(
     "Branch",
@@ -113,7 +113,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Branch_hdrs"
+    ":Branch_hdrs"
   ],
   pch = pch_with_name_hint(
     "Branch",
@@ -191,7 +191,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Branch_hdrs"
+    ":Branch_hdrs"
   ],
   pch = pch_with_name_hint(
     "Branch",

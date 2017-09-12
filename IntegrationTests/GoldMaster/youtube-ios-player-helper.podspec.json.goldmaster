@@ -50,31 +50,39 @@ objc_library(
     {
       ":osxCase": glob(
         [
+          "Classes/**/*.S",
           "Classes/**/*.c",
           "Classes/**/*.cpp",
           "Classes/**/*.m",
-          "Classes/**/*.mm"
+          "Classes/**/*.mm",
+          "Classes/**/*.s"
         ],
         exclude = [
+          "Classes/ios/**/*.S",
           "Classes/ios/**/*.c",
           "Classes/ios/**/*.cpp",
           "Classes/ios/**/*.m",
-          "Classes/ios/**/*.mm"
+          "Classes/ios/**/*.mm",
+          "Classes/ios/**/*.s"
         ],
         exclude_directories = 1
         ),
       "//conditions:default": glob(
         [
+          "Classes/**/*.S",
           "Classes/**/*.c",
           "Classes/**/*.cpp",
           "Classes/**/*.m",
-          "Classes/**/*.mm"
+          "Classes/**/*.mm",
+          "Classes/**/*.s"
         ],
         exclude = [
+          "Classes/osx/**/*.S",
           "Classes/osx/**/*.c",
           "Classes/osx/**/*.cpp",
           "Classes/osx/**/*.m",
-          "Classes/osx/**/*.mm"
+          "Classes/osx/**/*.mm",
+          "Classes/osx/**/*.s"
         ],
         exclude_directories = 1
         )
@@ -102,7 +110,7 @@ objc_library(
     }
     ),
   hdrs = [
-    "youtube-ios-player-helper_hdrs"
+    ":youtube-ios-player-helper_hdrs"
   ],
   pch = pch_with_name_hint(
     "youtube-ios-player-helper",

@@ -126,7 +126,7 @@ objc_library(
     }
     ),
   hdrs = [
-    "FBSDKShareKit_hdrs"
+    ":FBSDKShareKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "FBSDKShareKit",

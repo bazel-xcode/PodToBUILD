@@ -45,11 +45,12 @@ struct XCConfigTransformer {
             .map { transformer.string(forXCConfigValue: $0) }
     }
 
-    public static func defaultTransformer() -> XCConfigTransformer {
+    public static func defaultTransformer(externalName: String) -> XCConfigTransformer {
         return XCConfigTransformer(transformers: [
             PassthroughTransformer(xcconfigKey: "OTHER_CFLAGS"),
             PassthroughTransformer(xcconfigKey: "OTHER_LDFLAGS"),
             PassthroughTransformer(xcconfigKey: "OTHER_CPLUSPLUSFLAGS"),
+            HeaderSearchPathTransformer(externalName: externalName),
             PreprocessorDefinesTransformer(),
             AllowNonModularIncludesInFrameworkModulesTransformer(),
             CXXLibraryTransformer(),
@@ -95,6 +96,21 @@ struct PreCompilePrefixHeaderTransformer: XCConfigValueTransformer {
     func string(forXCConfigValue _: String) -> String {
         // TODO: Implement precompiled header support in Bazel.
         return ""
+    }
+}
+
+struct HeaderSearchPathTransformer: XCConfigValueTransformer {
+    static let xcconfigKey = "HEADER_SEARCH_PATHS"
+    var xcconfigKey: String = HeaderSearchPathTransformer.xcconfigKey
+    
+    let externalName: String
+    init(externalName: String) {
+        self.externalName = externalName;
+    }
+    
+    func string(forXCConfigValue value: String) -> String {
+        let cleaned = value.replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)", with: "external/\(externalName)").replacingOccurrences(of: "\"", with: "")
+        return "-I\(cleaned)"
     }
 }
 

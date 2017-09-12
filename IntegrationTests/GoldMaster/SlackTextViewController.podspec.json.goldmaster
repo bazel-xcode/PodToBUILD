@@ -46,7 +46,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "SlackTextViewController_hdrs"
+    ":SlackTextViewController_hdrs"
   ],
   pch = pch_with_name_hint(
     "SlackTextViewController",

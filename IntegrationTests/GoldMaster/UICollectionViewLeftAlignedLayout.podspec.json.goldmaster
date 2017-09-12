@@ -36,10 +36,12 @@ objc_library(
   enable_modules = 0,
   srcs = glob(
     [
+      "UICollectionViewLeftAlignedLayout/**/*.S",
       "UICollectionViewLeftAlignedLayout/**/*.c",
       "UICollectionViewLeftAlignedLayout/**/*.cpp",
       "UICollectionViewLeftAlignedLayout/**/*.m",
-      "UICollectionViewLeftAlignedLayout/**/*.mm"
+      "UICollectionViewLeftAlignedLayout/**/*.mm",
+      "UICollectionViewLeftAlignedLayout/**/*.s"
     ],
     exclude_directories = 1
     ) + glob(
@@ -49,7 +51,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "UICollectionViewLeftAlignedLayout_hdrs"
+    ":UICollectionViewLeftAlignedLayout_hdrs"
   ],
   pch = pch_with_name_hint(
     "UICollectionViewLeftAlignedLayout",

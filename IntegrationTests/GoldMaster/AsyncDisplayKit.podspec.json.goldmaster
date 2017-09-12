@@ -35,7 +35,7 @@ objc_library(
   name = "AsyncDisplayKit",
   enable_modules = 0,
   hdrs = [
-    "AsyncDisplayKit_hdrs"
+    ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",
@@ -121,7 +121,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "AsyncDisplayKit_hdrs"
+    ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",
@@ -186,7 +186,7 @@ objc_library(
   name = "AsyncDisplayKit_PINRemoteImage",
   enable_modules = 0,
   hdrs = [
-    "AsyncDisplayKit_hdrs"
+    ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",
@@ -257,7 +257,7 @@ objc_library(
   name = "AsyncDisplayKit_IGListKit",
   enable_modules = 0,
   hdrs = [
-    "AsyncDisplayKit_hdrs"
+    ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",
@@ -326,7 +326,7 @@ objc_library(
   name = "AsyncDisplayKit_Yoga",
   enable_modules = 0,
   hdrs = [
-    "AsyncDisplayKit_hdrs"
+    ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "AsyncDisplayKit",

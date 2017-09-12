@@ -300,7 +300,7 @@ class BuildFileTests: XCTestCase {
             "USER_HEADER_SEARCH_PATHS": "$SRCROOT/..",
             "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1",
         ]
-        let compilerFlags = XCConfigTransformer.defaultTransformer().compilerFlags(forXCConfig: config)
+        let compilerFlags = XCConfigTransformer.defaultTransformer(externalName: "test").compilerFlags(forXCConfig: config)
         XCTAssertEqual(compilerFlags, ["-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"])
     }
 
@@ -309,7 +309,7 @@ class BuildFileTests: XCTestCase {
             "CLANG_CXX_LANGUAGE_STANDARD": "c++11",
             "CLANG_CXX_LIBRARY": "libc++",
         ]
-        let compilerFlags = XCConfigTransformer.defaultTransformer().compilerFlags(forXCConfig: config)
+        let compilerFlags = XCConfigTransformer.defaultTransformer(externalName: "test").compilerFlags(forXCConfig: config)
         XCTAssertEqual(compilerFlags, ["-std=c++11", "-stdlib=libc++"])
     }
 }

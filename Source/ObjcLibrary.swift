@@ -218,7 +218,6 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     var sdkFrameworks: AttrSet<[String]>
     var copts: AttrSet<[String]>
     var deps: AttrSet<[String]>
-    static let xcconfigTransformer = XCConfigTransformer.defaultTransformer()
 
     init(name: String,
         externalName: String,
@@ -282,10 +281,6 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         self.publicHeaders = (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.publicHeaders))).map{ Set($0) }
 
-        let xcconfigFlags =
-            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
-            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.userTargetXcconfig)))) +
-            ObjcLibrary.xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.xcconfig))))
 
         // We are not using the fallback spec here since
         let fallbackName = ComposedSpec.create(fromSpecs: [spec, rootSpec].flatMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
@@ -294,6 +289,12 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(rootName)_\(spec.moduleName ?? spec.name)")
         self.externalName = rootName
 
+        let xcconfigTransformer = XCConfigTransformer.defaultTransformer(externalName: externalName)
+        let xcconfigFlags =
+            xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
+                xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.userTargetXcconfig)))) +
+                xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.xcconfig))))
+        
         let moduleName = AttrSet<String>(
             value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
         )
@@ -423,7 +424,10 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let isTopLevelTarget = name == moduleName
 
         // FIXME: Vendored
-        let depHdrs = deps.map { $0.filter { $0.hasPrefix(":") && $0.contains("Vendored") == false && $0.contains("_Bundle") == false }.map { ($0 + "_hdrs").toSkylark() } }
+        let depHdrs = deps.map {
+            $0.filter { $0.hasPrefix(":") && !$0.contains("Vendored") && !$0.contains("_Bundle") }
+                .map { ($0 + "_hdrs").toSkylark() }
+        }
        
         let allModuleInternalHeaders = headers.toSkylark() .+. depHdrs.toSkylark()
 
@@ -525,15 +529,16 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                                     return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
                                 }))
         
+        let hdrsName = isTopLevelTarget ? moduleName : externalName
         if generateModuleMap {
             libArguments.append(.named(
                 name: "hdrs",
-                value: [moduleMapName + "_module_map_file"].toSkylark() .+. ([moduleName + "_hdrs"]).toSkylark()
+                value: [moduleMapName + "_module_map_file"].toSkylark() .+. ([hdrsName + "_hdrs"]).toSkylark()
                 ))
         } else {
             libArguments.append(.named(
                 name: "hdrs",
-                value: ([moduleName + "_hdrs"]).toSkylark()
+                value: ([":" + hdrsName + "_hdrs"]).toSkylark()
                 ))
         }
 
@@ -669,24 +674,13 @@ extension ObjcLibrary {
 
 private func extractSources(patterns: [String]) -> [String] {
     return patterns.flatMap { (p: String) -> [String] in
-        let sourceFileTypes = Set(["m", "mm", "c", "cpp"])
-        if let _ = (sourceFileTypes.first{ p.hasSuffix(".\($0)") }) {
-            return [p]
-        } else {
-            // This is domain specific to bazel. Bazel's "glob" can't support wild cards so add
-            // multiple entries instead of {m, cpp}
-            return sourceFileTypes.flatMap{ pattern(fromPattern: p, includingFileType: $0) }
-        }
+        pattern(fromPattern: p, includingFileTypes: ["m", "mm", "c", "cpp", "s", "S"])
     }
 }
 
 private func extractHeaders(patterns: [String]) -> [String] {
     return patterns.flatMap { (p: String) -> [String] in
-        if p.hasSuffix("h") {
-            return [p]
-        } else {
-            return pattern(fromPattern: p, includingFileType: "h").map{ [$0] } ?? []
-        }
+        pattern(fromPattern: p, includingFileTypes: ["h"])
     }
 }
 

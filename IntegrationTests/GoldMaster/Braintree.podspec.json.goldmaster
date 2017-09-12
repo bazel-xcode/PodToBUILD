@@ -35,7 +35,7 @@ objc_library(
   name = "Braintree",
   enable_modules = 0,
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -124,7 +124,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -198,7 +198,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -277,7 +277,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -348,7 +348,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -435,7 +435,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -508,7 +508,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -611,7 +611,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -691,7 +691,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -782,7 +782,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -864,7 +864,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -952,7 +952,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -1051,7 +1051,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "Braintree_hdrs"
+    ":Braintree_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",

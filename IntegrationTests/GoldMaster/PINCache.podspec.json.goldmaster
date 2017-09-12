@@ -47,7 +47,7 @@ objc_library(
   name = "PINCache",
   enable_modules = 0,
   hdrs = [
-    "PINCache_hdrs"
+    ":PINCache_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINCache",
@@ -136,7 +136,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "PINCache_hdrs"
+    ":PINCache_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINCache",
@@ -214,7 +214,7 @@ objc_library(
 
   ],
   hdrs = [
-    "PINCache_hdrs"
+    ":PINCache_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINCache",

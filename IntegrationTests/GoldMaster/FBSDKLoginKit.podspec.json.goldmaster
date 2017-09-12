@@ -46,7 +46,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "FBSDKLoginKit_hdrs"
+    ":FBSDKLoginKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "FBSDKLoginKit",

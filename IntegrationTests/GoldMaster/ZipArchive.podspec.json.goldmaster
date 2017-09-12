@@ -61,7 +61,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "ZipArchive_hdrs"
+    ":ZipArchive_hdrs"
   ],
   pch = pch_with_name_hint(
     "ZipArchive",

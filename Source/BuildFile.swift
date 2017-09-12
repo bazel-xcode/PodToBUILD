@@ -115,8 +115,6 @@ struct InsertAcknowledgementsTransform: SkylarkConvertibleTransform {
 }
 
 public struct PodBuildFile: SkylarkConvertible {
-    static let xcconfigTransformer = XCConfigTransformer.defaultTransformer()
-
     /// Skylark Convertibles excluding prefix nodes.
     /// @note Use toSkylark() to generate the actual BUILD file
     public let skylarkConvertibles: [SkylarkConvertible]

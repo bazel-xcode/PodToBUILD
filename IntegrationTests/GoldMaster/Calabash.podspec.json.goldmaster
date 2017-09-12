@@ -40,13 +40,34 @@ gen_module_map(
 objc_library(
   name = "Calabash",
   enable_modules = 0,
+  srcs = glob(
+    [
+      "calabash.framework/Versions/A/Headers/*.S",
+      "calabash.framework/Versions/A/Headers/*.c",
+      "calabash.framework/Versions/A/Headers/*.cpp",
+      "calabash.framework/Versions/A/Headers/*.s"
+    ],
+    exclude_directories = 1
+    ) + glob(
+    [
+      "calabash.framework/Versions/A/Headers/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  non_arc_srcs = glob(
+    [
+      "calabash.framework/Versions/A/Headers/*.m",
+      "calabash.framework/Versions/A/Headers/*.mm"
+    ],
+    exclude_directories = 1
+    ),
   hdrs = [
-    "Calabash_hdrs"
+    ":Calabash_hdrs"
   ],
   pch = pch_with_name_hint(
     "Calabash",
     [
-
+      "calabash.framework/**/*.pch"
     ]
     ),
   includes = [

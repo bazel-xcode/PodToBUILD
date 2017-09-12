@@ -36,8 +36,10 @@ objc_library(
   enable_modules = 0,
   srcs = glob(
     [
+      "security/**/*.S",
       "security/**/*.c",
-      "security/**/*.cpp"
+      "security/**/*.cpp",
+      "security/**/*.s"
     ],
     exclude_directories = 1
     ) + glob(
@@ -54,7 +56,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "SFHFKeychainUtils_hdrs"
+    ":SFHFKeychainUtils_hdrs"
   ],
   pch = pch_with_name_hint(
     "SFHFKeychainUtils",

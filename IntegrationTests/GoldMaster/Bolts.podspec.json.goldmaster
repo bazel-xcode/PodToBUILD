@@ -59,7 +59,7 @@ objc_library(
   name = "Bolts",
   enable_modules = 0,
   hdrs = [
-    "Bolts_hdrs"
+    ":Bolts_hdrs"
   ],
   pch = pch_with_name_hint(
     "Bolts",
@@ -201,7 +201,7 @@ objc_library(
     }
     ),
   hdrs = [
-    "Bolts_hdrs"
+    ":Bolts_hdrs"
   ],
   pch = pch_with_name_hint(
     "Bolts",
@@ -281,7 +281,7 @@ objc_library(
     }
     ),
   hdrs = [
-    "Bolts_hdrs"
+    ":Bolts_hdrs"
   ],
   pch = pch_with_name_hint(
     "Bolts",

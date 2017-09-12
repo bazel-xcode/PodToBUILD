@@ -57,7 +57,13 @@ objc_library(
         ],
         exclude = [
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m"
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.S",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.c",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.cpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.s"
         ],
         exclude_directories = 1
         ),
@@ -74,6 +80,24 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.m",
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.m",
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.S",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.c",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.cpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.s",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.S",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.c",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.cpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.s",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.S",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.c",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.cpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.s",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.m",
@@ -81,7 +105,13 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.m",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.m"
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.S",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.c",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.cpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
         ],
         exclude_directories = 1
         )
@@ -94,7 +124,8 @@ objc_library(
         ],
         exclude = [
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h"
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h"
         ],
         exclude_directories = 1
         ),
@@ -109,6 +140,9 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h",
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.h",
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.h",
@@ -117,7 +151,8 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h"
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h"
         ],
         exclude_directories = 1
         )
@@ -135,7 +170,9 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm"
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm"
         ],
         exclude_directories = 1
         ),
@@ -153,6 +190,12 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.mm",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.m",
@@ -160,14 +203,16 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.m",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.m",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.m"
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm"
         ],
         exclude_directories = 1
         )
     }
     ),
   hdrs = [
-    "FBSDKCoreKit_hdrs"
+    ":FBSDKCoreKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "FBSDKCoreKit",

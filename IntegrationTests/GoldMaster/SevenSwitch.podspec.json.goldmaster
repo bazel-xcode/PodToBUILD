@@ -35,7 +35,7 @@ objc_library(
   name = "SevenSwitch",
   enable_modules = 0,
   hdrs = [
-    "SevenSwitch_hdrs"
+    ":SevenSwitch_hdrs"
   ],
   pch = pch_with_name_hint(
     "SevenSwitch",

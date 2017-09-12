@@ -35,7 +35,7 @@ objc_library(
   name = "PINRemoteImage",
   enable_modules = 0,
   hdrs = [
-    "PINRemoteImage_hdrs"
+    ":PINRemoteImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -120,7 +120,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "PINRemoteImage_hdrs"
+    ":PINRemoteImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -181,7 +181,7 @@ objc_library(
   name = "PINRemoteImage_iOS",
   enable_modules = 0,
   hdrs = [
-    "PINRemoteImage_hdrs"
+    ":PINRemoteImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -241,7 +241,7 @@ objc_library(
   name = "PINRemoteImage_OSX",
   enable_modules = 0,
   hdrs = [
-    "PINRemoteImage_hdrs"
+    ":PINRemoteImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -302,7 +302,7 @@ objc_library(
   name = "PINRemoteImage_tvOS",
   enable_modules = 0,
   hdrs = [
-    "PINRemoteImage_hdrs"
+    ":PINRemoteImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -373,7 +373,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "PINRemoteImage_hdrs"
+    ":PINRemoteImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -432,7 +432,7 @@ objc_library(
   name = "PINRemoteImage_WebP",
   enable_modules = 0,
   hdrs = [
-    "PINRemoteImage_hdrs"
+    ":PINRemoteImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -505,7 +505,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    "PINRemoteImage_hdrs"
+    ":PINRemoteImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
