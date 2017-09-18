@@ -191,7 +191,7 @@ pod_repo_ = repository_rule(
 # @param repo_tools: a program to run after downloading the archive.
 # Typically, this program is responsible for performing modifications to a
 # source repository, in order to support bazel.  i.e.
-# "//tools/PodSpecToBUILD/bin:RepoTools" if PodSpecToBUILD is in //tools
+# "@rules_pods//bin:RepoTools" if PodSpecToBUILD is in //tools
 #
 # @param build_file_content: string content of a new build file
 #
@@ -217,7 +217,8 @@ def new_pod_repository(name,
                        build_file_content="",
                        cmds={"0": ["RepoTool"]},
                        repo_tools={
-                           "//tools/PodSpecToBUILD/bin:RepoTools": "RepoTool"},
+                           "@rules_pods//bin:RepoTools": "RepoTool"
+                       },
                        inhibit_warnings=False,
                        trace=False,
                        enable_modules=True,
