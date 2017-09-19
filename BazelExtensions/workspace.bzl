@@ -1,10 +1,10 @@
-def _exec(repository_ctx, transformed_command):
+def _exec(repository_ctx, command):
     if repository_ctx.attr.trace:
-        print("__EXEC", transformed_command)
-    output = repository_ctx.execute(transformed_command)
+        print("__EXEC", command)
+    output = repository_ctx.execute(command)
     if output.return_code != 0:
         print("__OUTPUT", output.return_code, output.stdout, output.stderr)
-        fail("Could not exec command " + " ".join(transformed_command))
+        fail("Could not exec command " + " ".join(command))
     elif repository_ctx.attr.trace:
         print("__OUTPUT", output.return_code, output.stdout, output.stderr)
 
@@ -12,8 +12,7 @@ def _exec(repository_ctx, transformed_command):
 
 # Compiler Options
 
-
-global_copts = [
+GLOBAL_COPTS = [
     '-Wnon-modular-include-in-framework-module',
     "-g",
     "-stdlib=libc++",
@@ -28,7 +27,7 @@ global_copts = [
     "-Wno-error=nonportable-include-path"
 ]
 
-inhibit_warnings_global_copts = [
+INHIBIT_WARNINGS_GLOBAL_COPTS = [
     "-Wno-everything",
 ]
 
@@ -75,6 +74,9 @@ def _cli_bool(b):
         return "true"
     return "false"
 
+REPO_TOOL_NAME = "RepoTool"
+INIT_REPO_PLACEHOLDER = "__INIT_REPO__"
+
 def _impl(repository_ctx):
     if repository_ctx.attr.trace:
         print("__RUN with repository_ctx", repository_ctx.attr)
@@ -83,53 +85,51 @@ def _impl(repository_ctx):
     target_name = repository_ctx.attr.target_name
     url = repository_ctx.attr.url
     repo_tools_labels = repository_ctx.attr.repo_tools_labels
-    command_dict = repository_ctx.attr.command_dict
+    install_script_tpl = repository_ctx.attr.install_script_tpl
     tool_bin_by_name = {}
     repo_tool_dict = repository_ctx.attr.repo_tool_dict
     inhibit_warnings = repository_ctx.attr.inhibit_warnings
 
-    if command_dict and repo_tools_labels:
-        for tool_label in repo_tools_labels:
-            tool_name = repo_tool_dict[str(tool_label)]
-            tool_bin_by_name[tool_name] = repository_ctx.path(tool_label)
+    for tool_label in repo_tools_labels:
+        tool_name = repo_tool_dict[str(tool_label)]
+        tool_bin_by_name[tool_name] = repository_ctx.path(tool_label)
 
     if url.startswith("http") or url.startswith("https"):
         _fetch_remote_repo(
-            repository_ctx, tool_bin_by_name["RepoTool"], target_name, url)
+            repository_ctx, tool_bin_by_name[REPO_TOOL_NAME], target_name, url)
     else:
         _link_local_repo(repository_ctx, target_name, url)
 
     # This seems needed
     _exec(repository_ctx, ["mkdir", "-p", "external/" + target_name])
 
-    idx = 0
-    cmd_len = len(command_dict)
-    for some in command_dict:
-        cmd = command_dict[str(idx)]
-        transformed_command = cmd
-        cmd_path = cmd[0]
-        repo_tool_bin = tool_bin_by_name.get(cmd_path)
+    # Build up substitutions for the install script
+    substitutions = {}
+    for name in tool_bin_by_name:
         # Alias the command path to the binary program
-        if repo_tool_bin:
-            transformed_command[0] = repo_tool_bin
-        # Set the first argument for RepoTool to "target_name"
-        if cmd_path == "RepoTool":
-            transformed_command.append(target_name)
-            transformed_command.append("init")
+        repo_tool_bin = tool_bin_by_name.get(name)
+        if not repo_tool_bin:
+            fail("invalid repo_tool:" + name)
+
+        entry = [repo_tool_bin]
+
+        # RepoTool in this context is a special placeholder for a RepoTool
+        # invocation ( INIT_REPO_PLACEHOLDER )
+        if name == REPO_TOOL_NAME:
+            # Set the first argument for RepoTool to "target_name"
+            entry.append(target_name)
+            entry.append("init")
             for user_option in repository_ctx.attr.user_options:
-                transformed_command.append("--user_option")
-                transformed_command.append(user_option)
+                entry.extend(["--user_option", "'" + user_option + "'"])
 
             if inhibit_warnings:
-                for global_copt in inhibit_warnings_global_copts:
-                    transformed_command.append("--global_copt")
-                    transformed_command.append(global_copt)
+                for global_copt in INHIBIT_WARNINGS_GLOBAL_COPTS:
+                    entry.extend(["--global_copt", global_copt])
 
-            for global_copt in global_copts:
-                transformed_command.append("--global_copt")
-                transformed_command.append(global_copt)
+            for global_copt in GLOBAL_COPTS:
+                entry.extend(["--global_copt", global_copt])
 
-            transformed_command.extend([
+            entry.extend([
                 "--trace",
                 _cli_bool(repository_ctx.attr.trace),
                 "--enable_modules",
@@ -139,13 +139,26 @@ def _impl(repository_ctx):
                 "--generate_module_map",
                 _cli_bool(repository_ctx.attr.generate_module_map)
             ])
+            substitutions[INIT_REPO_PLACEHOLDER] = " ".join(entry)
+        else:
+            substitutions[name] = " ".join(entry)
 
-        _exec(repository_ctx, transformed_command)
-        idx = idx + 1
-    build_file_content = repository_ctx.attr.build_file_content
-    if build_file_content and len(build_file_content) > 0:
-        # Write the build file
-        repository_ctx.file("BUILD", repository_ctx.attr.build_file_content)
+    # Build up the script
+    script = ""
+
+    # For now, we curl the podspec url before the script runs
+    if repository_ctx.attr.podspec_url:
+        script += "curl -O " + repository_ctx.attr.podspec_url
+        script += "\n"
+
+    if repository_ctx.attr.install_script_tpl:
+        for sub in substitutions:
+            install_script_tpl = install_script_tpl.replace(sub, substitutions[sub])
+        script += install_script_tpl
+    else:
+        script += substitutions[INIT_REPO_PLACEHOLDER]
+
+    _exec(repository_ctx, ["/bin/bash", "-c", script])
 
 
 pod_repo_ = repository_rule(
@@ -154,12 +167,12 @@ pod_repo_ = repository_rule(
     attrs={
         "target_name": attr.string(mandatory=True),
         "url": attr.string(mandatory=True),
+        "podspec_url": attr.string(),
         "strip_prefix": attr.string(),
         "user_options": attr.string_list(),
-        "build_file_content": attr.string(mandatory=True),
         "repo_tools_labels": attr.label_list(),
         "repo_tool_dict": attr.string_dict(),
-        "command_dict": attr.string_list_dict(),
+        "install_script_tpl": attr.string(),
         "inhibit_warnings": attr.bool(default=False, mandatory=True),
         "trace": attr.bool(default=False, mandatory=True),
         "enable_modules": attr.bool(default=True, mandatory=True),
@@ -168,56 +181,15 @@ pod_repo_ = repository_rule(
     }
 )
 
-# New Pod Repository
-#
-# @param name: the name of this repo
-#
-# @param url: the url of this repo
-#
-# @param owner: the owner of this dependency
-#
-# @note Github automatically creates zip files for a commit hash:
-# Ex commit: 751edba685e997ea4d8501dcf16df53aac5355a4
-# https://github.com/pinterest/PINCache/archive/751edba685e997ea4d8501dcf16df53aac5355a4.zip
-# In some cases, the strip prefix will be the commit hash, but make sure the
-# code has the correct directory structure when using this.
-#
-# @param strip_prefix: a directory prefix to strip from the extracted files.
-# Many archives contain a top-level directory that contains all of the useful
-# files in archive. Instead of needing to specify this prefix over and over in
-# the build_file, this field can be used to strip it from all of the extracted
-# files.
-#
-# @param repo_tools: a program to run after downloading the archive.
-# Typically, this program is responsible for performing modifications to a
-# source repository, in order to support bazel.  i.e.
-# "@rules_pods//bin:RepoTools" if PodSpecToBUILD is in //tools
-#
-# @param build_file_content: string content of a new build file
-#
-# @param cmds: commands executed within this repository.
-# The first part of the command is a string representation of the order the
-# commands will be run in. Skylark seems to break when we try to use an array of
-# arrays.
-#
-# @see repository_context.execute
-#
-# @param repo_tools: a mapping of binaries to command names.
-# If we are running something like "mv" or "sed" these binaries are already on
-# path, so there is no need to add an entry for them.
-#
-# @param trace: dump out useful debug info
-
-
 def new_pod_repository(name,
                        url,
                        owner,
+                       podspec_url=None,
                        strip_prefix="",
                        user_options=[],
-                       build_file_content="",
-                       cmds={"0": ["RepoTool"]},
+                       install_script=None,
                        repo_tools={
-                           "@rules_pods//bin:RepoTools": "RepoTool"
+                           "@rules_pods//bin:RepoTools": REPO_TOOL_NAME
                        },
                        inhibit_warnings=False,
                        trace=False,
@@ -225,6 +197,66 @@ def new_pod_repository(name,
                        generate_module_map=None,
                        header_visibility="pod_support",
                        ):
+    """Declare a repository for a Pod
+    Args:
+         name: the name of this repo
+
+         url: the url of this repo
+
+         podspec_url: the podspec url. By default, we will look in the root of
+         the repository, and read a .podspec file. This requires having
+         CocoaPods installed on build nodes. If a JSON podspec is provided here,
+         then it is not required to run CocoaPods.
+
+         owner: the owner of this dependency
+
+         strip_prefix: a directory prefix to strip from the extracted files.
+         Many archives contain a top-level directory that contains all of the
+         useful files in archive.
+
+         For most sources, this is typically not needed.
+
+         user_options: an array of key value operators that act on code
+         generated `target`s.
+
+         Supported operators:
+         PlusEquals ( += ). Add an item to an array
+
+         Implemented for:
+         `objc_library` [ `copts`, `deps`, `sdkFrameworks` ]
+
+         Example usage: add a custom define to the target, Texture's `copts`
+         field
+
+         ```
+            user_options = [ "Texture.copts += -DTEXTURE_DEBUG " ]
+         ```
+
+         install_script: a script used for installation.
+
+         The placeholder __INIT_REPO__ indicates at which point the BUILD file is
+         generated, if any.
+
+         `repo_tools` may be provided as a label. The names provided in `repo_tools`
+         are substituted out for the respective tools.
+
+         note that the script is ran directly after the repository has been fetched.
+
+         repo_tools: a mapping of executables in Bazel to command names.  If we
+         are running something like "mv" or "sed" these binaries are already on
+         path, so there is no need to add an entry for them.
+
+         inhibit_warnings: whether compiler warnings should be inhibited.
+
+         trace: dump out useful debug info for a given repo.
+
+         generate_module_map: whether a module map should be generated.
+
+         enable_modules: set generated rules enable_modules parameter
+
+         header_visibility: DEPRECATED: This is replaced by headermaps:
+         https://github.com/bazelbuild/bazel/pull/3712
+    """
     if generate_module_map == None:
         generate_module_map = enable_modules
 
@@ -235,10 +267,10 @@ def new_pod_repository(name,
         name=name,
         target_name=name,
         url=url,
+        podspec_url=podspec_url,
         user_options=user_options,
         strip_prefix=strip_prefix,
-        build_file_content=build_file_content,
-        command_dict=cmds,
+        install_script_tpl=install_script,
         repo_tools_labels=tool_labels,
         repo_tool_dict=repo_tools,
         inhibit_warnings=inhibit_warnings,
