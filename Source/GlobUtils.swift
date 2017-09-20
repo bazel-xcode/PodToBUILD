@@ -63,7 +63,7 @@ public class Glob: Collection {
         let includesFilesInResultsIfTrailingSlash: Bool
     }
 
-    static var defaultBehavior = GlobBehaviorBashV4
+    public static var defaultBehavior = GlobBehaviorBashV4
 
     private var isDirectoryCache = [String: Bool]()
 
@@ -290,7 +290,7 @@ let curlyChunk = Parsers.anyChar.butNot("}") // need to exclude "}" to counter g
     .manyUntil(terminator: comma.forget)
 // matches 1, 2, 3
 let curlyChunks = curlyChunk
-    .rep(separatedBy: (comma.andThen{ _ in Parsers.whitespace.many() }).forget)
+    .rep(separatedBy: (comma.andThen{  Parsers.whitespace.many() }).forget)
 // now we wrap with { }
 let parseCurlySet: Parser<RubyGlobChunk> =
     curlyChunks

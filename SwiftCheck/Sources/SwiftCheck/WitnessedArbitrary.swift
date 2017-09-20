@@ -43,17 +43,24 @@ extension AnyBidirectionalCollection where Element : Arbitrary {
 	}
 }
 
+//FIXME: This works as of Xcode 9 beta 3 but is disabled until Travis has Xcode 9 > beta 3
+#if os(Linux)
 extension AnyBidirectionalCollection : WitnessedArbitrary {
 	public typealias Param = Element
 
 	/// Given a witness and a function to test, converts them into a universally
 	/// quantified property over `AnyBidirectionalCollection`s.
 	public static func forAllWitnessed<A : Arbitrary>(_ wit : @escaping (A) -> Element, pf : @escaping (AnyBidirectionalCollection<Element>) -> Testable) -> Property {
-		return forAllShrink(AnyBidirectionalCollection<A>.arbitrary, shrinker: AnyBidirectionalCollection<A>.shrink, f: { bl in
-			return pf(AnyBidirectionalCollection<Element>(bl.map(wit)))
-		})
+		return forAllShrink(
+			AnyBidirectionalCollection<A>.arbitrary,
+			shrinker: AnyBidirectionalCollection<A>.shrink,
+			f: { bl in
+				return pf(AnyBidirectionalCollection<Element>(bl.map(wit)))
+			}
+		)
 	}
 }
+#endif
 
 extension AnySequence where Element : Arbitrary {
 	/// Returns a generator of `AnySequence`s of arbitrary `Element`s.
@@ -67,6 +74,8 @@ extension AnySequence where Element : Arbitrary {
 	}
 }
 
+//FIXME: This does not compile as of Xcode 9 beta 3 / 4.0-DEVELOPMENT-SNAPSHOT-2017-07-06
+#if false
 extension AnySequence : WitnessedArbitrary {
 	public typealias Param = Element
 
@@ -78,6 +87,7 @@ extension AnySequence : WitnessedArbitrary {
 		})
 	}
 }
+#endif
 
 extension ArraySlice where Element : Arbitrary {
 	/// Returns a generator of `ArraySlice`s of arbitrary `Element`s.
@@ -192,9 +202,10 @@ extension Dictionary where Key : Arbitrary, Value : Arbitrary {
 	/// The default shrinking function for `Dictionary`s of arbitrary `Key`s and
 	/// `Value`s.
 	public static func shrink(_ d : Dictionary<Key, Value>) -> [Dictionary<Key, Value>] {
-		return d.map { Dictionary(zip(Key.shrink($0), Value.shrink($1)).map({ (k, v) -> (key: Key, value: Value) in
-			(key: k, value: v)
-		})) }
+		return d.map { (t) -> Dictionary<Key, Value> in
+			let ts = zip(Key.shrink(t.0), Value.shrink(t.1)).map { $0 }
+			return Dictionary(ts)
+		}
 	}
 }
 
@@ -205,7 +216,7 @@ extension EmptyCollection : Arbitrary {
 	}
 }
 
-extension Range where Bound : Comparable & Arbitrary {
+extension Range where Bound : Arbitrary {
 	/// Returns a generator of `HalfOpenInterval`s of arbitrary `Bound`s.
 	public static var arbitrary : Gen<Range<Bound>> {
 		return Bound.arbitrary.flatMap { l in
@@ -221,14 +232,14 @@ extension Range where Bound : Comparable & Arbitrary {
 	}
 }
 
-extension LazyCollection where Base : Collection & Arbitrary, Base.Index : Comparable {
+extension LazyCollection where Base : Arbitrary {
 	/// Returns a generator of `LazyCollection`s of arbitrary `Base`s.
 	public static var arbitrary : Gen<LazyCollection<Base>> {
 		return LazyCollection<Base>.arbitrary
 	}
 }
 
-extension LazySequence where Base : Sequence & Arbitrary {
+extension LazySequence where Base : Arbitrary {
 	/// Returns a generator of `LazySequence`s of arbitrary `Base`s.
 	public static var arbitrary : Gen<LazySequence<Base>> {
 		return LazySequence<Base>.arbitrary
@@ -242,7 +253,7 @@ extension Repeated where Element : Arbitrary {
 			return repeatElement(element , count: count)
 		}
 
-		return Gen<(Element, Int)>.zip(Element.arbitrary, Int.arbitrary).map(constructor)
+		return Gen<(Element, Int)>.zip(Element.arbitrary, Int.arbitrary).map({ t in constructor(t.0, t.1) })
 	}
 }
 
@@ -259,7 +270,7 @@ extension Repeated : WitnessedArbitrary {
 	}
 }
 
-extension Set where Element : Arbitrary & Hashable {
+extension Set where Element : Arbitrary {
 	/// Returns a generator of `Set`s of arbitrary `Element`s.
 	public static var arbitrary : Gen<Set<Element>> {
 		return Gen.sized { n in

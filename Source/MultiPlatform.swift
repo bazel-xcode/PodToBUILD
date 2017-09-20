@@ -292,7 +292,7 @@ extension Dictionary {
 }
 
 extension AttrSet {
-    static func sequence<K: Hashable, V: AttrSetConstraint>(attrSet attrOfDict: AttrSet<[K:V]>) -> [K: AttrSet<V>] {
+    static func sequence<K, V: AttrSetConstraint>(attrSet attrOfDict: AttrSet<[K:V]>) -> [K: AttrSet<V>] {
         return attrOfDict.fold(
             basic: { dictOpt in
                 let dict: [K: V] = (dictOpt ?? [K:V]())
@@ -314,7 +314,7 @@ extension AttrSet {
     /// In this case, `F = AttrSet`, `G = some Sequence S` (and since Swift is limited in it's expressiveness, we'll return an array)
     /// So we're turning an `AttrSet<S<?>>` into an `[AttrSet<?>]` where the `[]` are morally the `S`
     static func sequenceSeq<S: Sequence, T: AttrSetConstraint>(attrSet attrOfArr: AttrSet<S>) -> [AttrSet<T>]
-	    where S.Iterator.Element == T, S.Iterator.Element: Monoid, S.Iterator.Element: EmptyAwareness {
+	    where S.Iterator.Element == T {
         return attrOfArr.fold(basic: { (arr: S?) -> [AttrSet<T>] in
             let arr: [T] = Array(arr ?? S.empty)
             return arr.map{ (t: T) -> AttrSet<T> in AttrSet<T>(basic: t) }

@@ -50,7 +50,7 @@ class ParserTests: XCTestCase {
     
     func testTrivialParserSucceeds() {
         property("Using a trivial parser always succeeds and consumes nothing") <- forAll { (cs: ArrayOf<Character>) in
-            if let (_, rest) = Parser<()>.trivial().run(cs.getArray) {
+            if let (_, rest) = Parser<()>.trivial(()).run(cs.getArray) {
                 return rest == cs.getArray
             } else {
                 return false

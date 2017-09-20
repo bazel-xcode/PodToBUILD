@@ -4,7 +4,7 @@
  
  
 SwiftCheck
----
+==========
 
 QuickCheck for Swift.
 
@@ -13,7 +13,7 @@ everybody else, see the [Tutorial Playground](Tutorial.playground) for a
 beginner-level introduction to the major concepts and use-cases of this library.
  
 Introduction
----
+============
 
 SwiftCheck is a testing library that automatically generates random data for 
 testing of program properties.  A property is a particular facet of an algorithm
@@ -93,7 +93,7 @@ property("Gen.oneOf multiple generators picks only given generators") <- forAll 
 All you have to figure out is what to test.  SwiftCheck will handle the rest.  
 
 Shrinking
----
+=========
  
 What makes QuickCheck unique is the notion of *shrinking* test cases.  When fuzz
 testing with arbitrary data, rather than simply halt on a failing test, SwiftCheck
@@ -191,7 +191,7 @@ Running SwiftCheck again reports a successful sieve of all 100 random cases:
 ```
 
 Custom Types
----
+============
 
 SwiftCheck implements random generation for most of the types in the Swift 
 Standard Library. Any custom types that wish to take part in testing must 
@@ -297,12 +297,12 @@ For instances of many complex or "real world" generators, see
 [`ComplexSpec.swift`](Tests/SwiftCheckTests/ComplexSpec.swift).
 
 System Requirements
----
+===================
 
 SwiftCheck supports OS X 10.9+ and iOS 7.0+.
 
 Setup
----
+=====
 
 SwiftCheck can be included one of two ways:
  
@@ -343,7 +343,7 @@ SwiftCheck can be included one of two ways:
 - Click the + and add SwiftCheck
 
 License
----
+=======
 
 SwiftCheck is released under the MIT license.
 

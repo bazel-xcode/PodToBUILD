@@ -31,7 +31,7 @@ public struct EmptyBuildOptions: BuildOptions {
     public let generateModuleMap: Bool = false
     public let headerVisibility: String = ""
 
-    static let shared = EmptyBuildOptions()
+    public static let shared = EmptyBuildOptions()
 }
 
 private var sharedBuildOptions: BuildOptions = EmptyBuildOptions.shared
@@ -125,7 +125,7 @@ public struct PodBuildFile: SkylarkConvertible {
         return .lines([makePrefixNodes()] + convertibleNodes)
     }
 
-    public static func with(podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions()) -> PodBuildFile {
+    public static func with(podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions.shared) -> PodBuildFile {
         sharedBuildOptions = buildOptions
         let libs = PodBuildFile.makeConvertables(fromPodspec: podSpec, buildOptions: buildOptions)
         return PodBuildFile(skylarkConvertibles: libs)
@@ -170,7 +170,7 @@ public struct PodBuildFile: SkylarkConvertible {
         return libraries.isEmpty ? [] : [ObjcImport(name: "\(spec.moduleName ?? spec.name)_VendoredLibraries", archives: libraries)]
     }
 
-    public static func makeConvertables(fromPodspec podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions()) -> [SkylarkConvertible] {
+    public static func makeConvertables(fromPodspec podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions.shared) -> [SkylarkConvertible] {
         let subspecTargets: [BazelTarget] = podSpec.subspecs.flatMap { spec in
             (bundleLibraries(withPodSpec: spec) as [BazelTarget]) +
                 ([ObjcLibrary(rootSpec: podSpec,

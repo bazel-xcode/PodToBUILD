@@ -94,7 +94,7 @@ struct Parser<A> {
     /// Make a parser that wraps this parser with two characters
     /// Note: Make sure you don't greedily parse the endingWith character in `self`
     func wrapped(startingWith: Character, endingWith: Character) -> Parser<A> {
-        return Parsers.just(startingWith).andThen{ _ in self }.flatMap{ x in
+        return Parsers.just(startingWith).andThen{  self }.flatMap{ x in
             return Parsers.just(endingWith).map{ _ in x }
         }
     }
@@ -104,7 +104,7 @@ struct Parser<A> {
     /// Note: Make sure you don't greedily parse the `separatedBy` character in `self`
     func rep(separatedBy: Parser<()>) -> Parser<[A]> {
         return self.flatMap{ a in
-            return Parser<[A]>.trivial([a]) <> (separatedBy.andThen{ _ in self}).many()
+            return Parser<[A]>.trivial([a]) <> (separatedBy.andThen{  self}).many()
         }
     }
     

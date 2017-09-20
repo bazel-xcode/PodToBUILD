@@ -486,8 +486,8 @@ enum RepoActions {
         if fileName.contains(".")
             && fileName[fileName.startIndex] == "v"
             && CharacterSet.decimalDigits.contains(secondUnicode) {
-            fileName = fileName.substring(from:
-                fileName.index(fileName.startIndex, offsetBy: 1))
+            fileName = String(fileName[
+                fileName.index(fileName.startIndex, offsetBy: 1)...])
         }
         let magicDir = components[components.count - 3] + "-" + fileName
         return magicDir
