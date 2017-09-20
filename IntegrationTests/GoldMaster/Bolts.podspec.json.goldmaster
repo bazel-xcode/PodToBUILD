@@ -72,8 +72,8 @@ objc_library(
     "Bolts_module_map"
   ],
   deps = [
-    ":Bolts_Tasks",
-    ":Bolts_AppLinks"
+    ":Tasks",
+    ":AppLinks"
   ],
   copts = [
 
@@ -101,12 +101,12 @@ objc_library(
 acknowledged_target(
   name = "Bolts_acknowledgement",
   deps = [
-    ":Bolts_Tasks_acknowledgement",
-    ":Bolts_AppLinks_acknowledgement"
+    ":Tasks_acknowledgement",
+    ":AppLinks_acknowledgement"
   ]
   )
 filegroup(
-  name = "Bolts_Tasks_hdrs",
+  name = "Tasks_hdrs",
   srcs = select(
     {
       ":osxCase": glob(
@@ -140,7 +140,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Bolts_Tasks",
+  name = "Tasks",
   enable_modules = 0,
   srcs = select(
     {
@@ -237,13 +237,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Bolts_Tasks_acknowledgement",
+  name = "Tasks_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "Bolts_AppLinks_hdrs",
+  name = "AppLinks_hdrs",
   srcs = select(
     {
       "//conditions:default": glob(
@@ -259,7 +259,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Bolts_AppLinks",
+  name = "AppLinks",
   enable_modules = 0,
   srcs = select(
     {
@@ -294,7 +294,7 @@ objc_library(
     "Bolts_module_map"
   ],
   deps = [
-    ":Bolts_Tasks"
+    ":Tasks"
   ],
   copts = [
 
@@ -320,8 +320,8 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Bolts_AppLinks_acknowledgement",
+  name = "AppLinks_acknowledgement",
   deps = [
-    ":Bolts_Tasks_acknowledgement"
+    ":Tasks_acknowledgement"
   ]
   )

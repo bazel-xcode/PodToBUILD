@@ -48,7 +48,7 @@ objc_library(
     "FMDB_module_map"
   ],
   deps = [
-    ":FMDB_standard"
+    ":standard"
   ],
   copts = [
 
@@ -76,11 +76,11 @@ objc_library(
 acknowledged_target(
   name = "FMDB_acknowledgement",
   deps = [
-    ":FMDB_standard_acknowledgement"
+    ":standard_acknowledgement"
   ]
   )
 filegroup(
-  name = "FMDB_standard_hdrs",
+  name = "standard_hdrs",
   srcs = glob(
     [
       "src/fmdb/FM*.h"
@@ -92,7 +92,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "FMDB_standard",
+  name = "standard",
   enable_modules = 0,
   srcs = glob(
     [
@@ -149,13 +149,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "FMDB_standard_acknowledgement",
+  name = "standard_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "FMDB_FTS_hdrs",
+  name = "FTS_hdrs",
   srcs = glob(
     [
       "src/extra/fts3/*.h"
@@ -167,7 +167,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "FMDB_FTS",
+  name = "FTS",
   enable_modules = 0,
   srcs = glob(
     [
@@ -194,7 +194,7 @@ objc_library(
     "FMDB_module_map"
   ],
   deps = [
-    ":FMDB_standard"
+    ":standard"
   ],
   copts = [
 
@@ -220,13 +220,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "FMDB_FTS_acknowledgement",
+  name = "FTS_acknowledgement",
   deps = [
-    ":FMDB_standard_acknowledgement"
+    ":standard_acknowledgement"
   ]
   )
 filegroup(
-  name = "FMDB_standalone_hdrs",
+  name = "standalone_hdrs",
   srcs = [
 
   ],
@@ -235,7 +235,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "FMDB_standalone",
+  name = "standalone",
   enable_modules = 0,
   hdrs = [
     ":FMDB_hdrs"
@@ -274,13 +274,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "FMDB_standalone_acknowledgement",
+  name = "standalone_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "FMDB_SQLCipher_hdrs",
+  name = "SQLCipher_hdrs",
   srcs = glob(
     [
       "src/fmdb/FM*.h"
@@ -292,7 +292,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "FMDB_SQLCipher",
+  name = "SQLCipher",
   enable_modules = 0,
   srcs = glob(
     [
@@ -349,7 +349,7 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "FMDB_SQLCipher_acknowledgement",
+  name = "SQLCipher_acknowledgement",
   deps = [
     "@SQLCipher//:SQLCipher_acknowledgement"
   ]

@@ -48,10 +48,10 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":Braintree_Core",
-    ":Braintree_Card",
-    ":Braintree_PayPal",
-    ":Braintree_UI"
+    ":Core",
+    ":Card",
+    ":PayPal",
+    ":UI"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -79,14 +79,14 @@ objc_library(
 acknowledged_target(
   name = "Braintree_acknowledgement",
   deps = [
-    ":Braintree_Core_acknowledgement",
-    ":Braintree_PayPal_acknowledgement",
-    ":Braintree_Card_acknowledgement",
-    ":Braintree_UI_acknowledgement"
+    ":PayPal_acknowledgement",
+    ":Core_acknowledgement",
+    ":Card_acknowledgement",
+    ":UI_acknowledgement"
   ]
   )
 filegroup(
-  name = "Braintree_Core_hdrs",
+  name = "Core_hdrs",
   srcs = glob(
     [
       "BraintreeCore/**/*.h"
@@ -98,7 +98,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_Core",
+  name = "Core",
   enable_modules = 0,
   srcs = glob(
     [
@@ -166,13 +166,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_Core_acknowledgement",
+  name = "Core_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "Braintree_Apple_Pay_hdrs",
+  name = "Apple-Pay_hdrs",
   srcs = glob(
     [
       "BraintreeApplePay/**/*.h"
@@ -184,7 +184,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_Apple_Pay",
+  name = "Apple-Pay",
   enable_modules = 0,
   srcs = glob(
     [
@@ -214,7 +214,7 @@ objc_library(
     "PassKit"
   ],
   deps = [
-    ":Braintree_Core"
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -240,13 +240,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_Apple_Pay_acknowledgement",
+  name = "Apple-Pay_acknowledgement",
   deps = [
-    ":Braintree_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "Braintree_Card_hdrs",
+  name = "Card_hdrs",
   srcs = glob(
     [
       "BraintreeCard/**/*.h"
@@ -258,7 +258,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_Card",
+  name = "Card",
   enable_modules = 0,
   srcs = glob(
     [
@@ -290,7 +290,7 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":Braintree_Core"
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -316,13 +316,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_Card_acknowledgement",
+  name = "Card_acknowledgement",
   deps = [
-    ":Braintree_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "Braintree_DataCollector_hdrs",
+  name = "DataCollector_hdrs",
   srcs = glob(
     [
       "BraintreeDataCollector/**/*.h"
@@ -334,7 +334,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_DataCollector",
+  name = "DataCollector",
   enable_modules = 0,
   srcs = glob(
     [
@@ -362,7 +362,7 @@ objc_library(
   ],
   deps = [
     ":DataCollector_VendoredLibraries",
-    ":Braintree_Core"
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -388,9 +388,9 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_DataCollector_acknowledgement",
+  name = "DataCollector_acknowledgement",
   deps = [
-    ":Braintree_Core_acknowledgement",
+    ":Core_acknowledgement",
     ":DataCollector_VendoredLibraries_acknowledgement"
   ]
   )
@@ -407,7 +407,7 @@ acknowledged_target(
   ]
   )
 filegroup(
-  name = "Braintree_PayPal_hdrs",
+  name = "PayPal_hdrs",
   srcs = glob(
     [
       "BraintreePayPal/*.h",
@@ -420,7 +420,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_PayPal",
+  name = "PayPal",
   enable_modules = 0,
   srcs = glob(
     [
@@ -448,8 +448,8 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":Braintree_PayPalOneTouch",
-    ":Braintree_Core"
+    ":PayPalOneTouch",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -475,14 +475,14 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_PayPal_acknowledgement",
+  name = "PayPal_acknowledgement",
   deps = [
-    ":Braintree_Core_acknowledgement",
-    ":Braintree_PayPalOneTouch_acknowledgement"
+    ":PayPalOneTouch_acknowledgement",
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "Braintree_Venmo_hdrs",
+  name = "Venmo_hdrs",
   srcs = glob(
     [
       "BraintreeVenmo/**/*.h"
@@ -494,7 +494,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_Venmo",
+  name = "Venmo",
   enable_modules = 0,
   srcs = glob(
     [
@@ -521,8 +521,8 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":Braintree_PayPalDataCollector",
-    ":Braintree_Core"
+    ":PayPalDataCollector",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -548,14 +548,14 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_Venmo_acknowledgement",
+  name = "Venmo_acknowledgement",
   deps = [
-    ":Braintree_Core_acknowledgement",
-    ":Braintree_PayPalDataCollector_acknowledgement"
+    ":PayPalDataCollector_acknowledgement",
+    ":Core_acknowledgement"
   ]
   )
 objc_bundle_library(
-  name = "UI_Bundle_Braintree_UI_Localization",
+  name = "UI_Bundle_Braintree-UI-Localization",
   resources = glob(
     [
       "BraintreeUI/Localization/*.lproj"
@@ -564,13 +564,13 @@ objc_bundle_library(
     )
   )
 acknowledged_target(
-  name = "UI_Bundle_Braintree_UI_Localization_acknowledgement",
+  name = "UI_Bundle_Braintree-UI-Localization_acknowledgement",
   deps = [
 
   ]
   )
 objc_bundle_library(
-  name = "UI_Bundle_Braintree_Drop_In_Localization",
+  name = "UI_Bundle_Braintree-Drop-In-Localization",
   resources = glob(
     [
       "BraintreeUI/Drop-In/Localization/*.lproj"
@@ -579,13 +579,13 @@ objc_bundle_library(
     )
   )
 acknowledged_target(
-  name = "UI_Bundle_Braintree_Drop_In_Localization_acknowledgement",
+  name = "UI_Bundle_Braintree-Drop-In-Localization_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "Braintree_UI_hdrs",
+  name = "UI_hdrs",
   srcs = glob(
     [
       "BraintreeUI/**/*.h"
@@ -597,7 +597,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_UI",
+  name = "UI",
   enable_modules = 0,
   srcs = glob(
     [
@@ -627,8 +627,8 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":Braintree_Card",
-    ":Braintree_Core"
+    ":Card",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -650,22 +650,22 @@ objc_library(
     "-fmodule-name=Braintree_pod_module"
   ],
   bundles = [
-    ":UI_Bundle_Braintree_UI_Localization",
-    ":UI_Bundle_Braintree_Drop_In_Localization"
+    ":UI_Bundle_Braintree-UI-Localization",
+    ":UI_Bundle_Braintree-Drop-In-Localization"
   ],
   visibility = [
     "//visibility:public"
   ]
   )
 acknowledged_target(
-  name = "Braintree_UI_acknowledgement",
+  name = "UI_acknowledgement",
   deps = [
-    ":Braintree_Card_acknowledgement",
-    ":Braintree_Core_acknowledgement"
+    ":Card_acknowledgement",
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "Braintree_UnionPay_hdrs",
+  name = "UnionPay_hdrs",
   srcs = glob(
     [
       "BraintreeUnionPay/**/*.h"
@@ -677,7 +677,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_UnionPay",
+  name = "UnionPay",
   enable_modules = 0,
   srcs = glob(
     [
@@ -707,8 +707,8 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":Braintree_Card",
-    ":Braintree_Core"
+    ":Card",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -734,14 +734,14 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_UnionPay_acknowledgement",
+  name = "UnionPay_acknowledgement",
   deps = [
-    ":Braintree_Card_acknowledgement",
-    ":Braintree_Core_acknowledgement"
+    ":Card_acknowledgement",
+    ":Core_acknowledgement"
   ]
   )
 objc_bundle_library(
-  name = "3D_Secure_Bundle_Braintree_3D_Secure_Localization",
+  name = "3D-Secure_Bundle_Braintree-3D-Secure-Localization",
   resources = glob(
     [
       "Braintree3DSecure/Localization/*.lproj"
@@ -750,13 +750,13 @@ objc_bundle_library(
     )
   )
 acknowledged_target(
-  name = "3D_Secure_Bundle_Braintree_3D_Secure_Localization_acknowledgement",
+  name = "3D-Secure_Bundle_Braintree-3D-Secure-Localization_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "Braintree_3D_Secure_hdrs",
+  name = "3D-Secure_hdrs",
   srcs = glob(
     [
       "Braintree3DSecure/**/*.h"
@@ -768,7 +768,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_3D_Secure",
+  name = "3D-Secure",
   enable_modules = 0,
   srcs = glob(
     [
@@ -798,8 +798,8 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":Braintree_Card",
-    ":Braintree_Core"
+    ":Card",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -821,21 +821,21 @@ objc_library(
     "-fmodule-name=Braintree_pod_module"
   ],
   bundles = [
-    ":3D_Secure_Bundle_Braintree_3D_Secure_Localization"
+    ":3D-Secure_Bundle_Braintree-3D-Secure-Localization"
   ],
   visibility = [
     "//visibility:public"
   ]
   )
 acknowledged_target(
-  name = "Braintree_3D_Secure_acknowledgement",
+  name = "3D-Secure_acknowledgement",
   deps = [
-    ":Braintree_Card_acknowledgement",
-    ":Braintree_Core_acknowledgement"
+    ":Card_acknowledgement",
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "Braintree_PayPalOneTouch_hdrs",
+  name = "PayPalOneTouch_hdrs",
   srcs = glob(
     [
       "BraintreePayPal/PayPalOneTouch/**/*.h"
@@ -847,7 +847,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_PayPalOneTouch",
+  name = "PayPalOneTouch",
   enable_modules = 0,
   srcs = glob(
     [
@@ -883,9 +883,9 @@ objc_library(
     "SafariServices"
   ],
   deps = [
-    ":Braintree_PayPalUtils",
-    ":Braintree_PayPalDataCollector",
-    ":Braintree_Core"
+    ":PayPalUtils",
+    ":PayPalDataCollector",
+    ":Core"
   ],
   copts = [
     "-ObjC",
@@ -913,15 +913,15 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_PayPalOneTouch_acknowledgement",
+  name = "PayPalOneTouch_acknowledgement",
   deps = [
-    ":Braintree_PayPalUtils_acknowledgement",
-    ":Braintree_Core_acknowledgement",
-    ":Braintree_PayPalDataCollector_acknowledgement"
+    ":PayPalDataCollector_acknowledgement",
+    ":Core_acknowledgement",
+    ":PayPalUtils_acknowledgement"
   ]
   )
 filegroup(
-  name = "Braintree_PayPalDataCollector_hdrs",
+  name = "PayPalDataCollector_hdrs",
   srcs = glob(
     [
       "BraintreePayPal/PayPalDataCollector/**/*.h"
@@ -933,7 +933,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_PayPalDataCollector",
+  name = "PayPalDataCollector",
   enable_modules = 0,
   srcs = glob(
     [
@@ -972,8 +972,8 @@ objc_library(
   ],
   deps = [
     ":PayPalDataCollector_VendoredLibraries",
-    ":Braintree_PayPalUtils",
-    ":Braintree_Core"
+    ":PayPalUtils",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -999,11 +999,11 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_PayPalDataCollector_acknowledgement",
+  name = "PayPalDataCollector_acknowledgement",
   deps = [
     ":PayPalDataCollector_VendoredLibraries_acknowledgement",
-    ":Braintree_PayPalUtils_acknowledgement",
-    ":Braintree_Core_acknowledgement"
+    ":Core_acknowledgement",
+    ":PayPalUtils_acknowledgement"
   ]
   )
 objc_import(
@@ -1019,7 +1019,7 @@ acknowledged_target(
   ]
   )
 filegroup(
-  name = "Braintree_PayPalUtils_hdrs",
+  name = "PayPalUtils_hdrs",
   srcs = glob(
     [
       "BraintreePayPal/PayPalUtils/**/*.h"
@@ -1031,7 +1031,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Braintree_PayPalUtils",
+  name = "PayPalUtils",
   enable_modules = 0,
   srcs = glob(
     [
@@ -1093,7 +1093,7 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Braintree_PayPalUtils_acknowledgement",
+  name = "PayPalUtils_acknowledgement",
   deps = [
 
   ]

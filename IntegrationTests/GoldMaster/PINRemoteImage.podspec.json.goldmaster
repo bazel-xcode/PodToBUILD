@@ -48,8 +48,8 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    ":PINRemoteImage_FLAnimatedImage",
-    ":PINRemoteImage_PINCache"
+    ":FLAnimatedImage",
+    ":PINCache"
   ],
   copts = [
 
@@ -77,12 +77,12 @@ objc_library(
 acknowledged_target(
   name = "PINRemoteImage_acknowledgement",
   deps = [
-    ":PINRemoteImage_FLAnimatedImage_acknowledgement",
-    ":PINRemoteImage_PINCache_acknowledgement"
+    ":FLAnimatedImage_acknowledgement",
+    ":PINCache_acknowledgement"
   ]
   )
 filegroup(
-  name = "PINRemoteImage_Core_hdrs",
+  name = "Core_hdrs",
   srcs = glob(
     [
       "Source/Classes/**/*.h"
@@ -98,7 +98,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "PINRemoteImage_Core",
+  name = "Core",
   enable_modules = 0,
   srcs = glob(
     [
@@ -163,13 +163,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "PINRemoteImage_Core_acknowledgement",
+  name = "Core_acknowledgement",
   deps = [
     "@PINOperation//:PINOperation_acknowledgement"
   ]
   )
 filegroup(
-  name = "PINRemoteImage_iOS_hdrs",
+  name = "iOS_hdrs",
   srcs = [
 
   ],
@@ -178,7 +178,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "PINRemoteImage_iOS",
+  name = "iOS",
   enable_modules = 0,
   hdrs = [
     ":PINRemoteImage_hdrs"
@@ -197,7 +197,7 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":PINRemoteImage_Core"
+    ":Core"
   ],
   copts = [
 
@@ -223,13 +223,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "PINRemoteImage_iOS_acknowledgement",
+  name = "iOS_acknowledgement",
   deps = [
-    ":PINRemoteImage_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "PINRemoteImage_OSX_hdrs",
+  name = "OSX_hdrs",
   srcs = [
 
   ],
@@ -238,7 +238,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "PINRemoteImage_OSX",
+  name = "OSX",
   enable_modules = 0,
   hdrs = [
     ":PINRemoteImage_hdrs"
@@ -258,7 +258,7 @@ objc_library(
     "CoreServices"
   ],
   deps = [
-    ":PINRemoteImage_Core"
+    ":Core"
   ],
   copts = [
 
@@ -284,13 +284,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "PINRemoteImage_OSX_acknowledgement",
+  name = "OSX_acknowledgement",
   deps = [
-    ":PINRemoteImage_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "PINRemoteImage_tvOS_hdrs",
+  name = "tvOS_hdrs",
   srcs = [
 
   ],
@@ -299,7 +299,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "PINRemoteImage_tvOS",
+  name = "tvOS",
   enable_modules = 0,
   hdrs = [
     ":PINRemoteImage_hdrs"
@@ -315,7 +315,7 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    ":PINRemoteImage_iOS"
+    ":iOS"
   ],
   copts = [
 
@@ -341,13 +341,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "PINRemoteImage_tvOS_acknowledgement",
+  name = "tvOS_acknowledgement",
   deps = [
-    ":PINRemoteImage_iOS_acknowledgement"
+    ":iOS_acknowledgement"
   ]
   )
 filegroup(
-  name = "PINRemoteImage_FLAnimatedImage_hdrs",
+  name = "FLAnimatedImage_hdrs",
   srcs = glob(
     [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
@@ -359,7 +359,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "PINRemoteImage_FLAnimatedImage",
+  name = "FLAnimatedImage",
   enable_modules = 0,
   srcs = glob(
     [
@@ -386,7 +386,7 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    ":PINRemoteImage_Core",
+    ":Core",
     "@FLAnimatedImage//:FLAnimatedImage"
   ],
   copts = [
@@ -413,14 +413,14 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "PINRemoteImage_FLAnimatedImage_acknowledgement",
+  name = "FLAnimatedImage_acknowledgement",
   deps = [
-    ":PINRemoteImage_Core_acknowledgement",
+    ":Core_acknowledgement",
     "@FLAnimatedImage//:FLAnimatedImage_acknowledgement"
   ]
   )
 filegroup(
-  name = "PINRemoteImage_WebP_hdrs",
+  name = "WebP_hdrs",
   srcs = [
 
   ],
@@ -429,7 +429,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "PINRemoteImage_WebP",
+  name = "WebP",
   enable_modules = 0,
   hdrs = [
     ":PINRemoteImage_hdrs"
@@ -445,7 +445,7 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    ":PINRemoteImage_Core",
+    ":Core",
     "@libwebp//:libwebp"
   ],
   copts = [
@@ -472,14 +472,14 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "PINRemoteImage_WebP_acknowledgement",
+  name = "WebP_acknowledgement",
   deps = [
-    ":PINRemoteImage_Core_acknowledgement",
+    ":Core_acknowledgement",
     "@libwebp//:libwebp_acknowledgement"
   ]
   )
 filegroup(
-  name = "PINRemoteImage_PINCache_hdrs",
+  name = "PINCache_hdrs",
   srcs = glob(
     [
       "Source/Classes/PINCache/*.h"
@@ -491,7 +491,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "PINRemoteImage_PINCache",
+  name = "PINCache",
   enable_modules = 0,
   srcs = glob(
     [
@@ -519,7 +519,7 @@ objc_library(
   ],
   deps = [
     "@PINCache//:PINCache",
-    ":PINRemoteImage_Core"
+    ":Core"
   ],
   copts = [
 
@@ -545,9 +545,9 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "PINRemoteImage_PINCache_acknowledgement",
+  name = "PINCache_acknowledgement",
   deps = [
     "@PINCache//:PINCache_acknowledgement",
-    ":PINRemoteImage_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )

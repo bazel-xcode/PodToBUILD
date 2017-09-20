@@ -73,8 +73,8 @@ objc_library(
     }
     ),
   deps = [
-    ":PINCache_Core",
-    ":PINCache_Arc_exception_safe"
+    ":Core",
+    ":Arc-exception-safe"
   ],
   copts = [
 
@@ -102,12 +102,12 @@ objc_library(
 acknowledged_target(
   name = "PINCache_acknowledgement",
   deps = [
-    ":PINCache_Core_acknowledgement",
-    ":PINCache_Arc_exception_safe_acknowledgement"
+    ":Core_acknowledgement",
+    ":Arc-exception-safe_acknowledgement"
   ]
   )
 filegroup(
-  name = "PINCache_Core_hdrs",
+  name = "Core_hdrs",
   srcs = glob(
     [
       "Source/*.h"
@@ -119,7 +119,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "PINCache_Core",
+  name = "Core",
   enable_modules = 0,
   srcs = glob(
     [
@@ -188,13 +188,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "PINCache_Core_acknowledgement",
+  name = "Core_acknowledgement",
   deps = [
     "@PINOperation//:PINOperation_acknowledgement"
   ]
   )
 filegroup(
-  name = "PINCache_Arc_exception_safe_hdrs",
+  name = "Arc-exception-safe_hdrs",
   srcs = [
 
   ],
@@ -203,7 +203,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "PINCache_Arc_exception_safe",
+  name = "Arc-exception-safe",
   enable_modules = 0,
   srcs = glob(
     [
@@ -240,7 +240,7 @@ objc_library(
     }
     ),
   deps = [
-    ":PINCache_Core"
+    ":Core"
   ],
   copts = [
     "-fobjc-arc-exceptions"
@@ -266,8 +266,8 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "PINCache_Arc_exception_safe_acknowledgement",
+  name = "Arc-exception-safe_acknowledgement",
   deps = [
-    ":PINCache_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )

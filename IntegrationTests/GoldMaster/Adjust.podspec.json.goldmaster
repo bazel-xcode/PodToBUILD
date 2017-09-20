@@ -74,7 +74,7 @@ objc_library(
     }
     ),
   deps = [
-    ":Adjust_Core"
+    ":Core"
   ],
   copts = [
 
@@ -102,11 +102,11 @@ objc_library(
 acknowledged_target(
   name = "Adjust_acknowledgement",
   deps = [
-    ":Adjust_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "Adjust_Core_hdrs",
+  name = "Core_hdrs",
   srcs = glob(
     [
       "Adjust/*.h",
@@ -119,7 +119,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Adjust_Core",
+  name = "Core",
   enable_modules = 0,
   srcs = glob(
     [
@@ -190,13 +190,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Adjust_Core_acknowledgement",
+  name = "Core_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "Adjust_Sociomantic_hdrs",
+  name = "Sociomantic_hdrs",
   srcs = glob(
     [
       "plugin/Sociomantic/*.h"
@@ -208,7 +208,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Adjust_Sociomantic",
+  name = "Sociomantic",
   enable_modules = 0,
   srcs = glob(
     [
@@ -249,7 +249,7 @@ objc_library(
     }
     ),
   deps = [
-    ":Adjust_Core"
+    ":Core"
   ],
   copts = [
 
@@ -275,13 +275,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Adjust_Sociomantic_acknowledgement",
+  name = "Sociomantic_acknowledgement",
   deps = [
-    ":Adjust_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "Adjust_Criteo_hdrs",
+  name = "Criteo_hdrs",
   srcs = glob(
     [
       "plugin/Criteo/*.h"
@@ -293,7 +293,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Adjust_Criteo",
+  name = "Criteo",
   enable_modules = 0,
   srcs = glob(
     [
@@ -334,7 +334,7 @@ objc_library(
     }
     ),
   deps = [
-    ":Adjust_Core"
+    ":Core"
   ],
   copts = [
 
@@ -360,13 +360,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Adjust_Criteo_acknowledgement",
+  name = "Criteo_acknowledgement",
   deps = [
-    ":Adjust_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "Adjust_Trademob_hdrs",
+  name = "Trademob_hdrs",
   srcs = glob(
     [
       "plugin/Trademob/*.h"
@@ -378,7 +378,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Adjust_Trademob",
+  name = "Trademob",
   enable_modules = 0,
   srcs = glob(
     [
@@ -419,7 +419,7 @@ objc_library(
     }
     ),
   deps = [
-    ":Adjust_Core"
+    ":Core"
   ],
   copts = [
 
@@ -445,8 +445,8 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Adjust_Trademob_acknowledgement",
+  name = "Trademob_acknowledgement",
   deps = [
-    ":Adjust_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )

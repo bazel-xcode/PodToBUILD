@@ -48,8 +48,8 @@ objc_library(
     "Branch_module_map"
   ],
   deps = [
-    ":Branch_Core",
-    ":Branch_without_IDFA"
+    ":Core",
+    ":without-IDFA"
   ],
   copts = [
 
@@ -77,12 +77,12 @@ objc_library(
 acknowledged_target(
   name = "Branch_acknowledgement",
   deps = [
-    ":Branch_Core_acknowledgement",
-    ":Branch_without_IDFA_acknowledgement"
+    ":Core_acknowledgement",
+    ":without-IDFA_acknowledgement"
   ]
   )
 filegroup(
-  name = "Branch_Core_hdrs",
+  name = "Core_hdrs",
   srcs = glob(
     [
       "Branch-SDK/Branch-SDK/*.h",
@@ -96,7 +96,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Branch_Core",
+  name = "Core",
   enable_modules = 0,
   srcs = glob(
     [
@@ -154,13 +154,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Branch_Core_acknowledgement",
+  name = "Core_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "Branch_without_IDFA_hdrs",
+  name = "without-IDFA_hdrs",
   srcs = glob(
     [
       "Branch-SDK/Branch-SDK/*.h",
@@ -174,7 +174,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "Branch_without_IDFA",
+  name = "without-IDFA",
   enable_modules = 0,
   srcs = glob(
     [
@@ -231,7 +231,7 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "Branch_without_IDFA_acknowledgement",
+  name = "without-IDFA_acknowledgement",
   deps = [
 
   ]

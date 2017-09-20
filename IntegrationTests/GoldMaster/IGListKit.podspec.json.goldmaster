@@ -82,7 +82,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":IGListKit_Default"
+    ":Default"
   ],
   copts = [
     "-std=c++11",
@@ -111,11 +111,11 @@ objc_library(
 acknowledged_target(
   name = "IGListKit_acknowledgement",
   deps = [
-    ":IGListKit_Default_acknowledgement"
+    ":Default_acknowledgement"
   ]
   )
 filegroup(
-  name = "IGListKit_Diffing_hdrs",
+  name = "Diffing_hdrs",
   srcs = glob(
     [
       "Source/Common/**/*.h"
@@ -127,7 +127,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "IGListKit_Diffing",
+  name = "Diffing",
   enable_modules = 0,
   srcs = select(
     {
@@ -214,13 +214,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "IGListKit_Diffing_acknowledgement",
+  name = "Diffing_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "IGListKit_Default_hdrs",
+  name = "Default_hdrs",
   srcs = select(
     {
       "//conditions:default": glob(
@@ -242,7 +242,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "IGListKit_Default",
+  name = "Default",
   enable_modules = 0,
   srcs = select(
     {
@@ -307,7 +307,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":IGListKit_Diffing"
+    ":Diffing"
   ],
   copts = [
     "-std=c++11",
@@ -334,8 +334,8 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "IGListKit_Default_acknowledgement",
+  name = "Default_acknowledgement",
   deps = [
-    ":IGListKit_Diffing_acknowledgement"
+    ":Diffing_acknowledgement"
   ]
   )

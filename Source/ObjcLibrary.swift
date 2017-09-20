@@ -106,26 +106,23 @@ struct ConfigSetting: BazelTarget {
     }
 }
 
-/// rootName -> names -> fixedNames
-func fixDependencyNames(rootName: String, moduleName: String?) -> ([String]) -> [String]  {
-    return { $0.map { depName in
-            // Build up dependencies. Versions are ignored!
-            // When a given dependency is locally speced, it should
-            // Match the PodName i.e. PINCache/Core
-            let results = depName.components(separatedBy: "/")
-            if results.count > 1 && results[0] == rootName {
-                // This is a local subspec reference
-                let join = results[1 ... results.count - 1].joined(separator: "/")
-                return ":\(moduleName ?? rootName)_\(ObjcLibrary.bazelLabel(fromString: join))"
-            } else {
-                if results.count > 1, let podname = results.first {
-                    // This is a reference to an external podspec's subspec
-                    return "@\(podname)//:\(ObjcLibrary.bazelLabel(fromString: depName))"
-                } else {
-                    // This is a reference to another pod library
-                    return "@\(ObjcLibrary.bazelLabel(fromString: depName))//:\(ObjcLibrary.bazelLabel(fromString: depName))"
-                }
-            }
+/// Get a dependency name from a name in accordance with
+/// CocoaPods dependency naming ( slashes )
+/// Versions are ignored!
+/// When a given dependency is locally speced, it should
+/// Match the PodName i.e. PINCache/Core
+func getDependencyName(fromPodDepName podDepName: String, inRootPodNamed rootName: String, moduleName: String?) -> String  {
+    let results = podDepName.components(separatedBy: "/")
+    if results.count > 1 && results[0] == rootName {
+        // This is a local subspec reference
+        let join = results[1 ... results.count - 1].joined(separator: "/")
+        return ":\(ObjcLibrary.bazelLabel(fromString: join))"
+    } else {
+        if results.count > 1 {
+            return "@\(results[0])//:\(ObjcLibrary.bazelLabel(fromString: results[1]))"
+        } else {
+            // This is a reference to another pod library
+            return "@\(ObjcLibrary.bazelLabel(fromString: results[0]))//:\(ObjcLibrary.bazelLabel(fromString: results[0]))"
         }
     }
 }
@@ -254,7 +251,6 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
     static func bazelLabel(fromString string: String) -> String {
         return string.replacingOccurrences(of: "/", with: "_")
-                     .replacingOccurrences(of: "-", with: "_")
                      .replacingOccurrences(of: "+", with: "_")
     }
 
@@ -286,7 +282,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let fallbackName = ComposedSpec.create(fromSpecs: [spec, rootSpec].flatMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
         let rootName = fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName)) ?? fallbackName
 
-        self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(rootName)_\(spec.moduleName ?? spec.name)")
+        self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
         self.externalName = rootName
 
         let xcconfigTransformer = XCConfigTransformer.defaultTransformer(externalName: externalName)
@@ -318,8 +314,12 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         self.sdkDylibs = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.libraries))
 
-        let extraDepsSet = AttrSet(basic: extraDeps.map{ ":\($0)" }.map(ObjcLibrary.bazelLabel))
-        self.deps = extraDepsSet <> (spec ^* liftToAttr(PodSpec.lens.dependencies .. ReadonlyLens(fixDependencyNames(rootName: fallbackName, moduleName: rootName))))
+        // Lift the deps to multiplatform, then get the names of these deps.
+        let mpDeps = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.dependencies))
+        let mpPodSpecDeps = mpDeps.map { $0.map { getDependencyName(fromPodDepName: $0, inRootPodNamed: fallbackName, moduleName: rootName) } }
+
+        let extraDepNames = extraDeps.map { ObjcLibrary.bazelLabel(fromString: ":\($0)") }
+        self.deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
 
         self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
 
@@ -464,13 +464,14 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let headerGlobNode = headers
         var moduleMapName = externalName + "_module_map"
+        let clangModuleName = headerName.basic?.replacingOccurrences(of: "-", with: "_")
         if isTopLevelTarget {
             inlineSkylark.append(.functionCall(
                 name: "gen_module_map",
                 arguments: [
                     .basic(externalName.toSkylark()),
                     .basic(moduleMapName.toSkylark()),
-                    .basic(headerName.basic.toSkylark()),
+                    .basic(clangModuleName.toSkylark()),
                     .basic([name + "_hdrs"].toSkylark())
                 ]
                 ))

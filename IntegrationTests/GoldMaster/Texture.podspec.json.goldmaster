@@ -56,7 +56,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":AsyncDisplayKit_PINRemoteImage"
+    ":PINRemoteImage"
   ],
   copts = [
     "-std=c++11",
@@ -85,11 +85,11 @@ objc_library(
 acknowledged_target(
   name = "AsyncDisplayKit_acknowledgement",
   deps = [
-    ":AsyncDisplayKit_PINRemoteImage_acknowledgement"
+    ":PINRemoteImage_acknowledgement"
   ]
   )
 filegroup(
-  name = "AsyncDisplayKit_Core_hdrs",
+  name = "Core_hdrs",
   srcs = glob(
     [
       "Base/*.h",
@@ -103,7 +103,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "AsyncDisplayKit_Core",
+  name = "Core",
   enable_modules = 0,
   srcs = glob(
     [
@@ -168,13 +168,13 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "AsyncDisplayKit_Core_acknowledgement",
+  name = "Core_acknowledgement",
   deps = [
 
   ]
   )
 filegroup(
-  name = "AsyncDisplayKit_PINRemoteImage_hdrs",
+  name = "PINRemoteImage_hdrs",
   srcs = [
 
   ],
@@ -183,7 +183,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "AsyncDisplayKit_PINRemoteImage",
+  name = "PINRemoteImage",
   enable_modules = 0,
   hdrs = [
     ":AsyncDisplayKit_hdrs"
@@ -207,9 +207,9 @@ objc_library(
     "c++"
   ],
   deps = [
-    "@PINRemoteImage//:PINRemoteImage_PINCache",
-    ":AsyncDisplayKit_Core",
-    "@PINRemoteImage//:PINRemoteImage_iOS"
+    "@PINRemoteImage//:PINCache",
+    ":Core",
+    "@PINRemoteImage//:iOS"
   ],
   copts = [
     "-std=c++11",
@@ -236,15 +236,15 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "AsyncDisplayKit_PINRemoteImage_acknowledgement",
+  name = "PINRemoteImage_acknowledgement",
   deps = [
-    "@PINRemoteImage//:PINRemoteImage_PINCache_acknowledgement",
-    "@PINRemoteImage//:PINRemoteImage_iOS_acknowledgement",
-    ":AsyncDisplayKit_Core_acknowledgement"
+    "@PINRemoteImage//:iOS_acknowledgement",
+    ":Core_acknowledgement",
+    "@PINRemoteImage//:PINCache_acknowledgement"
   ]
   )
 filegroup(
-  name = "AsyncDisplayKit_IGListKit_hdrs",
+  name = "IGListKit_hdrs",
   srcs = [
 
   ],
@@ -253,7 +253,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "AsyncDisplayKit_IGListKit",
+  name = "IGListKit",
   enable_modules = 0,
   hdrs = [
     ":AsyncDisplayKit_hdrs"
@@ -277,7 +277,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":AsyncDisplayKit_Core",
+    ":Core",
     "@IGListKit//:IGListKit"
   ],
   copts = [
@@ -305,14 +305,14 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "AsyncDisplayKit_IGListKit_acknowledgement",
+  name = "IGListKit_acknowledgement",
   deps = [
     "@IGListKit//:IGListKit_acknowledgement",
-    ":AsyncDisplayKit_Core_acknowledgement"
+    ":Core_acknowledgement"
   ]
   )
 filegroup(
-  name = "AsyncDisplayKit_Yoga_hdrs",
+  name = "Yoga_hdrs",
   srcs = [
 
   ],
@@ -321,7 +321,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "AsyncDisplayKit_Yoga",
+  name = "Yoga",
   enable_modules = 0,
   hdrs = [
     ":AsyncDisplayKit_hdrs"
@@ -345,7 +345,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":AsyncDisplayKit_Core",
+    ":Core",
     "@Yoga//:Yoga"
   ],
   copts = [
@@ -374,9 +374,9 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "AsyncDisplayKit_Yoga_acknowledgement",
+  name = "Yoga_acknowledgement",
   deps = [
-    "@Yoga//:Yoga_acknowledgement",
-    ":AsyncDisplayKit_Core_acknowledgement"
+    ":Core_acknowledgement",
+    "@Yoga//:Yoga_acknowledgement"
   ]
   )

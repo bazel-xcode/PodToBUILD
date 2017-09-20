@@ -47,15 +47,12 @@ objc_library(
     "pod_support/Headers/Public/",
     "KakaoOpenSDK_module_map"
   ],
+  sdk_frameworks = [
+    "UIKit",
+    "WebKit"
+  ],
   deps = [
-    ":KakaoOpenSDK_KakaoOpenSDK",
-    ":KakaoOpenSDK_VendoredFrameworks",
-    ":KakaoOpenSDK_KakaoNavi",
-    ":KakaoNavi_VendoredFrameworks",
-    ":KakaoOpenSDK_KakaoLink",
-    ":KakaoLink_VendoredFrameworks",
-    ":KakaoOpenSDK_KakaoS2",
-    ":KakaoS2_VendoredFrameworks"
+    ":KakaoOpenSDK_VendoredFrameworks"
   ],
   copts = [
 
@@ -83,27 +80,31 @@ objc_library(
 acknowledged_target(
   name = "KakaoOpenSDK_acknowledgement",
   deps = [
-    ":KakaoOpenSDK_KakaoLink_acknowledgement",
-    ":KakaoOpenSDK_KakaoOpenSDK_acknowledgement",
-    ":KakaoS2_VendoredFrameworks_acknowledgement",
-    ":KakaoOpenSDK_KakaoNavi_acknowledgement",
-    ":KakaoOpenSDK_VendoredFrameworks_acknowledgement",
-    ":KakaoNavi_VendoredFrameworks_acknowledgement",
-    ":KakaoLink_VendoredFrameworks_acknowledgement",
-    ":KakaoOpenSDK_KakaoS2_acknowledgement"
+    ":KakaoOpenSDK_VendoredFrameworks_acknowledgement"
   ]
   )
 filegroup(
-  name = "KakaoOpenSDK_KakaoOpenSDK_hdrs",
-  srcs = [
-
-  ],
+  name = "KakaoOpenSDK_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
   visibility = [
     "//visibility:public"
   ]
   )
+gen_module_map(
+  "KakaoOpenSDK",
+  "KakaoOpenSDK_module_map",
+  "KakaoOpenSDK",
+  [
+    "KakaoOpenSDK_hdrs"
+  ]
+  )
 objc_library(
-  name = "KakaoOpenSDK_KakaoOpenSDK",
+  name = "KakaoOpenSDK",
   enable_modules = 0,
   hdrs = [
     ":KakaoOpenSDK_hdrs"
@@ -149,7 +150,7 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "KakaoOpenSDK_KakaoOpenSDK_acknowledgement",
+  name = "KakaoOpenSDK_acknowledgement",
   deps = [
     ":KakaoOpenSDK_VendoredFrameworks_acknowledgement"
   ]
@@ -174,7 +175,7 @@ acknowledged_target(
   ]
   )
 filegroup(
-  name = "KakaoOpenSDK_KakaoNavi_hdrs",
+  name = "KakaoNavi_hdrs",
   srcs = [
 
   ],
@@ -183,7 +184,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "KakaoOpenSDK_KakaoNavi",
+  name = "KakaoNavi",
   enable_modules = 0,
   hdrs = [
     ":KakaoOpenSDK_hdrs"
@@ -228,7 +229,7 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "KakaoOpenSDK_KakaoNavi_acknowledgement",
+  name = "KakaoNavi_acknowledgement",
   deps = [
     ":KakaoNavi_VendoredFrameworks_acknowledgement"
   ]
@@ -253,7 +254,7 @@ acknowledged_target(
   ]
   )
 filegroup(
-  name = "KakaoOpenSDK_KakaoLink_hdrs",
+  name = "KakaoLink_hdrs",
   srcs = [
 
   ],
@@ -262,7 +263,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "KakaoOpenSDK_KakaoLink",
+  name = "KakaoLink",
   enable_modules = 0,
   hdrs = [
     ":KakaoOpenSDK_hdrs"
@@ -307,7 +308,7 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "KakaoOpenSDK_KakaoLink_acknowledgement",
+  name = "KakaoLink_acknowledgement",
   deps = [
     ":KakaoLink_VendoredFrameworks_acknowledgement"
   ]
@@ -332,7 +333,7 @@ acknowledged_target(
   ]
   )
 filegroup(
-  name = "KakaoOpenSDK_KakaoS2_hdrs",
+  name = "KakaoS2_hdrs",
   srcs = [
 
   ],
@@ -341,7 +342,7 @@ filegroup(
   ]
   )
 objc_library(
-  name = "KakaoOpenSDK_KakaoS2",
+  name = "KakaoS2",
   enable_modules = 0,
   hdrs = [
     ":KakaoOpenSDK_hdrs"
@@ -386,7 +387,7 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "KakaoOpenSDK_KakaoS2_acknowledgement",
+  name = "KakaoS2_acknowledgement",
   deps = [
     ":KakaoS2_VendoredFrameworks_acknowledgement"
   ]
