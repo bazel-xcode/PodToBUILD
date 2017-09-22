@@ -18,7 +18,18 @@ func main() {
         fatalError("Invalid JSON Podspec: \(JSONPodspecFile)")
     }
 
-    let buildFile = PodBuildFile.with(podSpec: podSpec)
+    let podSpecURL = NSURL(fileURLWithPath: JSONPodspecFile)
+    let assumedPodName = podSpecURL.lastPathComponent!.components(separatedBy: ".")[0]
+    let options = BasicBuildOptions(podName: assumedPodName,
+                                 userOptions: [String](),
+                                 globalCopts: [String](),
+                                 trace: false,
+                                 enableModules: false,
+                                 generateModuleMap: false,
+                                 headerVisibility:  ""
+        )
+
+    let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: options)
     let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
     print(buildFileSkylarkCompiler.run())
 }

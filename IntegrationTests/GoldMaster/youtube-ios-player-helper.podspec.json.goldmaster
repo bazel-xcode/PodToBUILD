@@ -38,7 +38,7 @@ filegroup(
 gen_module_map(
   "youtube-ios-player-helper",
   "youtube-ios-player-helper_module_map",
-  "youtube-ios-player-helper",
+  "youtube_ios_player_helper",
   [
     "youtube-ios-player-helper_hdrs"
   ]

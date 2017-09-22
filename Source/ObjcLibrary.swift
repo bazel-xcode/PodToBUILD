@@ -608,11 +608,9 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         // Include headders
         var iquotes = [String]()
         for searchPath in headerSearchPaths {
-            // This external directory is wrong, along with a few others
-            var externalDir: String = externalName
-            if externalName == "AsyncDisplayKit" {
-                externalDir = "Texture"
-            }
+            // Assume that the podspec matches the name of the directory.
+            // it is a convention that these are 1 in the same.
+            let externalDir = options.podName
             iquotes.append("-I" + "external/" + externalDir + "/" + searchPath)
             iquotes.append("-iquote")
             iquotes.append("external/" + externalDir + "/" + searchPath)

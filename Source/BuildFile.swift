@@ -12,6 +12,7 @@ public protocol BuildOptions {
     var userOptions: [String] { get }
     var globalCopts: [String] { get }
     var trace: Bool { get }
+    var podName: String { get }
 
     // Frontend options
 
@@ -26,12 +27,41 @@ public struct EmptyBuildOptions: BuildOptions {
     public let userOptions = [String]()
     public let globalCopts = [String]()
     public let trace: Bool = false
+    public let podName: String = ""
 
     public let enableModules: Bool = false
     public let generateModuleMap: Bool = false
     public let headerVisibility: String = ""
 
     public static let shared = EmptyBuildOptions()
+}
+
+public struct BasicBuildOptions: BuildOptions {
+    public let podName: String
+    public let userOptions: [String]
+    public let globalCopts: [String]
+    public let trace: Bool
+
+    public let enableModules: Bool
+    public let generateModuleMap: Bool
+    public let headerVisibility: String
+
+    public init(podName: String,
+                userOptions: [String],
+                globalCopts: [String],
+                trace: Bool,
+                enableModules: Bool = false,
+                generateModuleMap: Bool = false,
+                headerVisibility: String = ""
+    ) {
+        self.podName = podName
+        self.userOptions = userOptions
+        self.globalCopts = globalCopts
+        self.trace = trace
+        self.enableModules = enableModules
+        self.generateModuleMap = generateModuleMap
+        self.headerVisibility = headerVisibility
+    }
 }
 
 private var sharedBuildOptions: BuildOptions = EmptyBuildOptions.shared

@@ -72,9 +72,9 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-Iexternal/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/",
     "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "external/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],
@@ -157,9 +157,9 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-Iexternal/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/",
     "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "external/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],
@@ -226,9 +226,9 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-Iexternal/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/",
     "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "external/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],
@@ -296,9 +296,9 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-Iexternal/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/",
     "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "external/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],
@@ -365,9 +365,9 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
+    "-Iexternal/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/",
     "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "external/AsyncDisplayKit/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],

@@ -27,33 +27,6 @@ public struct FetchOptions {
 
 /// Parse in Command Line arguments
 /// Example: PodName --user_option Opt1
-public struct BasicBuildOptions: BuildOptions {
-    public let podName: String
-    public let userOptions: [String]
-    public let globalCopts: [String]
-    public let trace: Bool
-
-    public let enableModules: Bool
-    public let generateModuleMap: Bool
-    public let headerVisibility: String
-
-    public init(podName: String,
-                userOptions: [String],
-                globalCopts: [String],
-                trace: Bool,
-                enableModules: Bool = false,
-                generateModuleMap: Bool = false,
-                headerVisibility: String = ""
-    ) {
-        self.podName = podName
-        self.userOptions = userOptions
-        self.globalCopts = globalCopts
-        self.trace = trace
-        self.enableModules = enableModules
-        self.generateModuleMap = generateModuleMap
-        self.headerVisibility = headerVisibility
-    }
-}
 
 enum CLIArgumentType {
     case bool
