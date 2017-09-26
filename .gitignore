@@ -4,3 +4,4 @@ bin/WorkspaceTools
 bin/PodSpecToBUILD
 project.xcworkspace
 !BazelExtensions
+xcuserdata
