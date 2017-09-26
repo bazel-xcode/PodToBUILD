@@ -38,7 +38,7 @@ objc_library(
     ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
-    "AsyncDisplayKit",
+    "Texture",
     [
 
     ]
@@ -124,7 +124,7 @@ objc_library(
     ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
-    "AsyncDisplayKit",
+    "Texture",
     [
       "Source/**/*.pch",
       "Base/**/*.pch"
@@ -189,7 +189,7 @@ objc_library(
     ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
-    "AsyncDisplayKit",
+    "Texture",
     [
 
     ]
@@ -259,7 +259,7 @@ objc_library(
     ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
-    "AsyncDisplayKit",
+    "Texture",
     [
 
     ]
@@ -327,7 +327,7 @@ objc_library(
     ":AsyncDisplayKit_hdrs"
   ],
   pch = pch_with_name_hint(
-    "AsyncDisplayKit",
+    "Texture",
     [
 
     ]

@@ -283,7 +283,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let rootName = fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName)) ?? fallbackName
 
         self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
-        self.externalName = rootName
+        self.externalName = rootSpec?.name ?? spec.name
 
         let xcconfigTransformer = XCConfigTransformer.defaultTransformer(externalName: externalName)
         let xcconfigFlags =
@@ -419,11 +419,15 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         libArguments.append(enableModulesSkylark)
 
         let moduleName = bazelModuleName()
-        
-        // Generate a module map for the target matching the package name.
-        let isTopLevelTarget = name == moduleName
 
-        // FIXME: Vendored
+        let isTopLevelTarget: Bool
+        if externalName != moduleName {
+             // Someone has a headername different than the external name
+             isTopLevelTarget = name == moduleName
+        } else {
+             isTopLevelTarget = name == externalName
+        }
+
         let depHdrs = deps.map {
             $0.filter { $0.hasPrefix(":") && !$0.contains("Vendored") && !$0.contains("_Bundle") }
                 .map { ($0 + "_hdrs").toSkylark() }
@@ -463,14 +467,16 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         }
 
         let headerGlobNode = headers
-        var moduleMapName = externalName + "_module_map"
+
+        let hdrsRuleBasename = isTopLevelTarget ? name : moduleName
+        let moduleMapDirectoryName = hdrsRuleBasename + "_module_map"
         let clangModuleName = headerName.basic?.replacingOccurrences(of: "-", with: "_")
         if isTopLevelTarget {
             inlineSkylark.append(.functionCall(
                 name: "gen_module_map",
                 arguments: [
-                    .basic(externalName.toSkylark()),
-                    .basic(moduleMapName.toSkylark()),
+                    .basic(moduleName.toSkylark()),
+                    .basic(moduleMapDirectoryName.toSkylark()),
                     .basic(clangModuleName.toSkylark()),
                     .basic([name + "_hdrs"].toSkylark())
                 ]
@@ -529,17 +535,15 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                                   multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
                                     return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
                                 }))
-        
-        let hdrsName = isTopLevelTarget ? moduleName : externalName
         if generateModuleMap {
             libArguments.append(.named(
                 name: "hdrs",
-                value: [moduleMapName + "_module_map_file"].toSkylark() .+. ([hdrsName + "_hdrs"]).toSkylark()
+                value: [moduleMapDirectoryName + "_module_map_file"].toSkylark() .+.  ([hdrsRuleBasename + "_hdrs"]).toSkylark()
                 ))
         } else {
             libArguments.append(.named(
                 name: "hdrs",
-                value: ([":" + hdrsName + "_hdrs"]).toSkylark()
+                value: ([":" + hdrsRuleBasename + "_hdrs"]).toSkylark()
                 ))
         }
 
@@ -560,7 +564,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         // All includes are bubbled up automatically
         libArguments.append(.named(
             name: "includes",
-            value: ([PodSupportSystemPublicHeaderDir] + [ moduleMapName ]).toSkylark()
+            value: ([PodSupportSystemPublicHeaderDir] + [ moduleMapDirectoryName ]).toSkylark()
         ))
 
         if !lib.sdkFrameworks.isEmpty {
