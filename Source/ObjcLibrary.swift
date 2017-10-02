@@ -616,8 +616,6 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             // it is a convention that these are 1 in the same.
             let externalDir = options.podName
             iquotes.append("-I" + "external/" + externalDir + "/" + searchPath)
-            iquotes.append("-iquote")
-            iquotes.append("external/" + externalDir + "/" + searchPath)
         }
 
         libArguments.append(.named(
