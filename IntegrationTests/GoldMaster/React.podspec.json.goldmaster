@@ -63,9 +63,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -169,9 +167,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -240,9 +236,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -311,9 +305,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -382,9 +374,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -453,9 +443,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -524,9 +512,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -595,9 +581,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -666,9 +650,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -737,9 +719,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -808,9 +788,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -879,9 +857,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -950,9 +926,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -1021,9 +995,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/React/pod_support/Headers/Public/React/",
-    "-iquote",
-    "external/React/pod_support/Headers/Public/React/"
+    "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],

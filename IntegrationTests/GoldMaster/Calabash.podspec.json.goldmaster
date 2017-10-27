@@ -96,9 +96,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Calabash/pod_support/Headers/Public/Calabash/",
-    "-iquote",
-    "external/Calabash/pod_support/Headers/Public/Calabash/"
+    "-IVendor/Calabash/pod_support/Headers/Public/Calabash/"
   ] + [
     "-fmodule-name=Calabash_pod_module"
   ],

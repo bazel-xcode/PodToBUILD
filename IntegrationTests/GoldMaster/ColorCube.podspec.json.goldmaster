@@ -71,9 +71,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/ColorCube/pod_support/Headers/Public/ColorCube/",
-    "-iquote",
-    "external/ColorCube/pod_support/Headers/Public/ColorCube/"
+    "-IVendor/ColorCube/pod_support/Headers/Public/ColorCube/"
   ] + [
     "-fmodule-name=ColorCube_pod_module"
   ],

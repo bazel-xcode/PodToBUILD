@@ -50,7 +50,7 @@ objc_library(
   deps = [
     ":Messages",
     ":Services",
-    "@!ProtoCompiler-gRPCPlugin//:!ProtoCompiler-gRPCPlugin"
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
@@ -65,9 +65,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/googleapis/pod_support/Headers/Public/googleapis/",
-    "-iquote",
-    "external/googleapis/pod_support/Headers/Public/googleapis/"
+    "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
     "-fmodule-name=googleapis_pod_module"
   ],
@@ -79,7 +77,7 @@ acknowledged_target(
   name = "googleapis_acknowledgement",
   deps = [
     ":Services_acknowledgement",
-    "@!ProtoCompiler-gRPCPlugin//:!ProtoCompiler-gRPCPlugin_acknowledgement",
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin_acknowledgement",
     ":Messages_acknowledgement"
   ]
   )
@@ -121,7 +119,7 @@ objc_library(
     "googleapis_module_map"
   ],
   deps = [
-    "@Protobuf//:Protobuf"
+    "//Vendor/Protobuf:Protobuf"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
@@ -136,9 +134,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/googleapis/pod_support/Headers/Public/googleapis/",
-    "-iquote",
-    "external/googleapis/pod_support/Headers/Public/googleapis/"
+    "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
     "-fmodule-name=googleapis_pod_module"
   ],
@@ -149,7 +145,7 @@ objc_library(
 acknowledged_target(
   name = "Messages_acknowledgement",
   deps = [
-    "@Protobuf//:Protobuf_acknowledgement"
+    "//Vendor/Protobuf:Protobuf_acknowledgement"
   ]
   )
 filegroup(
@@ -193,7 +189,7 @@ objc_library(
   ],
   deps = [
     ":Messages",
-    "@gRPC-ProtoRPC//:gRPC-ProtoRPC"
+    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
@@ -208,9 +204,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/googleapis/pod_support/Headers/Public/googleapis/",
-    "-iquote",
-    "external/googleapis/pod_support/Headers/Public/googleapis/"
+    "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
     "-fmodule-name=googleapis_pod_module"
   ],
@@ -221,7 +215,7 @@ objc_library(
 acknowledged_target(
   name = "Services_acknowledgement",
   deps = [
-    "@gRPC-ProtoRPC//:gRPC-ProtoRPC_acknowledgement",
+    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC_acknowledgement",
     ":Messages_acknowledgement"
   ]
   )

@@ -89,9 +89,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
-    "-iquote",
-    "external/Adjust/pod_support/Headers/Public/Adjust/"
+    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
   ],
@@ -179,9 +177,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
-    "-iquote",
-    "external/Adjust/pod_support/Headers/Public/Adjust/"
+    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
   ],
@@ -264,9 +260,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
-    "-iquote",
-    "external/Adjust/pod_support/Headers/Public/Adjust/"
+    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
   ],
@@ -349,9 +343,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
-    "-iquote",
-    "external/Adjust/pod_support/Headers/Public/Adjust/"
+    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
   ],
@@ -434,9 +426,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Adjust/pod_support/Headers/Public/Adjust/",
-    "-iquote",
-    "external/Adjust/pod_support/Headers/Public/Adjust/"
+    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
   ],

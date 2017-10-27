@@ -63,9 +63,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
-    "-iquote",
-    "external/FMDB/pod_support/Headers/Public/FMDB/"
+    "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
   ],
@@ -138,9 +136,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
-    "-iquote",
-    "external/FMDB/pod_support/Headers/Public/FMDB/"
+    "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
   ],
@@ -209,9 +205,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
-    "-iquote",
-    "external/FMDB/pod_support/Headers/Public/FMDB/"
+    "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
   ],
@@ -263,9 +257,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
-    "-iquote",
-    "external/FMDB/pod_support/Headers/Public/FMDB/"
+    "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
   ],
@@ -322,7 +314,7 @@ objc_library(
     "FMDB_module_map"
   ],
   deps = [
-    "@SQLCipher//:SQLCipher"
+    "//Vendor/SQLCipher:SQLCipher"
   ],
   copts = [
     "-DSQLITE_HAS_CODEC",
@@ -338,9 +330,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/FMDB/pod_support/Headers/Public/FMDB/",
-    "-iquote",
-    "external/FMDB/pod_support/Headers/Public/FMDB/"
+    "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
   ],
@@ -351,6 +341,6 @@ objc_library(
 acknowledged_target(
   name = "SQLCipher_acknowledgement",
   deps = [
-    "@SQLCipher//:SQLCipher_acknowledgement"
+    "//Vendor/SQLCipher:SQLCipher_acknowledgement"
   ]
   )

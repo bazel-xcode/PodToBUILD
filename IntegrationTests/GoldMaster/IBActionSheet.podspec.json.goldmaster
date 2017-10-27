@@ -74,9 +74,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/IBActionSheet/pod_support/Headers/Public/IBActionSheet/",
-    "-iquote",
-    "external/IBActionSheet/pod_support/Headers/Public/IBActionSheet/"
+    "-IVendor/IBActionSheet/pod_support/Headers/Public/IBActionSheet/"
   ] + [
     "-fmodule-name=IBActionSheet_pod_module"
   ],

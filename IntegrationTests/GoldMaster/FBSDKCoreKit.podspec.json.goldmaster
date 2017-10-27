@@ -253,7 +253,7 @@ objc_library(
   ] + select(
     {
       "//conditions:default": [
-        "@Bolts//:Bolts"
+        "//Vendor/Bolts:Bolts"
       ]
     }
     ),
@@ -270,9 +270,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/",
-    "-iquote",
-    "external/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/"
+    "-IVendor/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/"
   ] + [
     "-fmodule-name=FBSDKCoreKit_pod_module"
   ],
@@ -286,7 +284,7 @@ objc_library(
 acknowledged_target(
   name = "FBSDKCoreKit_acknowledgement",
   deps = [
-    "@Bolts//:Bolts_acknowledgement",
+    "//Vendor/Bolts:Bolts_acknowledgement",
     ":FBSDKCoreKit_Bundle_FacebookSDKStrings_acknowledgement"
   ]
   )

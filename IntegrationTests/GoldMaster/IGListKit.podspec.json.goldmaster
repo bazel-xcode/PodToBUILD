@@ -98,9 +98,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/IGListKit/pod_support/Headers/Public/IGListKit/",
-    "-iquote",
-    "external/IGListKit/pod_support/Headers/Public/IGListKit/"
+    "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
     "-fmodule-name=IGListKit_pod_module"
   ],
@@ -203,9 +201,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/IGListKit/pod_support/Headers/Public/IGListKit/",
-    "-iquote",
-    "external/IGListKit/pod_support/Headers/Public/IGListKit/"
+    "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
     "-fmodule-name=IGListKit_pod_module"
   ],
@@ -323,9 +319,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/IGListKit/pod_support/Headers/Public/IGListKit/",
-    "-iquote",
-    "external/IGListKit/pod_support/Headers/Public/IGListKit/"
+    "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
     "-fmodule-name=IGListKit_pod_module"
   ],

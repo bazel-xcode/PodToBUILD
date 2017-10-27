@@ -53,8 +53,8 @@ objc_library(
   ],
   deps = [
     ":GoogleAuthUtilities_VendoredFrameworks",
-    "@GoogleSymbolUtilities//:GoogleSymbolUtilities",
-    "@GoogleNetworkingUtilities//:GoogleNetworkingUtilities"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
+    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities"
   ],
   copts = [
 
@@ -69,9 +69,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/GoogleAuthUtilities/pod_support/Headers/Public/GoogleAuthUtilities/",
-    "-iquote",
-    "external/GoogleAuthUtilities/pod_support/Headers/Public/GoogleAuthUtilities/"
+    "-IVendor/GoogleAuthUtilities/pod_support/Headers/Public/GoogleAuthUtilities/"
   ] + [
     "-fmodule-name=GoogleAuthUtilities_pod_module"
   ],
@@ -85,9 +83,9 @@ objc_library(
 acknowledged_target(
   name = "GoogleAuthUtilities_acknowledgement",
   deps = [
-    "@GoogleSymbolUtilities//:GoogleSymbolUtilities_acknowledgement",
     ":GoogleAuthUtilities_VendoredFrameworks_acknowledgement",
-    "@GoogleNetworkingUtilities//:GoogleNetworkingUtilities_acknowledgement"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities_acknowledgement",
+    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities_acknowledgement"
   ]
   )
 objc_framework(

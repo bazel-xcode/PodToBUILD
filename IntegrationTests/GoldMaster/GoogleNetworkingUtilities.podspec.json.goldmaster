@@ -52,7 +52,7 @@ objc_library(
   ],
   deps = [
     ":GoogleNetworkingUtilities_VendoredFrameworks",
-    "@GoogleSymbolUtilities//:GoogleSymbolUtilities"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
   ],
   copts = [
 
@@ -67,9 +67,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/GoogleNetworkingUtilities/pod_support/Headers/Public/GoogleNetworkingUtilities/",
-    "-iquote",
-    "external/GoogleNetworkingUtilities/pod_support/Headers/Public/GoogleNetworkingUtilities/"
+    "-IVendor/GoogleNetworkingUtilities/pod_support/Headers/Public/GoogleNetworkingUtilities/"
   ] + [
     "-fmodule-name=GoogleNetworkingUtilities_pod_module"
   ],
@@ -80,7 +78,7 @@ objc_library(
 acknowledged_target(
   name = "GoogleNetworkingUtilities_acknowledgement",
   deps = [
-    "@GoogleSymbolUtilities//:GoogleSymbolUtilities_acknowledgement",
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities_acknowledgement",
     ":GoogleNetworkingUtilities_VendoredFrameworks_acknowledgement"
   ]
   )

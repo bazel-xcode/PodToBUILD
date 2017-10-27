@@ -71,9 +71,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/SlackTextViewController/pod_support/Headers/Public/SlackTextViewController/",
-    "-iquote",
-    "external/SlackTextViewController/pod_support/Headers/Public/SlackTextViewController/"
+    "-IVendor/SlackTextViewController/pod_support/Headers/Public/SlackTextViewController/"
   ] + [
     "-fmodule-name=SlackTextViewController_pod_module"
   ],

@@ -10,28 +10,22 @@
 		094A504C1F687F99002FA188 /* ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094A504B1F687F99002FA188 /* ParserTests.swift */; };
 		09C570271F630C5B00E9EB4D /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C570261F630C5B00E9EB4D /* Parser.swift */; };
 		09C5702E1F630D1C00E9EB4D /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C570261F630C5B00E9EB4D /* Parser.swift */; };
-		09C5702F1F630D1F00E9EB4D /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C570261F630C5B00E9EB4D /* Parser.swift */; };
 		09C570301F6313F300E9EB4D /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C570261F630C5B00E9EB4D /* Parser.swift */; };
 		09F194B61EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
 		09F194B71EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
 		09F194B81EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
-		09F194B91EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F194B51EC69A18000568E3 /* SplitArcAndNoArcTransform.swift */; };
 		09FD9B641EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
 		09FD9B651EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
 		09FD9B661EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
-		09FD9B671EB3B70700272A01 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B631EB3B70700272A01 /* Lens.swift */; };
 		09FD9B6A1EB3C01500272A01 /* MultiPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B691EB3C01500272A01 /* MultiPlatform.swift */; };
 		09FD9B6B1EB3C01500272A01 /* MultiPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B691EB3C01500272A01 /* MultiPlatform.swift */; };
 		09FD9B6C1EB3C01500272A01 /* MultiPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B691EB3C01500272A01 /* MultiPlatform.swift */; };
-		09FD9B6D1EB3C01500272A01 /* MultiPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B691EB3C01500272A01 /* MultiPlatform.swift */; };
 		09FD9B701EB3C08000272A01 /* Magmas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B6F1EB3C08000272A01 /* Magmas.swift */; };
 		09FD9B711EB3C08000272A01 /* Magmas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B6F1EB3C08000272A01 /* Magmas.swift */; };
 		09FD9B721EB3C08000272A01 /* Magmas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B6F1EB3C08000272A01 /* Magmas.swift */; };
-		09FD9B731EB3C08000272A01 /* Magmas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD9B6F1EB3C08000272A01 /* Magmas.swift */; };
 		C40AD54C1EF84F2500BCFD99 /* AcknowledgementEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */; };
 		C40AD5521EF84F2C00BCFD99 /* AcknowledgementEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */; };
 		C40AD5531EF84F2D00BCFD99 /* AcknowledgementEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */; };
-		C40AD5541EF84F2D00BCFD99 /* AcknowledgementEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD54B1EF84F2500BCFD99 /* AcknowledgementEntry.swift */; };
 		C40AD5571EF853CC00BCFD99 /* AcknowledgementPlistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40AD5561EF853CC00BCFD99 /* AcknowledgementPlistTests.swift */; };
 		C41448E51EBAA6D500C5DDF6 /* MagmasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0913CB9F1EB7C05A0070B5AF /* MagmasTests.swift */; };
 		C41448E91EBAA6FF00C5DDF6 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C41448DA1EBAA6C500C5DDF6 /* SwiftCheck.framework */; };
@@ -44,18 +38,15 @@
 		C4893A591EB90FC600A44D1F /* UserConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A581EB90FC600A44D1F /* UserConfigurable.swift */; };
 		C4893A5A1EB90FC600A44D1F /* UserConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A581EB90FC600A44D1F /* UserConfigurable.swift */; };
 		C4893A5B1EB90FC600A44D1F /* UserConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A581EB90FC600A44D1F /* UserConfigurable.swift */; };
-		C4893A5C1EB90FC600A44D1F /* UserConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A581EB90FC600A44D1F /* UserConfigurable.swift */; };
 		C4893A5F1EB9108100A44D1F /* UserConfigurableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A5E1EB9108100A44D1F /* UserConfigurableTests.swift */; };
 		C4893A611EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A601EB9114900A44D1F /* SkylarkConvertibleTransform.swift */; };
 		C4893A621EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A601EB9114900A44D1F /* SkylarkConvertibleTransform.swift */; };
 		C4893A631EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A601EB9114900A44D1F /* SkylarkConvertibleTransform.swift */; };
-		C4893A641EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A601EB9114900A44D1F /* SkylarkConvertibleTransform.swift */; };
 		C4893A6D1EB914AD00A44D1F /* BasicBuildOptionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4893A6C1EB914AD00A44D1F /* BasicBuildOptionsTest.swift */; };
 		C49C630D1EB001C000F17E47 /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = C49C630C1EB001C000F17E47 /* CrashReporter.m */; };
 		C4B8A3961EB2A58D00859B73 /* XCConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8A3951EB2A58D00859B73 /* XCConfig.swift */; };
 		C4B8A3971EB2A58D00859B73 /* XCConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8A3951EB2A58D00859B73 /* XCConfig.swift */; };
 		C4B8A3981EB2A58D00859B73 /* XCConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8A3951EB2A58D00859B73 /* XCConfig.swift */; };
-		C4B8A3991EB2A58D00859B73 /* XCConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8A3951EB2A58D00859B73 /* XCConfig.swift */; };
 		C4B95C8C1EA18FF50033C7FA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B95C8B1EA18FF50033C7FA /* main.swift */; };
 		C4B95C8E1EA1B04E0033C7FA /* BuildFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B95C8D1EA1B04E0033C7FA /* BuildFileTests.swift */; };
 		C4C1BF971ECA807D00B42EB2 /* LogicalShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */; };
@@ -63,12 +54,9 @@
 		C4C1BF9A1ECA80C900B42EB2 /* PodStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF991ECA80C900B42EB2 /* PodStoreTests.swift */; };
 		C4C1BFA51ECA811400B42EB2 /* LogicalShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */; };
 		C4C1BFA61ECA811500B42EB2 /* LogicalShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */; };
-		C4C1BFA71ECA811600B42EB2 /* LogicalShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */; };
-		C4C1BFAB1ECA811D00B42EB2 /* ShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */; };
 		C4C1BFAC1ECA811E00B42EB2 /* ShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */; };
 		C4C1BFAD1ECA811F00B42EB2 /* ShellContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */; };
 		C4C1BFB01ECA813F00B42EB2 /* RepoActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */; };
-		C4C1BFB11ECA820100B42EB2 /* RepoActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */; };
 		C4C1BFB31ECA820300B42EB2 /* RepoActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */; };
 		C4C1BFB41ECA820400B42EB2 /* RepoActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */; };
 		C4E5BC811EA8564200954EB8 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
@@ -77,20 +65,11 @@
 		C4E5BC841EA8564200954EB8 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
 		C4E5BC851EA8564200954EB8 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
 		C4E5BC861EA8564200954EB8 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
-		C4E5BC9A1EAA7AD700954EB8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC991EAA7AD700954EB8 /* main.swift */; };
-		C4E5BC9E1EAA7AFA00954EB8 /* PodSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E151EA56749005C8B70 /* PodSpec.swift */; };
-		C4E5BC9F1EAA7B1200954EB8 /* Skylark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E121EA53E29005C8B70 /* Skylark.swift */; };
-		C4E5BCA01EAA7B1F00954EB8 /* SkylarkConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */; };
-		C4E5BCA11EAA7B3B00954EB8 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02781EA18AA4009B091A /* Workspace.swift */; };
-		C4E5BCA21EAA7B4E00954EB8 /* BuildFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E02751EA189EF009B091A /* BuildFile.swift */; };
-		C4E5BCA31EAA7B5C00954EB8 /* ObjcLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */; };
-		C4E5BCA41EAA7B7200954EB8 /* GlobUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E431EA6B4DB005C8B70 /* GlobUtils.swift */; };
 		C4E5BCA81EAA871E00954EB8 /* WorkspaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BCA71EAA871E00954EB8 /* WorkspaceTests.swift */; };
 		C4E5BCAA1EAA8A9B00954EB8 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */; };
 		C4F92F921F7B1B91001F3B36 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F92F911F7B1B90001F3B36 /* RedundantCompiledSourceTransform.swift */; };
 		C4F92F931F7B1BA0001F3B36 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F92F911F7B1B90001F3B36 /* RedundantCompiledSourceTransform.swift */; };
 		C4F92F941F7B1BA0001F3B36 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F92F911F7B1B90001F3B36 /* RedundantCompiledSourceTransform.swift */; };
-		C4F92F951F7B1BA1001F3B36 /* RedundantCompiledSourceTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F92F911F7B1B90001F3B36 /* RedundantCompiledSourceTransform.swift */; };
 		C4FA7E131EA53E29005C8B70 /* Skylark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E121EA53E29005C8B70 /* Skylark.swift */; };
 		C4FA7E141EA53FA6005C8B70 /* Skylark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E121EA53E29005C8B70 /* Skylark.swift */; };
 		C4FA7E161EA56749005C8B70 /* PodSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FA7E151EA56749005C8B70 /* PodSpec.swift */; };
@@ -178,15 +157,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		C4E5BC951EAA7AD700954EB8 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		C4FA7E1F1EA56AEA005C8B70 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -233,12 +203,9 @@
 		C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShellContext.swift; path = Source/ShellContext.swift; sourceTree = SOURCE_ROOT; };
 		C4C1BF991ECA80C900B42EB2 /* PodStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodStoreTests.swift; sourceTree = "<group>"; };
 		C4C1BF9B1ECA80E100B42EB2 /* PodSpecToBUILDTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PodSpecToBUILDTests-Bridging-Header.h"; path = "PodSpecToBUILD/PodSpecToBUILDTests-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		C4C1BF9C1ECA80F000B42EB2 /* WorkspaceTools-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WorkspaceTools-Bridging-Header.h"; path = "PodSpecToBUILD/WorkspaceTools-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		C4C1BFAF1ECA813F00B42EB2 /* RepoActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepoActions.swift; sourceTree = "<group>"; };
 		C4E5BC7F1EA8564200954EB8 /* ObjcLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ObjcLibrary.swift; path = Source/ObjcLibrary.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C4E5BC801EA8564200954EB8 /* SkylarkConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = SkylarkConvertible.swift; path = Source/SkylarkConvertible.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		C4E5BC971EAA7AD700954EB8 /* WorkspaceTools */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WorkspaceTools; sourceTree = BUILT_PRODUCTS_DIR; };
-		C4E5BC991EAA7AD700954EB8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C4E5BCA71EAA871E00954EB8 /* WorkspaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkspaceTests.swift; sourceTree = "<group>"; };
 		C4E5BCA91EAA8A9B00954EB8 /* TestUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestUtils.swift; sourceTree = "<group>"; };
 		C4F92F911F7B1B90001F3B36 /* RedundantCompiledSourceTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RedundantCompiledSourceTransform.swift; path = Source/RedundantCompiledSourceTransform.swift; sourceTree = SOURCE_ROOT; };
@@ -263,13 +230,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C41448E91EBAA6FF00C5DDF6 /* SwiftCheck.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C4E5BC941EAA7AD700954EB8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,7 +264,6 @@
 				C42E02071EA1454B009B091A /* Source */,
 				C42E026C1EA150B0009B091A /* PodSpecToBUILDTests */,
 				C4FA7E221EA56AEA005C8B70 /* RepoTools */,
-				C4E5BC981EAA7AD700954EB8 /* WorkspaceTools */,
 				C42E02061EA1454B009B091A /* Products */,
 				C42E02631EA14E70009B091A /* IntegrationTests */,
 			);
@@ -316,7 +275,6 @@
 				C42E02051EA1454B009B091A /* PodSpecToBUILD */,
 				C42E026B1EA150B0009B091A /* PodSpecToBUILDTests.xctest */,
 				C4FA7E211EA56AEA005C8B70 /* RepoTools */,
-				C4E5BC971EAA7AD700954EB8 /* WorkspaceTools */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -376,15 +334,6 @@
 				C4438AAD1F7C5BD8002D9A13 /* ShellTaskTest.swift */,
 			);
 			path = PodSpecToBUILDTests;
-			sourceTree = "<group>";
-		};
-		C4E5BC981EAA7AD700954EB8 /* WorkspaceTools */ = {
-			isa = PBXGroup;
-			children = (
-				C4E5BC991EAA7AD700954EB8 /* main.swift */,
-				C4C1BF9C1ECA80F000B42EB2 /* WorkspaceTools-Bridging-Header.h */,
-			);
-			path = WorkspaceTools;
 			sourceTree = "<group>";
 		};
 		C4FA7E221EA56AEA005C8B70 /* RepoTools */ = {
@@ -456,23 +405,6 @@
 			productReference = C42E026B1EA150B0009B091A /* PodSpecToBUILDTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		C4E5BC961EAA7AD700954EB8 /* WorkspaceTools */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C4E5BC9D1EAA7AD700954EB8 /* Build configuration list for PBXNativeTarget "WorkspaceTools" */;
-			buildPhases = (
-				C4E5BC931EAA7AD700954EB8 /* Sources */,
-				C4E5BC941EAA7AD700954EB8 /* Frameworks */,
-				C4E5BC951EAA7AD700954EB8 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = WorkspaceTools;
-			productName = WorkspaceTools;
-			productReference = C4E5BC971EAA7AD700954EB8 /* WorkspaceTools */;
-			productType = "com.apple.product-type.tool";
-		};
 		C4FA7E201EA56AEA005C8B70 /* RepoTools */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C4FA7E251EA56AEA005C8B70 /* Build configuration list for PBXNativeTarget "RepoTools" */;
@@ -514,10 +446,6 @@
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
-					C4E5BC961EAA7AD700954EB8 = {
-						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Automatic;
-					};
 					C4FA7E201EA56AEA005C8B70 = {
 						CreatedOnToolsVersion = 8.2.1;
 						LastSwiftMigration = 0900;
@@ -547,7 +475,6 @@
 				C42E02471EA14876009B091A /* IntegrationTests */,
 				C42E026A1EA150B0009B091A /* PodSpecToBUILDTests */,
 				C4FA7E201EA56AEA005C8B70 /* RepoTools */,
-				C4E5BC961EAA7AD700954EB8 /* WorkspaceTools */,
 			);
 		};
 /* End PBXProject section */
@@ -673,34 +600,6 @@
 				09FD9B711EB3C08000272A01 /* Magmas.swift in Sources */,
 				C4FA7E181EA56759005C8B70 /* PodSpec.swift in Sources */,
 				C42E02771EA189EF009B091A /* BuildFile.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C4E5BC931EAA7AD700954EB8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C4E5BC9E1EAA7AFA00954EB8 /* PodSpec.swift in Sources */,
-				C4E5BCA01EAA7B1F00954EB8 /* SkylarkConvertible.swift in Sources */,
-				09F194B91EC69A18000568E3 /* SplitArcAndNoArcTransform.swift in Sources */,
-				C4E5BCA11EAA7B3B00954EB8 /* Workspace.swift in Sources */,
-				C4E5BC9F1EAA7B1200954EB8 /* Skylark.swift in Sources */,
-				C4E5BCA21EAA7B4E00954EB8 /* BuildFile.swift in Sources */,
-				C4B8A3991EB2A58D00859B73 /* XCConfig.swift in Sources */,
-				C4C1BFA71ECA811600B42EB2 /* LogicalShellContext.swift in Sources */,
-				C4E5BC9A1EAA7AD700954EB8 /* main.swift in Sources */,
-				C4C1BFAB1ECA811D00B42EB2 /* ShellContext.swift in Sources */,
-				C4E5BCA31EAA7B5C00954EB8 /* ObjcLibrary.swift in Sources */,
-				09C5702F1F630D1F00E9EB4D /* Parser.swift in Sources */,
-				C4893A5C1EB90FC600A44D1F /* UserConfigurable.swift in Sources */,
-				09FD9B731EB3C08000272A01 /* Magmas.swift in Sources */,
-				09FD9B671EB3B70700272A01 /* Lens.swift in Sources */,
-				C4F92F951F7B1BA1001F3B36 /* RedundantCompiledSourceTransform.swift in Sources */,
-				09FD9B6D1EB3C01500272A01 /* MultiPlatform.swift in Sources */,
-				C40AD5541EF84F2D00BCFD99 /* AcknowledgementEntry.swift in Sources */,
-				C4893A641EB9114900A44D1F /* SkylarkConvertibleTransform.swift in Sources */,
-				C4E5BCA41EAA7B7200954EB8 /* GlobUtils.swift in Sources */,
-				C4C1BFB11ECA820100B42EB2 /* RepoActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -925,22 +824,6 @@
 			};
 			name = Release;
 		};
-		C4E5BC9B1EAA7AD700954EB8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Debug;
-		};
-		C4E5BC9C1EAA7AD700954EB8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Release;
-		};
 		C4FA7E261EA56AEA005C8B70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1001,15 +884,6 @@
 			buildConfigurations = (
 				C42E02711EA150B0009B091A /* Debug */,
 				C42E02721EA150B0009B091A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C4E5BC9D1EAA7AD700954EB8 /* Build configuration list for PBXNativeTarget "WorkspaceTools" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C4E5BC9B1EAA7AD700954EB8 /* Debug */,
-				C4E5BC9C1EAA7AD700954EB8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

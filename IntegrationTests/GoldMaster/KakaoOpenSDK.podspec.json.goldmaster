@@ -67,9 +67,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/",
-    "-iquote",
-    "external/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
+    "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
   ],
@@ -139,9 +137,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/",
-    "-iquote",
-    "external/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
+    "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
   ],
@@ -218,9 +214,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/",
-    "-iquote",
-    "external/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
+    "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
   ],
@@ -297,9 +291,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/",
-    "-iquote",
-    "external/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
+    "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
   ],
@@ -376,9 +368,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/",
-    "-iquote",
-    "external/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
+    "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
   ],

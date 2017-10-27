@@ -72,9 +72,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Weixin/pod_support/Headers/Public/Weixin/",
-    "-iquote",
-    "external/Weixin/pod_support/Headers/Public/Weixin/"
+    "-IVendor/Weixin/pod_support/Headers/Public/Weixin/"
   ] + [
     "-fmodule-name=Weixin_pod_module"
   ],

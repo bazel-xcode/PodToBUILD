@@ -89,9 +89,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINCache/pod_support/Headers/Public/PINCache/",
-    "-iquote",
-    "external/PINCache/pod_support/Headers/Public/PINCache/"
+    "-IVendor/PINCache/pod_support/Headers/Public/PINCache/"
   ] + [
     "-fmodule-name=PINCache_pod_module"
   ],
@@ -162,7 +160,7 @@ objc_library(
     }
     ),
   deps = [
-    "@PINOperation//:PINOperation"
+    "//Vendor/PINOperation:PINOperation"
   ],
   copts = [
 
@@ -177,9 +175,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINCache/pod_support/Headers/Public/PINCache/",
-    "-iquote",
-    "external/PINCache/pod_support/Headers/Public/PINCache/"
+    "-IVendor/PINCache/pod_support/Headers/Public/PINCache/"
   ] + [
     "-fmodule-name=PINCache_pod_module"
   ],
@@ -190,7 +186,7 @@ objc_library(
 acknowledged_target(
   name = "Core_acknowledgement",
   deps = [
-    "@PINOperation//:PINOperation_acknowledgement"
+    "//Vendor/PINOperation:PINOperation_acknowledgement"
   ]
   )
 filegroup(
@@ -255,9 +251,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINCache/pod_support/Headers/Public/PINCache/",
-    "-iquote",
-    "external/PINCache/pod_support/Headers/Public/PINCache/"
+    "-IVendor/PINCache/pod_support/Headers/Public/PINCache/"
   ] + [
     "-fmodule-name=PINCache_pod_module"
   ],

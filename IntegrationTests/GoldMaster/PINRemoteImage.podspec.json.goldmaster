@@ -64,9 +64,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
-    "-iquote",
-    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+    "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
     "-fmodule-name=PINRemoteImage_pod_module"
   ],
@@ -137,7 +135,7 @@ objc_library(
     "Accelerate"
   ],
   deps = [
-    "@PINOperation//:PINOperation"
+    "//Vendor/PINOperation:PINOperation"
   ],
   copts = [
 
@@ -152,9 +150,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
-    "-iquote",
-    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+    "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
     "-fmodule-name=PINRemoteImage_pod_module"
   ],
@@ -165,7 +161,7 @@ objc_library(
 acknowledged_target(
   name = "Core_acknowledgement",
   deps = [
-    "@PINOperation//:PINOperation_acknowledgement"
+    "//Vendor/PINOperation:PINOperation_acknowledgement"
   ]
   )
 filegroup(
@@ -212,9 +208,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
-    "-iquote",
-    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+    "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
     "-fmodule-name=PINRemoteImage_pod_module"
   ],
@@ -273,9 +267,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
-    "-iquote",
-    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+    "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
     "-fmodule-name=PINRemoteImage_pod_module"
   ],
@@ -330,9 +322,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
-    "-iquote",
-    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+    "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
     "-fmodule-name=PINRemoteImage_pod_module"
   ],
@@ -387,7 +377,7 @@ objc_library(
   ],
   deps = [
     ":Core",
-    "@FLAnimatedImage//:FLAnimatedImage"
+    "//Vendor/FLAnimatedImage:FLAnimatedImage"
   ],
   copts = [
 
@@ -402,9 +392,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
-    "-iquote",
-    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+    "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
     "-fmodule-name=PINRemoteImage_pod_module"
   ],
@@ -416,7 +404,7 @@ acknowledged_target(
   name = "FLAnimatedImage_acknowledgement",
   deps = [
     ":Core_acknowledgement",
-    "@FLAnimatedImage//:FLAnimatedImage_acknowledgement"
+    "//Vendor/FLAnimatedImage:FLAnimatedImage_acknowledgement"
   ]
   )
 filegroup(
@@ -446,7 +434,7 @@ objc_library(
   ],
   deps = [
     ":Core",
-    "@libwebp//:libwebp"
+    "//Vendor/libwebp:libwebp"
   ],
   copts = [
     "-DPIN_WEBP=1"
@@ -461,9 +449,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
-    "-iquote",
-    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+    "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
     "-fmodule-name=PINRemoteImage_pod_module"
   ],
@@ -475,7 +461,7 @@ acknowledged_target(
   name = "WebP_acknowledgement",
   deps = [
     ":Core_acknowledgement",
-    "@libwebp//:libwebp_acknowledgement"
+    "//Vendor/libwebp:libwebp_acknowledgement"
   ]
   )
 filegroup(
@@ -518,7 +504,7 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    "@PINCache//:PINCache",
+    "//Vendor/PINCache:PINCache",
     ":Core"
   ],
   copts = [
@@ -534,9 +520,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/",
-    "-iquote",
-    "external/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
+    "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
     "-fmodule-name=PINRemoteImage_pod_module"
   ],
@@ -547,7 +531,7 @@ objc_library(
 acknowledged_target(
   name = "PINCache_acknowledgement",
   deps = [
-    "@PINCache//:PINCache_acknowledgement",
+    "//Vendor/PINCache:PINCache_acknowledgement",
     ":Core_acknowledgement"
   ]
   )

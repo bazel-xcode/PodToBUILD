@@ -163,7 +163,7 @@ objc_library(
     }
     ),
   deps = [
-    "@FBSDKCoreKit//:FBSDKCoreKit"
+    "//Vendor/FBSDKCoreKit:FBSDKCoreKit"
   ],
   copts = [
     "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
@@ -178,9 +178,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/FBSDKShareKit/pod_support/Headers/Public/FBSDKShareKit/",
-    "-iquote",
-    "external/FBSDKShareKit/pod_support/Headers/Public/FBSDKShareKit/"
+    "-IVendor/FBSDKShareKit/pod_support/Headers/Public/FBSDKShareKit/"
   ] + [
     "-fmodule-name=FBSDKShareKit_pod_module"
   ],
@@ -191,6 +189,6 @@ objc_library(
 acknowledged_target(
   name = "FBSDKShareKit_acknowledgement",
   deps = [
-    "@FBSDKCoreKit//:FBSDKCoreKit_acknowledgement"
+    "//Vendor/FBSDKCoreKit:FBSDKCoreKit_acknowledgement"
   ]
   )

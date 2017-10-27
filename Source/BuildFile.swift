@@ -97,10 +97,12 @@ public func makeConfigSettingNodes() -> SkylarkNode {
 // Make Nodes to be inserted at the beginning of skylark output
 // public for test purposes
 public func makePrefixNodes() -> SkylarkNode {
+    let options = GetBuildOptions()
+    let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
     return .lines([
-        .skylark("load('//:" + PodSupportBuidableDir + "extensions.bzl', 'pch_with_name_hint')"),
-        .skylark("load('//:" + PodSupportBuidableDir + "extensions.bzl', 'acknowledged_target')"),
-        .skylark("load('//:" + PodSupportBuidableDir + "extensions.bzl', 'gen_module_map')"),
+        SkylarkNode.skylark("load('//Vendor/" + options.podName + "/" + podSupportBuildableDir + ":extensions.bzl', 'pch_with_name_hint')"),
+        SkylarkNode.skylark("load('//Vendor/" + options.podName + "/" + podSupportBuildableDir + ":extensions.bzl', 'acknowledged_target')"),
+        SkylarkNode.skylark("load('//Vendor/" + options.podName + "/" + podSupportBuildableDir + ":extensions.bzl', 'gen_module_map')"),
         makeConfigSettingNodes(),
     ])
 }

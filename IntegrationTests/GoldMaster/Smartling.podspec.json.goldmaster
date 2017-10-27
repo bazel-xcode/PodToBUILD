@@ -66,9 +66,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Smartling/pod_support/Headers/Public/Smartling/",
-    "-iquote",
-    "external/Smartling/pod_support/Headers/Public/Smartling/"
+    "-IVendor/Smartling/pod_support/Headers/Public/Smartling/"
   ] + [
     "-fmodule-name=Smartling_pod_module"
   ],

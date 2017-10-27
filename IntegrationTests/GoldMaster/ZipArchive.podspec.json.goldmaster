@@ -89,9 +89,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/ZipArchive/pod_support/Headers/Public/ZipArchive/",
-    "-iquote",
-    "external/ZipArchive/pod_support/Headers/Public/ZipArchive/"
+    "-IVendor/ZipArchive/pod_support/Headers/Public/ZipArchive/"
   ] + [
     "-fmodule-name=ZipArchive_pod_module"
   ],

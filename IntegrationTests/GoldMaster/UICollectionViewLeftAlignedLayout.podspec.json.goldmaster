@@ -76,9 +76,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/",
-    "-iquote",
-    "external/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/"
+    "-IVendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/"
   ] + [
     "-fmodule-name=UICollectionViewLeftAlignedLayout_pod_module"
   ],

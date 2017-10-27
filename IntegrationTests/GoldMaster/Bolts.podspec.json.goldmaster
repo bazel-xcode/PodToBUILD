@@ -88,9 +88,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Bolts/pod_support/Headers/Public/Bolts/",
-    "-iquote",
-    "external/Bolts/pod_support/Headers/Public/Bolts/"
+    "-IVendor/Bolts/pod_support/Headers/Public/Bolts/"
   ] + [
     "-fmodule-name=Bolts_pod_module"
   ],
@@ -226,9 +224,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Bolts/pod_support/Headers/Public/Bolts/",
-    "-iquote",
-    "external/Bolts/pod_support/Headers/Public/Bolts/"
+    "-IVendor/Bolts/pod_support/Headers/Public/Bolts/"
   ] + [
     "-fmodule-name=Bolts_pod_module"
   ],
@@ -309,9 +305,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Bolts/pod_support/Headers/Public/Bolts/",
-    "-iquote",
-    "external/Bolts/pod_support/Headers/Public/Bolts/"
+    "-IVendor/Bolts/pod_support/Headers/Public/Bolts/"
   ] + [
     "-fmodule-name=Bolts_pod_module"
   ],

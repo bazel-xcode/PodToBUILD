@@ -71,9 +71,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PaymentKit/pod_support/Headers/Public/PaymentKit/",
-    "-iquote",
-    "external/PaymentKit/pod_support/Headers/Public/PaymentKit/"
+    "-IVendor/PaymentKit/pod_support/Headers/Public/PaymentKit/"
   ] + [
     "-fmodule-name=PaymentKit_pod_module"
   ],

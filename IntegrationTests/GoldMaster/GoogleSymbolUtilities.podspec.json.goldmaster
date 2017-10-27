@@ -63,9 +63,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/GoogleSymbolUtilities/pod_support/Headers/Public/GoogleSymbolUtilities/",
-    "-iquote",
-    "external/GoogleSymbolUtilities/pod_support/Headers/Public/GoogleSymbolUtilities/"
+    "-IVendor/GoogleSymbolUtilities/pod_support/Headers/Public/GoogleSymbolUtilities/"
   ] + [
     "-fmodule-name=GoogleSymbolUtilities_pod_module"
   ],

@@ -75,9 +75,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/PINOperation/pod_support/Headers/Public/PINOperation/",
-    "-iquote",
-    "external/PINOperation/pod_support/Headers/Public/PINOperation/"
+    "-IVendor/PINOperation/pod_support/Headers/Public/PINOperation/"
   ] + [
     "-fmodule-name=PINOperation_pod_module"
   ],

@@ -6,27 +6,30 @@ macro.
 
 ### Quickstart Instructions:
 
-In your `WORKSPACE` file, setup the `rules_pods` repository.
+In the root directory, clone `rules_pods` into `Vendor/rules_pods`.
 
 ```
-# Initialize the `rules_pods` repository
-new_http_archive(
-  name = "rules_pods",
-  #TODO:OSS actual URL
-  remote = "http//:github.com/Pinterest/rules_pods/releases/archive/0.1.zip",
-  visibility = ["//visibility:public"]
-)
-
-load('@rules_pods//BazelExtensions:workspace.bzl', 'new_pod_repository')
+mkdir -p Vendor/rules_pods
+# TODO: Add actual URL to V1 release
+curl http//:github.com/Pinterest/rules_pods/releases/archive/0.1.zip
 ```
+
 <br />
 
 ### Adding Pods
 
 That's it. Now you're ready to add Pods.
 
-Repositories are initialized in the `WORKSPACE` file with the macro,
+Repositories are initialized in the `Pods.WORKSPACE` file with the macro,
 `new_pod_repository`.
+
+Create the file `Pods.WORKSPACE`
+
+```
+touch Pods.WORKSPACE
+```
+
+Pod repositories are described using the `new_pod_repository` macro.
 
 <br />
 ```
@@ -35,11 +38,29 @@ new_pod_repository(
   url = "https://github.com/pinterest/PINOperation/archive/1.0.3.zip",
 )
 ```
+
 <br />
 
-The package `@PINOperation` and the associated `objc_library` target,
+The package `PINOperation` and the associated `objc_library` target,
 `PINOperation`, is available for use within Bazel. The package and target name
-are combined to form the label `@PINOperation//:PINOperation`.
+are combined to form the label `//Vendor/PINOperation:PINOperation`.
+
+#### Installation
+
+The script `bin/update_pods.py` loads the Pod into `Vendor/__POD_NAME__`.
+_This notion is similar to `pod install`._
+
+```
+# SRC_ROOT is the root workspace directory
+./Vendor/rules_pods/bin/update_pods.py --src_root $PWD
+```
+
+Anytime `Pods.WORKSPACE` is changed, `bin/update_pods.py` should be
+ran to ensure all dependencies are updated.
+
+_PodToBUILD puts stabilty and predictablity at the core of managing
+dependencies. Loading files in `external` has implications on Tulsi, Xcode,
+network bandwidth, and build times._
 
 ## new_pod_repository
 
@@ -47,7 +68,7 @@ This macro is the main point of integration for pod dependencies.
 
 Each pod is integrated as a repository and each repository is self contained.
 
-By declaring a `new_pod_repository` in the `WORKSPACE` file, the dependency is
+By declaring a `new_pod_repository` in `Pods.WORKSPACE`, the dependency is
 automatically availble within all Bazel targets.
 
 ### Naming Convention
@@ -56,25 +77,24 @@ In Bazel a label is a build target identifier. Pod labels are all formed using
 the same logic.
 
 The first part of the label is the package name, followed by the name of the
-target: `@__PACKAGE__//:__TARGET__`
+target: `//Vendor/__PACKAGE__:__TARGET__`
 
 The top level target is determined by the root subspec.
 
-For example, in `PINCache`, the root target's label is `@PINCache//:PINCache`.
+For example, in `PINCache`, the root target's label is `//Vendor/PINCache:PINCache`.
 
 Subspecs targets have the same name as the subspec. For example, the label of the
-subpsec `Core` in `PINCache` is `@PINCache//:Core`
+subpsec `Core` in `PINCache` is `//Vendor/PINCache:Core`
 
 ### Dependencies on Pods
 
-As with any external dependencies in Bazel, all transitive dependencies must be
-declared in the `WORKSPACE`.
+Transitive dependencies must be declared in the `Pods.WORKSPACE`.
 
 Dependencies between targets are resolved through an idiomatic naming
 convention.
 
 For example, `PINCache` depends on `PINOperation`. In `PINCache`'s `BUILD` file,
-the dependency on `@PINOperation//:PINOperation` is generated.  The `WORKSPACE`
+the dependency on `//Vendor/PINOperation:PINOperation` is generated.  The `WORKSPACE`
 needs to declare both `PINOperation` and `PINCache`.
 
 ### Local Dependencies
@@ -93,9 +113,10 @@ new_pod_repository(
 )
 ```
 
-Upon building, the local files are linked into the pod directory.
+Upon running `bin/update_pods.py`, the local files are sym-linked into the pod
+directory.
 
-This can aid in local development of external dependencies, and was originally
+This can aid in local development of Pod dependencies, and was originally
 designed for such a use case.
 
 ### Resolving issues with dependencies
@@ -135,9 +156,9 @@ Acknowledgments metadata from a Pod is supported.
 
 A target containing acknowledgment metadata for a given target is automatically
 generated. Acknowledgment targets have the label of the form
-`@__PACKAGE__//:$__POD_NAME___acknowledgment`
+`//Vendor/__PACKAGE__:$__POD_NAME___acknowledgment`
 
-Merge all of the dependencies into your `Settings.bundle`
+Merge all of the dependencies into `Settings.bundle`
 
 ```
 load("@rules_pods//BazelExtensions:extensions.bzl", "acknowledgments_plist")
@@ -149,11 +170,11 @@ objc_bundle_library(
     visibility = ['//visibility:public'],
 )
 
-ALL_POD_DEPS = ["@PINOperation//:PINOperation", "@PINCache//:PINCache"]
+ALL_POD_DEPS = ["//Vendor/PINOperation:PINOperation", "//Vendor/PINCache:PINCache"]
 acknowledgments_plist(
     name = "acknowledgements",
     deps = [d + "_acknowledgement" for d in ALL_POD_DEPS],
-    merger = "@rules_pods//BazelExtensions:acknowledgement_merger"
+    merger = "//Vendor/rules_pods/BazelExtensions:acknowledgement_merger"
 )
 ```
 
@@ -229,7 +250,7 @@ the least common denominator, the Linux convention. For now, use an
 Some code, like `Texture` uses `__has_include` to conditionally include code.
 
 In Bazel, if that include is not explicitly added, then this feature will not
-work. In this case, use a `user_option` to add dependencies available on your
+work. In this case, use a `user_option` to add dependencies available on the
 system.
 
 ### Incompatible Target Names
@@ -262,5 +283,4 @@ Now, in Bazel, the target is accessible via `SPUserResizableView_Pion` instead
 of `SPUserResizableView_Pion`.
 
 This should eventually be handled by default.
-
 

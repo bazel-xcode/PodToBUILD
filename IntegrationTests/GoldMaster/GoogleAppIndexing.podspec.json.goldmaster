@@ -68,9 +68,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/GoogleAppIndexing/pod_support/Headers/Public/GoogleAppIndexing/",
-    "-iquote",
-    "external/GoogleAppIndexing/pod_support/Headers/Public/GoogleAppIndexing/"
+    "-IVendor/GoogleAppIndexing/pod_support/Headers/Public/GoogleAppIndexing/"
   ] + [
     "-fmodule-name=GoogleAppIndexing_pod_module"
   ],

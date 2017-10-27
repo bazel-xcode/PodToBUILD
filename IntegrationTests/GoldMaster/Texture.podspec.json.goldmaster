@@ -72,9 +72,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
-    "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],
@@ -157,9 +155,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
-    "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],
@@ -207,9 +203,9 @@ objc_library(
     "c++"
   ],
   deps = [
-    "@PINRemoteImage//:PINCache",
+    "//Vendor/PINRemoteImage:PINCache",
     ":Core",
-    "@PINRemoteImage//:iOS"
+    "//Vendor/PINRemoteImage:iOS"
   ],
   copts = [
     "-std=c++11",
@@ -225,9 +221,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
-    "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],
@@ -238,9 +232,9 @@ objc_library(
 acknowledged_target(
   name = "PINRemoteImage_acknowledgement",
   deps = [
-    "@PINRemoteImage//:iOS_acknowledgement",
     ":Core_acknowledgement",
-    "@PINRemoteImage//:PINCache_acknowledgement"
+    "//Vendor/PINRemoteImage:iOS_acknowledgement",
+    "//Vendor/PINRemoteImage:PINCache_acknowledgement"
   ]
   )
 filegroup(
@@ -278,7 +272,7 @@ objc_library(
   ],
   deps = [
     ":Core",
-    "@IGListKit//:IGListKit"
+    "//Vendor/IGListKit:IGListKit"
   ],
   copts = [
     "-std=c++11",
@@ -294,9 +288,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
-    "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],
@@ -307,8 +299,8 @@ objc_library(
 acknowledged_target(
   name = "IGListKit_acknowledgement",
   deps = [
-    "@IGListKit//:IGListKit_acknowledgement",
-    ":Core_acknowledgement"
+    ":Core_acknowledgement",
+    "//Vendor/IGListKit:IGListKit_acknowledgement"
   ]
   )
 filegroup(
@@ -346,7 +338,7 @@ objc_library(
   ],
   deps = [
     ":Core",
-    "@Yoga//:Yoga"
+    "//Vendor/Yoga:Yoga"
   ],
   copts = [
     "-std=c++11",
@@ -363,9 +355,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Texture/pod_support/Headers/Public/AsyncDisplayKit/",
-    "-iquote",
-    "external/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+    "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
   ],
@@ -377,6 +367,6 @@ acknowledged_target(
   name = "Yoga_acknowledgement",
   deps = [
     ":Core_acknowledgement",
-    "@Yoga//:Yoga_acknowledgement"
+    "//Vendor/Yoga:Yoga_acknowledgement"
   ]
   )

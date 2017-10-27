@@ -79,9 +79,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/EarlGrey/pod_support/Headers/Public/EarlGrey/",
-    "-iquote",
-    "external/EarlGrey/pod_support/Headers/Public/EarlGrey/"
+    "-IVendor/EarlGrey/pod_support/Headers/Public/EarlGrey/"
   ] + [
     "-fmodule-name=EarlGrey_pod_module"
   ],

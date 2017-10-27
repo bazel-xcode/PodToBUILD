@@ -66,9 +66,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -155,9 +153,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -229,9 +225,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -305,9 +299,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -377,9 +369,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -464,9 +454,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -537,9 +525,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -643,9 +629,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -723,9 +707,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -814,9 +796,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -902,9 +882,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -988,9 +966,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],
@@ -1082,9 +1058,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Braintree/pod_support/Headers/Public/Braintree/",
-    "-iquote",
-    "external/Braintree/pod_support/Headers/Public/Braintree/"
+    "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
     "-fmodule-name=Braintree_pod_module"
   ],

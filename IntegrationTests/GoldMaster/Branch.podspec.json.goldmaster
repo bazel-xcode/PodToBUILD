@@ -64,9 +64,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Branch/pod_support/Headers/Public/Branch/",
-    "-iquote",
-    "external/Branch/pod_support/Headers/Public/Branch/"
+    "-IVendor/Branch/pod_support/Headers/Public/Branch/"
   ] + [
     "-fmodule-name=Branch_pod_module"
   ],
@@ -143,9 +141,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Branch/pod_support/Headers/Public/Branch/",
-    "-iquote",
-    "external/Branch/pod_support/Headers/Public/Branch/"
+    "-IVendor/Branch/pod_support/Headers/Public/Branch/"
   ] + [
     "-fmodule-name=Branch_pod_module"
   ],
@@ -220,9 +216,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/Branch/pod_support/Headers/Public/Branch/",
-    "-iquote",
-    "external/Branch/pod_support/Headers/Public/Branch/"
+    "-IVendor/Branch/pod_support/Headers/Public/Branch/"
   ] + [
     "-fmodule-name=Branch_pod_module"
   ],

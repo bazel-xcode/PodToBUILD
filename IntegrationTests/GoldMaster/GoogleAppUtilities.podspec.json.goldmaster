@@ -49,7 +49,7 @@ objc_library(
   ],
   deps = [
     ":GoogleAppUtilities_VendoredFrameworks",
-    "@GoogleSymbolUtilities//:GoogleSymbolUtilities"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
   ],
   copts = [
 
@@ -64,9 +64,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/GoogleAppUtilities/pod_support/Headers/Public/GoogleAppUtilities/",
-    "-iquote",
-    "external/GoogleAppUtilities/pod_support/Headers/Public/GoogleAppUtilities/"
+    "-IVendor/GoogleAppUtilities/pod_support/Headers/Public/GoogleAppUtilities/"
   ] + [
     "-fmodule-name=GoogleAppUtilities_pod_module"
   ],
@@ -77,8 +75,8 @@ objc_library(
 acknowledged_target(
   name = "GoogleAppUtilities_acknowledgement",
   deps = [
-    "@GoogleSymbolUtilities//:GoogleSymbolUtilities_acknowledgement",
-    ":GoogleAppUtilities_VendoredFrameworks_acknowledgement"
+    ":GoogleAppUtilities_VendoredFrameworks_acknowledgement",
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities_acknowledgement"
   ]
   )
 objc_framework(

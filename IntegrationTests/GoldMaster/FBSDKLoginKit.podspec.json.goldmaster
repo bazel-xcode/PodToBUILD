@@ -70,7 +70,7 @@ objc_library(
     "AudioToolbox"
   ],
   deps = [
-    "@FBSDKCoreKit//:FBSDKCoreKit"
+    "//Vendor/FBSDKCoreKit:FBSDKCoreKit"
   ],
   copts = [
     "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
@@ -85,9 +85,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/",
-    "-iquote",
-    "external/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
+    "-IVendor/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
   ] + [
     "-fmodule-name=FBSDKLoginKit_pod_module"
   ],
@@ -98,6 +96,6 @@ objc_library(
 acknowledged_target(
   name = "FBSDKLoginKit_acknowledgement",
   deps = [
-    "@FBSDKCoreKit//:FBSDKCoreKit_acknowledgement"
+    "//Vendor/FBSDKCoreKit:FBSDKCoreKit_acknowledgement"
   ]
   )

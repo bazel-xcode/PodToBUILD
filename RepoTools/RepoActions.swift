@@ -184,7 +184,7 @@ enum RepoActions {
     /// Initialize a pod repository.
     /// - Get the IPC JSON PodSpec
     /// - Compile a build file based on the PodSpec
-    /// - Create a hardlinked header structure to support angle bracket includes
+    /// - Create a symLinked header structure to support angle bracket includes
     static func initializeRepository(shell: ShellContext, buildOptions: BasicBuildOptions) {
         // This uses the current environment's cocoapods installation.
         let whichPod = shell.shellOut("which pod").standardOutputAsString
@@ -192,7 +192,6 @@ enum RepoActions {
             fatalError("RepoTools requires a cocoapod installation on host")
         }
         let podspecName = CommandLine.arguments[1]
-        let pwd = shell.command(CommandBinary.pwd, arguments: [String]()).standardOutputAsString.components(separatedBy: "\n")[0]
 
         // make json data
         let jsonData: Data
@@ -263,7 +262,7 @@ enum RepoActions {
                 // we're already cd-ed to this directory
                 // so we can just rip out the variable
                 let cleansedPath = searchPath.replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)/", with: "").replacingOccurrences(of: "\"", with: "")
-                let cmd = shell.command("/bin/ls", arguments: ["\(pwd)/" + cleansedPath])
+                let cmd = shell.command("/bin/ls", arguments: [cleansedPath])
                 return cmd.standardOutputAsString.components(separatedBy: "\n").map{ String($0) }
             })
         
@@ -297,54 +296,47 @@ enum RepoActions {
             }
             .forEach { globResult in
                 customHeaderSearchPaths.forEach { searchPath in
-                    shell.hardLink(from: "\(pwd)/\(globResult)", to: searchPath)
+                    // pod_support/Headers/Public/__POD_NAME__
+                    shell.symLink(from: "../../../../\(globResult)", to: searchPath)
                 }
             }
 
         // Write out contents of PodSupportBuildableDir
-
+  
         // Write out the acknowledgement entry plist
         let entry = RenderAcknowledgmentEntry(entry: AcknowledgmentEntry(forPodspec: podSpec))
         let acknowledgementFilePath = URL(
             fileURLWithPath: PodSupportBuidableDir + "acknowledgement.plist",
-            relativeTo: URL(fileURLWithPath: pwd)
-        )
+            relativeTo: URL(fileURLWithPath: "../"))
         shell.write(value: entry, toPath: acknowledgementFilePath)
 
         // assume _PATH_TO_SOME/bin/RepoTools
         let assetRoot = RepoActions.assetRoot()
         let buildExtensions = assetRoot.appendingPathComponent("extensions")
             .appendingPathExtension("bzl")
-        let buildExtensionsFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "extensions.bzl",
-                                          relativeTo: URL(fileURLWithPath: pwd))
-        shell.symLink(from: buildExtensions.path, to: buildExtensionsFilePath.path)
+        let buildExtensionsFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "extensions.bzl")
+        shell.symLink(from: buildExtensions.relativePath, to: buildExtensionsFilePath.path)
 
         let licenseMergeScript = assetRoot.appendingPathComponent("acknowledgement_merger")
             .appendingPathExtension("py")
-        let licenseMergeScriptFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "acknowledgement_merger.py",
-                                             relativeTo: URL(fileURLWithPath: pwd))
-        shell.hardLink(from: licenseMergeScript.path, to: licenseMergeScriptFilePath.path)
+        let licenseMergeScriptFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "acknowledgement_merger.py")
+        shell.symLink(from: licenseMergeScript.relativePath, to: licenseMergeScriptFilePath.path)
 
         let supportBUILDFile = assetRoot.appendingPathComponent("support")
             .appendingPathExtension("BUILD")
-        let supportBUILDFileFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "BUILD", relativeTo: URL(fileURLWithPath: pwd))
-        shell.hardLink(from: supportBUILDFile.path, to: supportBUILDFileFilePath.path)
+        let supportBUILDFileFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "BUILD")
+        shell.symLink(from: supportBUILDFile.relativePath, to: supportBUILDFileFilePath.path)
 
         // Write the root BUILD file
         let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
         let buildFileOut = buildFileSkylarkCompiler.run()
-        let buildFilePath = URL(fileURLWithPath: "BUILD", relativeTo: URL(fileURLWithPath: pwd))
+        let buildFilePath = URL(fileURLWithPath: "BUILD")
         shell.write(value: buildFileOut, toPath: buildFilePath)
     }
 
-    // Assume the directory structure relative to this file
+    // Assume the directory structure relative to the pod root
     private static func assetRoot() -> URL {
-        let binary = CommandLine.arguments[0]
-        let binURL = URL(fileURLWithPath: binary)
-        let assetRoot = binURL.deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("BazelExtensions")
-        return assetRoot
+      return URL(fileURLWithPath: "../../../Vendor/rules_pods/BazelExtensions")
     }
 
     /// Fetch pods from urls.

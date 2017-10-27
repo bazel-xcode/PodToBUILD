@@ -119,10 +119,10 @@ func getDependencyName(fromPodDepName podDepName: String, inRootPodNamed rootNam
         return ":\(ObjcLibrary.bazelLabel(fromString: join))"
     } else {
         if results.count > 1 {
-            return "@\(results[0])//:\(ObjcLibrary.bazelLabel(fromString: results[1]))"
+            return "//Vendor/\(results[0]):\(ObjcLibrary.bazelLabel(fromString: results[1]))"
         } else {
             // This is a reference to another pod library
-            return "@\(ObjcLibrary.bazelLabel(fromString: results[0]))//:\(ObjcLibrary.bazelLabel(fromString: results[0]))"
+            return "//Vendor/\(ObjcLibrary.bazelLabel(fromString: results[0])):\(ObjcLibrary.bazelLabel(fromString: results[0]))"
         }
     }
 }
@@ -615,7 +615,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             // Assume that the podspec matches the name of the directory.
             // it is a convention that these are 1 in the same.
             let externalDir = options.podName
-            iquotes.append("-I" + "external/" + externalDir + "/" + searchPath)
+            iquotes.append("-I" + "Vendor/" + externalDir + "/" + searchPath)
         }
 
         libArguments.append(.named(

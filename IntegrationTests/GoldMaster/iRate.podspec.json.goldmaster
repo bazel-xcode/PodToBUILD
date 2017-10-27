@@ -74,9 +74,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/iRate/pod_support/Headers/Public/iRate/",
-    "-iquote",
-    "external/iRate/pod_support/Headers/Public/iRate/"
+    "-IVendor/iRate/pod_support/Headers/Public/iRate/"
   ] + [
     "-fmodule-name=iRate_pod_module"
   ],

@@ -71,9 +71,7 @@ objc_library(
       ]
     }
     ) + [
-    "-Iexternal/KVOController/pod_support/Headers/Public/KVOController/",
-    "-iquote",
-    "external/KVOController/pod_support/Headers/Public/KVOController/"
+    "-IVendor/KVOController/pod_support/Headers/Public/KVOController/"
   ] + [
     "-fmodule-name=KVOController_pod_module"
   ],
