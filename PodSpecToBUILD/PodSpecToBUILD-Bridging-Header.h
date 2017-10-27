@@ -4,3 +4,4 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 #import "CrashReporter.h"
+#import "ExceptionCatcher.h"

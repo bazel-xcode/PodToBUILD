@@ -282,7 +282,7 @@ enum RepoActions {
         // - Get all of the paths matching wild card imports
         // - Put them into the public header directory
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)
-        buildFile.skylarkConvertibles.flatMap { $0 as? ObjcLibrary }
+        let globResultsArr = buildFile.skylarkConvertibles.flatMap { $0 as? ObjcLibrary }
             .flatMap { $0.headers }
             .flatMap { globNode in
                 globNode.include.fold(basic: { (patterns: Set<String>?) -> Set<String> in
@@ -293,13 +293,24 @@ enum RepoActions {
                         MultiPlatform<Set<String>>.lens.viewAll { Set($0.flatMap(podGlob)) }
                     return set.union(inner.denormalize())
                 })
+        }
+
+        // Batch create several symlinks for Pod style includes
+        // creating thousands of processes in few milliseconds will
+        // blow up otherwise.
+        let globResults = Set(globResultsArr)
+        customHeaderSearchPaths.forEach { searchPath in
+            var script = "cd " + searchPath + ";\n"
+            globResults.forEach { globResult in
+                // i.e. pod_support/Headers/Public/__POD_NAME__
+                let from = "\"../../../../\(globResult)\""
+                let to =  String(globResult.split(separator: "/").last!)
+                script += "ln -sf \(from) \(to);\n"
             }
-            .forEach { globResult in
-                customHeaderSearchPaths.forEach { searchPath in
-                    // pod_support/Headers/Public/__POD_NAME__
-                    shell.symLink(from: "../../../../\(globResult)", to: searchPath)
-                }
-            }
+            // Run the script without checking exit codes. It's possible that pods
+            // contain garbage that Xcode previously dealt with.
+            let _ = shell.shellOut(script)
+        }
 
         // Write out contents of PodSupportBuildableDir
   

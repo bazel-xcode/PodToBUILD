@@ -123,7 +123,7 @@ class ShellTask : NSObject {
         
         let taskObserver = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: OperationQueue()) {
             _ in
-            CFRunLoopStop(currentLoop);
+            CFRunLoopStop(currentLoop)
         }
         
         // Setup the process.
@@ -136,16 +136,24 @@ class ShellTask : NSObject {
         process.standardError = stderr
         process.launchPath = command
         process.arguments = arguments
-        process.launch()
-
-        CFRunLoopRun()
+        let exception = tryBlock {
+          process.launch()
+          CFRunLoopRun()
+        }
         
-        let standardOutputData = stdout.fileHandleForReading.readDataToEndOfFile()
-        let standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
-
         CFRunLoopRemoveTimer(currentLoop, timer, CFRunLoopMode.defaultMode)
         NotificationCenter.default.removeObserver(taskObserver)
 
+        if exception != nil {
+            // Attempt to read standard output
+            let standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
+            return ShellTaskResult(standardErrorData: standardErrorData,
+                                   standardOutputData: Data(),
+                                   terminationStatus: 42)
+        }
+
+        let standardOutputData = stdout.fileHandleForReading.readDataToEndOfFile()
+        let standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
         return ShellTaskResult(standardErrorData: standardErrorData,
                                standardOutputData: standardOutputData,
                                terminationStatus: process.terminationStatus)

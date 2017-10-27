@@ -192,6 +192,7 @@
 		C4893A5E1EB9108100A44D1F /* UserConfigurableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserConfigurableTests.swift; sourceTree = "<group>"; };
 		C4893A601EB9114900A44D1F /* SkylarkConvertibleTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SkylarkConvertibleTransform.swift; path = Source/SkylarkConvertibleTransform.swift; sourceTree = SOURCE_ROOT; };
 		C4893A6C1EB914AD00A44D1F /* BasicBuildOptionsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicBuildOptionsTest.swift; sourceTree = "<group>"; };
+		C4967A071FA3DFD400394D04 /* ExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ExceptionCatcher.h; path = Source/ExceptionCatcher.h; sourceTree = SOURCE_ROOT; };
 		C49C630A1EB001BF00F17E47 /* RepoTools-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RepoTools-Bridging-Header.h"; sourceTree = "<group>"; };
 		C49C630B1EB001C000F17E47 /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReporter.h; sourceTree = "<group>"; };
 		C49C630C1EB001C000F17E47 /* CrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReporter.m; sourceTree = "<group>"; };
@@ -301,6 +302,7 @@
 				C4C1BF941ECA807D00B42EB2 /* LogicalShellContext.swift */,
 				C4C1BF951ECA807D00B42EB2 /* ShellContext.swift */,
 				C4C1BF911ECA807D00B42EB2 /* PodSpecToBUILD-Bridging-Header.h */,
+				C4967A071FA3DFD400394D04 /* ExceptionCatcher.h */,
 				09C570261F630C5B00E9EB4D /* Parser.swift */,
 			);
 			name = Source;
