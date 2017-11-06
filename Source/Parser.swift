@@ -1,6 +1,6 @@
 //
 //  Parser.swift
-//  PodSpecToBUILD
+//  PodToBUILD
 //
 //  Created by Brandon Kase on 9/8/17.
 //  Copyright © 2017 Pinterest. All rights reserved.

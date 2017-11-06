@@ -1,9 +1,9 @@
 //
 //  XCConfig.swift
-//  PodSpecToBUILD
+//  PodToBUILD
 //
-//  Created by jerry on 4/27/17.
-//  Copyright © 2017 jerry. All rights reserved.
+//  Created by Jerry Marino on 4/27/17.
+//  Copyright © 2017 Pinterest Inc. All rights reserved.
 //
 // Notes:
 // Clang uses the right most value for a given flag

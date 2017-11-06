@@ -1,9 +1,9 @@
 //
 //  AcknowledgementPlistTests.swift
-//  PodSpecToBUILD
+//  PodToBUILD
 //
-//  Created by jerry on 6/19/17.
-//  Copyright © 2017 jerry. All rights reserved.
+//  Created by Jerry Marino on 6/19/17.
+//  Copyright © 2017 Pinterest Inc. All rights reserved.
 //
 
 import XCTest

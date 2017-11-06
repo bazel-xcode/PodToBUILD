@@ -1,9 +1,9 @@
 //
 //  ExceptionCatcher.h
-//  PodSpecToBUILD
+//  PodToBUILD
 //
-//  Created by jerry on 10/27/17.
-//  Copyright © 2017 jerry. All rights reserved.
+//  Created by Jerry Marino on 10/27/17.
+//  Copyright © 2017 Pinterest Inc. All rights reserved.
 //
 
 //

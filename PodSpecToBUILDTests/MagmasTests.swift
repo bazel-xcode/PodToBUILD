@@ -1,9 +1,9 @@
 //
 //  MagmasTests.swift
-//  PodSpecToBUILD
+//  PodToBUILD
 //
 //  Created by Brandon Kase on 5/1/17.
-//  Copyright © 2017 jerry. All rights reserved.
+//  Copyright © 2017 Pinterest Inc. All rights reserved.
 //
 
 import Foundation

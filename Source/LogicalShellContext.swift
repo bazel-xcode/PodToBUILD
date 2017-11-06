@@ -1,9 +1,9 @@
 //
 //  LogicalShellContext.swift
-//  PodSpecToBUILD
+//  PodToBUILD
 //
-//  Created by jerry on 5/9/17.
-//  Copyright © 2017 jerry. All rights reserved.
+//  Created by Jerry Marino on 5/9/17.
+//  Copyright © 2017 Pinterest Inc. All rights reserved.
 //
 
 import Foundation

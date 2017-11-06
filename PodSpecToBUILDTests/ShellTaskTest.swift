@@ -2,8 +2,8 @@
 //  ShellTaskTest.swift
 //  PodSpecToBUILDTests
 //
-//  Created by jerry on 9/27/17.
-//  Copyright © 2017 jerry. All rights reserved.
+//  Created by Jerry Marino on 9/27/17.
+//  Copyright © 2017 Pinterest Inc. All rights reserved.
 //
 
 import XCTest

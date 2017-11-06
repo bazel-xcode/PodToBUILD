@@ -1,9 +1,9 @@
 //
 //  CrashReporter.h
-//  PodSpecToBUILD
+//  PodToBUILD
 //
-//  Created by jerry on 4/25/17.
-//  Copyright © 2017 jerry. All rights reserved.
+//  Created by Jerry Marino on 4/25/17.
+//  Copyright © 2017 Pinterest Inc. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
