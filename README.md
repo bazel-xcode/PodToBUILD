@@ -3,7 +3,6 @@ An easy way to integrate `CocoaPods.org` into Bazel.
 `PodSpecToBUILD` integrates Pod dependencies end to end with an easy to use
 macro.
 
-
 ### Quickstart Instructions:
 
 In the root directory, clone `rules_pods` into `Vendor/rules_pods`.
@@ -14,8 +13,6 @@ mkdir -p Vendor/rules_pods
 curl http//:github.com/Pinterest/rules_pods/releases/archive/0.1.zip
 ```
 
-<br />
-
 ### Adding Pods
 
 That's it. Now you're ready to add Pods.
@@ -23,23 +20,16 @@ That's it. Now you're ready to add Pods.
 Repositories are initialized in the `Pods.WORKSPACE` file with the macro,
 `new_pod_repository`.
 
-Create the file `Pods.WORKSPACE`
-
-```
-touch Pods.WORKSPACE
-```
+Create the file `Pods.WORKSPACE`:
 
 Pod repositories are described using the `new_pod_repository` macro.
 
-<br />
 ```
 new_pod_repository(
   name = "PINOperation",
   url = "https://github.com/pinterest/PINOperation/archive/1.0.3.zip",
 )
 ```
-
-<br />
 
 The package `PINOperation` and the associated `objc_library` target,
 `PINOperation`, is available for use within Bazel. The package and target name
