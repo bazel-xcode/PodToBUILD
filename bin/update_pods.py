@@ -157,6 +157,24 @@ def _needs_update(repository_ctx):
     cached_version = _exec(repository_ctx, ["/bin/bash", "-c", "cat .pod-version"], pod_root_dir).split("\n")[0]
     return GetVersion(repository_ctx) != cached_version
 
+def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
+    url = repository_ctx.url
+    target_name = repository_ctx.target_name
+    if not url:
+        # We allow putting source code in the Vendor/PodName and then initing
+        # the repo with that code.
+	return
+
+    # Note: the pod is not cleaned out if the sourcecode is loaded from the
+    # current directory
+    _exec(repository_ctx, ["rm", "-rf", repository_ctx.GetPodRootDir()])
+    _exec(repository_ctx, ["mkdir", "-p", repository_ctx.GetPodRootDir()])
+
+    if url.startswith("http"):
+        _fetch_remote_repo(repository_ctx, repo_tool_bin_path, target_name, url)
+    elif url.startswith("/"):
+        _link_local_repo(repository_ctx, target_name, url)
+
 def _update_repo_impl(repository_ctx):
     if repository_ctx.GetTrace():
         print("__RUN with repository_ctx", repository_ctx.__dict__)
@@ -180,14 +198,7 @@ def _update_repo_impl(repository_ctx):
     tool_bin_by_name = {}
     tool_bin_by_name[REPO_TOOL_NAME] = repo_tool_bin_path
 
-    # Cleanout the old directory
-    _exec(repository_ctx, ["rm", "-rf", repository_ctx.GetPodRootDir()])
-    _exec(repository_ctx, ["mkdir", "-p", repository_ctx.GetPodRootDir()])
-
-    if url.startswith("http") or url.startswith("https"):
-        _fetch_remote_repo(repository_ctx, repo_tool_bin_path, target_name, url)
-    else:
-        _link_local_repo(repository_ctx, target_name, url)
+    _load_repo_if_needed(repository_ctx, repo_tool_bin_path)
 
     # Build up substitutions for the install script
     substitutions = {}
@@ -263,7 +274,7 @@ def _update_repo_impl(repository_ctx):
     version_file.close()
 
 def new_pod_repository(name,
-            url,
+            url = None,
             podspec_url = None,
             strip_prefix = "",
             user_options = [],
@@ -278,7 +289,17 @@ def new_pod_repository(name,
     Args:
          name: the name of this repo
 
-         url: the url of this repo
+         url: the url of this repo.
+            The url may either:
+            - A http url pointing to a zip or tar archive, i.e:
+              https://github.com/pinterest/PINOperation/archive/1.1.zip
+
+            - an absolute path ( used for local development ). Note: We symlink the
+              entire contents into /Vendor/__name__.
+
+            - None. If the url is none, we will attempt to init the repository
+              without loading source. This is useful for custom Pods that aren't
+              provided from a URL.
 
          podspec_url: the podspec url. By default, we will look in the root of
          the repository, and read a .podspec file. This requires having
@@ -363,7 +384,7 @@ def cleanup_pods():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--src_root",
-        required=True,
+        required=False,
         help="""
     An absolute path to the project's root ( directory of Pods.WORKSPACE and
     WORKSPACE )
@@ -377,6 +398,11 @@ def main():
 
     global SRC_ROOT
     SRC_ROOT = args.src_root
+
+    if not SRC_ROOT:
+        SRC_ROOT = os.getcwd()
+
+    print("Updating pods in " + SRC_ROOT)
     global OVERRIDE_TRACE
     OVERRIDE_TRACE = args.trace
 
