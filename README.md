@@ -1,6 +1,6 @@
 An easy way to integrate `CocoaPods.org` into Bazel.
 
-`PodSpecToBUILD` integrates Pod dependencies end to end with an easy to use
+`PodToBUILD` integrates Pod dependencies end to end with an easy to use
 macro.
 
 ### Quickstart Instructions:
