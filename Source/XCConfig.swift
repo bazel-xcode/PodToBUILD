@@ -61,7 +61,7 @@ struct XCConfigTransformer {
 
     public func compilerFlags(forXCConfig xcconfig: [String: String]?) -> [String] {
         if let xcconfig = xcconfig {
-            return xcconfig.flatMap { try? compilerFlag(forXCConfigKey: $0, XCConfigValue: $1) }
+            return xcconfig.compactMap { try? compilerFlag(forXCConfigKey: $0, XCConfigValue: $1) }
                 .flatMap { $0 }
         }
         return [String]()

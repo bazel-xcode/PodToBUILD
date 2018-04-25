@@ -15,7 +15,7 @@
 
 void sigHandler(int signal)
 {
-   NSLog(@"Received signal: %zd", signal);
+   NSLog(@"Received signal: %d", signal);
    void* callstack[128];
    int frames = backtrace(callstack, 128);
    NSString *crashLogFilePath = @"/tmp/repo_tools_log.txt";

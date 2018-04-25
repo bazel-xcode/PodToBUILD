@@ -8,6 +8,9 @@
 
 import SwiftCheck
 import XCTest
+#if SWIFT_PACKAGE
+import FileCheck
+#endif
 
 class TestSpec : XCTestCase {
 	func testAll() {

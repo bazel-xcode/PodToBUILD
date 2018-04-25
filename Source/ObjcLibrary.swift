@@ -255,7 +255,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     }
 
     init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = []) {
-        let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].flatMap { $0 })
+        let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].compactMap { $0 })
 
         let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
         let implFiles = extract(sources: allSourceFiles).map{ Set($0) }
@@ -279,7 +279,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
 
         // We are not using the fallback spec here since
-        let fallbackName = ComposedSpec.create(fromSpecs: [spec, rootSpec].flatMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
+        let fallbackName = ComposedSpec.create(fromSpecs: [spec, rootSpec].compactMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
         let rootName = fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName)) ?? fallbackName
 
         self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
@@ -515,7 +515,7 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 .map { $0.appendingPathExtension("pch") }
                 .map { $0.relativePath }
                 .map { $0.components(separatedBy: "/") }
-                .flatMap { $0.count > 1 ? $0.first : nil }
+                .compactMap { $0.count > 1 ? $0.first : nil }
                 .map { [$0, "**", "*.pch"].joined(separator: "/") }
 
             return nestedComponents
@@ -527,13 +527,13 @@ struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             }
             return []
         }, multi: { (arr: [String], multi: MultiPlatform<Set<String>>) -> [String] in
-            return arr + buildPCHList(sources: [multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 }.flatMap { Array($0) })
+            return arr + buildPCHList(sources: [multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 }.flatMap { Array($0) })
         })
 
         let headerDirs = lib.headerName.map { PodSupportSystemPublicHeaderDir + "\($0)/" }
-        let headerSearchPaths: Set<String> = Set(headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
+        let headerSearchPaths: Set<String> = Set(headerDirs.fold(basic: { str in Set<String>([str].compactMap { $0 }) },
                                   multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
-                                    return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
+                                    return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
                                 }))
         if generateModuleMap {
             libArguments.append(.named(

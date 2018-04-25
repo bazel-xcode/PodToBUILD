@@ -129,7 +129,7 @@ public class Glob: Collection {
         var directories: [String]
 
         do {
-            directories = try fileManager.subpathsOfDirectory(atPath: firstPart).flatMap { subpath in
+            directories = try fileManager.subpathsOfDirectory(atPath: firstPart).compactMap { subpath in
                 let fullPath = NSString(string: firstPart).appendingPathComponent(subpath)
                 var isDirectory = ObjCBool(false)
                 if fileManager.fileExists(atPath: fullPath, isDirectory: &isDirectory) && isDirectory.boolValue {
@@ -415,7 +415,7 @@ extension Sequence where Iterator.Element == BazelGlobChunk {
 // Bazel does not support character group globs
 func pattern(fromPattern pattern: String, includingFileTypes fileTypes: Set<String>) -> [String] {
     // if we have a proper ruby pattern,
-    if let arr = parseGlob.parseFully(Array(pattern.characters)) {
+    if let arr = parseGlob.parseFully(Array(pattern)) {
         // Remove empty empty chunks
         let filtered: [[BazelGlobChunk]] = arr.toBazelChunks()
             .map{ $0.simplify }
@@ -490,7 +490,8 @@ extension NSRegularExpression {
     // Convert a glob to a regex
     class func pattern(withGlobPattern pattern: String) -> String {
         var regexStr = ""
-        for idx in pattern.characters.indices {
+
+        for idx in pattern.indices {
             let c = pattern[idx]
             if c == "*" {
                 regexStr.append(".*")

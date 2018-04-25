@@ -21,65 +21,36 @@ public struct Gen<A> {
 	///          v       v
 	let unGen : (StdGen, Int) -> A
 
-	/// Generates a value.
-	///
-	/// This property exists as a convenience mostly to test generators.  In
-	/// practice, you should never use this property because it hinders the
-	/// replay functionality and the robustness of tests in general.
-	public var generate : A {
-		let r = newStdGen()
-		return unGen(r, 30)
-	}
-
-	/// Generates some example values.
-	///
-	/// This property exists as a convenience mostly to test generators.  In
-	/// practice, you should never use this property because it hinders the
-	/// replay functionality and the robustness of tests in general.
-	public var sample : [A] {
-		return sequence((2...20).map(self.resize)).generate
-	}
-
 	/// Constructs a Generator that selects a random value from the given
 	/// collection and produces only that value.
 	///
-	/// The input collection is required to be non-empty.
+	/// - Requires: The input collection is required to be non-empty.
 	public static func fromElements<S : Collection>(of xs : S) -> Gen<S.Element>
-		where S.Index : RandomType
+		where S.Index : RandomType, A == S.Element
 	{
-		return Gen.fromElements(in: xs.startIndex...xs.index(xs.endIndex, offsetBy: -1)).map { i in
+		return Gen<S.Index>.fromElements(in: xs.startIndex...xs.index(xs.endIndex, offsetBy: -1)).map { i in
 			return xs[i]
 		}
-	}
-
-	/// Constructs a Generator that selects a random value from the given
-	/// interval and produces only that value.
-	///
-	/// The input interval is required to be non-empty.
-	public static func fromElements<R : RandomType>(in xs : ClosedRange<R>) -> Gen<R> {
-		assert(!xs.isEmpty, "Gen.fromElementsOf used with empty interval")
-
-		return choose((xs.lowerBound, xs.upperBound))
 	}
 
 	/// Constructs a Generator that uses a given array to produce smaller arrays
 	/// composed of its initial segments.  The size of each initial segment
 	/// increases with the generator's size parameter.
 	///
-	/// The input array is required to be non-empty.
-	public static func fromInitialSegments<S>(of xs : [S]) -> Gen<[S]> {
+	/// - Requires: The input array is required to be non-empty.
+	public static func fromInitialSegments(of xs : [A]) -> Gen<[A]> {
 		assert(!xs.isEmpty, "Gen.fromInitialSegmentsOf used with empty list")
 
-		return Gen<[S]>.sized { n in
+		return Gen<[A]>.sized { n in
 			let ss = xs[xs.startIndex..<max((xs.startIndex + 1), size(xs.endIndex, n))]
-			return Gen<[S]>.pure([S](ss))
+			return Gen<[A]>.pure([A](ss))
 		}
 	}
 
 	/// Constructs a Generator that produces permutations of a given array.
-	public static func fromShufflingElements<S>(of xs : [S]) -> Gen<[S]> {
-		return choose((Int.min + 1, Int.max)).proliferate(withSize: xs.count).flatMap { ns in
-			return Gen<[S]>.pure(Swift.zip(ns, xs).sorted(by: { l, r in l.0 < r.0 }).map { $0.1 })
+	public static func fromShufflingElements(of xs : [A]) -> Gen<[A]> {
+		return Gen<Int>.choose((Int.min + 1, Int.max)).proliferate(withSize: xs.count).flatMap { ns in
+			return Gen<[A]>.pure(Swift.zip(ns, xs).sorted(by: { l, r in l.0 < r.0 }).map { $0.1 })
 		}
 	}
 
@@ -87,30 +58,6 @@ public struct Gen<A> {
 	public static func sized(_ f : @escaping (Int) -> Gen<A>) -> Gen<A> {
 		return Gen(unGen: { r, n in
 			return f(n).unGen(r, n)
-		})
-	}
-
-	/// Constructs a random element in the inclusive range of two `RandomType`s.
-	///
-	/// When using this function, it is necessary to explicitly specialize the
-	/// generic parameter `A`.  For example:
-	///
-	///     Gen<UInt32>.choose((32, 255)).flatMap(Gen<Character>.pure • Character.init • UnicodeScalar.init)
-	public static func choose<A : RandomType>(_ rng : (A, A)) -> Gen<A> {
-		return Gen<A>(unGen: { s, _ in
-			return A.randomInRange(rng, gen: s).0
-		})
-	}
-	
-	/// Constructs a random element in the range of a bounded `RandomType`.
-	///
-	/// When using this function, it is necessary to explicitly specialize the
-	/// generic parameter `A`.  For example:
-	///
-	///     Gen<UInt32>.chooseAny().flatMap(Gen<Character>.pure • Character.init • UnicodeScalar.init)
-	public static func chooseAny<A : RandomType & LatticeType>() -> Gen<A> {
-		return Gen<A>(unGen: { (s, _) in
-			return randomBound(s).0
 		})
 	}
 
@@ -124,7 +71,7 @@ public struct Gen<A> {
 	{
 		assert(gs.count != 0, "oneOf used with empty list")
 
-		return choose((gs.startIndex, gs.index(before: gs.endIndex))).flatMap { x in
+		return Gen<S.Index>.choose((gs.startIndex, gs.index(before: gs.endIndex))).flatMap { x in
 			return gs[x]
 		}
 	}
@@ -141,7 +88,7 @@ public struct Gen<A> {
 		let xs: [(Int, Gen<A>)] = Array(xs)
 		assert(xs.count != 0, "frequency used with empty list")
 
-		return choose((1, xs.map({ $0.0 }).reduce(0, +))).flatMap { l in
+		return Gen<Int>.choose((1, xs.map({ $0.0 }).reduce(0, +))).flatMap { l in
 			return pick(l, xs)
 		}
 	}
@@ -161,11 +108,64 @@ public struct Gen<A> {
 	}
 }
 
+extension Gen where A : RandomType, A : Comparable {
+	/// Constructs a Generator that selects a random value from the given
+	/// interval and produces only that value.
+	///
+	/// - Requires: The input interval is required to be non-empty.
+	public static func fromElements(in xs : ClosedRange<A>) -> Gen {
+		assert(!xs.isEmpty, "Gen.fromElementsOf used with empty interval")
+		
+		return choose((xs.lowerBound, xs.upperBound))
+	}
+}
+
+extension Gen where A : RandomType {
+	/// Constructs a random element in the inclusive range of two `RandomType`s.
+	///
+	/// When using this function, it is necessary to explicitly specialize the
+	/// generic parameter `A`.  For example:
+	///
+	///     Gen<UInt32>.choose((32, 255)).flatMap(Gen<Character>.pure • Character.init • UnicodeScalar.init)
+	public static func choose(_ rng : (A, A)) -> Gen {
+		return Gen(unGen: { s, _ in
+			return A.randomInRange(rng, gen: s).0
+		})
+	}
+}
+
+extension Gen where A : RandomType, A : LatticeType {
+	/// Constructs a random element in the range of a bounded `RandomType`.
+	///
+	/// When using this function, it is necessary to explicitly specialize the
+	/// generic parameter `A`.  For example:
+	///
+	///     Gen<UInt32>.chooseAny().flatMap(Gen<Character>.pure • Character.init • UnicodeScalar.init)
+	public static func chooseAny() -> Gen {
+		return Gen(unGen: { (s, _) in
+			return randomBound(s).0
+		})
+	}
+}
+
+extension Gen where A : Hashable {
+	/// Constructs a Generator that selects a random value from the given
+	/// collection and produces only that value.
+	///
+	/// - Requires: The input collection is required to be non-empty.
+	public static func fromElements(of xs : Set<A>) -> Gen {
+		precondition(!xs.isEmpty)
+		return Gen<Int>.fromElements(in: 0...xs.distance(from: xs.startIndex, to: xs.endIndex)-1).map { i in
+			return xs[xs.index(xs.startIndex, offsetBy: i)]
+		}
+	}
+}
+
 // MARK: Monoidal Functor methods.
 
 extension Gen {
 	/// Zips together two generators and returns a generator of tuples.
-	public static func zip<A1, A2>(_ ga1 : Gen<A1>, _ ga2 : Gen<A2>) -> Gen<(A1, A2)> {
+	public static func zip<A1, A2>(_ ga1 : Gen<A1>, _ ga2 : Gen<A2>) -> Gen<(A1, A2)> where A == (A1, A2) {
 		return Gen<(A1, A2)> { r, n in
 			let (r1, r2) = r.split
 			return (ga1.unGen(r1, n), ga2.unGen(r2, n))
@@ -174,8 +174,8 @@ extension Gen {
 
 	/// Returns a new generator that applies a given function to any outputs the
 	/// given generators produce.
-	public static func map<A1, A2, R>(_ ga1 : Gen<A1>, _ ga2 : Gen<A2>, transform: @escaping (A1, A2) -> R) -> Gen<R> {
-		return zip(ga1, ga2).map({ t in transform(t.0, t.1) })
+	public static func map<A1, A2>(_ ga1 : Gen<A1>, _ ga2 : Gen<A2>, transform: @escaping (A1, A2) -> A) -> Gen {
+		return Gen<(A1, A2)>.zip(ga1, ga2).map({ t in transform(t.0, t.1) })
 	}
 }
 
@@ -257,7 +257,7 @@ extension Gen {
 	/// determined by the generator's size parameter.
 	public var proliferate : Gen<[A]> {
 		return Gen<[A]>.sized { n in
-			return Gen.choose((0, n)).flatMap(self.proliferate(withSize:))
+			return Gen<Int>.choose((0, n)).flatMap(self.proliferate(withSize:))
 		}
 	}
 
@@ -265,7 +265,7 @@ extension Gen {
 	/// length determined by the generator's size parameter.
 	public var proliferateNonEmpty : Gen<[A]> {
 		return Gen<[A]>.sized { n in
-			return Gen.choose((1, max(1, n))).flatMap(self.proliferate(withSize:))
+			return Gen<Int>.choose((1, max(1, n))).flatMap(self.proliferate(withSize:))
 		}
 	}
 
@@ -273,6 +273,32 @@ extension Gen {
 	public func proliferate(withSize k : Int) -> Gen<[A]> {
 		return sequence(Array<Gen<A>>(repeating: self, count: k))
 	}
+}
+
+// MARK: Generating Example Values
+
+extension Gen {
+	/// Generates a value.
+	///
+	/// - Attention: This property exists as a convenience mostly to test
+	///   generators.  In practice, you should never use this property because
+	///   it hinders the replay functionality and the robustness of tests in
+	///   general.
+	public var generate : A {
+		let r = newStdGen()
+		return unGen(r, 30)
+	}
+
+	/// Generates some example values.
+	///
+	/// - Attention: This property exists as a convenience mostly to test
+	///   generators.  In practice, you should never use this property because
+	///   it hinders the replay functionality and the robustness of tests in
+	///   general.
+	public var sample : [A] {
+		return sequence((2...20).map(self.resize)).generate
+	}
+
 }
 
 // MARK: Instances
@@ -283,9 +309,9 @@ extension Gen /*: Functor*/ {
 	///
 	/// This function is most useful for converting between generators of inter-
 	/// related types.  For example, you might have a Generator of `Character`
-	/// values that you then `.proliferate` into an `Array` of `Character`s.  You
-	/// can then use `map` to convert that generator of `Array`s to a generator 
-	/// of `String`s.
+	/// values that you then `.proliferate` into an `Array` of `Character`s.
+	/// You can then use `map` to convert that generator of `Array`s to a
+	/// generator of `String`s.
 	public func map<B>(_ f : @escaping (A) -> B) -> Gen<B> {
 		return Gen<B>(unGen: { r, n in
 			return f(self.unGen(r, n))
@@ -331,9 +357,10 @@ extension Gen /*: Monad*/ {
 /// Creates and returns a Generator of arrays of values drawn from each
 /// generator in the given array.
 ///
-/// The array that is created is guaranteed to use each of the given Generators
-/// in the order they were given to the function exactly once.  Thus all arrays
-/// generated are of the same rank as the array that was given.
+/// - Invariant: The array that is created is guaranteed to use each of the
+///   given Generators in the order they were given to the function exactly
+///   once.  Thus all arrays generated are of the same rank as the array that
+///   was given.
 public func sequence<A>(_ ms : [Gen<A>]) -> Gen<[A]> {
 	return Gen<[A]>(unGen: { r, n in
 		var r1 = r

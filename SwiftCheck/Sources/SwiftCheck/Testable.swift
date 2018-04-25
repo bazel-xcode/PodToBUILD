@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 TypeLift. All rights reserved.
 //
 
-
 /// The type of things that can be tested.  Consequently, the type of things
 /// that can be returned from a `forAll` block.
 ///
@@ -80,7 +79,7 @@ extension Bool : Testable {
 	}
 }
 
-extension Gen /*: Testable*/ where A : Testable {
+extension Gen : Testable where A : Testable {
 	public var property : Property {
 		return Property(self.flatMap { $0.property.unProperty })
 	}

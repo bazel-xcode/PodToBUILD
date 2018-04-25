@@ -12,21 +12,21 @@ import XCTest
 
 class MagmasTests: XCTestCase {
     func testArrayExtensions() {
-        property("Array semigroup associative") <- forAll { (xs: ArrayOf<Int>, ys: ArrayOf<Int>, zs: ArrayOf<Int>) in
-            return ((xs.getArray <> ys.getArray) <> zs.getArray) ==
-                    (xs.getArray <> (ys.getArray <> zs.getArray))
+        property("Array semigroup associative") <- forAll { (xs: Array<Int>, ys: Array<Int>, zs: Array<Int>) in
+            return ((xs <> ys) <> zs) ==
+                    (xs <> (ys <> zs))
         }
         
-        property("Array monoid identity") <- forAll { (xs: ArrayOf<Int>) in
-            return (xs.getArray <> Array.empty == xs.getArray) <?> "Right identity"
+        property("Array monoid identity") <- forAll { (xs: Array<Int>) in
+            return (xs <> Array.empty == xs) <?> "Right identity"
                 ^&&^
-                (Array.empty <> xs.getArray == xs.getArray) <?> "Left identity"
+                (Array.empty <> xs == xs) <?> "Left identity"
         }
         
-        property("Array empty awareness sound") <- forAll { (xs: ArrayOf<Int>) in
-            return xs.getArray.isEmpty ?
-                xs.getArray == Array.empty :
-                xs.getArray != Array.empty
+        property("Array empty awareness sound") <- forAll { (xs: Array<Int>) in
+            return xs.isEmpty ?
+                xs == Array.empty :
+                xs != Array.empty
         }
     }
     
@@ -49,33 +49,33 @@ class MagmasTests: XCTestCase {
     }
     
     func testDictionaryExtensions() {
-        property("Dict semigroup associative") <- forAll { (x: DictionaryOf<String, Int>, y: DictionaryOf<String, Int>, z: DictionaryOf<String, Int>) in
-            return ((x.getDictionary <> y.getDictionary) <> z.getDictionary) ==
-                (x.getDictionary <> (y.getDictionary <> z.getDictionary))
+        property("Dict semigroup associative") <- forAll { (x: Dictionary<String, Int>, y: Dictionary<String, Int>, z: Dictionary<String, Int>) in
+            return ((x <> y) <> z) ==
+                (x <> (y <> z))
         }
         
-        property("Dict monoid identity") <- forAll { (x: DictionaryOf<String, Int>) in
-            return (x.getDictionary <> Dictionary.empty == x.getDictionary) <?> "Right identity"
+        property("Dict monoid identity") <- forAll { (x: Dictionary<String, Int>) in
+            return (x <> Dictionary.empty == x) <?> "Right identity"
                 ^&&^
-                (Dictionary.empty <> x.getDictionary == x.getDictionary) <?> "Left identity"
+                (Dictionary.empty <> x == x) <?> "Left identity"
         }
         
-        property("Dict empty awareness sound") <- forAll { (x: DictionaryOf<String, Int>) in
-            return x.getDictionary.isEmpty ?
-                x.getDictionary == Dictionary.empty :
-                x.getDictionary != Dictionary.empty
+        property("Dict empty awareness sound") <- forAll { (x: Dictionary<String, Int>) in
+            return x.isEmpty ?
+                x == Dictionary.empty :
+                x != Dictionary.empty
         }
     }
     
     func testNormalizeOptions() {
-        property("Never admit an empty after normalizing") <- forAll { (x: OptionalOf<String>) in
-            return x.getOptional.normalize() != .some(String.empty)
+        property("Never admit an empty after normalizing") <- forAll { (x: Optional<String>) in
+            return x.normalize() != .some(String.empty)
         }
     }
 
     func testOptionalCompositionExtension() {
-        property("composition of optionals using <>") <- forAll { (x: OptionalOf<String>, y: OptionalOf<String>) in
-            return x.getOptional <> Optional.empty == x.getOptional
+        property("composition of optionals using <>") <- forAll { (x: Optional<String>, y: Optional<String>) in
+            return x <> Optional.empty == x
         }
     }
 }

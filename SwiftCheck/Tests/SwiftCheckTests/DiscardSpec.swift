@@ -8,6 +8,9 @@
 
 import SwiftCheck
 import XCTest
+#if SWIFT_PACKAGE
+import FileCheck
+#endif
 
 class DiscardSpec : XCTestCase {
 	func testDiscardFailure() {

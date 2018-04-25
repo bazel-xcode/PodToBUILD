@@ -153,7 +153,7 @@ public struct PodBuildFile: SkylarkConvertible {
 
     /// Return the skylark representation of the entire BUILD file
     public func toSkylark() -> SkylarkNode {
-        let convertibleNodes: [SkylarkNode] = skylarkConvertibles.flatMap { $0.toSkylark() }
+        let convertibleNodes: [SkylarkNode] = skylarkConvertibles.compactMap { $0.toSkylark() }
         return .lines([makePrefixNodes()] + convertibleNodes)
     }
 

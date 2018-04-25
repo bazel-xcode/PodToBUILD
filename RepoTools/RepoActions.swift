@@ -239,9 +239,9 @@ enum RepoActions {
             }
 
             let headerDirs = externalName.map { $0 }
-            let customHeaderSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].flatMap { $0 }) },
+            let customHeaderSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].compactMap { $0 }) },
                                                                        multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
-                                                                           result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].flatMap { $0 })
+                                                                        result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
             })
             return customHeaderSearchPaths
         }
@@ -250,7 +250,7 @@ enum RepoActions {
         let podSpecs: [PodSpec] = podSpec.subspecs + [podSpec]
         let xcconfigHeaderSearchPaths: Set<String> = Set(podSpecs
             // Grab the search paths from xcconfig
-            .flatMap{ (spec: PodSpec) -> Set<String> in
+            .compactMap{ (spec: PodSpec) -> Set<String> in
                 Set([spec.xcconfig, spec.podTargetXcconfig, spec.userTargetXcconfig].flatMap{ (xcconfigDict: [String: String]?) -> [String] in
                     let searchPathValue: String? = xcconfigDict?[HeaderSearchPathTransformer.xcconfigKey]
                     return (searchPathValue.map{ [$0] }) ?? []
@@ -282,8 +282,8 @@ enum RepoActions {
         // - Get all of the paths matching wild card imports
         // - Put them into the public header directory
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)
-        let globResultsArr = buildFile.skylarkConvertibles.flatMap { $0 as? ObjcLibrary }
-            .flatMap { $0.headers }
+        let globResultsArr = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
+            .compactMap { $0.headers }
             .flatMap { globNode in
                 globNode.include.fold(basic: { (patterns: Set<String>?) -> Set<String> in
                     let s: Set<String> = Set(patterns.map { $0.flatMap(podGlob) } ?? [])

@@ -8,6 +8,9 @@
 
 import SwiftCheck
 import XCTest
+#if SWIFT_PACKAGE
+import FileCheck
+#endif
 import Foundation
 
 class GenSpec : XCTestCase {
@@ -106,13 +109,13 @@ class GenSpec : XCTestCase {
 					return Discard()
 				}
 				let l = Set(xss)
-				return forAll(Gen<[Int]>.fromElements(of: xss)) { l.contains($0) }
+				return forAll(Gen.fromElements(of: xss)) { l.contains($0) }
 			}
 
 			// CHECK-NEXT: *** Passed 100 tests
 			// CHECK-NEXT: .
 			property("Gen.fromElementsOf only generates the elements of the given array") <- forAll { (n1 : Int, n2 : Int) in
-				return forAll(Gen<[Int]>.fromElements(of: [n1, n2])) { $0 == n1 || $0 == n2 }
+				return forAll(Gen.fromElements(of: [n1, n2])) { $0 == n1 || $0 == n2 }
 			}
 
 			// CHECK-NEXT: *** Passed 100 tests
@@ -120,7 +123,7 @@ class GenSpec : XCTestCase {
 			property("Gen.fromElementsIn only generates the elements of the given interval") <- forAll { (n1 : Int, n2 : Int) in
 				return (n1 < n2) ==> {
 					let interval = n1...n2
-					return forAll(Gen<[Int]>.fromElements(in: n1...n2)) { interval.contains($0) }
+					return forAll(Gen.fromElements(in: n1...n2)) { interval.contains($0) }
 				}
 			}
 
@@ -128,7 +131,7 @@ class GenSpec : XCTestCase {
 			// CHECK-NEXT: .
 			property("Gen.fromInitialSegmentsOf produces only prefixes of the generated array") <- forAll { (xs : Array<Int>) in
 				return !xs.isEmpty ==> {
-					return forAllNoShrink(Gen<[Int]>.fromInitialSegments(of: xs)) { (ys : Array<Int>) in
+					return forAllNoShrink(Gen.fromInitialSegments(of: xs)) { (ys : Array<Int>) in
 						return xs.starts(with: ys)
 					}
 				}
@@ -137,19 +140,19 @@ class GenSpec : XCTestCase {
 			// CHECK-NEXT: *** Passed 100 tests
 			// CHECK-NEXT: .
 			property("Gen.fromShufflingElementsOf produces only permutations of the generated array") <- forAll { (xs : Array<Int>) in
-				return forAllNoShrink(Gen<[Int]>.fromShufflingElements(of: xs)) { (ys : Array<Int>) in
+				return forAllNoShrink(Gen.fromShufflingElements(of: xs)) { (ys : Array<Int>) in
 					return (xs.count == ys.count) ^&&^ (xs.sorted() == ys.sorted())
 				}
 			}
 
 			// CHECK-NEXT: *** Passed 100 tests
 			// CHECK-NEXT: .
-			property("oneOf n") <- forAll { (xss : ArrayOf<Int>) in
-				if xss.getArray.isEmpty {
+			property("oneOf n") <- forAll { (xss : [Int]) in
+				if xss.isEmpty {
 					return Discard()
 				}
-				let l = Set(xss.getArray)
-				return forAll(Gen.one(of: xss.getArray.map(Gen.pure))) { l.contains($0) }
+				let l = Set(xss)
+				return forAll(Gen.one(of: xss.map(Gen.pure))) { l.contains($0) }
 			}
 
 			// CHECK-NEXT: *** Passed 100 tests
@@ -163,14 +166,14 @@ class GenSpec : XCTestCase {
 			// CHECK-NEXT: *** Passed 100 tests
 			// CHECK-NEXT: .
 			property("Gen.proliferateSized n generates arrays of length n") <- forAll(Gen<Int>.choose((0, 100))) { n in
-				let g = Int.arbitrary.proliferate(withSize: n).map(ArrayOf.init)
-				return forAll(g) { $0.getArray.count == n }
+				let g = Int.arbitrary.proliferate(withSize: n)
+				return forAll(g) { $0.count == n }
 			}
 
 			// CHECK-NEXT: *** Passed 100 tests
 			// CHECK-NEXT: .
-			property("Gen.proliferateSized 0 generates only empty arrays") <- forAll(Int.arbitrary.proliferate(withSize: 0).map(ArrayOf.init)) {
-				return $0.getArray.isEmpty
+			property("Gen.proliferateSized 0 generates only empty arrays") <- forAll(Int.arbitrary.proliferate(withSize: 0)) {
+				return $0.isEmpty
 			}
 
 			// CHECK-NEXT: *** Passed 100 tests
@@ -316,7 +319,7 @@ class GenSpec : XCTestCase {
 			// CHECK-NEXT: *** Passed 100 tests
 			// CHECK-NEXT: .
 			property("Gen.zip8 behaves") <- forAll { (x : Int, y : Int, z : Int, w : Int, a : Int, b : Int, c : Int, d : Int) in
-				let g = Gen<(Int, Int, Int, Int, Int, Int)>.zip(Gen.pure(x), Gen.pure(y), Gen.pure(z), Gen.pure(w), Gen.pure(a), Gen.pure(b), Gen.pure(c), Gen.pure(d))
+				let g = Gen<(Int, Int, Int, Int, Int, Int, Int, Int)>.zip(Gen.pure(x), Gen.pure(y), Gen.pure(z), Gen.pure(w), Gen.pure(a), Gen.pure(b), Gen.pure(c), Gen.pure(d))
 				return forAllNoShrink(g) { (t) in
 					return (t.0, t.1, t.2, t.3, t.4, t.5) == (x, y, z, w, a, b)
 						&& (t.6, t.7) == (c, d)
@@ -352,8 +355,8 @@ class GenSpec : XCTestCase {
 	func testLaws() {
 		XCTAssert(fileCheckOutput(withPrefixes: ["LAW"]) {
 			/// Turns out Gen is a really sketchy monad because of the underlying randomness.
-			let lawfulGen = Gen<Gen<Int>>.fromElements(of: (0...500).map(Gen.pure))
-			let lawfulArrowGen = Gen<Gen<ArrowOf<Int, Int>>>.fromElements(of: ArrowOf<Int, Int>.arbitrary.proliferate(withSize: 10).generate.map(Gen.pure))
+			let lawfulGen = Gen.fromElements(of: (0...500).map(Gen.pure))
+			let lawfulArrowGen = Gen.fromElements(of: ArrowOf<Int, Int>.arbitrary.proliferate(withSize: 10).generate.map(Gen.pure))
 
 			// LAW: *** Passed 100 tests
 			// LAW-NEXT: .
