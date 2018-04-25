@@ -10,6 +10,9 @@
 
 import SwiftCheck
 import XCTest
+#if SWIFT_PACKAGE
+import FileCheck
+#endif
 
 struct Formatter<Value> {
 	let lengthLimit : UInt
@@ -24,11 +27,11 @@ struct Formatter<Value> {
 
 	func format(_ value : Value) -> String {
 		let formatted = makeString(value)
-		let maxIndex = formatted.index(formatted.startIndex, offsetBy: String.IndexDistance(lengthLimit))
+		let maxIndex = formatted.index(formatted.startIndex, offsetBy: Int(lengthLimit))
 		if maxIndex >= formatted.endIndex {
 			return formatted
 		} else {
-			return formatted.substring(to: maxIndex)
+			return String(formatted[..<maxIndex])
 		}
 	}
 
@@ -73,7 +76,7 @@ class FormatterSpec : XCTestCase {
 				let formatter = af.get
 				let string = formatter.format(x)
 				_ = formatter.unFormat(string)
-				return string.distance(from: string.startIndex, to: string.endIndex) <= String.IndexDistance(formatter.lengthLimit)
+				return string.distance(from: string.startIndex, to: string.endIndex) <= Int(formatter.lengthLimit)
 			}
 
 		})

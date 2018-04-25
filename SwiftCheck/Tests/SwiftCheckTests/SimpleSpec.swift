@@ -8,13 +8,16 @@
 
 import SwiftCheck
 import XCTest
+#if SWIFT_PACKAGE
+import FileCheck
+#endif
 
 private func pack<A, B, C>(_ f : @escaping (A, B) -> C) -> ((A, B)) -> C {
-	return f
+  return { xs in f(xs.0, xs.1) }
 }
 
 private func pack<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(_ f : @escaping (A, B, C, D, E, F, G, H, I, J, K, L, M, N) -> O) -> ((A, B, C, D, E, F, G, H, I, J, K, L, M, N)) -> O {
-	return f
+	return { xs in f(xs.0, xs.1, xs.2, xs.3, xs.4, xs.5, xs.6, xs.7, xs.8, xs.9, xs.10,  xs.11, xs.12, xs.13) }
 }
 
 public struct ArbitraryFoo {
@@ -102,8 +105,10 @@ extension ArbitraryLargeFoo : Arbitrary {
 				, UInt8.arbitrary, UInt16.arbitrary, UInt32.arbitrary, UInt64.arbitrary
 				, Int.arbitrary, UInt.arbitrary)
 			.flatMap { t in
-				return Gen<(Bool, (Bool, Bool), (Bool, Bool, Bool), (Bool, Bool, Bool, Bool))>
-					.map(
+				return Gen<(Int8, Int16, Int32, Int64
+					, UInt8, UInt16, UInt32, UInt64
+					, Int , UInt, Bool, (Bool, Bool), (Bool, Bool, Bool), (Bool, Bool, Bool, Bool))>
+					.zipWith(
 						Bool.arbitrary,
 						Gen<(Bool, Bool)>.zip(Bool.arbitrary, Bool.arbitrary),
 						Gen<(Bool, Bool, Bool)>.zip(Bool.arbitrary, Bool.arbitrary, Bool.arbitrary),
@@ -227,6 +232,22 @@ class SimpleSpec : XCTestCase {
 			) { a, b in
 				return a != b
 			}
+
+			// CHECK: Passed: (.)
+			// CHECK-NEXT: 0
+			// CHECK-NEXT: 0 == 0
+			// CHECK: Passed: (.)
+			// CHECK-NEXT: {{[0-9]+}}
+			// CHECK-NEXT: {{[0-9]+}} == {{[0-9]+}}
+			// CHECK: Passed: (.)
+			// CHECK-NEXT: {{[0-9]+}}
+			// CHECK-NEXT: {{[0-9]+}} == {{[0-9]+}}
+			// CHECK: *** Passed 3 tests
+			// CHECK-NEXT: .
+			let verboseLimit = CheckerArguments(maxAllowableSuccessfulTests: 3)
+			property("Passing counter-counterexamples print correctly", arguments: verboseLimit) <- forAll { (x : Int) in
+				return x*x ==== x*x
+			}.verbose
 		})
 	}
 

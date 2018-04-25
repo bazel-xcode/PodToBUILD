@@ -191,7 +191,7 @@ public struct PodSpec: PodSpecRepresentable {
 
     public init(JSONPodspec: JSONDict) throws {
 
-        let fieldMap: [PodSpecField: Any] = Dictionary(tuples: JSONPodspec.flatMap { k, v in
+        let fieldMap: [PodSpecField: Any] = Dictionary(tuples: JSONPodspec.compactMap { k, v in
             guard let field = PodSpecField.init(rawValue: k) else {
                 fputs("WARNING: Unsupported field in Podspec \(k)\n", __stderrp)
                 return nil
@@ -285,7 +285,7 @@ indirect enum ComposedSpec {
             fatalError("ComposedSpec.create requires at least one element")
         }
 
-        return specs.dropFirst().flatMap { $0 }
+        return specs.dropFirst().compactMap { $0 }
             .reduce(.composed(child: parentSpec, parent: nil)) { (parent, child) in
                     .composed(child: child, parent: parent)
         }

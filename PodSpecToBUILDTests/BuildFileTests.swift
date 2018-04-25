@@ -186,7 +186,7 @@ class BuildFileTests: XCTestCase {
 
         XCTAssert(
             AttrSet(basic: [":IGListKit_Default"]) ==
-                (convs.flatMap{ $0 as? ObjcLibrary}.first!).deps
+                (convs.compactMap{ $0 as? ObjcLibrary}.first!).deps
         )
     }
 
@@ -196,7 +196,7 @@ class BuildFileTests: XCTestCase {
 
         XCTAssert(
             AttrSet(basic: [":PINCache_Core", ":PINCache_Arc_exception_safe"]) ==
-                (convs.flatMap{ $0 as? ObjcLibrary}.first!).deps
+                (convs.compactMap{ $0 as? ObjcLibrary}.first!).deps
         )
     }
 
@@ -207,7 +207,7 @@ class BuildFileTests: XCTestCase {
             ])
         let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
         XCTAssert(
-            convs.flatMap{ $0 as? ConfigSetting }.map{ $0.name }.first { $0.contains("osx") } != nil
+            convs.compactMap{ $0 as? ConfigSetting }.map{ $0.name }.first { $0.contains("osx") } != nil
         )
     }
 
@@ -219,7 +219,7 @@ class BuildFileTests: XCTestCase {
         ])
         let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
         XCTAssert(
-            convs.flatMap{ $0 as? ConfigSetting }.map{ $0.name }.first { $0.contains("osx") } != nil
+            convs.compactMap{ $0 as? ConfigSetting }.map{ $0.name }.first { $0.contains("osx") } != nil
         )
     }
 

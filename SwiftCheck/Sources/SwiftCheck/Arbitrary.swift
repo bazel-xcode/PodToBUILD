@@ -23,9 +23,9 @@
 /// implementation of `shrink` is provided, SwiftCheck will default to an empty
 /// one - that is, no shrinking will occur.
 ///
-/// As an example, take the `ArrayOf` implementation of shrink:
+/// As an example, take `Array`'s implementation of shrink:
 ///
-///     Arbitrary.shrink(ArrayOf([1, 2, 3]))
+///     Arbitrary.shrink([1, 2, 3])
 ///        > [[], [2,3], [1,3], [1,2], [0,2,3], [1,0,3], [1,1,3], [1,2,0], [1,2,2]]
 ///
 /// SwiftCheck will search each case forward, one-by-one, and continue shrinking
@@ -58,6 +58,19 @@ extension Arbitrary {
 	/// The implementation of a shrink that returns no alternatives.
 	public static func shrink(_ : Self) -> [Self] {
 		return []
+	}
+}
+
+extension FixedWidthInteger {
+	/// Shrinks any `IntegerType`.
+	public var shrinkIntegral : [Self] {
+		return unfoldr({ i in
+			if i <= 0 {
+				return .none
+			}
+			let n = i / 2
+			return .some((n, n))
+		}, initial: self < 0 ? self.multipliedReportingOverflow(by: -1).partialValue : self)
 	}
 }
 
@@ -301,14 +314,14 @@ extension String : Arbitrary {
 
 	/// The default shrinking function for `String` values.
 	public static func shrink(_ s : String) -> [String] {
-		return [Character].shrink([Character](s.characters)).map { String($0) }
+		return [Character].shrink(s.map{$0}).map { String($0) }
 	}
 }
 
 extension Character : Arbitrary {
 	/// Returns a generator of `Character` values.
 	public static var arbitrary : Gen<Character> {
-		return Gen<UInt32>.choose((32, 255)).flatMap(comp(Gen<Character>.pure, comp(Character.init, UnicodeScalar.init)))
+		return Gen<UInt8>.choose((32, 255)).flatMap(comp(Gen<Character>.pure, comp(Character.init, UnicodeScalar.init)))
 	}
 
 	/// The default shrinking function for `Character` values.

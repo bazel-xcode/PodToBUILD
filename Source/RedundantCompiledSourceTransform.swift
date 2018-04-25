@@ -93,10 +93,10 @@ struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
 
         // Initialize the dictionary
         var excludableByName = [String: SourceExcludable]()
-        convertibles.flatMap(toSourceExcludable).forEach { excludableByName[$0.name] = $0 }
+        convertibles.compactMap(toSourceExcludable).forEach { excludableByName[$0.name] = $0 }
 
         // DFS through the depedency graph.
-        convertibles.flatMap(toSourceExcludable).forEach { excludable in
+        convertibles.compactMap(toSourceExcludable).forEach { excludable in
             fixUnspecifiedSourceExcludesInGraphFrom(
                 root: excludable,
                 excludableByName: &excludableByName

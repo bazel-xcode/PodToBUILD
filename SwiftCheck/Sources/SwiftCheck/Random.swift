@@ -52,6 +52,10 @@ public struct StdGen : RandomGeneneratorType {
 	/// Returns an `Int` generated uniformly within the bounds of the generator
 	/// and a new distinct random number generator.
 	public var next : (Int, StdGen) {
+		// P. L'Ecuyer, "Efficient and Portable Combined Random Number
+		///Generators". Communications of the ACM, 31 (1988), 742-749 and 774.
+		// https://www.iro.umontreal.ca/~lecuyer/myftp/papers/cacm88.pdf
+		
 		let s1 = self.seed1
 		let s2 = self.seed2
 
@@ -83,16 +87,16 @@ public struct StdGen : RandomGeneneratorType {
 }
 
 extension StdGen : Equatable, CustomStringConvertible {
+	/// Equality over random number generators.
+	///
+	/// Two `StdGen`s are equal iff their seeds match.
+	public static func == (l : StdGen, r : StdGen) -> Bool {
+		return l.seed1 == r.seed1 && l.seed2 == r.seed2
+	}
+
 	public var description : String {
 		return "\(self.seed1) \(self.seed2)"
 	}
-}
-
-/// Equality over random number generators.
-///
-/// Two `StdGen`s are equal iff their seeds match.
-public func == (l : StdGen, r : StdGen) -> Bool {
-	return l.seed1 == r.seed1 && l.seed2 == r.seed2
 }
 
 private var theStdGen : StdGen = mkStdRNG(0)
@@ -106,13 +110,15 @@ public func newStdGen() -> StdGen {
 
 /// Types that can generate random versions of themselves.
 public protocol RandomType {
-	/// Takes a range `(lo, hi)` and a random number generator `G`, and returns
-	/// a random value uniformly distributed in the closed interval `[lo,hi]`,
-	/// together with a new generator. It is unspecified what happens if lo>hi.
+	/// Takes a range as a tuple of values `(lo, hi)` and a random number
+	/// generator `G`, and returns a random value uniformly distributed in the
+	/// closed interval `[lo,hi]`, together with a new generator.
 	///
-	/// For continuous types there is no requirement that the values `lo` and
-	/// `hi` are ever produced, but they may be, depending on the implementation
-	/// and the interval.
+	/// - Note: It is unspecified what happens if `lo > hi`.
+	///
+	/// - Remark: For continuous types there is no requirement that the values
+	///   `lo` and `hi` are ever produced, but they may be, depending on the
+	///   implementation and the interval.
 	static func randomInRange<G : RandomGeneneratorType>(_ range : (Self, Self), gen : G) -> (Self, G)
 }
 
@@ -292,7 +298,7 @@ extension Float : RandomType {
 	/// Produces a random `Float` value in the range `[Float.min, Float.max]`.
 	public static func random<G : RandomGeneneratorType>(_ rng : G) -> (Float, G) {
 		let (x, rng_) : (Int32, G) = randomBound(rng)
-		let twoto24 = Int32(2) ^ Int32(24)
+		let twoto24: Int32 = 1 << 24
 		let mask24 = twoto24 - 1
 
 		return (Float(mask24 & (x)) / Float(twoto24), rng_)
@@ -314,7 +320,7 @@ extension Double : RandomType {
 	/// Produces a random `Float` value in the range `[Double.min, Double.max]`.
 	public static func random<G : RandomGeneneratorType>(_ rng : G) -> (Double, G) {
 		let (x, rng_) : (Int64, G) = randomBound(rng)
-		let twoto53 = Int64(2) ^ Int64(53)
+		let twoto53: Int64 = 1 << 53
 		let mask53 = twoto53 - 1
 
 		return (Double(mask53 & (x)) / Double(twoto53), rng_)
