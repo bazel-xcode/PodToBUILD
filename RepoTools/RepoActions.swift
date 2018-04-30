@@ -265,7 +265,7 @@ enum RepoActions {
                 let cmd = shell.command("/bin/ls", arguments: [cleansedPath])
                 return cmd.standardOutputAsString.components(separatedBy: "\n").map{ String($0) }
             })
-        
+
         // Get the rest of the header searchpaths
         let customHeaderSearchPaths = Set([podSpec.name])
             .union(searchPaths(ComposedSpec.composed(child: podSpec, parent: nil)))
@@ -313,12 +313,10 @@ enum RepoActions {
         }
 
         // Write out contents of PodSupportBuildableDir
-  
+
         // Write out the acknowledgement entry plist
         let entry = RenderAcknowledgmentEntry(entry: AcknowledgmentEntry(forPodspec: podSpec))
-        let acknowledgementFilePath = URL(
-            fileURLWithPath: PodSupportBuidableDir + "acknowledgement.plist",
-            relativeTo: URL(fileURLWithPath: "../"))
+        let acknowledgementFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "acknowledgement.plist")
         shell.write(value: entry, toPath: acknowledgementFilePath)
 
         // assume _PATH_TO_SOME/bin/RepoTools
