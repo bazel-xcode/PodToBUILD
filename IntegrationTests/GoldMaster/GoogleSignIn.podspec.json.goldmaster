@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/GoogleSignIn/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/GoogleSignIn/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/GoogleSignIn/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -93,7 +93,9 @@ acknowledged_target(
     "//Vendor/GTMOAuth2:GTMOAuth2_acknowledgement",
     "//Vendor/GoogleToolboxForMac:NSDictionary_URLArguments_acknowledgement",
     "//Vendor/GTMSessionFetcher:Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_fragment"
   )
 objc_bundle(
   name = "GoogleSignIn_Bundle_GoogleSignIn",
@@ -108,7 +110,9 @@ acknowledged_target(
   name = "GoogleSignIn_Bundle_GoogleSignIn_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_fragment"
   )
 objc_framework(
   name = "GoogleSignIn_VendoredFrameworks",
@@ -127,5 +131,7 @@ acknowledged_target(
   name = "GoogleSignIn_VendoredFrameworks_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_fragment"
   )

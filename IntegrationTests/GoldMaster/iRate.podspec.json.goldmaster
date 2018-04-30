@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/iRate/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/iRate/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/iRate/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -89,7 +89,9 @@ acknowledged_target(
   name = "iRate_acknowledgement",
   deps = [
     ":iRate_Bundle_iRate_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/iRate/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/iRate/pod_support_buildable:acknowledgement_fragment"
   )
 objc_bundle(
   name = "iRate_Bundle_iRate",
@@ -104,5 +106,7 @@ acknowledged_target(
   name = "iRate_Bundle_iRate_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/iRate/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/iRate/pod_support_buildable:acknowledgement_fragment"
   )

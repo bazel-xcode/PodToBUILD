@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/FBSDKCoreKit/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/FBSDKCoreKit/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/FBSDKCoreKit/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -286,7 +286,9 @@ acknowledged_target(
   deps = [
     "//Vendor/Bolts:Bolts_acknowledgement",
     ":FBSDKCoreKit_Bundle_FacebookSDKStrings_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_fragment"
   )
 objc_bundle(
   name = "FBSDKCoreKit_Bundle_FacebookSDKStrings",
@@ -301,5 +303,7 @@ acknowledged_target(
   name = "FBSDKCoreKit_Bundle_FacebookSDKStrings_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_fragment"
   )

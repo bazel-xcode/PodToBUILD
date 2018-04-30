@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/youtube-ios-player-helper/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/youtube-ios-player-helper/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/youtube-ios-player-helper/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -153,7 +153,9 @@ acknowledged_target(
   name = "youtube-ios-player-helper_acknowledgement",
   deps = [
     ":youtube-ios-player-helper_Bundle_Assets_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
   )
 objc_bundle(
   name = "youtube-ios-player-helper_Bundle_Assets",
@@ -168,5 +170,7 @@ acknowledged_target(
   name = "youtube-ios-player-helper_Bundle_Assets_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
   )

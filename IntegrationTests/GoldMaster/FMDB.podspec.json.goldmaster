@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/FMDB/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/FMDB/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/FMDB/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -75,7 +75,9 @@ acknowledged_target(
   name = "FMDB_acknowledgement",
   deps = [
     ":standard_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/FMDB/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "standard_hdrs",
@@ -148,7 +150,9 @@ acknowledged_target(
   name = "standard_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/FMDB/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "FTS_hdrs",
@@ -217,7 +221,9 @@ acknowledged_target(
   name = "FTS_acknowledgement",
   deps = [
     ":standard_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/FMDB/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "standalone_hdrs",
@@ -269,7 +275,9 @@ acknowledged_target(
   name = "standalone_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/FMDB/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "SQLCipher_hdrs",
@@ -342,5 +350,7 @@ acknowledged_target(
   name = "SQLCipher_acknowledgement",
   deps = [
     "//Vendor/SQLCipher:SQLCipher_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/FMDB/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
   )
