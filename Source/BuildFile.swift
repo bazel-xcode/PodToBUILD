@@ -116,11 +116,20 @@ public struct AcknowledgmentNode: SkylarkConvertible {
 
     public func toSkylark() -> SkylarkNode {
         let nodeName = ObjcLibrary.bazelLabel(fromString: name + "_acknowledgement").toSkylark()
+        let options = GetBuildOptions()
+        let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
+        let merger = ("//Vendor/" + options.podName + "/"  +
+             podSupportBuildableDir + ":acknowledgement_merger").toSkylark()
+        let value = ("//Vendor/" + options.podName + "/" +
+             podSupportBuildableDir +
+             ":acknowledgement_fragment").toSkylark()
         let target = SkylarkNode.functionCall(
             name: "acknowledged_target",
             arguments: [
                 .named(name: "name", value: nodeName),
                 .named(name: "deps", value: deps.map { $0 + "_acknowledgement" }.toSkylark()),
+                .named(name: "merger", value: merger),
+                .named(name: "value", value: value)
             ]
         )
         return target
