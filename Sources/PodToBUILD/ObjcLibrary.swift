@@ -324,11 +324,11 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
 
         // Select resources that are not prebuilt bundles
-        self.resources = (spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
+        self.resources = ((spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
             strArr.filter({ (str: String) -> Bool in
                 !str.hasSuffix(".bundle")
             })
-        }
+        }).map(extractResources)
 
         let prebuiltBundles = spec ^* liftToAttr(PodSpec.lens.resources .. ReadonlyLens {
             $0.filter { s in s.hasSuffix(".bundle") }
@@ -679,6 +679,12 @@ private func extractSources(patterns: [String]) -> [String] {
     }
 }
 
+private func extractResources(patterns: [String]) -> [String] {
+    return patterns.flatMap { (p: String) -> [String] in
+        pattern(fromPattern: p, includingFileTypes: [])
+    }
+}
+
 private func extractHeaders(patterns: [String]) -> [String] {
     return patterns.flatMap { (p: String) -> [String] in
         pattern(fromPattern: p, includingFileTypes: ["h"])
@@ -688,6 +694,7 @@ private func extractHeaders(patterns: [String]) -> [String] {
 func extract(headers: AttrSet<[String]>) -> AttrSet<[String]> {
     return headers.map(extractHeaders)
 }
+
 func extract(sources: AttrSet<[String]>) -> AttrSet<[String]> {
     return sources.map(extractSources)
 }
