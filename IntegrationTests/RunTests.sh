@@ -5,7 +5,7 @@ cd $SCRIPTPATH/../
 echo $PWD
 
 make compiler
-CMD=bin/PodSpecToBUILD
+CMD=bin/Compiler
 
 # Loop through all the examples and compare outputs
 for f in $(find Examples/*); do
