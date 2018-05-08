@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/EarlGrey/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/EarlGrey/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/EarlGrey/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -91,7 +91,9 @@ acknowledged_target(
   name = "EarlGrey_acknowledgement",
   deps = [
     ":EarlGrey_VendoredFrameworks_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_fragment"
   )
 objc_framework(
   name = "EarlGrey_VendoredFrameworks",
@@ -114,5 +116,7 @@ acknowledged_target(
   name = "EarlGrey_VendoredFrameworks_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_fragment"
   )

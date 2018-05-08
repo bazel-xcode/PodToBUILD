@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/PINRemoteImage/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/PINRemoteImage/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/PINRemoteImage/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -77,7 +77,9 @@ acknowledged_target(
   deps = [
     ":FLAnimatedImage_acknowledgement",
     ":PINCache_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Core_hdrs",
@@ -162,7 +164,9 @@ acknowledged_target(
   name = "Core_acknowledgement",
   deps = [
     "//Vendor/PINOperation:PINOperation_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "iOS_hdrs",
@@ -220,7 +224,9 @@ acknowledged_target(
   name = "iOS_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "OSX_hdrs",
@@ -279,7 +285,9 @@ acknowledged_target(
   name = "OSX_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "tvOS_hdrs",
@@ -334,7 +342,9 @@ acknowledged_target(
   name = "tvOS_acknowledgement",
   deps = [
     ":iOS_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "FLAnimatedImage_hdrs",
@@ -405,7 +415,9 @@ acknowledged_target(
   deps = [
     ":Core_acknowledgement",
     "//Vendor/FLAnimatedImage:FLAnimatedImage_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "WebP_hdrs",
@@ -462,7 +474,9 @@ acknowledged_target(
   deps = [
     ":Core_acknowledgement",
     "//Vendor/libwebp:libwebp_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "PINCache_hdrs",
@@ -533,5 +547,7 @@ acknowledged_target(
   deps = [
     "//Vendor/PINCache:PINCache_acknowledgement",
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )

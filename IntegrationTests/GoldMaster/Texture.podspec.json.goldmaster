@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/Texture/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/Texture/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/Texture/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -84,7 +84,9 @@ acknowledged_target(
   name = "AsyncDisplayKit_acknowledgement",
   deps = [
     ":PINRemoteImage_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/Texture/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Core_hdrs",
@@ -167,7 +169,9 @@ acknowledged_target(
   name = "Core_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/Texture/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "PINRemoteImage_hdrs",
@@ -235,7 +239,9 @@ acknowledged_target(
     ":Core_acknowledgement",
     "//Vendor/PINRemoteImage:iOS_acknowledgement",
     "//Vendor/PINRemoteImage:PINCache_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/Texture/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "IGListKit_hdrs",
@@ -301,7 +307,9 @@ acknowledged_target(
   deps = [
     ":Core_acknowledgement",
     "//Vendor/IGListKit:IGListKit_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/Texture/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Yoga_hdrs",
@@ -368,5 +376,7 @@ acknowledged_target(
   deps = [
     ":Core_acknowledgement",
     "//Vendor/Yoga:Yoga_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/Texture/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
   )

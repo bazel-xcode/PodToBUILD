@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/React/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/React/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/React/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -75,7 +75,9 @@ acknowledged_target(
   name = "React_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Core_hdrs",
@@ -179,7 +181,9 @@ acknowledged_target(
   name = "Core_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "ART_hdrs",
@@ -248,7 +252,9 @@ acknowledged_target(
   name = "ART_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTActionSheet_hdrs",
@@ -317,7 +323,9 @@ acknowledged_target(
   name = "RCTActionSheet_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTAdSupport_hdrs",
@@ -386,7 +394,9 @@ acknowledged_target(
   name = "RCTAdSupport_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTGeolocation_hdrs",
@@ -455,7 +465,9 @@ acknowledged_target(
   name = "RCTGeolocation_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTImage_hdrs",
@@ -524,7 +536,9 @@ acknowledged_target(
   name = "RCTImage_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTNetwork_hdrs",
@@ -593,7 +607,9 @@ acknowledged_target(
   name = "RCTNetwork_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTPushNotification_hdrs",
@@ -662,7 +678,9 @@ acknowledged_target(
   name = "RCTPushNotification_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTSettings_hdrs",
@@ -731,7 +749,9 @@ acknowledged_target(
   name = "RCTSettings_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTText_hdrs",
@@ -800,7 +820,9 @@ acknowledged_target(
   name = "RCTText_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTVibration_hdrs",
@@ -869,7 +891,9 @@ acknowledged_target(
   name = "RCTVibration_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTWebSocket_hdrs",
@@ -938,7 +962,9 @@ acknowledged_target(
   name = "RCTWebSocket_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTLinkingIOS_hdrs",
@@ -1007,5 +1033,7 @@ acknowledged_target(
   name = "RCTLinkingIOS_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/React/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )

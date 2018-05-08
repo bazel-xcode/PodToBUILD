@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/PINCache/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/PINCache/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/PINCache/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -102,7 +102,9 @@ acknowledged_target(
   deps = [
     ":Core_acknowledgement",
     ":Arc-exception-safe_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINCache/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINCache/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Core_hdrs",
@@ -187,7 +189,9 @@ acknowledged_target(
   name = "Core_acknowledgement",
   deps = [
     "//Vendor/PINOperation:PINOperation_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINCache/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINCache/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Arc-exception-safe_hdrs",
@@ -263,5 +267,7 @@ acknowledged_target(
   name = "Arc-exception-safe_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/PINCache/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/PINCache/pod_support_buildable:acknowledgement_fragment"
   )

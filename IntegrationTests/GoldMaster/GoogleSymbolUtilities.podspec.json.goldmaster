@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/GoogleSymbolUtilities/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/GoogleSymbolUtilities/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/GoogleSymbolUtilities/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -75,7 +75,9 @@ acknowledged_target(
   name = "GoogleSymbolUtilities_acknowledgement",
   deps = [
     ":GoogleSymbolUtilities_VendoredFrameworks_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/GoogleSymbolUtilities/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/GoogleSymbolUtilities/pod_support_buildable:acknowledgement_fragment"
   )
 objc_framework(
   name = "GoogleSymbolUtilities_VendoredFrameworks",
@@ -94,5 +96,7 @@ acknowledged_target(
   name = "GoogleSymbolUtilities_VendoredFrameworks_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/GoogleSymbolUtilities/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/GoogleSymbolUtilities/pod_support_buildable:acknowledgement_fragment"
   )

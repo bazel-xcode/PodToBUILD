@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/Adjust/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/Adjust/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/Adjust/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -101,7 +101,9 @@ acknowledged_target(
   name = "Adjust_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/Adjust/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Core_hdrs",
@@ -189,7 +191,9 @@ acknowledged_target(
   name = "Core_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/Adjust/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Sociomantic_hdrs",
@@ -272,7 +276,9 @@ acknowledged_target(
   name = "Sociomantic_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/Adjust/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Criteo_hdrs",
@@ -355,7 +361,9 @@ acknowledged_target(
   name = "Criteo_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/Adjust/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Trademob_hdrs",
@@ -438,5 +446,7 @@ acknowledged_target(
   name = "Trademob_acknowledgement",
   deps = [
     ":Core_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/Adjust/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
   )

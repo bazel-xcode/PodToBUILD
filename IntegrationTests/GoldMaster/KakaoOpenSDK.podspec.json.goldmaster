@@ -1,6 +1,6 @@
-load('//:pod_support_buildable/extensions.bzl', 'pch_with_name_hint')
-load('//:pod_support_buildable/extensions.bzl', 'acknowledged_target')
-load('//:pod_support_buildable/extensions.bzl', 'gen_module_map')
+load('//Vendor/KakaoOpenSDK/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/KakaoOpenSDK/pod_support_buildable:extensions.bzl', 'acknowledged_target')
+load('//Vendor/KakaoOpenSDK/pod_support_buildable:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -79,7 +79,9 @@ acknowledged_target(
   name = "KakaoOpenSDK_acknowledgement",
   deps = [
     ":KakaoOpenSDK_VendoredFrameworks_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "KakaoOpenSDK_hdrs",
@@ -149,7 +151,9 @@ acknowledged_target(
   name = "KakaoOpenSDK_acknowledgement",
   deps = [
     ":KakaoOpenSDK_VendoredFrameworks_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 objc_framework(
   name = "KakaoOpenSDK_VendoredFrameworks",
@@ -168,7 +172,9 @@ acknowledged_target(
   name = "KakaoOpenSDK_VendoredFrameworks_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "KakaoNavi_hdrs",
@@ -226,7 +232,9 @@ acknowledged_target(
   name = "KakaoNavi_acknowledgement",
   deps = [
     ":KakaoNavi_VendoredFrameworks_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 objc_framework(
   name = "KakaoNavi_VendoredFrameworks",
@@ -245,7 +253,9 @@ acknowledged_target(
   name = "KakaoNavi_VendoredFrameworks_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "KakaoLink_hdrs",
@@ -303,7 +313,9 @@ acknowledged_target(
   name = "KakaoLink_acknowledgement",
   deps = [
     ":KakaoLink_VendoredFrameworks_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 objc_framework(
   name = "KakaoLink_VendoredFrameworks",
@@ -322,7 +334,9 @@ acknowledged_target(
   name = "KakaoLink_VendoredFrameworks_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "KakaoS2_hdrs",
@@ -380,7 +394,9 @@ acknowledged_target(
   name = "KakaoS2_acknowledgement",
   deps = [
     ":KakaoS2_VendoredFrameworks_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 objc_framework(
   name = "KakaoS2_VendoredFrameworks",
@@ -399,5 +415,7 @@ acknowledged_target(
   name = "KakaoS2_VendoredFrameworks_acknowledgement",
   deps = [
 
-  ]
+  ],
+  merger = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
