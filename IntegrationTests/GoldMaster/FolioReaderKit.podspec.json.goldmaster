@@ -97,5 +97,7 @@ acknowledged_target(
     "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition_acknowledgement",
     "//Vendor/RealmSwift:RealmSwift_acknowledgement",
     "//Vendor/AEXML:AEXML_acknowledgement"
-  ]
+  ],
+  merger = "//Vendor/FolioReaderKit/pod_support_buildable:acknowledgement_merger",
+  value = "//Vendor/FolioReaderKit/pod_support_buildable:acknowledgement_fragment"
   )
