@@ -422,6 +422,13 @@ func pattern(fromPattern pattern: String, includingFileTypes fileTypes: Set<Stri
             .filter{ (bazelChunks: [BazelGlobChunk]) -> Bool in
                 bazelChunks.count != 0 && bazelChunks[0] != BazelGlobChunk.Str("")
         }
+
+        // Allow all file types
+        if fileTypes.count == 0 {
+             let strs: [String] = filtered
+                  .map{ (glob: [BazelGlobChunk]) -> String in glob.bazelString }
+             return Array(Set(strs))
+	}
         // In Bazel, to keep things simple, we want all patterns to end in an extension
         // Unfortunately, Cocoapods patterns could end in anything, so we need to fix them all
         let suffixFixed: [[BazelGlobChunk]] = filtered
@@ -432,9 +439,9 @@ func pattern(fromPattern pattern: String, includingFileTypes fileTypes: Set<Stri
                 // ending in * needs to map to *.m (except .*)
                 case .Wild:
                     let lastTwo = Array(bazelGlobChunks.suffix(2))
-                    
                     // if we end in .*
                     if (lastTwo.count == 2 && lastTwo[0].hasSuffix(".")) {
+
                         return fileTypes.map{
                             // strip the last * and replace with the extension
                             bazelGlobChunks.prefix(upTo: bazelGlobChunks.count-1) + [BazelGlobChunk.Str($0)]
@@ -445,7 +452,7 @@ func pattern(fromPattern pattern: String, includingFileTypes fileTypes: Set<Stri
                     }
                 // ending in ** needs to map to **/*.m
                 case .DirWild:
-                    return fileTypes.map{ bazelGlobChunks + [.Str("/"), .Wild, .Str("." + $0)] }
+                     return fileTypes.map{ bazelGlobChunks + [.Str("/"), .Wild, .Str("." + $0)] }
                 // ending in a string if that string doesn't have an extension
                 // needs the full /**/*.m
                 case let .Str(s):
@@ -459,11 +466,10 @@ func pattern(fromPattern pattern: String, includingFileTypes fileTypes: Set<Stri
                     }
                 }
             }
-        
         // compile the bazel chunks
         let strs: [String] = suffixFixed
             .map{ (glob: [BazelGlobChunk]) -> String in glob.bazelString }
-        
+
         return Array(Set(strs))
             // Only include patterns that contain the suffixes we care about
             .filter{ (bazelRegex: String) -> Bool in
