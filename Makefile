@@ -1,65 +1,44 @@
 .PHONY : \
 	build \
-	releases \
+	release \
 	goldmaster \
 	test \
 	unit-test \
-	integration-test \
-	workspace-tools
+	integration-test
 
-build:
-	xcodebuild  \
-	-project PodSpecToBUILD.xcodeproj \
-	-scheme PodSpecToBUILD \
-	-configuration Debug \
-	-derivedDataPath tmp_build_dir
+build: CONFIG = debug
+build: SWIFTBFLAGS = --configuration $(CONFIG)
+build: build-impl
 
 clean:
-	rm -rf tmp_build_dir
+	rm -rf .build/debug
+	rm -rf .build/release
 
-compiler:
-	xcodebuild  \
-	-project PodSpecToBUILD.xcodeproj \
-	-scheme PodSpecToBUILD \
-	-configuration Release \
-	-derivedDataPath tmp_build_dir
-	ditto tmp_build_dir/Build/Products/Release/PodSpecToBUILD bin/
+compiler: release
 
-repo-tools:
-	xcodebuild  \
-	-project PodSpecToBUILD.xcodeproj \
-	-scheme RepoTools \
-	-configuration Release \
-	-derivedDataPath tmp_build_dir
-	ditto tmp_build_dir/Build/Products/Release/RepoTools bin/
+repo-tools: release
 
-workspace-tools:
-	xcodebuild  \
-	-project PodSpecToBUILD.xcodeproj \
-	-scheme WorkspaceTools \
-	-configuration Release \
-	-derivedDataPath tmp_build_dir
-	ditto tmp_build_dir/Build/Products/Release/WorkspaceTools bin/
+release: CONFIG = release
+release: SWIFTBFLAGS = --configuration $(CONFIG) -Xswiftc -static-stdlib
+release: build-impl
+release:
+	ditto .build/$(CONFIG)/Compiler bin/Compiler
+	ditto .build/$(CONFIG)/RepoTools bin/RepoTools
 
-# This program builds a release build of all the binaries
-releases:
-	./BuildReleases.sh
+build-impl:
+	swift build $(SWIFTBFLAGS) \
+	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13
 
 # Update the gold master directory
-goldmaster:
+goldmaster: release
 	./MakeGoldMaster.sh
 
-# Unit tests
 unit-test:
-	xcodebuild  \
-	-project PodSpecToBUILD.xcodeproj \
-	-scheme PodSpecToBUILDTests \
-	-configuration Release \
-	test
+	swift test \
+	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13
 
-integration-test:
+integration-test: release
 	./IntegrationTests/RunTests.sh
 
 test: unit-test integration-test
-
 

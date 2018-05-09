@@ -1,0 +1,5 @@
+module ObjcSupport {
+   export *
+   header "CrashReporter.h"
+   header "ExceptionCatcher.h"
+}

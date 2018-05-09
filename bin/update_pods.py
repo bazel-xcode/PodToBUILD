@@ -11,6 +11,9 @@ SRC_ROOT = None
 # All known pods, populated after execing `Pods.WORKSPACE`
 POD_PATHS = []
 
+def _getRepoToolPath():
+    return os.path.dirname(os.path.realpath(__file__)) + "/RepoTools"
+
 def _exec(repository_ctx, command, cwd = None):
     if repository_ctx.GetTrace():
         print("__Running CMD", " ".join(command))
@@ -90,7 +93,7 @@ def HashFile(path):
 
 def GetVersion(repository_ctx):
     self_hash = HashFile(os.path.realpath(__file__))
-    repo_tool_hash = HashFile(repository_ctx.src_root + "/Vendor/rules_pods/bin/RepoTools")
+    repo_tool_hash = HashFile(_getRepoToolPath())
     ctx_hash = str(hash(repository_ctx.GetIdentifier()))
     return self_hash + repo_tool_hash + ctx_hash
 
@@ -193,8 +196,7 @@ def _update_repo_impl(repository_ctx):
     install_script_tpl = repository_ctx.install_script_tpl
     inhibit_warnings = repository_ctx.inhibit_warnings
 
-    # Assume that `rules_pods` is installed to Vendor
-    repo_tool_bin_path = repository_ctx.src_root + "/Vendor/rules_pods/bin/RepoTools"
+    repo_tool_bin_path = _getRepoToolPath()
     tool_bin_by_name = {}
     tool_bin_by_name[REPO_TOOL_NAME] = repo_tool_bin_path
 
@@ -381,6 +383,16 @@ def cleanup_pods():
             continue
         shutil.rmtree(full_path)
 
+
+def _buildRepoToolsRelease():
+    """We currently rely on the `RepoTools` binary."""
+
+    print("Building PodToBUILD dependencies...")
+    _exec(RepositoryContext(None, None, None, None, None, None, None, trace=True), [
+        "make",
+        "release"],
+        os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--src_root",
@@ -405,6 +417,8 @@ def main():
     print("Updating pods in " + SRC_ROOT)
     global OVERRIDE_TRACE
     OVERRIDE_TRACE = args.trace
+
+    _buildRepoToolsRelease()
 
     # Eval the Pods.WORKSPACE
     with open(SRC_ROOT + "/Pods.WORKSPACE", "r") as workspace:

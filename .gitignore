@@ -5,3 +5,6 @@ bin/PodSpecToBUILD
 project.xcworkspace
 !BazelExtensions
 xcuserdata
+.build
+bin/Compiler
+bin/RepoTools
