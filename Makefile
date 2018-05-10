@@ -1,6 +1,7 @@
 .PHONY : \
 	build \
 	release \
+	release-spm \
 	goldmaster \
 	test \
 	unit-test \
@@ -8,24 +9,26 @@
 
 build: CONFIG = debug
 build: SWIFTBFLAGS = --configuration $(CONFIG)
-build: build-impl
+build: build-impl-spm
 
 clean:
 	rm -rf .build/debug
 	rm -rf .build/release
+	tools/bazelwrapper clean
 
 compiler: release
 
 repo-tools: release
 
-release: CONFIG = release
-release: SWIFTBFLAGS = --configuration $(CONFIG) -Xswiftc -static-stdlib
-release: build-impl
-release:
-	ditto .build/$(CONFIG)/Compiler bin/Compiler
-	ditto .build/$(CONFIG)/RepoTools bin/RepoTools
+release-spm: CONFIG = release
+release-spm: SWIFTBFLAGS = --configuration $(CONFIG) -Xswiftc -static-stdlib
+release-spm: build-impl-spm
+release-spm:
+	@ditto .build/$(CONFIG)/Compiler bin/Compiler
+	@ditto .build/$(CONFIG)/RepoTools bin/RepoTools
 
-build-impl:
+
+build-impl-spm:
 	swift build $(SWIFTBFLAGS) \
 	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13
 
@@ -41,4 +44,10 @@ integration-test: release
 	./IntegrationTests/RunTests.sh
 
 test: unit-test integration-test
+
+release:
+	tools/bazelwrapper build :RepoTools :Compiler
+	@ditto bazel-bin/RepoTools bin/RepoTools
+	@ditto bazel-bin/Compiler bin/Compiler
+
 

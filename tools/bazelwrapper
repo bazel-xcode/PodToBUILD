@@ -1,0 +1,57 @@
+#!/bin/bash
+
+set -e
+
+# Make sure we're in the project root directory.
+SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
+pushd "$SCRIPTPATH/.." > /dev/null
+trap popd > /dev/null ERR EXIT
+
+BAZEL_VERSION="0.12.0rc1"
+BAZEL_VERSION_SHA="fe9bf6e4d920c668f28a37d5d2ea11cee38871e90ccf5c2a52c7a327dd6de9a9"
+BAZEL_VERSION_URL="https://releases.bazel.build/0.12.0/rc1/bazel-0.12.0rc1-installer-darwin-x86_64.sh"
+
+BAZEL_ROOT="$HOME/.bazelenv/versions/$BAZEL_VERSION"
+BAZEL_PATH="$BAZEL_ROOT/bin/bazel"
+LEGACY_BAZEL_PATH="$SCRIPTPATH/../Scripts/bazel/bin/bazel"
+
+BAZEL=""
+
+function install_bazel() {
+    curl -L "$BAZEL_VERSION_URL" > $PWD/install_bazel.sh
+    SHA=$(shasum -a 256 install_bazel.sh | awk '{ print $1 }')
+    if [[ $SHA == $BAZEL_VERSION_SHA ]]; then
+        chmod +x install_bazel.sh
+        $PWD/install_bazel.sh --prefix="$BAZEL_ROOT" && rm install_bazel.sh
+    else
+        echo "You version of bazel is out of date; ask for help in #cx-ios"
+        exit 1
+    fi
+}
+
+# Check if we have the correct version of bazel installed in the home
+# directory.
+# Fallback to ./Scripts/bazel/bin/bazel for legacy installations
+# Lastly, check if there is one installed on the path
+if [[ -e "$BAZEL_PATH" ]]; then
+  BAZEL="$BAZEL_PATH"
+elif [[ -e "$LEGACY_BAZEL_PATH" ]] && [[ $("$LEGACY_BAZEL_PATH" version | head -n1 | awk '{ print $3 }') == "$BAZEL_VERSION" ]]; then
+  BAZEL="$LEGACY_BAZEL_PATH"
+elif [[ -e $(which bazel) ]] && [[ $($(which bazel) version | head -n1 | awk '{ print $3 }') == "$BAZEL_VERSION" ]]; then
+  BAZEL=$(which bazel)
+fi
+
+# Ensure we can execute the path for bazel and that it's the correct version
+if ! [[ -e "$BAZEL" ]]; then
+  echo "WARNING: Missing installation or incorrect bazel version ($BAZEL_VERSION)" >&2;
+  echo "Installing Bazel $BAZEL_VERSION to $BAZEL_PATH" >&2;
+  install_bazel
+  BAZEL=$BAZEL_PATH
+fi
+
+if [[ -x "${BAZEL}" ]]; then
+    exec -a "$0" /usr/bin/env - TERM=$TERM SHELL=$SHELL PATH=$PATH HOME=$HOME "${BAZEL}" "$@"
+else
+  echo "WARNING: Missing installation of bazel" >&2;
+  exit 1
+fi
