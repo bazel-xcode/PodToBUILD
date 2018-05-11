@@ -204,7 +204,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     public let weakSdkFrameworks: AttrSet<[String]>
     public let sdkDylibs: AttrSet<[String]>
     public let bundles: AttrSet<[String]>
-    public let resources: AttrSet<[String]>
+    public let resources: GlobNode
     public let publicHeaders: AttrSet<Set<String>>
     public let nonArcSrcs: GlobNode
 
@@ -227,7 +227,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         deps: AttrSet<[String]>,
         copts: AttrSet<[String]>,
         bundles: AttrSet<[String]>,
-        resources: AttrSet<[String]>,
+        resources: GlobNode,
         publicHeaders: AttrSet<Set<String>>,
         nonArcSrcs: GlobNode,
         requiresArc: Either<Bool, [String]>
@@ -324,11 +324,14 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
 
         // Select resources that are not prebuilt bundles
-        self.resources = ((spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
+        let resourceFiles = ((spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
             strArr.filter({ (str: String) -> Bool in
                 !str.hasSuffix(".bundle")
             })
         }).map(extractResources)
+        self.resources = GlobNode(
+            include: resourceFiles.map{ Set($0) },
+            exclude: AttrSet.empty)
 
         let prebuiltBundles = spec ^* liftToAttr(PodSpec.lens.resources .. ReadonlyLens {
             $0.filter { s in s.hasSuffix(".bundle") }

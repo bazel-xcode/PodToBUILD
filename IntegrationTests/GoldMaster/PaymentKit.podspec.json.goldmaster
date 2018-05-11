@@ -75,10 +75,13 @@ objc_library(
   ] + [
     "-fmodule-name=PaymentKit_pod_module"
   ],
-  resources = [
-    "PaymentKit/Resources/Cards/*.png",
-    "PaymentKit/Resources/*.png"
-  ],
+  resources = glob(
+    [
+      "PaymentKit/Resources/*.png",
+      "PaymentKit/Resources/Cards/*.png"
+    ],
+    exclude_directories = 1
+    ),
   visibility = [
     "//visibility:public"
   ]

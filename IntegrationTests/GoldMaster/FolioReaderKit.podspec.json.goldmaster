@@ -76,13 +76,16 @@ objc_library(
   ] + [
     "-fmodule-name=FolioReaderKit_pod_module"
   ],
-  resources = [
-    "Source/**/*.css",
-    "Source/**/*.js",
-    "Source/Resources/*.xcassets",
-    "Source/Resources/Fonts/**/*.otf",
-    "Source/Resources/Fonts/**/*.ttf"
-  ],
+  resources = glob(
+    [
+      "Source/**/*.css",
+      "Source/**/*.js",
+      "Source/Resources/*.xcassets",
+      "Source/Resources/Fonts/**/*.otf",
+      "Source/Resources/Fonts/**/*.ttf"
+    ],
+    exclude_directories = 1
+    ),
   visibility = [
     "//visibility:public"
   ]
