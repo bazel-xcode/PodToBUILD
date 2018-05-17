@@ -52,13 +52,14 @@ acknowledgement_merger = rule(
 
 def acknowledgments_plist(name,
                           deps,
+                          output_name="Acknowledgements",
                           merger="//pod_support_buildable:acknowledgement_merger",
                           ):
     acknowledgement_merger(
         name=name,
         deps=deps,
         value=None,
-        output_name="Acknowledgements",
+        output_name=output_name,
         merger=merger,
         visibility=["//visibility:public"]
     )
@@ -169,6 +170,6 @@ def gen_module_map(pod_name,
                     dir_name=dir_name,
                     module_name=module_name,
                     hdrs=dep_hdrs,
-                    module_map_name=module_map_name,                    
+                    module_map_name=module_map_name,
                     visibility = ["//visibility:public"])
 
