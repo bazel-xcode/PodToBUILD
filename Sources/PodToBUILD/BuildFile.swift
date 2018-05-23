@@ -100,9 +100,9 @@ public func makePrefixNodes() -> SkylarkNode {
     let options = GetBuildOptions()
     let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
     return .lines([
-        SkylarkNode.skylark("load('//Vendor/" + options.podName + "/" + podSupportBuildableDir + ":extensions.bzl', 'pch_with_name_hint')"),
-        SkylarkNode.skylark("load('//Vendor/" + options.podName + "/" + podSupportBuildableDir + ":extensions.bzl', 'acknowledged_target')"),
-        SkylarkNode.skylark("load('//Vendor/" + options.podName + "/" + podSupportBuildableDir + ":extensions.bzl', 'gen_module_map')"),
+        SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')"),
+        SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')"),
+        SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')"),
         makeConfigSettingNodes(),
     ])
 }
@@ -118,8 +118,6 @@ public struct AcknowledgmentNode: SkylarkConvertible {
         let nodeName = ObjcLibrary.bazelLabel(fromString: name + "_acknowledgement").toSkylark()
         let options = GetBuildOptions()
         let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
-        let merger = ("//Vendor/" + options.podName + "/"  +
-             podSupportBuildableDir + ":acknowledgement_merger").toSkylark()
         let value = ("//Vendor/" + options.podName + "/" +
              podSupportBuildableDir +
              ":acknowledgement_fragment").toSkylark()
@@ -128,7 +126,6 @@ public struct AcknowledgmentNode: SkylarkConvertible {
             arguments: [
                 .named(name: "name", value: nodeName),
                 .named(name: "deps", value: deps.map { $0 + "_acknowledgement" }.toSkylark()),
-                .named(name: "merger", value: merger),
                 .named(name: "value", value: value)
             ]
         )
