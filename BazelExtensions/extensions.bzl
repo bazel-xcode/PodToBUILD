@@ -53,7 +53,7 @@ acknowledgement_merger = rule(
 def acknowledgments_plist(name,
                           deps,
                           output_name="Acknowledgements",
-                          merger="//pod_support_buildable:acknowledgement_merger",
+                          merger="//Vendor/rules_pods/BazelExtensions:acknowledgement_merger",
                           ):
     acknowledgement_merger(
         name=name,
@@ -71,8 +71,8 @@ def acknowledgments_plist(name,
 
 def acknowledged_target(name,
                         deps,
-                        merger="//pod_support_buildable:acknowledgement_merger",
-                        value="//pod_support_buildable:acknowledgement_fragment",
+                        value,
+                        merger="//Vendor/rules_pods/BazelExtensions:acknowledgement_merger",
                         ):
     acknowledgement_merger(
         name=name,
