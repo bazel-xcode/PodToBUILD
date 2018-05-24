@@ -323,15 +323,6 @@ public enum RepoActions {
 
         // assume _PATH_TO_SOME/bin/RepoTools
         let assetRoot = RepoActions.assetRoot()
-        let buildExtensions = assetRoot.appendingPathComponent("extensions")
-            .appendingPathExtension("bzl")
-        let buildExtensionsFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "extensions.bzl")
-        shell.symLink(from: buildExtensions.relativePath, to: buildExtensionsFilePath.path)
-
-        let licenseMergeScript = assetRoot.appendingPathComponent("acknowledgement_merger")
-            .appendingPathExtension("py")
-        let licenseMergeScriptFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "acknowledgement_merger.py")
-        shell.symLink(from: licenseMergeScript.relativePath, to: licenseMergeScriptFilePath.path)
 
         let supportBUILDFile = assetRoot.appendingPathComponent("support")
             .appendingPathExtension("BUILD")
