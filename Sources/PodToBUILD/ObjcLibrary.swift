@@ -34,7 +34,7 @@ protocol BazelTarget: SkylarkConvertible {
 
 extension BazelTarget {
     var acknowledgedDeps: [String]? {
-        return nil 
+        return nil
     }
 
     var acknowledged: Bool {
@@ -438,7 +438,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
        
         let allModuleInternalHeaders = headers.toSkylark() .+. depHdrs.toSkylark()
 
-        let podSupportHeaders = GlobNode(include: AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*.h"]),
+        let podSupportHeaders = GlobNode(include: AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*"]),
                                                          exclude: AttrSet<Set<String>>.empty).toSkylark()
         
         if isTopLevelTarget {
@@ -690,7 +690,7 @@ private func extractResources(patterns: [String]) -> [String] {
 
 private func extractHeaders(patterns: [String]) -> [String] {
     return patterns.flatMap { (p: String) -> [String] in
-        pattern(fromPattern: p, includingFileTypes: ["h"])
+        pattern(fromPattern: p, includingFileTypes: ["h", "hpp", "hxx"])
     }
 }
 

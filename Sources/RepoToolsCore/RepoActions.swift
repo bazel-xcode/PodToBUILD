@@ -205,11 +205,11 @@ public enum RepoActions {
         let hasPodspec: () -> Bool = { hasFile(podspecName + ".podspec") }
         let hasPodspecJson: () -> Bool = { hasFile(podspecName + ".podspec.json") }
 
-        if hasPodspec() {
+        if hasPodspecJson() {
+            jsonData = shell.command("/bin/cat", arguments: [podspecName + ".podspec.json"]).standardOutputData
+        } else if hasPodspec() {
             let podBin = whichPod.components(separatedBy: "\n")[0]
             jsonData = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"]).standardOutputData
-        } else if hasPodspecJson() {
-            jsonData = shell.command("/bin/cat", arguments: [podspecName + ".podspec.json"]).standardOutputData
         } else {
             fatalError("Missing podspec!")
         }
@@ -300,18 +300,20 @@ public enum RepoActions {
         // Batch create several symlinks for Pod style includes
         // creating thousands of processes in few milliseconds will
         // blow up otherwise.
+        let currentDirectoryPath = FileManager.default.currentDirectoryPath
         let globResults = Set(globResultsArr)
         customHeaderSearchPaths.forEach { searchPath in
-            var script = "cd " + searchPath + ";\n"
+            let linkPath = currentDirectoryPath + "/" + searchPath
+            guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
+                print("WARNING: Can't change path while creating symlink")
+                return
+            }
             globResults.forEach { globResult in
                 // i.e. pod_support/Headers/Public/__POD_NAME__
-                let from = "\"../../../../\(globResult)\""
-                let to =  String(globResult.split(separator: "/").last!)
-                script += "ln -sf \(from) \(to);\n"
+                let from = "../../../../\(globResult)"
+                let to = String(globResult.split(separator: "/").last!)
+                shell.symLink(from: from, to: to)
             }
-            // Run the script without checking exit codes. It's possible that pods
-            // contain garbage that Xcode previously dealt with.
-            let _ = shell.shellOut(script)
         }
 
         // Write out contents of PodSupportBuildableDir

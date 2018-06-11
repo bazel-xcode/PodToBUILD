@@ -97,8 +97,6 @@ public func makeConfigSettingNodes() -> SkylarkNode {
 // Make Nodes to be inserted at the beginning of skylark output
 // public for test purposes
 public func makePrefixNodes() -> SkylarkNode {
-    let options = GetBuildOptions()
-    let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
     return .lines([
         SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')"),
         SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')"),

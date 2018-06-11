@@ -211,10 +211,14 @@ public struct SystemShellContext : ShellContext {
 
     public func symLink(from: String, to: String) {
         log("LINK FROM \(from) to \(to)")
-        let status = command("/bin/ln", arguments: ["-s", escape(from), escape(to)]).terminationStatus
-        log("LINK STATUS \(status)")
+        do {
+            try FileManager.default.createSymbolicLink(atPath: to, withDestinationPath: from)
+            print("LINK SUCCESS")
+        } catch {
+            print("LINK ERROR: ", error.localizedDescription)
+        }
     }
-    
+
     public func write(value: String, toPath path: URL) {
         log("WRITE \(value) TO \(path)")
         try? value.write(to: path, atomically: false, encoding: String.Encoding.utf8)
