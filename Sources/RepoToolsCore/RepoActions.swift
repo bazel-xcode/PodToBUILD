@@ -305,7 +305,7 @@ public enum RepoActions {
         customHeaderSearchPaths.forEach { searchPath in
             let linkPath = currentDirectoryPath + "/" + searchPath
             guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
-                print("Can't change path while creating symlink")
+                print("WARNING: Can't change path while creating symlink")
                 return
             }
             globResults.forEach { globResult in

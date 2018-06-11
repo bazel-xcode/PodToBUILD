@@ -690,7 +690,7 @@ private func extractResources(patterns: [String]) -> [String] {
 
 private func extractHeaders(patterns: [String]) -> [String] {
     return patterns.flatMap { (p: String) -> [String] in
-        pattern(fromPattern: p, includingFileTypes: ["h", "hpp"])
+        pattern(fromPattern: p, includingFileTypes: ["h", "hpp", "hxx"])
     }
 }
 
