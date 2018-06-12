@@ -315,6 +315,10 @@ public enum RepoActions {
                 shell.symLink(from: from, to: to)
             }
         }
+        
+        guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
+            fatalError("Can't change path back to original directory after creating symlinks")
+        }
 
         // Write out contents of PodSupportBuildableDir
 
