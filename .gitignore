@@ -8,3 +8,4 @@ xcuserdata
 .build
 bin/Compiler
 bin/RepoTools
+compile_commands.json

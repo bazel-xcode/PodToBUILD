@@ -5,7 +5,8 @@
 	goldmaster \
 	test \
 	unit-test \
-	integration-test
+	integration-test \
+	compile_commands.json
 
 build: CONFIG = debug
 build: SWIFTBFLAGS = --configuration $(CONFIG)
@@ -50,4 +51,12 @@ release:
 	@ditto bazel-bin/RepoTools bin/RepoTools
 	@ditto bazel-bin/Compiler bin/Compiler
 
+
+# https://github.com/swift-vim/SwiftPackageManager.vim
+compile_commands.json:
+	swift package clean
+	which spm-vim
+	swift build \
+		-Xswiftc -parseable-output | tee .build/commands_build.log
+	cat .build/commands_build.log | spm-vim compile_commands
 
