@@ -102,18 +102,35 @@ class ShellTask : NSObject {
         return description
     }
 
+    class RunLoopContext {
+        var cancelTerminationStatus: Int32? = 0
+        var process: Process
+        init (process: Process) {
+            self.process = process
+        }
+    }
+
     /// Launch a task and get the output
     func launch() -> CommandOutput {
         let process = Process()
-        
+
+        let runLoopContext = RunLoopContext(process: process)
         // Setup a timer.
         // When this timer ends, we smoke the process.
         var runLoopCtx =  CFRunLoopTimerContext()
-        runLoopCtx.info = unsafeBitCast(process, to: UnsafeMutableRawPointer.self)
+        runLoopCtx.info = unsafeBitCast(runLoopContext, to: UnsafeMutableRawPointer.self)
         let runLoopCB: CoreFoundation.CFRunLoopTimerCallBack = {
             (c: CFRunLoopTimer?, ctx: UnsafeMutableRawPointer?)  in
-            let process = unsafeBitCast(ctx, to: Process.self)
-            process.terminate()
+            let ctx = unsafeBitCast(ctx, to: RunLoopContext.self)
+            let _ = tryBlock {
+                ctx.process.terminate()
+            }
+            // Try to get the termination status, and assign it to 43 if it throws
+            var status: Int32 = 0
+            let _ = tryBlock {
+                status = ctx.process.terminationStatus
+            }
+            ctx.cancelTerminationStatus = status != 0 ? status : 43
             CFRunLoopStop(RunLoop.main.getCFRunLoop())
         }
 
@@ -157,7 +174,8 @@ class ShellTask : NSObject {
         let standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
         return ShellTaskResult(standardErrorData: standardErrorData,
                                standardOutputData: standardOutputData,
-                               terminationStatus: process.terminationStatus)
+                               terminationStatus: runLoopContext.cancelTerminationStatus
+                               ?? process.terminationStatus)
     }
 }
 
