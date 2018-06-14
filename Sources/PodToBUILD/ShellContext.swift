@@ -44,9 +44,9 @@ let FOUR_HOURS_TIME_CONSTANT = (60.0 * 60.0 * 4.0)
 /// All interaction with the the system should go through this
 /// layer, so that it is auditable, traceable, and testable
 public protocol ShellContext {
-    func command(_ launchPath: String, arguments: [String]) -> CommandOutput
+    @discardableResult func command(_ launchPath: String, arguments: [String]) -> CommandOutput
 
-    func shellOut(_ script: String) -> CommandOutput
+    @discardableResult func shellOut(_ script: String) -> CommandOutput
 
     func dir(_ path: String)
 
@@ -79,20 +79,24 @@ private struct ShellTaskResult : CommandOutput {
 class ShellTask : NSObject {
     let timeout: CFTimeInterval
     let command: String
+    let path: String?
     let arguments: [String]
 
-    init(command: String, arguments: [String], timeout: CFTimeInterval) {
+    init(command: String, arguments: [String], timeout: CFTimeInterval, cwd:
+            String? = nil) {
         self.command = command
         self.arguments = arguments
         self.timeout = timeout
+        self.path = cwd
     }
 
     /// Create a task with a script and timeout
     /// By default, it runs under bash for the current path.
-    public static func with(script: String, timeout: Double) -> ShellTask {
+    public static func with(script: String, timeout: Double, cwd: String? = nil) -> ShellTask {
         let path = ProcessInfo.processInfo.environment["PATH"]!
         let script = "PATH=%\(path) /bin/sh -c '\(script)'"
-        return ShellTask(command: "/bin/bash", arguments: ["-c", script], timeout: timeout)
+        return ShellTask(command: "/bin/bash", arguments: ["-c", script],
+                timeout: timeout, cwd: cwd)
     }
 
     override var description: String {
@@ -103,7 +107,7 @@ class ShellTask : NSObject {
     }
 
     class RunLoopContext {
-        var cancelTerminationStatus: Int32? = 0
+        var cancelTerminationStatus: Int32? = nil
         var process: Process
         init (process: Process) {
             self.process = process
@@ -139,8 +143,10 @@ class ShellTask : NSObject {
         let currentLoop = RunLoop.main.getCFRunLoop()
         CFRunLoopAddTimer(currentLoop, timer, CFRunLoopMode.defaultMode)
         
+        var didTerminateStatus: Int32? = nil
         let taskObserver = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: OperationQueue()) {
             _ in
+            didTerminateStatus = process.terminationStatus
             CFRunLoopStop(currentLoop)
         }
         
@@ -154,6 +160,9 @@ class ShellTask : NSObject {
         process.standardError = stderr
         process.launchPath = command
         process.arguments = arguments
+        if let cwd = path {
+            process.currentDirectoryURL = URL(fileURLWithPath: cwd)
+        }
         let exception = tryBlock {
           process.launch()
           CFRunLoopRun()
@@ -174,8 +183,8 @@ class ShellTask : NSObject {
         let standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
         return ShellTaskResult(standardErrorData: standardErrorData,
                                standardOutputData: standardOutputData,
-                               terminationStatus: runLoopContext.cancelTerminationStatus
-                               ?? process.terminationStatus)
+                               terminationStatus: didTerminateStatus
+                               ?? runLoopContext.cancelTerminationStatus ?? 44)
     }
 }
 
@@ -201,7 +210,7 @@ public struct SystemShellContext : ShellContext {
         return startShellAndWait(launchPath, arguments: arguments)
     }
 
-    public func shellOut(_ script: String) -> CommandOutput {
+    @discardableResult public func shellOut(_ script: String) -> CommandOutput {
         log("SHELL:\(script)")
         let task = ShellTask.with(script: script,
                                   timeout: FOUR_HOURS_TIME_CONSTANT)

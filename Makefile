@@ -1,20 +1,11 @@
-.PHONY : \
-	build \
-	release \
-	release-spm \
-	goldmaster \
-	test \
-	unit-test \
-	integration-test \
-	compile_commands.json
-
-build: CONFIG = debug
-build: SWIFTBFLAGS = --configuration $(CONFIG)
+.PHONY: build 
+build: CONFIG= debug
+build: SWIFT_OPTS= --configuration $(CONFIG)
 build: build-impl-spm
 
+# There are a few issues with SwiftPackageManager and incremental builds
 clean:
-	rm -rf .build/debug
-	rm -rf .build/release
+	rm -rf .build
 	tools/bazelwrapper clean
 
 compiler: release
@@ -22,41 +13,66 @@ compiler: release
 repo-tools: release
 
 release-spm: CONFIG = release
-release-spm: SWIFTBFLAGS = --configuration $(CONFIG) -Xswiftc -static-stdlib
+release-spm: SWIFT_OPTS= --configuration $(CONFIG) -Xswiftc -static-stdlib
 release-spm: build-impl-spm
 release-spm:
 	@ditto .build/$(CONFIG)/Compiler bin/Compiler
 	@ditto .build/$(CONFIG)/RepoTools bin/RepoTools
 
-
 build-impl-spm:
-	swift build $(SWIFTBFLAGS) \
-	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13
+	@mkdir -p .build
+	swift build $(SWIFT_OPTS) \
+	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13 \
+		| tee .build/last_build.log
+
+test-impl:
+	@mkdir -p .build
+	swift test $(SWIFT_TEST_OPTS) \
+	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13 \
+		| tee .build/last_build.log
 
 # Update the gold master directory
 goldmaster: release
 	./MakeGoldMaster.sh
 
-unit-test:
-	swift test \
-	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13
+unit-test: SWIFT_TEST_OPTS= --filter PodToBUILDTests
+unit-test: test-impl
+
+
+# Running this is non trival from within the SwiftTest - do it here.
+install-bazel:
+	./tools/bazelwrapper info
+
+SANDBOX=/var/tmp/PodTestSandbox
+init-sandbox: install-bazel release
+	rm -rf $(SANDBOX)
+	mkdir -p $(SANDBOX)
+
+.PHONY: build-test
+build-test: SWIFT_TEST_OPTS= --filter BuildTests*
+build-test: init-sandbox 
+build-test: test-impl
 
 integration-test: release
 	./IntegrationTests/RunTests.sh
 
-test: unit-test integration-test
+test: test-impl integration-test
+
+# We're running into issues with SwiftPackageManager's
+# Build system on the CI. Blow away it's state
+ci: clean test
 
 release:
 	tools/bazelwrapper build :RepoTools :Compiler
-	@ditto bazel-bin/RepoTools bin/RepoTools
-	@ditto bazel-bin/Compiler bin/Compiler
+	ditto bazel-bin/RepoTools bin/RepoTools
+	ditto bazel-bin/Compiler bin/Compiler
 
 
 # https://github.com/swift-vim/SwiftPackageManager.vim
 compile_commands.json:
 	swift package clean
 	which spm-vim
-	swift build \
+	swift build --build-tests \
 		-Xswiftc -parseable-output | tee .build/commands_build.log
 	cat .build/commands_build.log | spm-vim compile_commands
 
