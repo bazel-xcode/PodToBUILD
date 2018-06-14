@@ -109,7 +109,8 @@ public struct HeaderSearchPathTransformer: XCConfigValueTransformer {
     }
     
     public func string(forXCConfigValue value: String) -> String {
-        let cleaned = value.replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)", with: "external/\(externalName)").replacingOccurrences(of: "\"", with: "")
+        let cleaned = value.replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)",
+            with: "Vendor/\(externalName)").replacingOccurrences(of: "\"", with: "")
         return "-I\(cleaned)"
     }
 }
