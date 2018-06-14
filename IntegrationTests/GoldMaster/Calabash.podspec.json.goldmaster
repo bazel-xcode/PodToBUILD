@@ -1,6 +1,6 @@
-load('//Vendor/Calabash/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
-load('//Vendor/Calabash/pod_support_buildable:extensions.bzl', 'acknowledged_target')
-load('//Vendor/Calabash/pod_support_buildable:extensions.bzl', 'gen_module_map')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -21,7 +21,7 @@ filegroup(
   name = "Calabash_hdrs",
   srcs = glob(
     [
-      "pod_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
     ),
@@ -50,7 +50,9 @@ objc_library(
     exclude_directories = 1
     ) + glob(
     [
-      "calabash.framework/Versions/A/Headers/*.h"
+      "calabash.framework/Versions/A/Headers/*.h",
+      "calabash.framework/Versions/A/Headers/*.hpp",
+      "calabash.framework/Versions/A/Headers/*.hxx"
     ],
     exclude_directories = 1
     ),
@@ -109,6 +111,5 @@ acknowledged_target(
   deps = [
 
   ],
-  merger = "//Vendor/Calabash/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/Calabash/pod_support_buildable:acknowledgement_fragment"
   )

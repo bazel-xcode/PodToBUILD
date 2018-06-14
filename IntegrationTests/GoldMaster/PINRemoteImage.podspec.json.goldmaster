@@ -1,6 +1,6 @@
-load('//Vendor/PINRemoteImage/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
-load('//Vendor/PINRemoteImage/pod_support_buildable:extensions.bzl', 'acknowledged_target')
-load('//Vendor/PINRemoteImage/pod_support_buildable:extensions.bzl', 'gen_module_map')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,7 +15,7 @@ filegroup(
   name = "PINRemoteImage_hdrs",
   srcs = glob(
     [
-      "pod_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
     ),
@@ -78,7 +78,6 @@ acknowledged_target(
     ":FLAnimatedImage_acknowledgement",
     ":PINCache_acknowledgement"
   ],
-  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
@@ -165,7 +164,6 @@ acknowledged_target(
   deps = [
     "//Vendor/PINOperation:PINOperation_acknowledgement"
   ],
-  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
@@ -225,7 +223,6 @@ acknowledged_target(
   deps = [
     ":Core_acknowledgement"
   ],
-  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
@@ -286,7 +283,6 @@ acknowledged_target(
   deps = [
     ":Core_acknowledgement"
   ],
-  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
@@ -343,7 +339,6 @@ acknowledged_target(
   deps = [
     ":iOS_acknowledgement"
   ],
-  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
@@ -416,7 +411,6 @@ acknowledged_target(
     ":Core_acknowledgement",
     "//Vendor/FLAnimatedImage:FLAnimatedImage_acknowledgement"
   ],
-  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
@@ -475,7 +469,6 @@ acknowledged_target(
     ":Core_acknowledgement",
     "//Vendor/libwebp:libwebp_acknowledgement"
   ],
-  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
@@ -548,6 +541,5 @@ acknowledged_target(
     "//Vendor/PINCache:PINCache_acknowledgement",
     ":Core_acknowledgement"
   ],
-  merger = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )

@@ -1,6 +1,6 @@
-load('//Vendor/youtube-ios-player-helper/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
-load('//Vendor/youtube-ios-player-helper/pod_support_buildable:extensions.bzl', 'acknowledged_target')
-load('//Vendor/youtube-ios-player-helper/pod_support_buildable:extensions.bzl', 'gen_module_map')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -27,7 +27,7 @@ filegroup(
   name = "youtube-ios-player-helper_hdrs",
   srcs = glob(
     [
-      "pod_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
     ),
@@ -91,19 +91,27 @@ objc_library(
     {
       ":osxCase": glob(
         [
-          "Classes/**/*.h"
+          "Classes/**/*.h",
+          "Classes/**/*.hpp",
+          "Classes/**/*.hxx"
         ],
         exclude = [
-          "Classes/ios/**/*.h"
+          "Classes/ios/**/*.h",
+          "Classes/ios/**/*.hpp",
+          "Classes/ios/**/*.hxx"
         ],
         exclude_directories = 1
         ),
       "//conditions:default": glob(
         [
-          "Classes/**/*.h"
+          "Classes/**/*.h",
+          "Classes/**/*.hpp",
+          "Classes/**/*.hxx"
         ],
         exclude = [
-          "Classes/osx/**/*.h"
+          "Classes/osx/**/*.h",
+          "Classes/osx/**/*.hpp",
+          "Classes/osx/**/*.hxx"
         ],
         exclude_directories = 1
         )
@@ -154,7 +162,6 @@ acknowledged_target(
   deps = [
     ":youtube-ios-player-helper_Bundle_Assets_acknowledgement"
   ],
-  merger = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
   )
 objc_bundle(
@@ -171,6 +178,5 @@ acknowledged_target(
   deps = [
 
   ],
-  merger = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
   )

@@ -1,6 +1,6 @@
-load('//Vendor/FBSDKCoreKit/pod_support_buildable:extensions.bzl', 'pch_with_name_hint')
-load('//Vendor/FBSDKCoreKit/pod_support_buildable:extensions.bzl', 'acknowledged_target')
-load('//Vendor/FBSDKCoreKit/pod_support_buildable:extensions.bzl', 'gen_module_map')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -27,7 +27,7 @@ filegroup(
   name = "FBSDKCoreKit_hdrs",
   srcs = glob(
     [
-      "pod_support/Headers/Public/**/*.h"
+      "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
     ),
@@ -125,7 +125,9 @@ objc_library(
         exclude = [
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h"
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hxx"
         ],
         exclude_directories = 1
         ),
@@ -141,8 +143,14 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.h",
           "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.hpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.hxx",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.hpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.hxx",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.hpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.hxx",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.h",
@@ -152,7 +160,9 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.h",
           "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h"
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
         ],
         exclude_directories = 1
         )
@@ -287,7 +297,6 @@ acknowledged_target(
     "//Vendor/Bolts:Bolts_acknowledgement",
     ":FBSDKCoreKit_Bundle_FacebookSDKStrings_acknowledgement"
   ],
-  merger = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_fragment"
   )
 objc_bundle(
@@ -304,6 +313,5 @@ acknowledged_target(
   deps = [
 
   ],
-  merger = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_merger",
   value = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_fragment"
   )
