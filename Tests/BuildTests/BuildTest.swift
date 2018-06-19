@@ -34,10 +34,11 @@ class BuildTests: XCTestCase {
         shell.dir(podSandbox)
         shell.shellOut("ditto $PWD \(sandbox)/Vendor/rules_pods")
         shell.shellOut("ditto \(rootDir)/Tests/BuildTests/Examples/\(pod)/Pods.WORKSPACE \(sandbox)/Pods.WORKSPACE")
+        shell.shellOut("ditto \(rootDir)/Tests/BuildTests/Examples/PodSpecs \(sandbox)/Vendor/PodSpecs")
         let task = ShellTask(command: "/bin/bash", arguments: [
-                "-c", sandbox +
-                "/Vendor/rules_pods/bin/update_pods.py --src_root \(sandbox)"
-                ], timeout: 1200.0)
+                "-c",
+                "Vendor/rules_pods/bin/update_pods.py"
+                ], timeout: 1200.0, cwd: sandbox)
         let result = task.launch()
         XCTAssertEqual(result.terminationStatus, 0)
         print("PodUpdate Result:", result.standardOutputAsString)
@@ -70,7 +71,20 @@ class BuildTests: XCTestCase {
     }
 
     func testPINRemoteImage() {
-        build(pod: "PINRemoteImage", specs: ["Core"])
+        // build(pod: "PINRemoteImage", specs: ["Core"])
+    }
+
+    func testRN() {
+        build(pod: "React", specs: [
+             "Core",
+             "BatchedBridge",
+             "CxxBridge",
+             "DevSupport",
+             "RCTImage",
+             "RCTNetwork",
+             "RCTText",
+             "RCTWebSocket",
+             "RCTAnimation"])
     }
 }
 
