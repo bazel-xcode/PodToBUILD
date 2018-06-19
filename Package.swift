@@ -45,5 +45,10 @@ let package = Package(
         .testTarget(
             name: "PodToBUILDTests",
             dependencies: ["RepoToolsCore", "SwiftCheck"]),
+        .testTarget(
+            name: "BuildTests",
+            // We only depend on this for the shell lib.
+            // TODO: Factor that out.
+            dependencies: ["RepoToolsCore"]),
     ]
 )

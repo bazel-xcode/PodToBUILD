@@ -199,17 +199,29 @@ public enum RepoActions {
         let jsonData: Data
         let hasFile: (String) -> Bool = { file in
             // did you know that [ is the name of the binary that tests stuff!
-            shell.command("/bin/[",
+            return shell.command("/bin/[",
                           arguments: ["-e", file, "]"]).terminationStatus == 0
         }
-        let hasPodspec: () -> Bool = { hasFile(podspecName + ".podspec") }
-        let hasPodspecJson: () -> Bool = { hasFile(podspecName + ".podspec.json") }
+        let hasPodspec: () -> Bool = {
+            hasFile(FileManager.default.currentDirectoryPath + "/" + podspecName
+                    + ".podspec") }
+        let hasPodspecJson: () -> Bool = {
+            hasFile(FileManager.default.currentDirectoryPath + "/" 
+                    + podspecName + ".podspec.json") }
 
         if hasPodspecJson() {
             jsonData = shell.command("/bin/cat", arguments: [podspecName + ".podspec.json"]).standardOutputData
         } else if hasPodspec() {
             let podBin = whichPod.components(separatedBy: "\n")[0]
-            jsonData = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"]).standardOutputData
+            let podResult = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"])
+            guard podResult.terminationStatus == 0 else {
+                fatalError("""
+                        PodSpec decoding failed \(podResult.terminationStatus)
+                        stdout: \(podResult.standardOutputAsString)
+                        stderr: \(podResult.standardErrorAsString)
+                """)
+            }
+            jsonData = podResult.standardOutputData
         } else {
             fatalError("Missing podspec!")
         }
