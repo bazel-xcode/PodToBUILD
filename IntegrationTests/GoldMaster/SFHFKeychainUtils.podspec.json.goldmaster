@@ -4,7 +4,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -36,6 +37,17 @@ filegroup(
     "SFHFKeychainUtils_cxx_hdrs",
     "SFHFKeychainUtils_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "SFHFKeychainUtils_cxx_hmap",
+  namespace = "SFHFKeychainUtils",
+  hdrs = [
+    ":SFHFKeychainUtils_cxx_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -138,6 +150,20 @@ filegroup(
     exclude_directories = 1
   ) + [
     ":SFHFKeychainUtils_cxx_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "SFHFKeychainUtils_hmap",
+  namespace = "SFHFKeychainUtils",
+  hdrs = [
+    ":SFHFKeychainUtils_hdrs"
+  ],
+  deps = [
+    ":SFHFKeychainUtils_cxx",
+    ":SFHFKeychainUtils_swift"
   ],
   visibility = [
     "//visibility:public"

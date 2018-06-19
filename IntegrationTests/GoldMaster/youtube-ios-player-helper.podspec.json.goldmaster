@@ -5,7 +5,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -70,6 +71,19 @@ filegroup(
   srcs = [
     "youtube-ios-player-helper_cxx_hdrs",
     "youtube-ios-player-helper_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "youtube-ios-player-helper_cxx_hmap",
+  namespace = "youtube-ios-player-helper",
+  hdrs = [
+    ":youtube-ios-player-helper_cxx_union_hdrs"
+  ],
+  deps = [
+    ":youtube-ios-player-helper_Bundle_Assets"
   ],
   visibility = [
     "//visibility:public"
@@ -241,6 +255,21 @@ filegroup(
     }
   ) + [
     ":youtube-ios-player-helper_cxx_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "youtube-ios-player-helper_hmap",
+  namespace = "youtube-ios-player-helper",
+  hdrs = [
+    ":youtube-ios-player-helper_hdrs"
+  ],
+  deps = [
+    ":youtube-ios-player-helper_Bundle_Assets",
+    ":youtube-ios-player-helper_cxx",
+    ":youtube-ios-player-helper_swift"
   ],
   visibility = [
     "//visibility:public"

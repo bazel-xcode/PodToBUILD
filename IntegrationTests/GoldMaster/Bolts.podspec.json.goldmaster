@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -49,6 +50,20 @@ filegroup(
   ) + [
     ":Tasks_hdrs",
     ":AppLinks_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Bolts_hmap",
+  namespace = "Bolts",
+  hdrs = [
+    ":Bolts_hdrs"
+  ],
+  deps = [
+    ":AppLinks",
+    ":Tasks"
   ],
   visibility = [
     "//visibility:public"
@@ -151,6 +166,17 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Tasks_hmap",
+  namespace = "Bolts",
+  hdrs = [
+    ":Tasks_union_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Tasks_includes",
   include = [
@@ -248,6 +274,19 @@ filegroup(
   srcs = [
     "AppLinks_hdrs",
     "Bolts_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "AppLinks_hmap",
+  namespace = "Bolts",
+  hdrs = [
+    ":AppLinks_union_hdrs"
+  ],
+  deps = [
+    ":Tasks"
   ],
   visibility = [
     "//visibility:public"

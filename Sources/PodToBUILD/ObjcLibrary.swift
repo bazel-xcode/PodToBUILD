@@ -507,6 +507,23 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 ))
         }
 
+        let baseHeaders: [String] = isTopLevelTarget ?
+            [":" + externalName + "_hdrs"] : [":" + name + "_union_hdrs"]
+
+        inlineSkylark.append(.functionCall(
+            name: "headermap",
+            arguments: [
+                .named(name: "name", value: (name + "_hmap").toSkylark()),
+                .named(name: "namespace", value: moduleName.toSkylark()),
+                .named(name: "hdrs", value: baseHeaders.toSkylark()),
+                // TODO: in some cases, we may need to break this invariant, as
+                // it may not hold true for all cocoapods ( e.g. give it all
+                // possibilities here )
+                .named(name: "deps", value: deps.sorted(by: (<)).toSkylark()),
+                .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
+                ]
+            ))
+
         if lib.includes.count > 0 { 
             inlineSkylark.append(.functionCall(
                 name: "gen_includes",
@@ -572,13 +589,11 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         })
 
 
-        let baseHeaders: [String] = isTopLevelTarget ?
-            [":" + externalName + "_hdrs"] : [":" + name + "_union_hdrs"]
         let moduleHeaders: [String] = generateModuleMap ?
             [":" + moduleMapDirectoryName + "_module_map_file"] : []
         libArguments.append(.named(
                 name: "hdrs",
-                value: (baseHeaders + moduleHeaders).toSkylark()
+                value: (baseHeaders + moduleHeaders + (options.generateHeaderMap ? [":" + name + "_hmap"] : [])).toSkylark()
                 ))
 
         libArguments.append(.named(
@@ -594,14 +609,14 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             )
         ))
 
-          if generateModuleMap {
-               // Include the public headers which are symlinked in
-               // All includes are bubbled up automatically
-               libArguments.append(.named(
-                    name: "includes",
-                    value: [ moduleMapDirectoryName ].toSkylark()
-               ))
-          }
+        if generateModuleMap {
+            // Include the public headers which are symlinked in
+            // All includes are bubbled up automatically
+            libArguments.append(.named(
+                name: "includes",
+                value: [ moduleMapDirectoryName ].toSkylark()
+            ))
+        }
 
         if !lib.sdkFrameworks.isEmpty {
             libArguments.append(.named(
@@ -652,6 +667,19 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             )
         let getPodIQuotes = {
             () -> [String] in
+	    let headerMapOpts: [String]
+            let podName = GetBuildOptions().podName
+            if options.generateHeaderMap {
+		// __BAZEL_GEN_DIR__ currently subbed in the toolchain, as implemented 2 years ago.
+		// Add a PR to bazel to have a "make variable" instead
+                headerMapOpts = [
+                    "-I$(GENDIR)/\(getPodBaseDir())/\(podName)/" + lib.name + "_hmap.hmap",
+                    "-I.", 
+                ]
+            } else {
+                headerMapOpts = []
+	    }
+
             let podInclude = lib.includes.first(where: {
                     $0.contains(PodSupportSystemPublicHeaderDir) })
             guard podInclude != nil else { return [] }
@@ -664,16 +692,16 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                             -> Set<String> in
                             return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
                         }))
-            return headerSearchPaths
+            return headerMapOpts + headerSearchPaths
                 .sorted(by: (<))
                 .reduce([String]()) {
                 accum, searchPath in
                 // Assume that the podspec matches the name of the directory.
                 // it is a convention that these are 1 in the same.
-                let externalDir = GetBuildOptions()
-.podName
-                return accum + ["-I" + getPodBaseDir() + "/" + externalDir + "/" + searchPath]
+                let podName = GetBuildOptions().podName
+                return accum + ["-I\(getPodBaseDir())/\(podName)/\(searchPath)"]
             }
+
         }
 
         libArguments.append(.named(

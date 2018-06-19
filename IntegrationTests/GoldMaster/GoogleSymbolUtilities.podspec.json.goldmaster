@@ -4,7 +4,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -24,6 +25,19 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "GoogleSymbolUtilities_hmap",
+  namespace = "GoogleSymbolUtilities",
+  hdrs = [
+    ":GoogleSymbolUtilities_hdrs"
+  ],
+  deps = [
+    ":GoogleSymbolUtilities_VendoredFrameworks"
+  ],
   visibility = [
     "//visibility:public"
   ]

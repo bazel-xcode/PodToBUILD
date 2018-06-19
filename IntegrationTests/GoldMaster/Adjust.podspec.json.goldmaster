@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -36,6 +37,19 @@ filegroup(
     exclude_directories = 1
   ) + [
     ":Core_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Adjust_hmap",
+  namespace = "Adjust",
+  hdrs = [
+    ":Adjust_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -126,6 +140,17 @@ filegroup(
     "Core_hdrs",
     "Adjust_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Core_hmap",
+  namespace = "Adjust",
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -223,6 +248,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Sociomantic_hmap",
+  namespace = "Adjust",
+  hdrs = [
+    ":Sociomantic_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Sociomantic_includes",
   include = [
@@ -311,6 +349,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Criteo_hmap",
+  namespace = "Adjust",
+  hdrs = [
+    ":Criteo_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Criteo_includes",
   include = [
@@ -394,6 +445,19 @@ filegroup(
   srcs = [
     "Trademob_hdrs",
     "Adjust_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Trademob_hmap",
+  namespace = "Adjust",
+  hdrs = [
+    ":Trademob_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"

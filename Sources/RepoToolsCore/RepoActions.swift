@@ -83,6 +83,7 @@ public enum SerializedRepoToolsAction {
             "--trace": .bool,
             "--enable_modules": .bool,
             "--generate_module_map": .bool,
+            "--generate_header_map": .bool,
             "--vendorize": .bool,
             "--header_visibility": .string,
         ]
@@ -138,6 +139,7 @@ public enum SerializedRepoToolsAction {
                                  trace: parsed["--trace"]?.first as? Bool ?? false,
                                  enableModules: parsed["--enable_modules"]?.first as? Bool ?? false,
                                  generateModuleMap: parsed["--generate_module_map"]?.first as? Bool ?? false,
+                                 generateHeaderMap: parsed["--generate_header_map"]?.first as? Bool ?? false,
                                  headerVisibility: parsed["--header_visibility"]?.first as? String ?? "",
                                  alwaysSplitRules: false,
                                  vendorize: parsed["--vendorize"]?.first as? Bool ?? true
@@ -244,6 +246,17 @@ public enum RepoActions {
         shell.dir(PodSupportDir + "Headers/Private/")
         shell.dir(PodSupportBuidableDir)
 
+        // This closure looks up all of the headers from the project.
+        // We don't really need to touch the file system during generation time
+        // given:
+        // - Bazel can lookup all of the headers
+        // - All namespaces are accounted for by the headermap
+        //
+        // - We may need to have file groups for headers that
+        //   associate a given directory with a group of headers.
+        //
+        // - Consider how XCConfig namespaces will be propagated
+
         let searchPaths = { (spec: ComposedSpec) -> Set<String> in
             let fallbackSpec = spec
             let moduleName = AttrSet<String>(
@@ -332,17 +345,22 @@ public enum RepoActions {
         let currentDirectoryPath = FileManager.default.currentDirectoryPath
         // Get a de-duplicated, sorted (for determinism) list of all headers
         let globResults = Array(Set(globResultsArr)).sorted()
-        customHeaderSearchPaths.forEach { searchPath in
-            let linkPath = currentDirectoryPath + "/" + searchPath
-            guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
-                print("WARNING: Can't change path while creating symlink")
-                return
-            }
-            globResults.forEach { globResult in
-                // i.e. pod_support/Headers/Public/__POD_NAME__
-                let from = "../../../../\(globResult)"
-                let to = String(globResult.split(separator: "/").last!)
-                shell.symLink(from: from, to: to)
+        if buildOptions.generateHeaderMap == false {
+            // Warning: the input monoids are wild and will naively create dead
+            // links. Remove symlinks when headermaps are done.
+            customHeaderSearchPaths.forEach { searchPath in
+                let linkPath = currentDirectoryPath + "/" + searchPath
+                guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
+                    print("WARNING: Can't change path while creating symlink")
+                    return
+                }
+                globResults.forEach { globResult in
+                    // i.e. pod_support/Headers/Public/__POD_NAME__
+                    let from = "../../../../\(globResult)"
+                    let to = String(globResult.split(separator: "/").last!)
+                    print("Symlink: \(from) \(to)")
+                    shell.symLink(from: from, to: to)
+                }
             }
         }
 

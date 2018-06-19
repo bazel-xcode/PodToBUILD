@@ -4,7 +4,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -36,6 +37,17 @@ filegroup(
     "UICollectionViewLeftAlignedLayout_cxx_hdrs",
     "UICollectionViewLeftAlignedLayout_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "UICollectionViewLeftAlignedLayout_cxx_hmap",
+  namespace = "UICollectionViewLeftAlignedLayout",
+  hdrs = [
+    ":UICollectionViewLeftAlignedLayout_cxx_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -127,6 +139,20 @@ filegroup(
     exclude_directories = 1
   ) + [
     ":UICollectionViewLeftAlignedLayout_cxx_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "UICollectionViewLeftAlignedLayout_hmap",
+  namespace = "UICollectionViewLeftAlignedLayout",
+  hdrs = [
+    ":UICollectionViewLeftAlignedLayout_hdrs"
+  ],
+  deps = [
+    ":UICollectionViewLeftAlignedLayout_cxx",
+    ":UICollectionViewLeftAlignedLayout_swift"
   ],
   visibility = [
     "//visibility:public"

@@ -4,7 +4,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -24,6 +25,19 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "iOSSnapshotTestCase_hmap",
+  namespace = "FBSnapshotTestCase",
+  hdrs = [
+    ":iOSSnapshotTestCase_hdrs"
+  ],
+  deps = [
+    ":SwiftSupport"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -108,6 +122,17 @@ filegroup(
     "Core_hdrs",
     "iOSSnapshotTestCase_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Core_hmap",
+  namespace = "FBSnapshotTestCase",
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
