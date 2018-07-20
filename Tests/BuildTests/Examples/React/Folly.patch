@@ -1,0 +1,22 @@
+--- Vendor/Folly/BUILD	2018-08-02 14:45:15.000000000 -0700
++++ Correct
+@@ -15,11 +15,6 @@
+   name = "folly_hdrs",
+   srcs = glob(
+     [
+-      "pod_support/Headers/Public/**/*"
+-    ],
+-    exclude_directories = 1
+-    ) + glob(
+-    [
+       "folly/*.h",
+       "folly/detail/*.h",
+       "folly/portability/*.h"
+@@ -108,7 +103,6 @@
+       ]
+     }
+     ) + [
+-    "-IVendor/Folly/pod_support/Headers/Public/folly/"
+   ] + [
+     "-fmodule-name=folly_pod_module"
+   ],

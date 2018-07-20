@@ -1,0 +1,22 @@
+--- Vendor/boost/BUILD	2018-08-02 14:45:10.000000000 -0700
++++ Correct
+@@ -15,7 +15,8 @@
+   name = "boost_hdrs",
+   srcs = glob(
+     [
+-      "pod_support/Headers/Public/**/*"
++      "pod_support/Headers/Public/**/*",
++      "boost/**"
+     ],
+     exclude_directories = 1
+     ),
+@@ -44,8 +45,7 @@
+     ]
+     ),
+   includes = [
+-    "pod_support/Headers/Public/",
+-    "boost_module_map"
++    "boost"
+   ],
+   copts = [
+     "-Wnon-modular-include-in-framework-module",

@@ -33,7 +33,7 @@ class BuildTests: XCTestCase {
         let podSandbox = sandbox + "/Vendor/\(pod)"
         shell.dir(podSandbox)
         shell.shellOut("ditto $PWD \(sandbox)/Vendor/rules_pods")
-        shell.shellOut("ditto \(rootDir)/Tests/BuildTests/Examples/\(pod)/Pods.WORKSPACE \(sandbox)/Pods.WORKSPACE")
+        shell.shellOut("ditto \(rootDir)/Tests/BuildTests/Examples/\(pod)/* \(sandbox)/")
         shell.shellOut("ditto \(rootDir)/Tests/BuildTests/Examples/PodSpecs \(sandbox)/Vendor/PodSpecs")
         let task = ShellTask(command: "/bin/bash", arguments: [
                 "-c",
@@ -71,7 +71,7 @@ class BuildTests: XCTestCase {
     }
 
     func testPINRemoteImage() {
-        // build(pod: "PINRemoteImage", specs: ["Core"])
+        build(pod: "PINRemoteImage", specs: ["Core"])
     }
 
     func testRN() {

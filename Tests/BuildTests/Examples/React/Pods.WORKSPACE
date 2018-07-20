@@ -66,6 +66,10 @@ new_pod_repository(
   url = 'https://github.com/react-native-community/boost-for-react-native/archive/v1.63.0-0.zip',
   podspec_url = 'Vendor/PodSpecs/boost-react-native-1.63.0-0/boost.podspec.json',
   generate_module_map = False,
+  install_script = """
+    __INIT_REPO__
+    patch BUILD < ../../Boost.patch
+  """
 )
 
 new_pod_repository(
@@ -82,6 +86,8 @@ new_pod_repository(
 
     # TODO: Make variable replacement
     /usr/bin/sed -i '' 's,$(PODS_ROOT),Vendor,g' BUILD
+
+    patch BUILD < ../../Folly.patch
   """,
   header_visibility = 'everything',
 )
