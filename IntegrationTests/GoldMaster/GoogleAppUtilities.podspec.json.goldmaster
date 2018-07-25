@@ -93,10 +93,3 @@ objc_framework(
     "//visibility:public"
   ]
   )
-acknowledged_target(
-  name = "GoogleAppUtilities_VendoredFrameworks_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/GoogleAppUtilities/pod_support_buildable:acknowledgement_fragment"
-  )

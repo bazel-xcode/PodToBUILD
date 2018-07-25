@@ -89,12 +89,12 @@ objc_library(
     ""$(PODS_ROOT)/Calabash/calabash.framework/calabash""
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

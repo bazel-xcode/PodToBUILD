@@ -137,12 +137,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -172,11 +172,4 @@ objc_bundle(
     ],
     exclude_directories = 1
     )
-  )
-acknowledged_target(
-  name = "youtube-ios-player-helper_Bundle_Assets_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
   )

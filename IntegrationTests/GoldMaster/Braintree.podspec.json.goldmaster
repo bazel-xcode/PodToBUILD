@@ -77,9 +77,9 @@ objc_library(
 acknowledged_target(
   name = "Braintree_acknowledgement",
   deps = [
-    ":PayPal_acknowledgement",
     ":Core_acknowledgement",
     ":Card_acknowledgement",
+    ":PayPal_acknowledgement",
     ":UI_acknowledgement"
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
@@ -395,13 +395,6 @@ objc_import(
     "BraintreeDataCollector/Kount/libDeviceCollectorLibrary.a"
   ]
   )
-acknowledged_target(
-  name = "DataCollector_VendoredLibraries_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
-  )
 filegroup(
   name = "PayPal_hdrs",
   srcs = glob(
@@ -444,8 +437,8 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":PayPalOneTouch",
-    ":Core"
+    ":Core",
+    ":PayPalOneTouch"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -471,8 +464,8 @@ objc_library(
 acknowledged_target(
   name = "PayPal_acknowledgement",
   deps = [
-    ":PayPalOneTouch_acknowledgement",
-    ":Core_acknowledgement"
+    ":Core_acknowledgement",
+    ":PayPalOneTouch_acknowledgement"
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -516,8 +509,8 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":PayPalDataCollector",
-    ":Core"
+    ":Core",
+    ":PayPalDataCollector"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -543,8 +536,8 @@ objc_library(
 acknowledged_target(
   name = "Venmo_acknowledgement",
   deps = [
-    ":PayPalDataCollector_acknowledgement",
-    ":Core_acknowledgement"
+    ":Core_acknowledgement",
+    ":PayPalDataCollector_acknowledgement"
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -557,13 +550,6 @@ objc_bundle_library(
     exclude_directories = 1
     )
   )
-acknowledged_target(
-  name = "UI_Bundle_Braintree-UI-Localization_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
-  )
 objc_bundle_library(
   name = "UI_Bundle_Braintree-Drop-In-Localization",
   resources = glob(
@@ -572,13 +558,6 @@ objc_bundle_library(
     ],
     exclude_directories = 1
     )
-  )
-acknowledged_target(
-  name = "UI_Bundle_Braintree-Drop-In-Localization_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "UI_hdrs",
@@ -654,8 +633,8 @@ objc_library(
 acknowledged_target(
   name = "UI_acknowledgement",
   deps = [
-    ":Card_acknowledgement",
-    ":Core_acknowledgement"
+    ":Core_acknowledgement",
+    ":Card_acknowledgement"
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -729,8 +708,8 @@ objc_library(
 acknowledged_target(
   name = "UnionPay_acknowledgement",
   deps = [
-    ":Card_acknowledgement",
-    ":Core_acknowledgement"
+    ":Core_acknowledgement",
+    ":Card_acknowledgement"
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -742,13 +721,6 @@ objc_bundle_library(
     ],
     exclude_directories = 1
     )
-  )
-acknowledged_target(
-  name = "3D-Secure_Bundle_Braintree-3D-Secure-Localization_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "3D-Secure_hdrs",
@@ -823,8 +795,8 @@ objc_library(
 acknowledged_target(
   name = "3D-Secure_acknowledgement",
   deps = [
-    ":Card_acknowledgement",
-    ":Core_acknowledgement"
+    ":Core_acknowledgement",
+    ":Card_acknowledgement"
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -878,8 +850,8 @@ objc_library(
   ],
   deps = [
     ":PayPalUtils",
-    ":PayPalDataCollector",
-    ":Core"
+    ":Core",
+    ":PayPalDataCollector"
   ],
   copts = [
     "-ObjC",
@@ -907,9 +879,9 @@ objc_library(
 acknowledged_target(
   name = "PayPalOneTouch_acknowledgement",
   deps = [
-    ":PayPalDataCollector_acknowledgement",
+    ":PayPalUtils_acknowledgement",
     ":Core_acknowledgement",
-    ":PayPalUtils_acknowledgement"
+    ":PayPalDataCollector_acknowledgement"
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -993,8 +965,8 @@ acknowledged_target(
   name = "PayPalDataCollector_acknowledgement",
   deps = [
     ":PayPalDataCollector_VendoredLibraries_acknowledgement",
-    ":Core_acknowledgement",
-    ":PayPalUtils_acknowledgement"
+    ":PayPalUtils_acknowledgement",
+    ":Core_acknowledgement"
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -1003,13 +975,6 @@ objc_import(
   archives = [
     "BraintreePayPal/PayPalDataCollector/Risk/libPPRiskComponent.a"
   ]
-  )
-acknowledged_target(
-  name = "PayPalDataCollector_VendoredLibraries_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "PayPalUtils_hdrs",
