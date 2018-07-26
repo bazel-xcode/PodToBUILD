@@ -55,12 +55,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -75,8 +75,8 @@ objc_library(
 acknowledged_target(
   name = "PINRemoteImage_acknowledgement",
   deps = [
-    ":FLAnimatedImage_acknowledgement",
-    ":PINCache_acknowledgement"
+    ":PINCache_acknowledgement",
+    ":FLAnimatedImage_acknowledgement"
   ],
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
@@ -142,12 +142,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -201,12 +201,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -261,12 +261,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -317,12 +317,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -381,19 +381,19 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    ":Core",
-    "//Vendor/FLAnimatedImage:FLAnimatedImage"
+    "//Vendor/FLAnimatedImage:FLAnimatedImage",
+    ":Core"
   ],
   copts = [
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -439,19 +439,19 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    ":Core",
-    "//Vendor/libwebp:libwebp"
+    "//Vendor/libwebp:libwebp",
+    ":Core"
   ],
   copts = [
     "-DPIN_WEBP=1"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -518,12 +518,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -538,8 +538,8 @@ objc_library(
 acknowledged_target(
   name = "PINCache_acknowledgement",
   deps = [
-    "//Vendor/PINCache:PINCache_acknowledgement",
-    ":Core_acknowledgement"
+    ":Core_acknowledgement",
+    "//Vendor/PINCache:PINCache_acknowledgement"
   ],
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )

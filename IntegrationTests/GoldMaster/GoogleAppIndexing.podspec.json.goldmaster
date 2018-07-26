@@ -59,12 +59,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -82,8 +82,8 @@ objc_library(
 acknowledged_target(
   name = "GoogleAppIndexing_acknowledgement",
   deps = [
-    ":GoogleAppIndexing_Bundle_GoogleAppIndexingResources_acknowledgement",
-    ":GoogleAppIndexing_VendoredFrameworks_acknowledgement"
+    ":GoogleAppIndexing_VendoredFrameworks_acknowledgement",
+    ":GoogleAppIndexing_Bundle_GoogleAppIndexingResources_acknowledgement"
   ],
   value = "//Vendor/GoogleAppIndexing/pod_support_buildable:acknowledgement_fragment"
   )
@@ -95,13 +95,6 @@ objc_bundle(
     ],
     exclude_directories = 1
     )
-  )
-acknowledged_target(
-  name = "GoogleAppIndexing_Bundle_GoogleAppIndexingResources_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/GoogleAppIndexing/pod_support_buildable:acknowledgement_fragment"
   )
 objc_framework(
   name = "GoogleAppIndexing_VendoredFrameworks",
@@ -115,11 +108,4 @@ objc_framework(
   visibility = [
     "//visibility:public"
   ]
-  )
-acknowledged_target(
-  name = "GoogleAppIndexing_VendoredFrameworks_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/GoogleAppIndexing/pod_support_buildable:acknowledgement_fragment"
   )

@@ -86,9 +86,9 @@ objc_library(
 acknowledged_target(
   name = "GoogleAuthUtilities_acknowledgement",
   deps = [
-    ":GoogleAuthUtilities_VendoredFrameworks_acknowledgement",
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities_acknowledgement",
-    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities_acknowledgement"
+    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities_acknowledgement",
+    ":GoogleAuthUtilities_VendoredFrameworks_acknowledgement"
   ],
   value = "//Vendor/GoogleAuthUtilities/pod_support_buildable:acknowledgement_fragment"
   )
@@ -104,11 +104,4 @@ objc_framework(
   visibility = [
     "//visibility:public"
   ]
-  )
-acknowledged_target(
-  name = "GoogleAuthUtilities_VendoredFrameworks_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/GoogleAuthUtilities/pod_support_buildable:acknowledgement_fragment"
   )

@@ -101,10 +101,3 @@ objc_import(
     "CardIO/libopencv_imgproc.a"
   ]
   )
-acknowledged_target(
-  name = "CardIO_VendoredLibraries_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/CardIO/pod_support_buildable:acknowledgement_fragment"
-  )

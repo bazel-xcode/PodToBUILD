@@ -58,12 +58,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -129,12 +129,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -165,13 +165,6 @@ objc_framework(
   visibility = [
     "//visibility:public"
   ]
-  )
-acknowledged_target(
-  name = "KakaoOpenSDK_VendoredFrameworks_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "KakaoNavi_hdrs",
@@ -208,12 +201,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -244,13 +237,6 @@ objc_framework(
   visibility = [
     "//visibility:public"
   ]
-  )
-acknowledged_target(
-  name = "KakaoNavi_VendoredFrameworks_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "KakaoLink_hdrs",
@@ -287,12 +273,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -323,13 +309,6 @@ objc_framework(
   visibility = [
     "//visibility:public"
   ]
-  )
-acknowledged_target(
-  name = "KakaoLink_VendoredFrameworks_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "KakaoS2_hdrs",
@@ -366,12 +345,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -402,11 +381,4 @@ objc_framework(
   visibility = [
     "//visibility:public"
   ]
-  )
-acknowledged_target(
-  name = "KakaoS2_VendoredFrameworks_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )

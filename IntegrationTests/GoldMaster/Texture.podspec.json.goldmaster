@@ -59,16 +59,16 @@ objc_library(
     ":PINRemoteImage"
   ],
   copts = [
-    "-std=c++11",
-    "-stdlib=libc++"
+    "-stdlib=libc++",
+    "-std=c++11"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -142,17 +142,17 @@ objc_library(
     "c++"
   ],
   copts = [
-    "-std=c++11",
     "-stdlib=libc++",
+    "-std=c++11",
     ""
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -210,16 +210,16 @@ objc_library(
     "//Vendor/PINRemoteImage:iOS"
   ],
   copts = [
-    "-std=c++11",
-    "-stdlib=libc++"
+    "-stdlib=libc++",
+    "-std=c++11"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -234,9 +234,9 @@ objc_library(
 acknowledged_target(
   name = "PINRemoteImage_acknowledgement",
   deps = [
+    "//Vendor/PINRemoteImage:PINCache_acknowledgement",
     ":Core_acknowledgement",
-    "//Vendor/PINRemoteImage:iOS_acknowledgement",
-    "//Vendor/PINRemoteImage:PINCache_acknowledgement"
+    "//Vendor/PINRemoteImage:iOS_acknowledgement"
   ],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
   )
@@ -278,16 +278,16 @@ objc_library(
     "//Vendor/IGListKit:IGListKit"
   ],
   copts = [
-    "-std=c++11",
-    "-stdlib=libc++"
+    "-stdlib=libc++",
+    "-std=c++11"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -341,21 +341,21 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":Core",
-    "//Vendor/Yoga:Yoga"
+    "//Vendor/Yoga:Yoga",
+    ":Core"
   ],
   copts = [
-    "-std=c++11",
     "-stdlib=libc++",
+    "-std=c++11",
     "-DYOGA=1"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

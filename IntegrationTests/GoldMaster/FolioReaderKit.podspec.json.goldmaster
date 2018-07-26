@@ -51,24 +51,24 @@ objc_library(
     "z"
   ],
   deps = [
-    "//Vendor/JSQWebViewController:JSQWebViewController",
-    "//Vendor/RealmSwift:RealmSwift",
-    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition",
-    "//Vendor/AEXML:AEXML",
-    "//Vendor/FontBlaster:FontBlaster",
     "//Vendor/SSZipArchive:SSZipArchive",
-    "//Vendor/MenuItemKit:MenuItemKit"
+    "//Vendor/AEXML:AEXML",
+    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition",
+    "//Vendor/JSQWebViewController:JSQWebViewController",
+    "//Vendor/MenuItemKit:MenuItemKit",
+    "//Vendor/RealmSwift:RealmSwift",
+    "//Vendor/FontBlaster:FontBlaster"
   ],
   copts = [
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -93,13 +93,13 @@ objc_library(
 acknowledged_target(
   name = "FolioReaderKit_acknowledgement",
   deps = [
-    "//Vendor/FontBlaster:FontBlaster_acknowledgement",
-    "//Vendor/MenuItemKit:MenuItemKit_acknowledgement",
-    "//Vendor/SSZipArchive:SSZipArchive_acknowledgement",
     "//Vendor/JSQWebViewController:JSQWebViewController_acknowledgement",
-    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition_acknowledgement",
+    "//Vendor/FontBlaster:FontBlaster_acknowledgement",
+    "//Vendor/AEXML:AEXML_acknowledgement",
+    "//Vendor/SSZipArchive:SSZipArchive_acknowledgement",
     "//Vendor/RealmSwift:RealmSwift_acknowledgement",
-    "//Vendor/AEXML:AEXML_acknowledgement"
+    "//Vendor/MenuItemKit:MenuItemKit_acknowledgement",
+    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition_acknowledgement"
   ],
   value = "//Vendor/FolioReaderKit/pod_support_buildable:acknowledgement_fragment"
   )

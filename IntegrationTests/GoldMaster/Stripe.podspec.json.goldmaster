@@ -123,10 +123,3 @@ objc_bundle_library(
     }
     )
   )
-acknowledged_target(
-  name = "Stripe_Bundle_Stripe_acknowledgement",
-  deps = [
-
-  ],
-  value = "//Vendor/Stripe/pod_support_buildable:acknowledgement_fragment"
-  )

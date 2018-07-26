@@ -80,12 +80,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -100,8 +100,8 @@ objc_library(
 acknowledged_target(
   name = "PINCache_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
-    ":Arc-exception-safe_acknowledgement"
+    ":Arc-exception-safe_acknowledgement",
+    ":Core_acknowledgement"
   ],
   value = "//Vendor/PINCache/pod_support_buildable:acknowledgement_fragment"
   )
@@ -167,12 +167,12 @@ objc_library(
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -244,12 +244,12 @@ objc_library(
     "-fobjc-arc-exceptions"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
