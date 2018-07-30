@@ -52,23 +52,23 @@ objc_library(
   ],
   deps = [
     "//Vendor/SSZipArchive:SSZipArchive",
-    "//Vendor/AEXML:AEXML",
-    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition",
     "//Vendor/JSQWebViewController:JSQWebViewController",
-    "//Vendor/MenuItemKit:MenuItemKit",
+    "//Vendor/AEXML:AEXML",
     "//Vendor/RealmSwift:RealmSwift",
+    "//Vendor/MenuItemKit:MenuItemKit",
+    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition",
     "//Vendor/FontBlaster:FontBlaster"
   ],
   copts = [
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -94,8 +94,8 @@ acknowledged_target(
   name = "FolioReaderKit_acknowledgement",
   deps = [
     "//Vendor/JSQWebViewController:JSQWebViewController_acknowledgement",
-    "//Vendor/FontBlaster:FontBlaster_acknowledgement",
     "//Vendor/AEXML:AEXML_acknowledgement",
+    "//Vendor/FontBlaster:FontBlaster_acknowledgement",
     "//Vendor/SSZipArchive:SSZipArchive_acknowledgement",
     "//Vendor/RealmSwift:RealmSwift_acknowledgement",
     "//Vendor/MenuItemKit:MenuItemKit_acknowledgement",

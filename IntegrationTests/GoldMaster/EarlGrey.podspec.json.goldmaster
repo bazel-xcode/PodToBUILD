@@ -70,12 +70,12 @@ objc_library(
     "-fobjc-arc-exceptions"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -90,7 +90,7 @@ objc_library(
 acknowledged_target(
   name = "EarlGrey_acknowledgement",
   deps = [
-    ":EarlGrey_VendoredFrameworks_acknowledgement"
+
   ],
   value = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_fragment"
   )

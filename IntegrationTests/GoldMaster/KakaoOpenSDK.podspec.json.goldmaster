@@ -78,7 +78,7 @@ objc_library(
 acknowledged_target(
   name = "KakaoOpenSDK_acknowledgement",
   deps = [
-    ":KakaoOpenSDK_VendoredFrameworks_acknowledgement"
+
   ],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
@@ -149,7 +149,7 @@ objc_library(
 acknowledged_target(
   name = "KakaoOpenSDK_acknowledgement",
   deps = [
-    ":KakaoOpenSDK_VendoredFrameworks_acknowledgement"
+
   ],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
@@ -221,7 +221,7 @@ objc_library(
 acknowledged_target(
   name = "KakaoNavi_acknowledgement",
   deps = [
-    ":KakaoNavi_VendoredFrameworks_acknowledgement"
+
   ],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
@@ -293,7 +293,7 @@ objc_library(
 acknowledged_target(
   name = "KakaoLink_acknowledgement",
   deps = [
-    ":KakaoLink_VendoredFrameworks_acknowledgement"
+
   ],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
@@ -365,7 +365,7 @@ objc_library(
 acknowledged_target(
   name = "KakaoS2_acknowledgement",
   deps = [
-    ":KakaoS2_VendoredFrameworks_acknowledgement"
+
   ],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )

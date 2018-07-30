@@ -83,7 +83,7 @@ objc_library(
 acknowledged_target(
   name = "AsyncDisplayKit_acknowledgement",
   deps = [
-    ":PINRemoteImage_acknowledgement"
+
   ],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
   )
@@ -205,9 +205,9 @@ objc_library(
     "c++"
   ],
   deps = [
-    "//Vendor/PINRemoteImage:PINCache",
     ":Core",
-    "//Vendor/PINRemoteImage:iOS"
+    "//Vendor/PINRemoteImage:iOS",
+    "//Vendor/PINRemoteImage:PINCache"
   ],
   copts = [
     "-stdlib=libc++",
@@ -235,7 +235,6 @@ acknowledged_target(
   name = "PINRemoteImage_acknowledgement",
   deps = [
     "//Vendor/PINRemoteImage:PINCache_acknowledgement",
-    ":Core_acknowledgement",
     "//Vendor/PINRemoteImage:iOS_acknowledgement"
   ],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
@@ -274,8 +273,8 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":Core",
-    "//Vendor/IGListKit:IGListKit"
+    "//Vendor/IGListKit:IGListKit",
+    ":Core"
   ],
   copts = [
     "-stdlib=libc++",
@@ -302,7 +301,6 @@ objc_library(
 acknowledged_target(
   name = "IGListKit_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
     "//Vendor/IGListKit:IGListKit_acknowledgement"
   ],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
@@ -341,8 +339,8 @@ objc_library(
     "c++"
   ],
   deps = [
-    "//Vendor/Yoga:Yoga",
-    ":Core"
+    ":Core",
+    "//Vendor/Yoga:Yoga"
   ],
   copts = [
     "-stdlib=libc++",
@@ -370,7 +368,6 @@ objc_library(
 acknowledged_target(
   name = "Yoga_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
     "//Vendor/Yoga:Yoga_acknowledgement"
   ],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"

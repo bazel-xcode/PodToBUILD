@@ -67,13 +67,13 @@ objc_library(
   ],
   sdk_frameworks = select(
     {
+      ":tvosCase": [
+        "UIKit"
+      ],
       ":osxCase": [
         "Cocoa"
       ],
       "//conditions:default": [
-        "UIKit"
-      ],
-      ":tvosCase": [
         "UIKit"
       ]
     }
@@ -85,8 +85,8 @@ objc_library(
     ":Default"
   ],
   copts = [
-    "-stdlib=libc++",
-    "-std=c++11"
+    "-std=c++11",
+    "-stdlib=libc++"
   ] + select(
     {
       ":release": [
@@ -109,7 +109,7 @@ objc_library(
 acknowledged_target(
   name = "IGListKit_acknowledgement",
   deps = [
-    ":Default_acknowledgement"
+
   ],
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
   )
@@ -130,7 +130,7 @@ objc_library(
   enable_modules = 0,
   srcs = select(
     {
-      "//conditions:default": glob(
+      ":tvosCase": glob(
         [
           "Source/Common/**/*.m",
           "Source/Common/**/*.mm"
@@ -141,7 +141,7 @@ objc_library(
         ],
         exclude_directories = 1
         ),
-      ":tvosCase": glob(
+      "//conditions:default": glob(
         [
           "Source/Common/**/*.m",
           "Source/Common/**/*.mm"
@@ -174,13 +174,13 @@ objc_library(
   ],
   sdk_frameworks = select(
     {
+      ":tvosCase": [
+        "UIKit"
+      ],
       ":osxCase": [
         "Cocoa"
       ],
       "//conditions:default": [
-        "UIKit"
-      ],
-      ":tvosCase": [
         "UIKit"
       ]
     }
@@ -189,8 +189,8 @@ objc_library(
     "c++"
   ],
   copts = [
-    "-stdlib=libc++",
-    "-std=c++11"
+    "-std=c++11",
+    "-stdlib=libc++"
   ] + select(
     {
       ":release": [
@@ -221,13 +221,13 @@ filegroup(
   name = "Default_hdrs",
   srcs = select(
     {
-      "//conditions:default": glob(
+      ":tvosCase": glob(
         [
           "Source/**/*.h"
         ],
         exclude_directories = 1
         ),
-      ":tvosCase": glob(
+      "//conditions:default": glob(
         [
           "Source/**/*.h"
         ],
@@ -244,14 +244,14 @@ objc_library(
   enable_modules = 0,
   srcs = select(
     {
-      "//conditions:default": glob(
+      ":tvosCase": glob(
         [
           "Source/**/*.m",
           "Source/**/*.mm"
         ],
         exclude_directories = 1
         ),
-      ":tvosCase": glob(
+      "//conditions:default": glob(
         [
           "Source/**/*.m",
           "Source/**/*.mm"
@@ -261,13 +261,13 @@ objc_library(
     }
     ) + select(
     {
-      "//conditions:default": glob(
+      ":tvosCase": glob(
         [
           "Source/**/*.h"
         ],
         exclude_directories = 1
         ),
-      ":tvosCase": glob(
+      "//conditions:default": glob(
         [
           "Source/**/*.h"
         ],
@@ -290,13 +290,13 @@ objc_library(
   ],
   sdk_frameworks = select(
     {
+      ":tvosCase": [
+        "UIKit"
+      ],
       ":osxCase": [
         "Cocoa"
       ],
       "//conditions:default": [
-        "UIKit"
-      ],
-      ":tvosCase": [
         "UIKit"
       ]
     }
@@ -308,8 +308,8 @@ objc_library(
     ":Diffing"
   ],
   copts = [
-    "-stdlib=libc++",
-    "-std=c++11"
+    "-std=c++11",
+    "-stdlib=libc++"
   ] + select(
     {
       ":release": [
@@ -332,7 +332,7 @@ objc_library(
 acknowledged_target(
   name = "Default_acknowledgement",
   deps = [
-    ":Diffing_acknowledgement"
+
   ],
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
   )

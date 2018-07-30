@@ -100,7 +100,7 @@ objc_library(
 acknowledged_target(
   name = "Adjust_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
   )
@@ -273,7 +273,7 @@ objc_library(
 acknowledged_target(
   name = "Sociomantic_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
   )
@@ -357,7 +357,7 @@ objc_library(
 acknowledged_target(
   name = "Criteo_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
   )
@@ -441,7 +441,7 @@ objc_library(
 acknowledged_target(
   name = "Trademob_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
   )

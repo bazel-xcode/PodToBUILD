@@ -53,8 +53,8 @@ objc_library(
   ],
   deps = [
     ":GoogleAuthUtilities_VendoredFrameworks",
-    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
-    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities"
+    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities",
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
   ],
   copts = [
 
@@ -87,8 +87,7 @@ acknowledged_target(
   name = "GoogleAuthUtilities_acknowledgement",
   deps = [
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities_acknowledgement",
-    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities_acknowledgement",
-    ":GoogleAuthUtilities_VendoredFrameworks_acknowledgement"
+    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities_acknowledgement"
   ],
   value = "//Vendor/GoogleAuthUtilities/pod_support_buildable:acknowledgement_fragment"
   )

@@ -64,16 +64,16 @@ objc_library(
     "c++"
   ],
   copts = [
-    "-std=c++11",
-    "-stdlib=libc++"
+    "-stdlib=libc++",
+    "-std=c++11"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

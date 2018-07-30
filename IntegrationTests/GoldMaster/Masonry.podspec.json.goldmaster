@@ -78,17 +78,17 @@ objc_library(
   ],
   sdk_frameworks = select(
     {
-      ":osxCase": [
+      ":tvosCase": [
         "Foundation",
-        "AppKit"
+        "UIKit"
       ],
       "//conditions:default": [
         "Foundation",
         "UIKit"
       ],
-      ":tvosCase": [
+      ":osxCase": [
         "Foundation",
-        "UIKit"
+        "AppKit"
       ]
     }
     ),

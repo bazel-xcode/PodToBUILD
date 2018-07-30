@@ -76,9 +76,7 @@ objc_library(
 acknowledged_target(
   name = "googleapis_acknowledgement",
   deps = [
-    ":Services_acknowledgement",
-    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin_acknowledgement",
-    ":Messages_acknowledgement"
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin_acknowledgement"
   ],
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
   )
@@ -190,8 +188,8 @@ objc_library(
     "googleapis_module_map"
   ],
   deps = [
-    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
-    ":Messages"
+    ":Messages",
+    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
@@ -217,8 +215,7 @@ objc_library(
 acknowledged_target(
   name = "Services_acknowledgement",
   deps = [
-    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC_acknowledgement",
-    ":Messages_acknowledgement"
+    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC_acknowledgement"
   ],
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
   )
