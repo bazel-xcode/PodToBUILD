@@ -140,10 +140,12 @@ struct InsertAcknowledgementsTransform: SkylarkConvertibleTransform {
                     return [target]
                 }
 
+
                 let deps = target.acknowledgedDeps ?? [String]()
+                let externalDeps = deps.filter { $0.hasPrefix("//") }
                 let acknowledgement = AcknowledgmentNode(name: target.name,
                                                          license: podSpec.license,
-                                                         deps: deps)
+                                                         deps: externalDeps)
                 return [target, acknowledgement]
             } ?? [convertible]
         }.flatMap { $0 }

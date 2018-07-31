@@ -74,7 +74,7 @@ objc_library(
 acknowledged_target(
   name = "React_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -257,7 +257,7 @@ objc_library(
 acknowledged_target(
   name = "ART_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -327,7 +327,7 @@ objc_library(
 acknowledged_target(
   name = "RCTActionSheet_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -397,7 +397,7 @@ objc_library(
 acknowledged_target(
   name = "RCTAdSupport_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -467,7 +467,7 @@ objc_library(
 acknowledged_target(
   name = "RCTGeolocation_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -537,7 +537,7 @@ objc_library(
 acknowledged_target(
   name = "RCTImage_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -607,7 +607,7 @@ objc_library(
 acknowledged_target(
   name = "RCTNetwork_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -677,7 +677,7 @@ objc_library(
 acknowledged_target(
   name = "RCTPushNotification_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -747,7 +747,7 @@ objc_library(
 acknowledged_target(
   name = "RCTSettings_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -817,7 +817,7 @@ objc_library(
 acknowledged_target(
   name = "RCTText_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -887,7 +887,7 @@ objc_library(
 acknowledged_target(
   name = "RCTVibration_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -957,7 +957,7 @@ objc_library(
 acknowledged_target(
   name = "RCTWebSocket_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )
@@ -1027,7 +1027,7 @@ objc_library(
 acknowledged_target(
   name = "RCTLinkingIOS_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
   )

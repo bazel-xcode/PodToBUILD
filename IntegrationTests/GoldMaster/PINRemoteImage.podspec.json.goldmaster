@@ -75,8 +75,7 @@ objc_library(
 acknowledged_target(
   name = "PINRemoteImage_acknowledgement",
   deps = [
-    ":PINCache_acknowledgement",
-    ":FLAnimatedImage_acknowledgement"
+
   ],
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
@@ -221,7 +220,7 @@ objc_library(
 acknowledged_target(
   name = "iOS_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
@@ -281,7 +280,7 @@ objc_library(
 acknowledged_target(
   name = "OSX_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
@@ -337,7 +336,7 @@ objc_library(
 acknowledged_target(
   name = "tvOS_acknowledgement",
   deps = [
-    ":iOS_acknowledgement"
+
   ],
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
   )
@@ -408,7 +407,6 @@ objc_library(
 acknowledged_target(
   name = "FLAnimatedImage_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
     "//Vendor/FLAnimatedImage:FLAnimatedImage_acknowledgement"
   ],
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
@@ -466,7 +464,6 @@ objc_library(
 acknowledged_target(
   name = "WebP_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
     "//Vendor/libwebp:libwebp_acknowledgement"
   ],
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"
@@ -538,7 +535,6 @@ objc_library(
 acknowledged_target(
   name = "PINCache_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
     "//Vendor/PINCache:PINCache_acknowledgement"
   ],
   value = "//Vendor/PINRemoteImage/pod_support_buildable:acknowledgement_fragment"

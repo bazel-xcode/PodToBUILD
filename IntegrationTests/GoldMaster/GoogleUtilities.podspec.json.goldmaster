@@ -82,7 +82,6 @@ objc_library(
 acknowledged_target(
   name = "GoogleUtilities_acknowledgement",
   deps = [
-    ":GoogleUtilities_VendoredFrameworks_acknowledgement",
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities_acknowledgement"
   ],
   value = "//Vendor/GoogleUtilities/pod_support_buildable:acknowledgement_fragment"

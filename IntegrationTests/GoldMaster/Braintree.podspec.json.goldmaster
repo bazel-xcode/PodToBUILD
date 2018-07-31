@@ -57,12 +57,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -77,10 +77,7 @@ objc_library(
 acknowledged_target(
   name = "Braintree_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
-    ":Card_acknowledgement",
-    ":PayPal_acknowledgement",
-    ":UI_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -145,12 +142,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -218,12 +215,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -238,7 +235,7 @@ objc_library(
 acknowledged_target(
   name = "Apple-Pay_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -293,12 +290,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -313,7 +310,7 @@ objc_library(
 acknowledged_target(
   name = "Card_acknowledgement",
   deps = [
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -364,12 +361,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -384,8 +381,7 @@ objc_library(
 acknowledged_target(
   name = "DataCollector_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
-    ":DataCollector_VendoredLibraries_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -437,19 +433,19 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":Core",
-    ":PayPalOneTouch"
+    ":PayPalOneTouch",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -464,8 +460,7 @@ objc_library(
 acknowledged_target(
   name = "PayPal_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
-    ":PayPalOneTouch_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -516,12 +511,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -536,25 +531,24 @@ objc_library(
 acknowledged_target(
   name = "Venmo_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
-    ":PayPalDataCollector_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
-  )
-objc_bundle_library(
-  name = "UI_Bundle_Braintree-UI-Localization",
-  resources = glob(
-    [
-      "BraintreeUI/Localization/*.lproj"
-    ],
-    exclude_directories = 1
-    )
   )
 objc_bundle_library(
   name = "UI_Bundle_Braintree-Drop-In-Localization",
   resources = glob(
     [
       "BraintreeUI/Drop-In/Localization/*.lproj"
+    ],
+    exclude_directories = 1
+    )
+  )
+objc_bundle_library(
+  name = "UI_Bundle_Braintree-UI-Localization",
+  resources = glob(
+    [
+      "BraintreeUI/Localization/*.lproj"
     ],
     exclude_directories = 1
     )
@@ -602,19 +596,19 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":Card",
-    ":Core"
+    ":Core",
+    ":Card"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -623,8 +617,8 @@ objc_library(
     "-fmodule-name=Braintree_pod_module"
   ],
   bundles = [
-    ":UI_Bundle_Braintree-UI-Localization",
-    ":UI_Bundle_Braintree-Drop-In-Localization"
+    ":UI_Bundle_Braintree-Drop-In-Localization",
+    ":UI_Bundle_Braintree-UI-Localization"
   ],
   visibility = [
     "//visibility:public"
@@ -633,8 +627,7 @@ objc_library(
 acknowledged_target(
   name = "UI_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
-    ":Card_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -681,19 +674,19 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":Card",
-    ":Core"
+    ":Core",
+    ":Card"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -708,8 +701,7 @@ objc_library(
 acknowledged_target(
   name = "UnionPay_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
-    ":Card_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -765,19 +757,19 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":Card",
-    ":Core"
+    ":Core",
+    ":Card"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -795,8 +787,7 @@ objc_library(
 acknowledged_target(
   name = "3D-Secure_acknowledgement",
   deps = [
-    ":Core_acknowledgement",
-    ":Card_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -849,9 +840,9 @@ objc_library(
     "SafariServices"
   ],
   deps = [
-    ":PayPalUtils",
     ":Core",
-    ":PayPalDataCollector"
+    ":PayPalDataCollector",
+    ":PayPalUtils"
   ],
   copts = [
     "-ObjC",
@@ -859,12 +850,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -879,9 +870,7 @@ objc_library(
 acknowledged_target(
   name = "PayPalOneTouch_acknowledgement",
   deps = [
-    ":PayPalUtils_acknowledgement",
-    ":Core_acknowledgement",
-    ":PayPalDataCollector_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -937,19 +926,19 @@ objc_library(
   ],
   deps = [
     ":PayPalDataCollector_VendoredLibraries",
-    ":PayPalUtils",
-    ":Core"
+    ":Core",
+    ":PayPalUtils"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -964,9 +953,7 @@ objc_library(
 acknowledged_target(
   name = "PayPalDataCollector_acknowledgement",
   deps = [
-    ":PayPalDataCollector_VendoredLibraries_acknowledgement",
-    ":PayPalUtils_acknowledgement",
-    ":Core_acknowledgement"
+
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
@@ -1031,12 +1018,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

@@ -207,7 +207,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     public let resources: GlobNode
     public let publicHeaders: AttrSet<Set<String>>
     public let nonArcSrcs: GlobNode
-
+    
     // only used later in transforms
     public let requiresArc: Either<Bool, [String]>
 
@@ -304,6 +304,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.sourceFiles = GlobNode(
             include: implFiles,
             exclude: implExcludes)
+
         self.headers = GlobNode(
             include: extract(headers: allSourceFiles).map{ Set($0) },
             exclude: extract(headers: allExcludes).map{ Set($0) })
@@ -319,6 +320,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let mpPodSpecDeps = mpDeps.map { $0.map { getDependencyName(fromPodDepName: $0, inRootPodNamed: fallbackName, moduleName: rootName) } }
 
         let extraDepNames = extraDeps.map { ObjcLibrary.bazelLabel(fromString: ":\($0)") }
+
         self.deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
 
         self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))

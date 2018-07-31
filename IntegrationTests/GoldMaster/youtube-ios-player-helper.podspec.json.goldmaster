@@ -160,7 +160,7 @@ objc_library(
 acknowledged_target(
   name = "youtube-ios-player-helper_acknowledgement",
   deps = [
-    ":youtube-ios-player-helper_Bundle_Assets_acknowledgement"
+
   ],
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
   )

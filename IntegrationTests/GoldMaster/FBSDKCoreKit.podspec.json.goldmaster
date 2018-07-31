@@ -294,7 +294,6 @@ objc_library(
 acknowledged_target(
   name = "FBSDKCoreKit_acknowledgement",
   deps = [
-    ":FBSDKCoreKit_Bundle_FacebookSDKStrings_acknowledgement",
     "//Vendor/Bolts:Bolts_acknowledgement"
   ],
   value = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_fragment"

@@ -74,7 +74,7 @@ objc_library(
 acknowledged_target(
   name = "FMDB_acknowledgement",
   deps = [
-    ":standard_acknowledgement"
+
   ],
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
   )
@@ -218,7 +218,7 @@ objc_library(
 acknowledged_target(
   name = "FTS_acknowledgement",
   deps = [
-    ":standard_acknowledgement"
+
   ],
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
   )

@@ -161,7 +161,12 @@ class ShellTask : NSObject {
         process.launchPath = command
         process.arguments = arguments
         if let cwd = path {
-            process.currentDirectoryURL = URL(fileURLWithPath: cwd)
+            if #available(OSX 10.13, *) {
+                process.currentDirectoryURL = URL(fileURLWithPath: cwd)
+            } else {
+                // Fallback on earlier versions
+                process.currentDirectoryPath  = cwd
+            }
         }
         let exception = tryBlock {
           process.launch()

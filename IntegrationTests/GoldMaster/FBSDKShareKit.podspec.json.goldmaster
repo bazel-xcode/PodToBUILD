@@ -48,6 +48,16 @@ objc_library(
   enable_modules = 0,
   srcs = select(
     {
+      "//conditions:default": glob(
+        [
+          "FBSDKShareKit/FBSDKShareKit/**/*.m"
+        ],
+        exclude = [
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.m",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.m"
+        ],
+        exclude_directories = 1
+        ),
       ":tvosCase": glob(
         [
           "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.m",
@@ -70,20 +80,20 @@ objc_library(
           "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.m"
         ],
         exclude_directories = 1
-        ),
-      "//conditions:default": glob(
-        [
-          "FBSDKShareKit/FBSDKShareKit/**/*.m"
-        ],
-        exclude = [
-          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.m",
-          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.m"
-        ],
-        exclude_directories = 1
         )
     }
     ) + select(
     {
+      "//conditions:default": glob(
+        [
+          "FBSDKShareKit/FBSDKShareKit/**/*.h"
+        ],
+        exclude = [
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h"
+        ],
+        exclude_directories = 1
+        ),
       ":tvosCase": glob(
         [
           "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
@@ -112,16 +122,6 @@ objc_library(
           "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.h"
         ],
         exclude_directories = 1
-        ),
-      "//conditions:default": glob(
-        [
-          "FBSDKShareKit/FBSDKShareKit/**/*.h"
-        ],
-        exclude = [
-          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
-          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h"
-        ],
-        exclude_directories = 1
         )
     }
     ),
@@ -140,15 +140,6 @@ objc_library(
   ],
   weak_sdk_frameworks = select(
     {
-      ":tvosCase": [
-        "AudioToolbox",
-        "CoreGraphics",
-        "CoreLocation",
-        "Foundation",
-        "QuartzCore",
-        "Security",
-        "UIKit"
-      ],
       "//conditions:default": [
         "Accounts",
         "AudioToolbox",
@@ -158,6 +149,15 @@ objc_library(
         "QuartzCore",
         "Security",
         "Social",
+        "UIKit"
+      ],
+      ":tvosCase": [
+        "AudioToolbox",
+        "CoreGraphics",
+        "CoreLocation",
+        "Foundation",
+        "QuartzCore",
+        "Security",
         "UIKit"
       ]
     }
@@ -169,12 +169,12 @@ objc_library(
     "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
