@@ -8,9 +8,7 @@ macro.
 In the root directory, clone `rules_pods` into `Vendor/rules_pods`.
 
 ```
-mkdir -p Vendor/rules_pods
-# TODO: Add actual URL to V1 release
-curl http//:github.com/Pinterest/rules_pods/releases/archive/0.1.zip
+git clone git@github.com:pinterest/PodToBUILD.git Vendor/rules_pods
 ```
 
 ### Adding Pods
@@ -178,8 +176,6 @@ acknowledgments_plist(
 repository, and read a .podspec file. This requires having CocoaPods installed
 on build nodes. If a JSON podspec is provided here, then it is not required to
 run CocoaPods.
-
-`owner`: the owner of this dependency #TODO:OSS remove owner
 
 `strip_prefix`: a directory prefix to strip from the extracted files.  Many
 archives contain a top-level directory that contains all of the useful files in
