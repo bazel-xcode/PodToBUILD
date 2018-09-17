@@ -8,7 +8,7 @@ macro.
 In the root directory, clone `rules_pods` into `Vendor/rules_pods`.
 
 ```
-git clone git@github.com:pinterest/PodToBUILD.git Vendor/rules_pods
+git clone https://github.com/pinterest/PodToBUILD.git Vendor/rules_pods
 ```
 
 ### Adding Pods
@@ -82,7 +82,7 @@ Dependencies between targets are resolved through an idiomatic naming
 convention.
 
 For example, `PINCache` depends on `PINOperation`. In `PINCache`'s `BUILD` file,
-the dependency on `//Vendor/PINOperation:PINOperation` is generated.  The `WORKSPACE`
+the dependency on `//Vendor/PINOperation:PINOperation` is generated. The `WORKSPACE`
 needs to declare both `PINOperation` and `PINCache`.
 
 ### Local Dependencies
@@ -177,7 +177,7 @@ repository, and read a .podspec file. This requires having CocoaPods installed
 on build nodes. If a JSON podspec is provided here, then it is not required to
 run CocoaPods.
 
-`strip_prefix`: a directory prefix to strip from the extracted files.  Many
+`strip_prefix`: a directory prefix to strip from the extracted files. Many
 archives contain a top-level directory that contains all of the useful files in
 archive.
 
@@ -209,7 +209,7 @@ substituted out for the respective tools.
 
 note that the script is ran directly after the repository has been fetched.
 
-`repo_tools`: a mapping of executables in Bazel to command names.  If we are
+`repo_tools`: a mapping of executables in Bazel to command names. If we are
 running something like "mv" or "sed" these binaries are already on path, so
 there is no need to add an entry for them.
 
@@ -233,7 +233,8 @@ the least common denominator, the Linux convention. For now, use an
 
 ### __has_include directive
 
-Some code, like `Texture` uses `__has_include` to conditionally include code.
+Some code, like [Texture](https://github.com/TextureGroup/Texture), uses
+`__has_include` to conditionally include code.
 
 In Bazel, if that include is not explicitly added, then this feature will not
 work. In this case, use a `user_option` to add dependencies available on the
