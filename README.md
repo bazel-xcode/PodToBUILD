@@ -1,7 +1,8 @@
-An easy way to integrate `CocoaPods.org` into Bazel.
-
-`PodToBUILD` integrates Pod dependencies end to end with an easy to use
+# PodToBUILD
+An easy way to integrate `CocoaPods.org` into Bazel. `PodToBUILD` integrates Pod dependencies end to end with an easy to use
 macro.
+
+[![Build Status](https://travis-ci.org/pinterest/PodToBUILD.svg?branch=master)](https://travis-ci.org/pinterest/PodToBUILD)
 
 ### Quickstart Instructions:
 
