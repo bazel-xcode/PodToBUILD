@@ -41,10 +41,6 @@ public enum SerializedRepoToolsAction {
     case initialize(BasicBuildOptions)
 
     public static func parse(args: [String]) -> SerializedRepoToolsAction {
-        guard args.count >= 2 else {
-            print("Usage: PodName <init|fetch> ")
-            exit(0)
-        }
         // Program, PodName, Action
         let action = RepoToolsActionValue(rawValue: args[2])!
         switch action {
