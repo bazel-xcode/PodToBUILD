@@ -55,21 +55,21 @@ objc_library(
   deps = [
     ":GoogleSignIn_Bundle_GoogleSignIn",
     ":GoogleSignIn_VendoredFrameworks",
-    "//Vendor/GoogleToolboxForMac:NSDictionary_URLArguments",
-    "//Vendor/GoogleToolboxForMac:NSString_URLArguments",
     "//Vendor/GTMSessionFetcher:Core",
-    "//Vendor/GTMOAuth2:GTMOAuth2"
+    "//Vendor/GoogleToolboxForMac:NSDictionary_URLArguments",
+    "//Vendor/GTMOAuth2:GTMOAuth2",
+    "//Vendor/GoogleToolboxForMac:NSString_URLArguments"
   ],
   copts = [
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -88,9 +88,9 @@ acknowledged_target(
   name = "GoogleSignIn_acknowledgement",
   deps = [
     "//Vendor/GTMSessionFetcher:Core_acknowledgement",
-    "//Vendor/GoogleToolboxForMac:NSString_URLArguments_acknowledgement",
     "//Vendor/GoogleToolboxForMac:NSDictionary_URLArguments_acknowledgement",
-    "//Vendor/GTMOAuth2:GTMOAuth2_acknowledgement"
+    "//Vendor/GTMOAuth2:GTMOAuth2_acknowledgement",
+    "//Vendor/GoogleToolboxForMac:NSString_URLArguments_acknowledgement"
   ],
   value = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_fragment"
   )

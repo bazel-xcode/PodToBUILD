@@ -63,12 +63,12 @@ objc_library(
     "-std=c++11"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -147,12 +147,12 @@ objc_library(
     ""
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -205,21 +205,21 @@ objc_library(
     "c++"
   ],
   deps = [
+    "//Vendor/PINRemoteImage:PINCache",
     ":Core",
-    "//Vendor/PINRemoteImage:iOS",
-    "//Vendor/PINRemoteImage:PINCache"
+    "//Vendor/PINRemoteImage:iOS"
   ],
   copts = [
     "-stdlib=libc++",
     "-std=c++11"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -281,12 +281,12 @@ objc_library(
     "-std=c++11"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -348,12 +348,12 @@ objc_library(
     "-DYOGA=1"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

@@ -78,10 +78,6 @@ objc_library(
   ],
   sdk_frameworks = select(
     {
-      ":tvosCase": [
-        "Foundation",
-        "UIKit"
-      ],
       "//conditions:default": [
         "Foundation",
         "UIKit"
@@ -89,6 +85,10 @@ objc_library(
       ":osxCase": [
         "Foundation",
         "AppKit"
+      ],
+      ":tvosCase": [
+        "Foundation",
+        "UIKit"
       ]
     }
     ),
@@ -96,12 +96,12 @@ objc_library(
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

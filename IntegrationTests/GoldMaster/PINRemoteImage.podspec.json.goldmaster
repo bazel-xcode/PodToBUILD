@@ -380,8 +380,8 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    "//Vendor/FLAnimatedImage:FLAnimatedImage",
-    ":Core"
+    ":Core",
+    "//Vendor/FLAnimatedImage:FLAnimatedImage"
   ],
   copts = [
 
@@ -437,8 +437,8 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    "//Vendor/libwebp:libwebp",
-    ":Core"
+    ":Core",
+    "//Vendor/libwebp:libwebp"
   ],
   copts = [
     "-DPIN_WEBP=1"
@@ -508,8 +508,8 @@ objc_library(
     "PINRemoteImage_module_map"
   ],
   deps = [
-    "//Vendor/PINCache:PINCache",
-    ":Core"
+    ":Core",
+    "//Vendor/PINCache:PINCache"
   ],
   copts = [
 

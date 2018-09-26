@@ -107,18 +107,6 @@ filegroup(
   name = "Tasks_hdrs",
   srcs = select(
     {
-      ":watchosCase": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-        ),
-      ":tvosCase": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-        ),
       "//conditions:default": glob(
         [
           "Bolts/Common/*.h"
@@ -126,6 +114,18 @@ filegroup(
         exclude_directories = 1
         ),
       ":osxCase": glob(
+        [
+          "Bolts/Common/*.h"
+        ],
+        exclude_directories = 1
+        ),
+      ":watchosCase": glob(
+        [
+          "Bolts/Common/*.h"
+        ],
+        exclude_directories = 1
+        ),
+      ":tvosCase": glob(
         [
           "Bolts/Common/*.h"
         ],
@@ -142,18 +142,6 @@ objc_library(
   enable_modules = 0,
   srcs = select(
     {
-      ":watchosCase": glob(
-        [
-          "Bolts/Common/*.m"
-        ],
-        exclude_directories = 1
-        ),
-      ":tvosCase": glob(
-        [
-          "Bolts/Common/*.m"
-        ],
-        exclude_directories = 1
-        ),
       "//conditions:default": glob(
         [
           "Bolts/Common/*.m"
@@ -168,22 +156,22 @@ objc_library(
           "Bolts/Common/*.m"
         ],
         exclude_directories = 1
-        )
-    }
-    ) + select(
-    {
+        ),
       ":watchosCase": glob(
         [
-          "Bolts/Common/*.h"
+          "Bolts/Common/*.m"
         ],
         exclude_directories = 1
         ),
       ":tvosCase": glob(
         [
-          "Bolts/Common/*.h"
+          "Bolts/Common/*.m"
         ],
         exclude_directories = 1
-        ),
+        )
+    }
+    ) + select(
+    {
       "//conditions:default": glob(
         [
           "Bolts/Common/*.h"
@@ -191,6 +179,18 @@ objc_library(
         exclude_directories = 1
         ),
       ":osxCase": glob(
+        [
+          "Bolts/Common/*.h"
+        ],
+        exclude_directories = 1
+        ),
+      ":watchosCase": glob(
+        [
+          "Bolts/Common/*.h"
+        ],
+        exclude_directories = 1
+        ),
+      ":tvosCase": glob(
         [
           "Bolts/Common/*.h"
         ],

@@ -1,9 +1,22 @@
 // Copied from (Apache licensed) Kickstarter Prelude
+// https://github.com/kickstarter/Kickstarter-Prelude/
+
+/**
+ Composes two functions in left-to-right order, i.e. (f >>> g)(x) = g(f(x)
+ - parameter g: A function.
+ - parameter f: A function.
+ - returns: A function that is the composition of `f` and `g`.
+ */
 infix operator >>>: MultiplicationPrecedence
 func >>><A, B, C>(f: @escaping (A) -> B, g: @escaping (B) -> C) -> (A) -> C {
     return { a in g(f(a)) }
 }
 
+// Lens
+//
+// Checkout this blog post if you don't know what a lens is
+// https://broomburgo.github.io/fun-ios/post/lenses-and-prisms-in-swift-a-pragmatic-approach/
+// TDLR PodToBUILD uses this for higher level key value setting and composition.
 public struct Lens<Whole, Part> {
     public let view: (Whole) -> Part
     public let set: (Part, Whole) -> Whole
@@ -95,6 +108,7 @@ public func .. <A, B, C>(lhs: Lens<A, B>, rhs: Lens<B, C>) -> Lens<A, C> {
  - returns: The composed lens.
  */
 infix operator >•>: MultiplicationPrecedence
+@available(*, deprecated)
 public func >•> <A, B, C>(lhs: Lens<A, B?>, rhs: Lens<B, C?>) -> Lens<A, C?> {
     return Lens(
         view: { a in lhs.view(a).flatMap(rhs.view) },

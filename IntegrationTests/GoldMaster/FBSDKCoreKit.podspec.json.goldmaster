@@ -48,6 +48,25 @@ objc_library(
   enable_modules = 0,
   srcs = select(
     {
+      "//conditions:default": glob(
+        [
+          "FBSDKCoreKit/FBSDKCoreKit/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm"
+        ],
+        exclude = [
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.S",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.c",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.cpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.s"
+        ],
+        exclude_directories = 1
+        ),
       ":tvosCase": glob(
         [
           "FBSDKCoreKit/FBSDKCoreKit/*.m",
@@ -95,29 +114,23 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
         ],
         exclude_directories = 1
-        ),
-      "//conditions:default": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/*.m",
-          "FBSDKCoreKit/FBSDKCoreKit/*.mm",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm"
-        ],
-        exclude = [
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.S",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.c",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.cpp",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.s"
-        ],
-        exclude_directories = 1
         )
     }
     ) + select(
     {
+      "//conditions:default": glob(
+        [
+          "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+        ],
+        exclude = [
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hpp",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hxx"
+        ],
+        exclude_directories = 1
+        ),
       ":tvosCase": glob(
         [
           "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
@@ -152,24 +165,27 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
         ],
         exclude_directories = 1
-        ),
-      "//conditions:default": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
-        ],
-        exclude = [
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hpp",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hxx"
-        ],
-        exclude_directories = 1
         )
     }
     ),
   non_arc_srcs = select(
     {
+      "//conditions:default": glob(
+        [
+          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+        ],
+        exclude = [
+          "FBSDKCoreKit/FBSDKCoreKit/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
+          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m",
+          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm"
+        ],
+        exclude_directories = 1
+        ),
       ":tvosCase": glob(
         [
           "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
@@ -202,22 +218,6 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm"
         ],
         exclude_directories = 1
-        ),
-      "//conditions:default": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
-        ],
-        exclude = [
-          "FBSDKCoreKit/FBSDKCoreKit/*.m",
-          "FBSDKCoreKit/FBSDKCoreKit/*.mm",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm"
-        ],
-        exclude_directories = 1
         )
     }
     ),
@@ -236,8 +236,10 @@ objc_library(
   ],
   weak_sdk_frameworks = select(
     {
-      ":tvosCase": [
+      "//conditions:default": [
+        "Accounts",
         "CoreLocation",
+        "Social",
         "Security",
         "QuartzCore",
         "CoreGraphics",
@@ -245,10 +247,8 @@ objc_library(
         "Foundation",
         "AudioToolbox"
       ],
-      "//conditions:default": [
-        "Accounts",
+      ":tvosCase": [
         "CoreLocation",
-        "Social",
         "Security",
         "QuartzCore",
         "CoreGraphics",
@@ -271,12 +271,12 @@ objc_library(
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

@@ -48,25 +48,6 @@ objc_library(
   enable_modules = 0,
   srcs = select(
     {
-      ":osxCase": glob(
-        [
-          "Classes/**/*.S",
-          "Classes/**/*.c",
-          "Classes/**/*.cpp",
-          "Classes/**/*.m",
-          "Classes/**/*.mm",
-          "Classes/**/*.s"
-        ],
-        exclude = [
-          "Classes/ios/**/*.S",
-          "Classes/ios/**/*.c",
-          "Classes/ios/**/*.cpp",
-          "Classes/ios/**/*.m",
-          "Classes/ios/**/*.mm",
-          "Classes/ios/**/*.s"
-        ],
-        exclude_directories = 1
-        ),
       "//conditions:default": glob(
         [
           "Classes/**/*.S",
@@ -85,23 +66,29 @@ objc_library(
           "Classes/osx/**/*.s"
         ],
         exclude_directories = 1
+        ),
+      ":osxCase": glob(
+        [
+          "Classes/**/*.S",
+          "Classes/**/*.c",
+          "Classes/**/*.cpp",
+          "Classes/**/*.m",
+          "Classes/**/*.mm",
+          "Classes/**/*.s"
+        ],
+        exclude = [
+          "Classes/ios/**/*.S",
+          "Classes/ios/**/*.c",
+          "Classes/ios/**/*.cpp",
+          "Classes/ios/**/*.m",
+          "Classes/ios/**/*.mm",
+          "Classes/ios/**/*.s"
+        ],
+        exclude_directories = 1
         )
     }
     ) + select(
     {
-      ":osxCase": glob(
-        [
-          "Classes/**/*.h",
-          "Classes/**/*.hpp",
-          "Classes/**/*.hxx"
-        ],
-        exclude = [
-          "Classes/ios/**/*.h",
-          "Classes/ios/**/*.hpp",
-          "Classes/ios/**/*.hxx"
-        ],
-        exclude_directories = 1
-        ),
       "//conditions:default": glob(
         [
           "Classes/**/*.h",
@@ -112,6 +99,19 @@ objc_library(
           "Classes/osx/**/*.h",
           "Classes/osx/**/*.hpp",
           "Classes/osx/**/*.hxx"
+        ],
+        exclude_directories = 1
+        ),
+      ":osxCase": glob(
+        [
+          "Classes/**/*.h",
+          "Classes/**/*.hpp",
+          "Classes/**/*.hxx"
+        ],
+        exclude = [
+          "Classes/ios/**/*.h",
+          "Classes/ios/**/*.hpp",
+          "Classes/ios/**/*.hxx"
         ],
         exclude_directories = 1
         )

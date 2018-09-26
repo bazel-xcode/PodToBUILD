@@ -183,14 +183,6 @@ public func |><T,U>(x: T, f: (T) -> U) -> U {
     return f(x)
 }
 
-/// public function composition (g • f)(x) = g(f(x))
-/// Use this to combine public functions when you don't have the target yet
-/// If you have the target of the public function prefer using |>
-infix operator •: MultiplicationPrecedence
-public func •<A,B,C>(lhs: @escaping (B) -> C, rhs: @escaping (A) -> B) -> (A) -> C {
-    return { a in lhs(rhs(a)) }
-}
-
 public enum Either<T,U> {
     case left(T)
     case right(U)
