@@ -58,6 +58,10 @@ integration-test: release
 
 test: test-impl integration-test
 
+# Run the BUILD compiler on an example
+example: build
+	.build/debug/Compiler Examples/$(POD)*
+
 # We're running into issues with SwiftPackageManager's
 # Build system on the CI. Blow away it's state
 ci: clean test
