@@ -26,7 +26,12 @@ public struct MultiPlatform<T: AttrSetConstraint>: Monoid, SkylarkConvertible, E
     
     public static var empty: MultiPlatform<T> { return MultiPlatform(ios: nil, osx: nil, watchos: nil, tvos: nil) }
 
-    public var isEmpty: Bool { return ios == nil && osx == nil && watchos == nil && tvos == nil }
+    public var isEmpty: Bool {
+        return (ios == nil || ios.isEmpty)
+            && (osx == nil || osx.isEmpty)
+            && (watchos == nil || watchos.isEmpty)
+            && (tvos == nil || tvos.isEmpty)
+    }
 
     // overwrites the value with the one on the right
     public static func<>(lhs: MultiPlatform, rhs: MultiPlatform) -> MultiPlatform {
@@ -171,10 +176,14 @@ public struct AttrTuple<A: AttrSetConstraint, B: AttrSetConstraint>: AttrSetCons
         )
     }
 
-    public static var empty: AttrTuple { return AttrTuple(nil, nil) }
+    public static var empty: AttrTuple {
+        return AttrTuple(nil, nil)
+    }
 
-    public var isEmpty: Bool { return first == nil && second == nil }
-
+    public var isEmpty: Bool {
+        return (first == nil || first.isEmpty) &&
+            (second == nil || second.isEmpty)
+    }
 
     public func toSkylark() -> SkylarkNode {
         fatalError("You tried to toSkylark on a tuple (our domain modelling failed here :( )")
@@ -238,7 +247,8 @@ public struct AttrSet<T: AttrSetConstraint>: Monoid, SkylarkConvertible, EmptyAw
     public static var empty: AttrSet<T> { return AttrSet(basic: nil, multi: MultiPlatform.empty) }
 
     public var isEmpty: Bool {
-        return basic == nil && multi.isEmpty
+        return (basic == nil || basic.isEmpty)
+            && (multi.isEmpty)
     }
 
     public static func<>(lhs: AttrSet<T>, rhs: AttrSet<T>) -> AttrSet<T> {
