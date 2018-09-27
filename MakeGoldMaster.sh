@@ -7,8 +7,7 @@ cd $SCRIPTPATH
 
 mkdir -p IntegrationTests/GoldMaster
 
-CMD=bin/Compiler
-
 for f in $(find Examples/*); do
-    $CMD $f > IntegrationTests/GoldMaster/$(basename $f).goldmaster
+    bin/Compiler $f --always_split_rules \
+        > IntegrationTests/GoldMaster/$(basename $f).goldmaster
 done

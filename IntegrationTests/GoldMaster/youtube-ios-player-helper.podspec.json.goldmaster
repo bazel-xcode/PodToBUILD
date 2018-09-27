@@ -24,43 +24,61 @@ config_setting(
   }
   )
 filegroup(
-  name = "youtube-ios-player-helper_hdrs",
-  srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+  name = "youtube-ios-player-helper_cxx_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Classes/**/*.h",
+          "Classes/**/*.hpp",
+          "Classes/**/*.hxx"
+        ],
+        exclude = [
+          "Classes/osx/**/*.h",
+          "Classes/osx/**/*.hpp",
+          "Classes/osx/**/*.hxx"
+        ],
+        exclude_directories = 1
+        ),
+      ":osxCase": glob(
+        [
+          "Classes/**/*.h",
+          "Classes/**/*.hpp",
+          "Classes/**/*.hxx"
+        ],
+        exclude = [
+          "Classes/ios/**/*.h",
+          "Classes/ios/**/*.hpp",
+          "Classes/ios/**/*.hxx"
+        ],
+        exclude_directories = 1
+        )
+    }
     ),
   visibility = [
     "//visibility:public"
   ]
   )
-gen_module_map(
-  "youtube-ios-player-helper",
-  "youtube-ios-player-helper_module_map",
-  "youtube_ios_player_helper",
-  [
-    "youtube-ios-player-helper_hdrs"
-  ]
-  )
 objc_library(
-  name = "youtube-ios-player-helper",
+  name = "youtube-ios-player-helper_cxx",
   enable_modules = 0,
   srcs = select(
     {
       "//conditions:default": glob(
         [
-          "Classes/**/*.S",
-          "Classes/**/*.c",
           "Classes/**/*.cpp",
-          "Classes/**/*.m",
-          "Classes/**/*.mm",
-          "Classes/**/*.s"
+          "Classes/**/*.cxx",
+          "Classes/**/*.mm"
         ],
         exclude = [
+          "Classes/**/*.S",
+          "Classes/**/*.c",
+          "Classes/**/*.m",
+          "Classes/**/*.s",
           "Classes/osx/**/*.S",
           "Classes/osx/**/*.c",
           "Classes/osx/**/*.cpp",
+          "Classes/osx/**/*.cxx",
           "Classes/osx/**/*.m",
           "Classes/osx/**/*.mm",
           "Classes/osx/**/*.s"
@@ -69,17 +87,19 @@ objc_library(
         ),
       ":osxCase": glob(
         [
-          "Classes/**/*.S",
-          "Classes/**/*.c",
           "Classes/**/*.cpp",
-          "Classes/**/*.m",
-          "Classes/**/*.mm",
-          "Classes/**/*.s"
+          "Classes/**/*.cxx",
+          "Classes/**/*.mm"
         ],
         exclude = [
+          "Classes/**/*.S",
+          "Classes/**/*.c",
+          "Classes/**/*.m",
+          "Classes/**/*.s",
           "Classes/ios/**/*.S",
           "Classes/ios/**/*.c",
           "Classes/ios/**/*.cpp",
+          "Classes/ios/**/*.cxx",
           "Classes/ios/**/*.m",
           "Classes/ios/**/*.mm",
           "Classes/ios/**/*.s"
@@ -132,6 +152,146 @@ objc_library(
   ],
   deps = [
     ":youtube-ios-player-helper_Bundle_Assets"
+  ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/youtube-ios-player-helper/pod_support/Headers/Public/youtube-ios-player-helper/"
+  ] + [
+    "-fmodule-name=youtube-ios-player-helper_pod_module"
+  ],
+  bundles = [
+    ":youtube-ios-player-helper_Bundle_Assets"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "youtube-ios-player-helper_cxx_acknowledgement",
+  deps = [
+
+  ],
+  value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
+  )
+filegroup(
+  name = "youtube-ios-player-helper_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "youtube-ios-player-helper",
+  "youtube-ios-player-helper_module_map",
+  "youtube_ios_player_helper",
+  [
+    "youtube-ios-player-helper_hdrs"
+  ]
+  )
+objc_library(
+  name = "youtube-ios-player-helper",
+  enable_modules = 0,
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Classes/**/*.S",
+          "Classes/**/*.c",
+          "Classes/**/*.m",
+          "Classes/**/*.s"
+        ],
+        exclude = [
+          "Classes/osx/**/*.S",
+          "Classes/osx/**/*.c",
+          "Classes/osx/**/*.cpp",
+          "Classes/osx/**/*.cxx",
+          "Classes/osx/**/*.m",
+          "Classes/osx/**/*.mm",
+          "Classes/osx/**/*.s"
+        ],
+        exclude_directories = 1
+        ),
+      ":osxCase": glob(
+        [
+          "Classes/**/*.S",
+          "Classes/**/*.c",
+          "Classes/**/*.m",
+          "Classes/**/*.s"
+        ],
+        exclude = [
+          "Classes/ios/**/*.S",
+          "Classes/ios/**/*.c",
+          "Classes/ios/**/*.cpp",
+          "Classes/ios/**/*.cxx",
+          "Classes/ios/**/*.m",
+          "Classes/ios/**/*.mm",
+          "Classes/ios/**/*.s"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ) + select(
+    {
+      "//conditions:default": glob(
+        [
+          "Classes/**/*.h",
+          "Classes/**/*.hpp",
+          "Classes/**/*.hxx"
+        ],
+        exclude = [
+          "Classes/osx/**/*.h",
+          "Classes/osx/**/*.hpp",
+          "Classes/osx/**/*.hxx"
+        ],
+        exclude_directories = 1
+        ),
+      ":osxCase": glob(
+        [
+          "Classes/**/*.h",
+          "Classes/**/*.hpp",
+          "Classes/**/*.hxx"
+        ],
+        exclude = [
+          "Classes/ios/**/*.h",
+          "Classes/ios/**/*.hpp",
+          "Classes/ios/**/*.hxx"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
+  hdrs = [
+    ":youtube-ios-player-helper_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "youtube-ios-player-helper",
+    [
+      "Classes/**/*.pch"
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "youtube-ios-player-helper_module_map"
+  ],
+  deps = [
+    ":youtube-ios-player-helper_Bundle_Assets",
+    ":youtube-ios-player-helper_cxx"
   ],
   copts = [
 

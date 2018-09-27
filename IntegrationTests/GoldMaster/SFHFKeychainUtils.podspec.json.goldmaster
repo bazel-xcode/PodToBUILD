@@ -12,6 +12,96 @@ native.config_setting(
   }
   )
 filegroup(
+  name = "SFHFKeychainUtils_cxx_hdrs",
+  srcs = glob(
+    [
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "SFHFKeychainUtils_cxx",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "security/**/*.cpp",
+      "security/**/*.cxx"
+    ],
+    exclude = [
+      "security/**/*.S",
+      "security/**/*.c",
+      "security/**/*.m",
+      "security/**/*.s"
+    ],
+    exclude_directories = 1
+    ) + glob(
+    [
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ),
+  non_arc_srcs = glob(
+    [
+      "security/**/*.mm"
+    ],
+    exclude = [
+      "security/**/*.m"
+    ],
+    exclude_directories = 1
+    ),
+  hdrs = [
+    ":SFHFKeychainUtils_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "SFHFKeychainUtils",
+    [
+      "security/**/*.pch"
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "SFHFKeychainUtils_module_map"
+  ],
+  sdk_frameworks = [
+    "Security"
+  ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/SFHFKeychainUtils/pod_support/Headers/Public/SFHFKeychainUtils/"
+  ] + [
+    "-fmodule-name=SFHFKeychainUtils_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "SFHFKeychainUtils_cxx_acknowledgement",
+  deps = [
+
+  ],
+  value = "//Vendor/SFHFKeychainUtils/pod_support_buildable:acknowledgement_fragment"
+  )
+filegroup(
   name = "SFHFKeychainUtils_hdrs",
   srcs = glob(
     [
@@ -38,7 +128,6 @@ objc_library(
     [
       "security/**/*.S",
       "security/**/*.c",
-      "security/**/*.cpp",
       "security/**/*.s"
     ],
     exclude_directories = 1
@@ -52,8 +141,7 @@ objc_library(
     ),
   non_arc_srcs = glob(
     [
-      "security/**/*.m",
-      "security/**/*.mm"
+      "security/**/*.m"
     ],
     exclude_directories = 1
     ),
@@ -72,6 +160,9 @@ objc_library(
   ],
   sdk_frameworks = [
     "Security"
+  ],
+  deps = [
+    ":SFHFKeychainUtils_cxx"
   ],
   copts = [
 

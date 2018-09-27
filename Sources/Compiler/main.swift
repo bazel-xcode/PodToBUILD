@@ -27,9 +27,9 @@ func main() {
                                  trace: false,
                                  enableModules: false,
                                  generateModuleMap: false,
-                                 headerVisibility:  ""
-        )
+                                 headerVisibility:  "")
 
+    // Consider adding a split here to split out sublibs
     let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: options)
     let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
     print(buildFileSkylarkCompiler.run())

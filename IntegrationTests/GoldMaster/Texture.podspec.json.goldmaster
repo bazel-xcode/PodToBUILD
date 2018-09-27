@@ -47,20 +47,17 @@ objc_library(
     "pod_support/Headers/Public/",
     "AsyncDisplayKit_module_map"
   ],
-  weak_sdk_frameworks = [
-    "Photos",
-    "MapKit",
-    "AssetsLibrary"
-  ],
   sdk_dylibs = [
     "c++"
   ],
   deps = [
-    ":PINRemoteImage"
+    ":AssetsLibrary",
+    ":MapKit",
+    ":PINRemoteImage",
+    ":Photos"
   ],
   copts = [
-    "-std=c++11",
-    "-stdlib=libc++"
+
   ] + select(
     {
       "//conditions:default": [
@@ -88,6 +85,86 @@ acknowledged_target(
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
+  name = "Core_cxx_hdrs",
+  srcs = glob(
+    [
+      "Base/*.h",
+      "Source/**/*.h",
+      "Source/TextKit/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "Core_cxx",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "Source/**/*.mm"
+    ],
+    exclude = [
+      "Base/*.m",
+      "Source/**/*.m"
+    ],
+    exclude_directories = 1
+    ) + glob(
+    [
+      "Base/*.h",
+      "Source/**/*.h",
+      "Source/TextKit/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  hdrs = [
+    ":AsyncDisplayKit_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "Texture",
+    [
+      "Source/**/*.pch"
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "AsyncDisplayKit_module_map"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  copts = [
+    "-std=c++11",
+    "-stdlib=libc++",
+    "-fno-exceptions -fno-objc-arc-exceptions"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+  ] + [
+    "-fmodule-name=AsyncDisplayKit_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "Core_cxx_acknowledgement",
+  deps = [
+
+  ],
+  value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
+  )
+filegroup(
   name = "Core_hdrs",
   srcs = glob(
     [
@@ -107,8 +184,7 @@ objc_library(
   srcs = glob(
     [
       "Base/*.m",
-      "Source/**/*.m",
-      "Source/**/*.mm"
+      "Source/**/*.m"
     ],
     exclude_directories = 1
     ) + glob(
@@ -133,18 +209,14 @@ objc_library(
     "pod_support/Headers/Public/",
     "AsyncDisplayKit_module_map"
   ],
-  weak_sdk_frameworks = [
-    "Photos",
-    "MapKit",
-    "AssetsLibrary"
-  ],
   sdk_dylibs = [
     "c++"
   ],
+  deps = [
+    ":Core_cxx"
+  ],
   copts = [
-    "",
-    "-std=c++11",
-    "-stdlib=libc++"
+    "-fno-exceptions -fno-objc-arc-exceptions"
   ] + select(
     {
       "//conditions:default": [
@@ -196,11 +268,6 @@ objc_library(
     "pod_support/Headers/Public/",
     "AsyncDisplayKit_module_map"
   ],
-  weak_sdk_frameworks = [
-    "Photos",
-    "MapKit",
-    "AssetsLibrary"
-  ],
   sdk_dylibs = [
     "c++"
   ],
@@ -210,8 +277,7 @@ objc_library(
     ":Core"
   ],
   copts = [
-    "-std=c++11",
-    "-stdlib=libc++"
+
   ] + select(
     {
       "//conditions:default": [
@@ -264,11 +330,6 @@ objc_library(
     "pod_support/Headers/Public/",
     "AsyncDisplayKit_module_map"
   ],
-  weak_sdk_frameworks = [
-    "Photos",
-    "MapKit",
-    "AssetsLibrary"
-  ],
   sdk_dylibs = [
     "c++"
   ],
@@ -277,8 +338,7 @@ objc_library(
     ":Core"
   ],
   copts = [
-    "-std=c++11",
-    "-stdlib=libc++"
+
   ] + select(
     {
       "//conditions:default": [
@@ -330,11 +390,6 @@ objc_library(
     "pod_support/Headers/Public/",
     "AsyncDisplayKit_module_map"
   ],
-  weak_sdk_frameworks = [
-    "Photos",
-    "MapKit",
-    "AssetsLibrary"
-  ],
   sdk_dylibs = [
     "c++"
   ],
@@ -343,9 +398,7 @@ objc_library(
     ":Core"
   ],
   copts = [
-    "-DYOGA=1",
-    "-std=c++11",
-    "-stdlib=libc++"
+    "-DYOGA=1"
   ] + select(
     {
       "//conditions:default": [
@@ -369,6 +422,192 @@ acknowledged_target(
   name = "Yoga_acknowledgement",
   deps = [
     "//Vendor/Yoga:Yoga_acknowledgement"
+  ],
+  value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
+  )
+filegroup(
+  name = "MapKit_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "MapKit",
+  enable_modules = 0,
+  hdrs = [
+    ":AsyncDisplayKit_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "Texture",
+    [
+
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "AsyncDisplayKit_module_map"
+  ],
+  sdk_frameworks = [
+    "MapKit"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    ":Core"
+  ],
+  copts = [
+    "-DAS_USE_MAPKIT=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+  ] + [
+    "-fmodule-name=AsyncDisplayKit_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "MapKit_acknowledgement",
+  deps = [
+
+  ],
+  value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
+  )
+filegroup(
+  name = "Photos_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "Photos",
+  enable_modules = 0,
+  hdrs = [
+    ":AsyncDisplayKit_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "Texture",
+    [
+
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "AsyncDisplayKit_module_map"
+  ],
+  sdk_frameworks = [
+    "Photos"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    ":Core"
+  ],
+  copts = [
+    "-DAS_USE_PHOTOS=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+  ] + [
+    "-fmodule-name=AsyncDisplayKit_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "Photos_acknowledgement",
+  deps = [
+
+  ],
+  value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
+  )
+filegroup(
+  name = "AssetsLibrary_hdrs",
+  srcs = [
+
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "AssetsLibrary",
+  enable_modules = 0,
+  hdrs = [
+    ":AsyncDisplayKit_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "Texture",
+    [
+
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "AsyncDisplayKit_module_map"
+  ],
+  sdk_frameworks = [
+    "AssetsLibrary"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    ":Core"
+  ],
+  copts = [
+    "-DAS_USE_ASSETS_LIBRARY=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
+  ] + [
+    "-fmodule-name=AsyncDisplayKit_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "AssetsLibrary_acknowledgement",
+  deps = [
+
   ],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
   )

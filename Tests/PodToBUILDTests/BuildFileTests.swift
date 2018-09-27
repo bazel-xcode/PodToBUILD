@@ -226,24 +226,35 @@ class BuildFileTests: XCTestCase {
 
     // MARK: - Source File Extraction Tests
 
-    func testHeaderExtraction() {
+    func testExtractionCurly() {
         let podPattern = "Source/Classes/**/*.{h,m}"
-        XCTAssertEqual(extract(headers: AttrSet(basic: [podPattern])).basic!, ["Source/Classes/**/*.h"])
-        XCTAssertEqual(extract(sources: AttrSet(basic: [podPattern])).basic!, ["Source/Classes/**/*.m"])
+        let extractedHeaders = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
+                includingFileTypes: HeaderFileTypes).basic!
+        let extractedSources = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
+                includingFileTypes: ObjcLikeFileTypes).basic!
+        XCTAssertEqual(extractedHeaders, ["Source/Classes/**/*.h"])
+        XCTAssertEqual(extractedSources, ["Source/Classes/**/*.m"])
     }
 
-    func testHeaderExtractionWithBarPattern() {
+    func testExtractionWithBarPattern() {
         let podPattern = "Source/Classes/**/*.[h,m]"
-        XCTAssertEqual(extract(headers: AttrSet(basic: [podPattern])).basic!, ["Source/Classes/**/*.h"])
-        XCTAssertEqual(extract(sources: AttrSet(basic: [podPattern])).basic!, ["Source/Classes/**/*.m"])
+        let extractedHeaders = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
+                includingFileTypes: HeaderFileTypes).basic!
+        let extractedSources = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
+                includingFileTypes: ObjcLikeFileTypes).basic!
+
+        XCTAssertEqual(extractedHeaders, ["Source/Classes/**/*.h"])
+        XCTAssertEqual(extractedSources, ["Source/Classes/**/*.m"])
     }
 
-    func testHeaderExtractionMultiplatform() {
+    func testExtractionMultiplatform() {
 	    let podPattern = "Source/Classes/**/*.[h,m]"
-        let headers = extract(headers: AttrSet(multi: MultiPlatform(ios: [podPattern])))
-        let sources = extract(sources: AttrSet(multi: MultiPlatform(ios: [podPattern])))
-        XCTAssert(headers == AttrSet(multi: MultiPlatform(ios: ["Source/Classes/**/*.h"])))
-        XCTAssert(sources == AttrSet(multi: MultiPlatform(ios: ["Source/Classes/**/*.m"])))
+        let extractedHeaders = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
+                includingFileTypes: HeaderFileTypes)
+        let extractedSources = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
+                includingFileTypes: ObjcLikeFileTypes)
+        XCTAssert(extractedHeaders == AttrSet(basic: ["Source/Classes/**/*.h"]))
+        XCTAssert(extractedSources == AttrSet(basic: ["Source/Classes/**/*.m"]))
     }
 
     func testHeaderIncExclExtraction() {
@@ -301,7 +312,9 @@ class BuildFileTests: XCTestCase {
             "USER_HEADER_SEARCH_PATHS": "$SRCROOT/..",
             "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1",
         ]
-        let compilerFlags = XCConfigTransformer.defaultTransformer(externalName: "test").compilerFlags(forXCConfig: config)
+        let compilerFlags = XCConfigTransformer
+            .defaultTransformer(externalName: "test", sourceType: .objc)
+            .compilerFlags(forXCConfig: config)
         XCTAssertEqual(compilerFlags, ["-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"])
     }
 
@@ -310,7 +323,9 @@ class BuildFileTests: XCTestCase {
             "CLANG_CXX_LANGUAGE_STANDARD": "c++11",
             "CLANG_CXX_LIBRARY": "libc++",
         ]
-        let compilerFlags = XCConfigTransformer.defaultTransformer(externalName: "test").compilerFlags(forXCConfig: config)
-        XCTAssertEqual(compilerFlags, ["-std=c++11", "-stdlib=libc++"])
+        let compilerFlags = XCConfigTransformer
+            .defaultTransformer(externalName: "test", sourceType: .cpp)
+            .compilerFlags(forXCConfig: config)
+        XCTAssertEqual(compilerFlags.sorted(by: (<)), ["-std=c++11", "-stdlib=libc++"])
     }
 }

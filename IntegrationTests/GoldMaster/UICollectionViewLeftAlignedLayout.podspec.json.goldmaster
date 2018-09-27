@@ -12,6 +12,85 @@ native.config_setting(
   }
   )
 filegroup(
+  name = "UICollectionViewLeftAlignedLayout_cxx_hdrs",
+  srcs = glob(
+    [
+      "UICollectionViewLeftAlignedLayout/**/*.h",
+      "UICollectionViewLeftAlignedLayout/**/*.hpp",
+      "UICollectionViewLeftAlignedLayout/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "UICollectionViewLeftAlignedLayout_cxx",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "UICollectionViewLeftAlignedLayout/**/*.cpp",
+      "UICollectionViewLeftAlignedLayout/**/*.cxx",
+      "UICollectionViewLeftAlignedLayout/**/*.mm"
+    ],
+    exclude = [
+      "UICollectionViewLeftAlignedLayout/**/*.S",
+      "UICollectionViewLeftAlignedLayout/**/*.c",
+      "UICollectionViewLeftAlignedLayout/**/*.m",
+      "UICollectionViewLeftAlignedLayout/**/*.s"
+    ],
+    exclude_directories = 1
+    ) + glob(
+    [
+      "UICollectionViewLeftAlignedLayout/**/*.h",
+      "UICollectionViewLeftAlignedLayout/**/*.hpp",
+      "UICollectionViewLeftAlignedLayout/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ),
+  hdrs = [
+    ":UICollectionViewLeftAlignedLayout_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "UICollectionViewLeftAlignedLayout",
+    [
+      "UICollectionViewLeftAlignedLayout/**/*.pch"
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "UICollectionViewLeftAlignedLayout_module_map"
+  ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/"
+  ] + [
+    "-fmodule-name=UICollectionViewLeftAlignedLayout_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "UICollectionViewLeftAlignedLayout_cxx_acknowledgement",
+  deps = [
+
+  ],
+  value = "//Vendor/UICollectionViewLeftAlignedLayout/pod_support_buildable:acknowledgement_fragment"
+  )
+filegroup(
   name = "UICollectionViewLeftAlignedLayout_hdrs",
   srcs = glob(
     [
@@ -38,9 +117,7 @@ objc_library(
     [
       "UICollectionViewLeftAlignedLayout/**/*.S",
       "UICollectionViewLeftAlignedLayout/**/*.c",
-      "UICollectionViewLeftAlignedLayout/**/*.cpp",
       "UICollectionViewLeftAlignedLayout/**/*.m",
-      "UICollectionViewLeftAlignedLayout/**/*.mm",
       "UICollectionViewLeftAlignedLayout/**/*.s"
     ],
     exclude_directories = 1
@@ -64,6 +141,9 @@ objc_library(
   includes = [
     "pod_support/Headers/Public/",
     "UICollectionViewLeftAlignedLayout_module_map"
+  ],
+  deps = [
+    ":UICollectionViewLeftAlignedLayout_cxx"
   ],
   copts = [
 

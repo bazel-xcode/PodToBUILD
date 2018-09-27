@@ -254,27 +254,33 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                      .replacingOccurrences(of: "+", with: "_")
     }
 
-    init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = []) {
+    /// Helper to allocate with a podspec
+    /// objc_library is used for either C++ compilation or ObjC/C compilation.
+    /// There is no way to have rule specific `cpp` opts in Bazel, so we need
+    /// to split C++ and ObjC apart.
+    /// TODO: Add bazel-discuss thread on this matter.
+    /// isSplitDep indicates if the library is a split language dependency
+    init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = [],
+            isSplitDep: Bool = false,
+            sourceType: BazelSourceLibType = .objc) {
         let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].compactMap { $0 })
 
         let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
-        let implFiles = extract(sources: allSourceFiles).map{ Set($0) }
+
+        let includeFileTypes = sourceType == .cpp ? CppLikeFileTypes :
+                ObjcLikeFileTypes
+        let implFiles = extractFiles(fromPattern: allSourceFiles,
+                includingFileTypes: includeFileTypes)
+            .map { Set($0) }
+
         let allExcludes = spec ^* liftToAttr(PodSpec.lens.excludeFiles)
-        let implExcludes = extract(sources: allExcludes).map{ Set($0) }
+        let implExcludes = extractFiles(fromPattern: allExcludes,
+                includingFileTypes: CppLikeFileTypes <> ObjcLikeFileTypes)
+            .map { Set($0) }
 
         // TODO: Invoke intersectPatterns (i.e. don't use the bool)
         // TODO: Handle multiplatform overrides of requiresArc
-        /*let needArcPatterns = (spec ^* liftToAttr(PodSpec.lens.requiresArc)).map{ Set($0) }
-        let trueArcPatterns = GlobNode(
-            include: intersectPatterns(attrSet: implFiles, attrSet2: needArcPatterns),
-            exclude: implExcludes
-        )
-        let trueNoArcPatterns = GlobNode(
-            include: implFiles,
-            exclude: needArcPatterns <> implExcludes
-        )*/
         self.requiresArc = (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.requiresArc))) ?? .left(true)
-
         self.publicHeaders = (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.publicHeaders))).map{ Set($0) }
 
 
@@ -282,10 +288,18 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let fallbackName = ComposedSpec.create(fromSpecs: [spec, rootSpec].compactMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
         let rootName = fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName)) ?? fallbackName
 
-        self.name = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
+        // If we split out a lib, it needs to take on a different name
+        // Assume that we only split out Cpp for now.
+        let splitSuffix = isSplitDep ? "_cxx" : ""
+        let baseName = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
+        self.name = baseName + splitSuffix
         self.externalName = rootSpec?.name ?? spec.name
 
-        let xcconfigTransformer = XCConfigTransformer.defaultTransformer(externalName: externalName)
+        let xcconfigTransformer =
+            XCConfigTransformer.defaultTransformer(externalName: externalName,
+                    sourceType: sourceType)
+
+
         let xcconfigFlags =
             xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
                 xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.userTargetXcconfig)))) +
@@ -298,16 +312,18 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let headerDirectoryName: AttrSet<String?> = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.headerDirectory))
 
         self.headerName = (moduleName.isEmpty ? nil : moduleName) ??
-                            (headerDirectoryName.basic == nil ? nil : headerDirectoryName.denormalize()) ??
-                            AttrSet<String>(value: rootName)
+        (headerDirectoryName.basic == nil ? nil :
+         headerDirectoryName.denormalize()) ??  AttrSet<String>(value: rootName)
 
         self.sourceFiles = GlobNode(
             include: implFiles,
             exclude: implExcludes)
 
         self.headers = GlobNode(
-            include: extract(headers: allSourceFiles).map{ Set($0) },
-            exclude: extract(headers: allExcludes).map{ Set($0) })
+            include: extractFiles(fromPattern: allSourceFiles,
+                includingFileTypes: HeaderFileTypes).map{ Set($0) },
+            exclude: extractFiles(fromPattern: allExcludes,
+                includingFileTypes: HeaderFileTypes).map{ Set($0) })
         self.nonArcSrcs = GlobNode.empty
         self.sdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.frameworks))
 
@@ -680,28 +696,10 @@ extension ObjcLibrary {
     }
 }
 
-private func extractSources(patterns: [String]) -> [String] {
-    return patterns.flatMap { (p: String) -> [String] in
-        pattern(fromPattern: p, includingFileTypes: ["m", "mm", "c", "cpp", "s", "S"])
-    }
-}
-
+// FIXME: Clean these up and move to RuleUtils
 private func extractResources(patterns: [String]) -> [String] {
     return patterns.flatMap { (p: String) -> [String] in
         pattern(fromPattern: p, includingFileTypes: [])
     }
 }
 
-private func extractHeaders(patterns: [String]) -> [String] {
-    return patterns.flatMap { (p: String) -> [String] in
-        pattern(fromPattern: p, includingFileTypes: ["h", "hpp", "hxx"])
-    }
-}
-
-func extract(headers: AttrSet<[String]>) -> AttrSet<[String]> {
-    return headers.map(extractHeaders)
-}
-
-func extract(sources: AttrSet<[String]>) -> AttrSet<[String]> {
-    return sources.map(extractSources)
-}

@@ -18,8 +18,10 @@ public protocol BuildOptions {
 
     var enableModules: Bool { get }
     var generateModuleMap: Bool { get }
-	// pod_support, everything, none
+    // pod_support, everything, none
     var headerVisibility: String { get }
+    
+    var alwaysSplitRules: Bool { get }
 }
 
 // Nullability is the root of all evil
@@ -32,6 +34,7 @@ public struct EmptyBuildOptions: BuildOptions {
     public let enableModules: Bool = false
     public let generateModuleMap: Bool = false
     public let headerVisibility: String = ""
+    public let alwaysSplitRules: Bool = false
 
     public static let shared = EmptyBuildOptions()
 }
@@ -45,6 +48,7 @@ public struct BasicBuildOptions: BuildOptions {
     public let enableModules: Bool
     public let generateModuleMap: Bool
     public let headerVisibility: String
+    public let alwaysSplitRules: Bool
 
     public init(podName: String,
                 userOptions: [String],
@@ -52,7 +56,8 @@ public struct BasicBuildOptions: BuildOptions {
                 trace: Bool,
                 enableModules: Bool = false,
                 generateModuleMap: Bool = false,
-                headerVisibility: String = ""
+                headerVisibility: String = "",
+                alwaysSplitRules: Bool = true
     ) {
         self.podName = podName
         self.userOptions = userOptions
@@ -61,6 +66,7 @@ public struct BasicBuildOptions: BuildOptions {
         self.enableModules = enableModules
         self.generateModuleMap = generateModuleMap
         self.headerVisibility = headerVisibility
+        self.alwaysSplitRules = alwaysSplitRules
     }
 }
 
@@ -211,33 +217,132 @@ public struct PodBuildFile: SkylarkConvertible {
         return libraries.isEmpty ? [] : [ObjcImport(name: "\(spec.moduleName ?? spec.name)_VendoredLibraries", archives: libraries)]
     }
 
-    public static func makeConvertables(fromPodspec podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions.shared) -> [SkylarkConvertible] {
-        let subspecTargets: [BazelTarget] = podSpec.subspecs.flatMap { spec in
-            (bundleLibraries(withPodSpec: spec) as [BazelTarget]) +
-                ([ObjcLibrary(rootSpec: podSpec,
-                              spec: spec,
-                              extraDeps: ((vendoredLibraries(withPodspec: spec) as [BazelTarget]) +
-                                  (vendoredFrameworks(withPodspec: spec) as [BazelTarget]))
-                                  .map { $0.name }) as BazelTarget]) +
-                vendoredLibraries(withPodspec: spec) +
-                vendoredFrameworks(withPodspec: spec)
+    static func getSourceTypes(fromPodspec spec: PodSpec) ->
+        Set<BazelSourceLibType> {
+        let sources = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
+
+        // Split all objc source files.
+        let options = GetBuildOptions()
+        let objcLike = extractFiles(fromPattern: sources, includingFileTypes:
+                ObjcLikeFileTypes)
+        var result: Set<BazelSourceLibType> = Set()
+        if !objcLike.isEmpty {
+            if options.alwaysSplitRules {
+                result.insert(.objc)
+            }
+        }
+
+        let cppLike = extractFiles(fromPattern: sources, includingFileTypes:
+                CppLikeFileTypes)
+        if !cppLike.isEmpty {
+            if options.alwaysSplitRules {
+                result.insert(.cpp)
+            }
+        }
+
+        let swiftLike = extractFiles(fromPattern: sources, includingFileTypes:
+                SwiftLikeFileTypes)
+        if !swiftLike.isEmpty {
+            // Warning: `swift_library` chokes if we give it empty source files
+            // at link time. Consider fixing that. Otherwise, we can hit the
+            // file system for unbounded globs here and determine deps based on
+            // those globs, or continue to emit the dep and determine if it
+            // should be a dep in Bazel. The latter limiting based on the
+            // current design.
+            if options.alwaysSplitRules {
+                result.insert(.swift)
+            }
+        }
+        return result
+    }
+
+    /// Construct source libs
+    /// Depending on the source files and other factors, we'll return different
+    /// kinds of rules for a PodSpec and corresponding SubSpecs
+    static func makeSourceLibs(rootSpec podSpec: PodSpec?, spec: PodSpec,
+            extraDeps: [BazelTarget]) -> [BazelTarget] {
+        var sourceLibs: [BazelTarget] = []
+        // Split libs based on the sources involved.
+        let sourceTypes = getSourceTypes(fromPodspec: spec)
+        if sourceTypes.count == 0 {
+            sourceLibs.append(ObjcLibrary(rootSpec: podSpec, spec: spec,
+                        extraDeps: extraDeps.map { $0.name }, sourceType:
+                        .objc))
+        } else if sourceTypes.count == 1 {
+            if sourceTypes.first == .swift {
+                // Append a swift library
+                fputs("WARNING: swift support is currently WIP", __stderrp)
+            } else {
+                sourceLibs.append(ObjcLibrary(rootSpec: podSpec, spec: spec,
+                            extraDeps: extraDeps.map { $0.name },
+                            sourceType: sourceTypes.first!))
+            }
+        } else {
+            // Split out Cpp and Swift libraries into seperate libraries
+            // The Objective-C libarary is the parent library ATM - is that
+            // applicable for all cases?
+            var splitDeps: [BazelTarget] = []
+
+            if sourceTypes.contains(.cpp) {
+                let cppLib = ObjcLibrary(rootSpec: podSpec, spec: spec,
+                        extraDeps: extraDeps.map { $0.name },
+                        isSplitDep: true, sourceType: .cpp)
+                splitDeps.append(cppLib)
+                sourceLibs.append(cppLib)
+            }
+
+            if sourceTypes.contains(.swift) {
+                // Append a swift library.
+                fputs("WARNING: swift support is currently WIP", __stderrp)
+            }
+
+            // In this case, the root lib is Objc
+            let rootLib = ObjcLibrary(rootSpec: podSpec, spec: spec,
+                    extraDeps: (extraDeps + splitDeps).map { $0.name })
+            sourceLibs.append(rootLib)
+        }
+        return sourceLibs
+    }
+
+    public static func makeConvertables(fromPodspec podSpec: PodSpec,
+            buildOptions: BuildOptions = EmptyBuildOptions.shared) ->
+        [SkylarkConvertible] {
+        let subspecTargets: [BazelTarget] = podSpec.subspecs.reduce([]) {
+            accum, spec in
+            let bundles: [BazelTarget] = bundleLibraries(withPodSpec: spec)
+            let libraries = vendoredLibraries(withPodspec: spec)
+            let frameworks = vendoredFrameworks(withPodspec: spec)
+
+            let extraDeps: [BazelTarget] = (
+                    (libraries as [BazelTarget]) +
+                    (frameworks as [BazelTarget]))
+            let sourceLibs = makeSourceLibs(rootSpec: podSpec, spec: spec,
+                    extraDeps: extraDeps)
+            return accum + bundles + sourceLibs + libraries +
+                frameworks
         }
 
         let defaultSubspecs = Set(podSpec.defaultSubspecs)
 
+        // Note: we use `ObjcLibrary` here to get the name only.
+        // TODO: how does filtering impact dep splitting?
         let filteredSpecs = podSpec.subspecs
             .filter { defaultSubspecs.contains($0.name) }
-            .map { ObjcLibrary(rootSpec: podSpec, spec: $0, extraDeps: []) }
-            .map { $0.name }
+            .map { ObjcLibrary(rootSpec: podSpec, spec: $0, extraDeps: []).name }
             .reduce(Set()) { result, name in result.union([name]) }
 
         let defaultSubspecTargets = subspecTargets.reduce([]) { result, target in
             return result + (filteredSpecs.contains(target.name) ? [target] : [])
         }
 
-        let extraDeps = bundleLibraries(withPodSpec: podSpec) + vendoredFrameworks(withPodspec: podSpec) + vendoredLibraries(withPodspec: podSpec)
-        let rootLib = ObjcLibrary(spec: podSpec,
-                                  extraDeps: ((defaultSubspecTargets.isEmpty ? subspecTargets : defaultSubspecTargets) + extraDeps).map { $0.name })
+        let extraDeps = bundleLibraries(withPodSpec: podSpec) +
+            vendoredFrameworks(withPodspec: podSpec) +
+            vendoredLibraries(withPodspec: podSpec)
+
+        let allRootDeps = ((defaultSubspecTargets.isEmpty ? subspecTargets :
+                    defaultSubspecTargets) + extraDeps)
+        let sourceLibs = makeSourceLibs(rootSpec: nil, spec: podSpec, extraDeps:
+                allRootDeps)
 
         // We don't care about the values here
         // So we just lens to an arbitrary monoid that we can <+>
@@ -245,6 +350,7 @@ public struct PodBuildFile: SkylarkConvertible {
         let trivialized: Lens<PodSpecRepresentable, Trivial?> = ReadonlyLens(const(.some(Trivial())))
 
         // Just assume ios for now, we can figure out the proper commands later
+        // We should remove this altogether, it doesn't do anything.
         let configs: [BazelTarget] = (
             (podSpec ^*
                 PodSpec.lens.liftOntoSubspecs(PodSpec.lens.ios >•> trivialized))
@@ -264,7 +370,7 @@ public struct PodBuildFile: SkylarkConvertible {
                                           values: ["cpu": "powerpc4"])]))
         ) ?? []
 
-        var output: [SkylarkConvertible] = configs + [rootLib as BazelTarget] + subspecTargets + extraDeps
+        var output: [SkylarkConvertible] = configs + sourceLibs + subspecTargets + extraDeps
         // Execute transforms manually
         // Don't use unneeded abstractions to make a few function calls
         // (bkase) but this is isomorphic to `BuildOptions -> Endo<SkylarkConvertible>` which means we *could* make a monoid out of it http://swift.sandbox.bluemix.net/#/repl/59090e9f9def327b2a45b255
