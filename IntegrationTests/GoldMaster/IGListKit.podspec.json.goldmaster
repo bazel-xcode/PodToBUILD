@@ -89,12 +89,12 @@ objc_library(
     "-stdlib=libc++"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -193,12 +193,12 @@ objc_library(
     "-stdlib=libc++"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -312,12 +312,12 @@ objc_library(
     "-stdlib=libc++"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

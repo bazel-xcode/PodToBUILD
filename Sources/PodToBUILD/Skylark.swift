@@ -107,7 +107,7 @@ public struct GlobNode: SkylarkConvertible {
     // Partitions Self into two GlobNodes where the first evaluates to true for the 
     // predicate function.
     func partition(by predicate: @escaping (String) -> Bool) -> (GlobNode, GlobNode) {
-        let excludePredicate = (!) • predicate
+        let excludePredicate: (String) -> Bool = { x in !predicate(x) }
         return (
             GlobNode(include: self.include.map { $0.filter(predicate) }.map { Set($0) },
                      exclude: self.exclude.map { $0.filter(predicate) }.map { Set($0) }),

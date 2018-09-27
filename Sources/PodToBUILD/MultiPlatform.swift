@@ -206,7 +206,7 @@ public struct AttrSet<T: AttrSetConstraint>: Monoid, SkylarkConvertible, EmptyAw
     }
 
     public func partition(predicate: @escaping (T) -> Bool) -> (AttrSet<T>, AttrSet<T>) {
-        return (self.filter(predicate), self.filter((!) • predicate))
+        return (self.filter(predicate), self.filter { x in !predicate(x) })
     }
 
     public func map<U: AttrSetConstraint>(_ transform: (T) -> U) -> AttrSet<U> {

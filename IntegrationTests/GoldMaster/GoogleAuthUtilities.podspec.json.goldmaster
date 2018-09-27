@@ -53,19 +53,19 @@ objc_library(
   ],
   deps = [
     ":GoogleAuthUtilities_VendoredFrameworks",
-    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities",
-    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
+    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities"
   ],
   copts = [
 
   ] + select(
     {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
+      ],
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

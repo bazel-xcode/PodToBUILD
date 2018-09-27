@@ -57,12 +57,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -142,12 +142,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -215,12 +215,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -290,12 +290,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -361,12 +361,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -440,12 +440,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -504,19 +504,19 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":Core",
-    ":PayPalDataCollector"
+    ":PayPalDataCollector",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -536,19 +536,19 @@ acknowledged_target(
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
 objc_bundle_library(
-  name = "UI_Bundle_Braintree-Drop-In-Localization",
+  name = "UI_Bundle_Braintree-UI-Localization",
   resources = glob(
     [
-      "BraintreeUI/Drop-In/Localization/*.lproj"
+      "BraintreeUI/Localization/*.lproj"
     ],
     exclude_directories = 1
     )
   )
 objc_bundle_library(
-  name = "UI_Bundle_Braintree-UI-Localization",
+  name = "UI_Bundle_Braintree-Drop-In-Localization",
   resources = glob(
     [
-      "BraintreeUI/Localization/*.lproj"
+      "BraintreeUI/Drop-In/Localization/*.lproj"
     ],
     exclude_directories = 1
     )
@@ -596,19 +596,19 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":Core",
-    ":Card"
+    ":Card",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -617,8 +617,8 @@ objc_library(
     "-fmodule-name=Braintree_pod_module"
   ],
   bundles = [
-    ":UI_Bundle_Braintree-Drop-In-Localization",
-    ":UI_Bundle_Braintree-UI-Localization"
+    ":UI_Bundle_Braintree-UI-Localization",
+    ":UI_Bundle_Braintree-Drop-In-Localization"
   ],
   visibility = [
     "//visibility:public"
@@ -674,19 +674,19 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":Core",
-    ":Card"
+    ":Card",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -757,19 +757,19 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":Core",
-    ":Card"
+    ":Card",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -840,9 +840,9 @@ objc_library(
     "SafariServices"
   ],
   deps = [
-    ":Core",
+    ":PayPalUtils",
     ":PayPalDataCollector",
-    ":PayPalUtils"
+    ":Core"
   ],
   copts = [
     "-ObjC",
@@ -850,12 +850,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -926,19 +926,19 @@ objc_library(
   ],
   deps = [
     ":PayPalDataCollector_VendoredLibraries",
-    ":Core",
-    ":PayPalUtils"
+    ":PayPalUtils",
+    ":Core"
   ],
   copts = [
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -1018,12 +1018,12 @@ objc_library(
     "-Wall -Werror -Wextra"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
