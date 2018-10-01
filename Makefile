@@ -53,8 +53,10 @@ build-test: SWIFT_TEST_OPTS= --filter BuildTests*
 build-test: init-sandbox 
 build-test: test-impl
 
+# Run the integration tests a few times. We want to make sure output is working
+# and stable.
 integration-test: release
-	./IntegrationTests/RunTests.sh
+	for i in $$(seq 1 10); do ./IntegrationTests/RunTests.sh; done
 
 test: test-impl integration-test
 

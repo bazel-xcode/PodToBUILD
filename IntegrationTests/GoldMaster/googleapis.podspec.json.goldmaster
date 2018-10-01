@@ -48,20 +48,20 @@ objc_library(
     "googleapis_module_map"
   ],
   deps = [
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin",
     ":Messages",
-    ":Services",
-    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin"
+    ":Services"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -124,12 +124,12 @@ objc_library(
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -188,19 +188,19 @@ objc_library(
     "googleapis_module_map"
   ],
   deps = [
-    ":Messages",
-    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC"
+    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
+    ":Messages"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

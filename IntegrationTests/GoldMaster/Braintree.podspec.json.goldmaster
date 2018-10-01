@@ -48,8 +48,8 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":Core",
     ":Card",
+    ":Core",
     ":PayPal",
     ":UI"
   ],
@@ -354,8 +354,8 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":DataCollector_VendoredLibraries",
-    ":Core"
+    ":Core",
+    ":DataCollector_VendoredLibraries"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -433,8 +433,8 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":PayPalOneTouch",
-    ":Core"
+    ":Core",
+    ":PayPalOneTouch"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -504,8 +504,8 @@ objc_library(
     "Braintree_module_map"
   ],
   deps = [
-    ":PayPalDataCollector",
-    ":Core"
+    ":Core",
+    ":PayPalDataCollector"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -536,19 +536,19 @@ acknowledged_target(
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
 objc_bundle_library(
-  name = "UI_Bundle_Braintree-UI-Localization",
+  name = "UI_Bundle_Braintree-Drop-In-Localization",
   resources = glob(
     [
-      "BraintreeUI/Localization/*.lproj"
+      "BraintreeUI/Drop-In/Localization/*.lproj"
     ],
     exclude_directories = 1
     )
   )
 objc_bundle_library(
-  name = "UI_Bundle_Braintree-Drop-In-Localization",
+  name = "UI_Bundle_Braintree-UI-Localization",
   resources = glob(
     [
-      "BraintreeUI/Drop-In/Localization/*.lproj"
+      "BraintreeUI/Localization/*.lproj"
     ],
     exclude_directories = 1
     )
@@ -617,8 +617,8 @@ objc_library(
     "-fmodule-name=Braintree_pod_module"
   ],
   bundles = [
-    ":UI_Bundle_Braintree-UI-Localization",
-    ":UI_Bundle_Braintree-Drop-In-Localization"
+    ":UI_Bundle_Braintree-Drop-In-Localization",
+    ":UI_Bundle_Braintree-UI-Localization"
   ],
   visibility = [
     "//visibility:public"
@@ -840,9 +840,9 @@ objc_library(
     "SafariServices"
   ],
   deps = [
-    ":PayPalUtils",
+    ":Core",
     ":PayPalDataCollector",
-    ":Core"
+    ":PayPalUtils"
   ],
   copts = [
     "-ObjC",
@@ -925,9 +925,9 @@ objc_library(
     "UIKit"
   ],
   deps = [
+    ":Core",
     ":PayPalDataCollector_VendoredLibraries",
-    ":PayPalUtils",
-    ":Core"
+    ":PayPalUtils"
   ],
   copts = [
     "-Wall -Werror -Wextra"

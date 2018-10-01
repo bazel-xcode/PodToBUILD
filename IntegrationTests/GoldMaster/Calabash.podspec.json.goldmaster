@@ -84,17 +84,17 @@ objc_library(
     }
     ),
   copts = [
+    ""$(PODS_ROOT)/Calabash/calabash.framework/calabash"",
     "-ObjC",
-    "-force_load",
-    ""$(PODS_ROOT)/Calabash/calabash.framework/calabash""
+    "-force_load"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

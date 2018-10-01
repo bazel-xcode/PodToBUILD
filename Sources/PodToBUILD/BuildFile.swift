@@ -140,8 +140,8 @@ struct InsertAcknowledgementsTransform: SkylarkConvertibleTransform {
                     return [target]
                 }
 
-
-                let deps = target.acknowledgedDeps ?? [String]()
+                let deps = target.acknowledgedDeps?.sorted(by: (<))
+                    ?? [String]()
                 let externalDeps = deps.filter { $0.hasPrefix("//") }
                 let acknowledgement = AcknowledgmentNode(name: target.name,
                                                          license: podSpec.license,
@@ -191,11 +191,14 @@ public struct PodBuildFile: SkylarkConvertible {
         }
 
 
-        let resourceBundles =   (AttrSet<[String: [String]]>.sequence(attrSet: resourceBundleAttrSet).map { k, v in
-            ObjcBundleLibrary(name: "\(spec.moduleName ?? spec.name)_Bundle_\(k)", resources: v) as BazelTarget
-        })
+        let resourceBundles = (AttrSet<[String: [String]]>
+            .sequence(attrSet: resourceBundleAttrSet)
+            .map { k, v -> BazelTarget in
+                let name = "\(spec.moduleName ?? spec.name)_Bundle_\(k)"
+                return ObjcBundleLibrary(name: name, resources: v)
+            })
 
-        return resourceBundles + (bundleTargets.basic ?? [])
+        return (resourceBundles + (bundleTargets.basic ?? [])).sorted { $0.name < $1.name }
     }
 
     private static func vendoredFrameworks(withPodspec spec: PodSpec) -> [BazelTarget] {

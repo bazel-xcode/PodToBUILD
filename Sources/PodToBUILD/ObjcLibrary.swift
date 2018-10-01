@@ -323,7 +323,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         self.deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
 
-        self.copts = AttrSet(basic: xcconfigFlags) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
+        self.copts = AttrSet(basic: xcconfigFlags.sorted(by: (<))) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
 
         // Select resources that are not prebuilt bundles
         let resourceFiles = ((spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
@@ -560,7 +560,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 name: "pch_with_name_hint",
                 arguments: [
                     .basic(.string(lib.externalName)),
-                    .basic(Array(Set(pchSourcePaths)).toSkylark())
+                    .basic(Array(Set(pchSourcePaths)).sorted(by: (<)).toSkylark())
                 ]
             )
         ))
@@ -596,7 +596,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         if !lib.deps.isEmpty {
             libArguments.append(.named(
                 name: "deps",
-                value: lib.deps.toSkylark()
+                value: lib.deps.sorted(by: (<)).toSkylark()
             ))
         }
 
@@ -615,12 +615,14 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             )
 
         // Include headders
-        var iquotes = [String]()
-        for searchPath in headerSearchPaths {
+        let iquotes = headerSearchPaths
+            .sorted(by: (<))
+            .reduce([String]()) {
+            accum, searchPath in
             // Assume that the podspec matches the name of the directory.
             // it is a convention that these are 1 in the same.
             let externalDir = options.podName
-            iquotes.append("-I" + "Vendor/" + externalDir + "/" + searchPath)
+            return accum + ["-I" + "Vendor/" + externalDir + "/" + searchPath]
         }
 
         libArguments.append(.named(
@@ -635,7 +637,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         if !lib.bundles.isEmpty {
             libArguments.append(.named(name: "bundles",
-                                       value: lib.bundles.toSkylark()))
+                                       value: lib.bundles.sorted(by: (<)).toSkylark()))
         }
         libArguments.append(.named(
             name: "visibility",

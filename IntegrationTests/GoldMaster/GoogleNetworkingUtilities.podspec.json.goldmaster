@@ -51,8 +51,8 @@ objc_library(
     "Security"
   ],
   deps = [
-    ":GoogleNetworkingUtilities_VendoredFrameworks",
-    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
+    ":GoogleNetworkingUtilities_VendoredFrameworks"
   ],
   copts = [
 

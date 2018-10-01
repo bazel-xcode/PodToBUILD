@@ -72,19 +72,19 @@ objc_library(
     "Bolts_module_map"
   ],
   deps = [
-    ":Tasks",
-    ":AppLinks"
+    ":AppLinks",
+    ":Tasks"
   ],
   copts = [
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -119,13 +119,13 @@ filegroup(
         ],
         exclude_directories = 1
         ),
-      ":watchosCase": glob(
+      ":tvosCase": glob(
         [
           "Bolts/Common/*.h"
         ],
         exclude_directories = 1
         ),
-      ":tvosCase": glob(
+      ":watchosCase": glob(
         [
           "Bolts/Common/*.h"
         ],
@@ -157,13 +157,13 @@ objc_library(
         ],
         exclude_directories = 1
         ),
-      ":watchosCase": glob(
+      ":tvosCase": glob(
         [
           "Bolts/Common/*.m"
         ],
         exclude_directories = 1
         ),
-      ":tvosCase": glob(
+      ":watchosCase": glob(
         [
           "Bolts/Common/*.m"
         ],
@@ -184,13 +184,13 @@ objc_library(
         ],
         exclude_directories = 1
         ),
-      ":watchosCase": glob(
+      ":tvosCase": glob(
         [
           "Bolts/Common/*.h"
         ],
         exclude_directories = 1
         ),
-      ":tvosCase": glob(
+      ":watchosCase": glob(
         [
           "Bolts/Common/*.h"
         ],
@@ -215,12 +215,12 @@ objc_library(
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -297,12 +297,12 @@ objc_library(
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

@@ -64,28 +64,28 @@ objc_library(
   ],
   weak_sdk_frameworks = select(
     {
-      ":osxCase": [
-        "AppKit"
-      ],
       "//conditions:default": [
         "UIKit"
+      ],
+      ":osxCase": [
+        "AppKit"
       ]
     }
     ),
   deps = [
-    ":Core",
-    ":Arc-exception-safe"
+    ":Arc-exception-safe",
+    ":Core"
   ],
   copts = [
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -151,11 +151,11 @@ objc_library(
   ],
   weak_sdk_frameworks = select(
     {
-      ":osxCase": [
-        "AppKit"
-      ],
       "//conditions:default": [
         "UIKit"
+      ],
+      ":osxCase": [
+        "AppKit"
       ]
     }
     ),
@@ -166,12 +166,12 @@ objc_library(
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -228,11 +228,11 @@ objc_library(
   ],
   weak_sdk_frameworks = select(
     {
-      ":osxCase": [
-        "AppKit"
-      ],
       "//conditions:default": [
         "UIKit"
+      ],
+      ":osxCase": [
+        "AppKit"
       ]
     }
     ),
@@ -243,12 +243,12 @@ objc_library(
     "-fobjc-arc-exceptions"
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

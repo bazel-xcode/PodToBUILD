@@ -48,19 +48,19 @@ objc_library(
     "GoogleAppUtilities_module_map"
   ],
   deps = [
-    ":GoogleAppUtilities_VendoredFrameworks",
-    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
+    ":GoogleAppUtilities_VendoredFrameworks"
   ],
   copts = [
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [

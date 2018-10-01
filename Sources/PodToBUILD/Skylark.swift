@@ -127,13 +127,19 @@ public struct GlobNode: SkylarkConvertible {
             // if includes are excludes, then this is the same as a no-op
             // guard includes == excludes else { return .list([]) }
             // otherwise we glob
-	        return SkylarkNode.functionCall(name: "glob",
-                                        arguments: [
-                                            .basic(includes.toSkylark())
-                                            ] +
-                                            (excludes.isEmpty ? [] : [.named(name: "exclude", value: excludes.toSkylark())]) +
-                                            [ .named(name: "exclude_directories", value: .int(excludeDirectories ? 1 : 0))
-            ])    
+
+            let includeArgs: [SkylarkFunctionArgument] = [
+                    .basic(includes.sorted { $0 < $1 }.toSkylark()) ]
+
+            let excludeArgs: [SkylarkFunctionArgument] = (excludes.isEmpty ? [] : [
+                    .named(name: "exclude", value: excludes
+                            .sorted { $0 < $1 }.toSkylark()) ])
+            let dirArgs: [SkylarkFunctionArgument] = [
+                .named(name: "exclude_directories", value: .int(excludeDirectories ? 1 : 0)) ]
+
+            return SkylarkNode
+                .functionCall(name: "glob",
+                        arguments: (includeArgs + excludeArgs + dirArgs))
         }
         
         let basicIncludes = (tupleSet.basic?.first).denormalize()
@@ -150,7 +156,7 @@ public struct GlobNode: SkylarkConvertible {
             AttrSet(basic: render(
                 includes: basicIncludes,
                 excludes: basicExcludes
-	        ))
+            ))
         
         // This could render three distinct ways
         // 1. If there is nothing in basic or multiplatform, we need at least a list for valid skylark (that's the guard in the render)
@@ -241,9 +247,12 @@ public struct SkylarkCompiler {
         case let .expr(lhs, op, rhs):
             return compile(lhs) + " \(op) " + compile(rhs)
         case let .dict(dict):
+            // Stabilize dict keys here. Other inputs are required to be stable.
+            let sortedKeys = Array(dict.keys).sorted { $0 < $1 }
             let compiler = SkylarkCompiler(node, indent: indent + 2)
-            return "{\n" + dict.map { key, val in
-                "\(SkylarkCompiler.white(indent: indent + 2))\(compiler.compile(.string(key))): \(compiler.compile(val))"
+            return "{\n" + sortedKeys.compactMap { key in
+                guard let val = dict[key] else { return nil }
+                return "\(SkylarkCompiler.white(indent: indent + 2))\(compiler.compile(.string(key))): \(compiler.compile(val))"
             }.joined(separator: ",\n") + "\n\(whitespace)}"
         case let .lines(lines):
             return lines.map(compile).joined(separator: "\n")
