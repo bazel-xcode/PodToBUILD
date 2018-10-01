@@ -321,8 +321,8 @@ objc_library(
     "//Vendor/SQLCipher:SQLCipher"
   ],
   copts = [
-    "-DSQLITE_HAS_CODEC",
-    "-DHAVE_USLEEP=1"
+    "-DHAVE_USLEEP=1",
+    "-DSQLITE_HAS_CODEC"
   ] + select(
     {
       "//conditions:default": [

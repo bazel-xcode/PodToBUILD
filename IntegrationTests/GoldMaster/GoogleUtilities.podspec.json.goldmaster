@@ -55,8 +55,8 @@ objc_library(
     "z"
   ],
   deps = [
-    ":GoogleUtilities_VendoredFrameworks",
-    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
+    ":GoogleUtilities_VendoredFrameworks"
   ],
   copts = [
 

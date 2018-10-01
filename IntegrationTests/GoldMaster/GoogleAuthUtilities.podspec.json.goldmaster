@@ -52,20 +52,20 @@ objc_library(
     "SystemConfiguration"
   ],
   deps = [
-    ":GoogleAuthUtilities_VendoredFrameworks",
+    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities",
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
-    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities"
+    ":GoogleAuthUtilities_VendoredFrameworks"
   ],
   copts = [
 
   ] + select(
     {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
         "-DNS_BLOCK_ASSERTIONS=1"
-      ],
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
       ]
     }
     ) + [
@@ -86,8 +86,8 @@ objc_library(
 acknowledged_target(
   name = "GoogleAuthUtilities_acknowledgement",
   deps = [
-    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities_acknowledgement",
-    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities_acknowledgement"
+    "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities_acknowledgement",
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities_acknowledgement"
   ],
   value = "//Vendor/GoogleAuthUtilities/pod_support_buildable:acknowledgement_fragment"
   )

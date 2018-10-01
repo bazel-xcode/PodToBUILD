@@ -59,8 +59,8 @@ objc_library(
     ":PINRemoteImage"
   ],
   copts = [
-    "-stdlib=libc++",
-    "-std=c++11"
+    "-std=c++11",
+    "-stdlib=libc++"
   ] + select(
     {
       "//conditions:default": [
@@ -125,8 +125,8 @@ objc_library(
   pch = pch_with_name_hint(
     "Texture",
     [
-      "Source/**/*.pch",
-      "Base/**/*.pch"
+      "Base/**/*.pch",
+      "Source/**/*.pch"
     ]
     ),
   includes = [
@@ -142,9 +142,9 @@ objc_library(
     "c++"
   ],
   copts = [
-    "-stdlib=libc++",
+    "",
     "-std=c++11",
-    ""
+    "-stdlib=libc++"
   ] + select(
     {
       "//conditions:default": [
@@ -206,12 +206,12 @@ objc_library(
   ],
   deps = [
     "//Vendor/PINRemoteImage:PINCache",
-    ":Core",
-    "//Vendor/PINRemoteImage:iOS"
+    "//Vendor/PINRemoteImage:iOS",
+    ":Core"
   ],
   copts = [
-    "-stdlib=libc++",
-    "-std=c++11"
+    "-std=c++11",
+    "-stdlib=libc++"
   ] + select(
     {
       "//conditions:default": [
@@ -277,8 +277,8 @@ objc_library(
     ":Core"
   ],
   copts = [
-    "-stdlib=libc++",
-    "-std=c++11"
+    "-std=c++11",
+    "-stdlib=libc++"
   ] + select(
     {
       "//conditions:default": [
@@ -339,13 +339,13 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":Core",
-    "//Vendor/Yoga:Yoga"
+    "//Vendor/Yoga:Yoga",
+    ":Core"
   ],
   copts = [
-    "-stdlib=libc++",
+    "-DYOGA=1",
     "-std=c++11",
-    "-DYOGA=1"
+    "-stdlib=libc++"
   ] + select(
     {
       "//conditions:default": [

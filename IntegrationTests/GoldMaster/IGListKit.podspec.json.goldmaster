@@ -67,13 +67,13 @@ objc_library(
   ],
   sdk_frameworks = select(
     {
-      ":tvosCase": [
+      "//conditions:default": [
         "UIKit"
       ],
       ":osxCase": [
         "Cocoa"
       ],
-      "//conditions:default": [
+      ":tvosCase": [
         "UIKit"
       ]
     }
@@ -130,7 +130,7 @@ objc_library(
   enable_modules = 0,
   srcs = select(
     {
-      ":tvosCase": glob(
+      "//conditions:default": glob(
         [
           "Source/Common/**/*.m",
           "Source/Common/**/*.mm"
@@ -141,7 +141,7 @@ objc_library(
         ],
         exclude_directories = 1
         ),
-      "//conditions:default": glob(
+      ":tvosCase": glob(
         [
           "Source/Common/**/*.m",
           "Source/Common/**/*.mm"
@@ -174,13 +174,13 @@ objc_library(
   ],
   sdk_frameworks = select(
     {
-      ":tvosCase": [
+      "//conditions:default": [
         "UIKit"
       ],
       ":osxCase": [
         "Cocoa"
       ],
-      "//conditions:default": [
+      ":tvosCase": [
         "UIKit"
       ]
     }
@@ -221,13 +221,13 @@ filegroup(
   name = "Default_hdrs",
   srcs = select(
     {
-      ":tvosCase": glob(
+      "//conditions:default": glob(
         [
           "Source/**/*.h"
         ],
         exclude_directories = 1
         ),
-      "//conditions:default": glob(
+      ":tvosCase": glob(
         [
           "Source/**/*.h"
         ],
@@ -244,14 +244,14 @@ objc_library(
   enable_modules = 0,
   srcs = select(
     {
-      ":tvosCase": glob(
+      "//conditions:default": glob(
         [
           "Source/**/*.m",
           "Source/**/*.mm"
         ],
         exclude_directories = 1
         ),
-      "//conditions:default": glob(
+      ":tvosCase": glob(
         [
           "Source/**/*.m",
           "Source/**/*.mm"
@@ -261,13 +261,13 @@ objc_library(
     }
     ) + select(
     {
-      ":tvosCase": glob(
+      "//conditions:default": glob(
         [
           "Source/**/*.h"
         ],
         exclude_directories = 1
         ),
-      "//conditions:default": glob(
+      ":tvosCase": glob(
         [
           "Source/**/*.h"
         ],
@@ -290,13 +290,13 @@ objc_library(
   ],
   sdk_frameworks = select(
     {
-      ":tvosCase": [
+      "//conditions:default": [
         "UIKit"
       ],
       ":osxCase": [
         "Cocoa"
       ],
-      "//conditions:default": [
+      ":tvosCase": [
         "UIKit"
       ]
     }

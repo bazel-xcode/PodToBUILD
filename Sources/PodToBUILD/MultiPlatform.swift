@@ -350,21 +350,43 @@ extension Optional where Wrapped == Array<String> {
         }
     }
 }
+
 extension MultiPlatform where T == [String] {
     public static func == (lhs: MultiPlatform, rhs: MultiPlatform) -> Bool {
         return lhs.ios == rhs.ios && lhs.osx == rhs.osx && lhs.watchos == rhs.watchos && lhs.tvos == rhs.tvos
     }
+
+    func sorted(by areInIncreasingOrder: (String, String) throws -> Bool) rethrows
+-> MultiPlatform<T> {
+        return try MultiPlatform(
+                ios: ios?.sorted(by: areInIncreasingOrder),
+                osx: osx?.sorted(by: areInIncreasingOrder),
+                watchos: watchos?.sorted(by: areInIncreasingOrder),
+                tvos: tvos?.sorted(by: areInIncreasingOrder)
+                )
+    }
 }
+
 extension MultiPlatform where T == Set<String> {
     public static func == (lhs: MultiPlatform, rhs: MultiPlatform) -> Bool {
         return lhs.ios == rhs.ios && lhs.osx == rhs.osx && lhs.watchos == rhs.watchos && lhs.tvos == rhs.tvos
     }   
 }
+
 extension AttrSet where T == [String] {
     public static func == (lhs: AttrSet, rhs: AttrSet) -> Bool {
         return lhs.basic == rhs.basic && lhs.multi == rhs.multi
     }
+
+    func sorted(by areInIncreasingOrder: (String, String) throws -> Bool) rethrows
+-> AttrSet<T> {
+        return try AttrSet(
+                basic: basic?.sorted(by: areInIncreasingOrder),
+                multi: multi.sorted(by: areInIncreasingOrder)
+                )
+    }
 }
+
 extension AttrSet where T == Set<String> {
     public static func == (lhs: AttrSet, rhs: AttrSet) -> Bool {
         return lhs.basic == rhs.basic && lhs.multi == rhs.multi
