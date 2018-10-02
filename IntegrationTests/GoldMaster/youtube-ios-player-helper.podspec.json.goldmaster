@@ -66,6 +66,7 @@ objc_library(
     {
       "//conditions:default": glob(
         [
+          "Classes/**/*.cc",
           "Classes/**/*.cpp",
           "Classes/**/*.cxx",
           "Classes/**/*.mm"
@@ -77,6 +78,7 @@ objc_library(
           "Classes/**/*.s",
           "Classes/osx/**/*.S",
           "Classes/osx/**/*.c",
+          "Classes/osx/**/*.cc",
           "Classes/osx/**/*.cpp",
           "Classes/osx/**/*.cxx",
           "Classes/osx/**/*.m",
@@ -87,6 +89,7 @@ objc_library(
         ),
       ":osxCase": glob(
         [
+          "Classes/**/*.cc",
           "Classes/**/*.cpp",
           "Classes/**/*.cxx",
           "Classes/**/*.mm"
@@ -98,6 +101,7 @@ objc_library(
           "Classes/**/*.s",
           "Classes/ios/**/*.S",
           "Classes/ios/**/*.c",
+          "Classes/ios/**/*.cc",
           "Classes/ios/**/*.cpp",
           "Classes/ios/**/*.cxx",
           "Classes/ios/**/*.m",
@@ -219,6 +223,7 @@ objc_library(
         exclude = [
           "Classes/osx/**/*.S",
           "Classes/osx/**/*.c",
+          "Classes/osx/**/*.cc",
           "Classes/osx/**/*.cpp",
           "Classes/osx/**/*.cxx",
           "Classes/osx/**/*.m",
@@ -237,6 +242,7 @@ objc_library(
         exclude = [
           "Classes/ios/**/*.S",
           "Classes/ios/**/*.c",
+          "Classes/ios/**/*.cc",
           "Classes/ios/**/*.cpp",
           "Classes/ios/**/*.cxx",
           "Classes/ios/**/*.m",

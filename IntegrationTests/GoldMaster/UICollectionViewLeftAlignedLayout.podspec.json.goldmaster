@@ -30,6 +30,7 @@ objc_library(
   enable_modules = 0,
   srcs = glob(
     [
+      "UICollectionViewLeftAlignedLayout/**/*.cc",
       "UICollectionViewLeftAlignedLayout/**/*.cpp",
       "UICollectionViewLeftAlignedLayout/**/*.cxx",
       "UICollectionViewLeftAlignedLayout/**/*.mm"

@@ -36,6 +36,7 @@ objc_library(
   enable_modules = 0,
   srcs = glob(
     [
+      "calabash.framework/Versions/A/Headers/*.cc",
       "calabash.framework/Versions/A/Headers/*.cpp",
       "calabash.framework/Versions/A/Headers/*.cxx"
     ],
@@ -84,7 +85,7 @@ objc_library(
     }
     ),
   copts = [
-    ""$(PODS_ROOT)/Calabash/calabash.framework/calabash"",
+    ""Vendor/Calabash/calabash.framework/calabash"",
     "-ObjC",
     "-force_load"
   ] + select(
@@ -181,7 +182,7 @@ objc_library(
     ":Calabash_cxx"
   ],
   copts = [
-    ""$(PODS_ROOT)/Calabash/calabash.framework/calabash"",
+    ""Vendor/Calabash/calabash.framework/calabash"",
     "-ObjC",
     "-force_load"
   ] + select(

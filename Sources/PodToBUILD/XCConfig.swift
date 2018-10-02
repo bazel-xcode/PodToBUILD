@@ -42,7 +42,11 @@ public struct XCConfigTransformer {
 
         let allValues = value.components(separatedBy: CharacterSet.whitespaces)
         return allValues.filter { $0 != "$(inherited)" }
-            .compactMap { transformer.string(forXCConfigValue: $0) }
+            .compactMap { val in
+                return transformer.string(forXCConfigValue: val)?
+                    .replacingOccurrences(of: "$(PODS_ROOT)", with: "Vendor")
+                    .replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)", with: "Vendor")
+            }
     }
 
     public static func defaultTransformer(externalName: String, sourceType: BazelSourceLibType) -> XCConfigTransformer {
