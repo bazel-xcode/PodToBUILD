@@ -227,6 +227,7 @@ func glob(pattern: String, contains needle: String) -> Bool {
 enum RubyGlobChunk {
     case Wild // *
     case DirWild // **
+    case DotStarWild // .*
     case CharWild // just one character but anything
     case Either(Set<String>) // matches any string here
     case Str(String)
@@ -249,6 +250,7 @@ extension RubyGlobChunk: Equatable {
 enum BazelGlobChunk {
     case Wild
     case DirWild
+    case DotStarWild
     case Str(String)
 }
 extension BazelGlobChunk: Equatable {
@@ -262,9 +264,7 @@ extension BazelGlobChunk: Equatable {
     
     func hasSuffix(_ suffix: String) -> Bool {
         switch self {
-        case .Wild:
-            return false
-        case .DirWild:
+        case .Wild, .DotStarWild, .DirWild:
             return false
         case let .Str(s):
             return s.hasSuffix(suffix)
@@ -279,6 +279,11 @@ let parseWild: Parser<RubyGlobChunk> = star.map{ _ in RubyGlobChunk.Wild }
 // ** is DirWild
 let starstar = Parsers.prefix(["*", "*"])
 let parseDirWild: Parser<RubyGlobChunk> = starstar.map{ _ in RubyGlobChunk.DirWild }
+
+// .*
+let dotStar = Parsers.prefix([".", "*"])
+let parseDotStarWild: Parser<RubyGlobChunk> = dotStar.map{ _ in RubyGlobChunk.DotStarWild }
+
 // ? is CharWild
 let questionmark = Parsers.just("?")
 let parseCharWild: Parser<RubyGlobChunk> = questionmark.map{ _ in RubyGlobChunk.CharWild }
@@ -314,6 +319,7 @@ let parseEither = parseCurlySet.orElse(parseCharacterSet)
 let parseSpecial =
     Parser.first([
         parseDirWild, // **
+        parseDotStarWild, // **
         parseWild, // *
         parseCharWild, // ?
         parseEither // [hm]
@@ -349,6 +355,8 @@ extension Sequence where Iterator.Element == RubyGlobChunk {
             switch foo {
             case .Wild:
                 return acc.map{ cs in cs + [BazelGlobChunk.Wild] }
+            case .DotStarWild:
+                return acc.map{ cs in cs + [BazelGlobChunk.DotStarWild] }
             case .DirWild:
                 return acc.map{ cs in cs + [BazelGlobChunk.DirWild] }
             case .CharWild:
@@ -390,6 +398,9 @@ extension Sequence where Iterator.Element == BazelGlobChunk {
             switch x {
             case .Wild:
                 return acc + "*"
+            case .DotStarWild:
+                // represent DotStarWild as a file extension.
+                return acc
             case .DirWild:
                 return acc + "**"
             case let .Str(str):
@@ -428,20 +439,18 @@ public func pattern(fromPattern pattern: String, includingFileTypes fileTypes: S
              let strs: [String] = filtered
                   .map{ (glob: [BazelGlobChunk]) -> String in glob.bazelString }
              return Array(Set(strs))
-	}
+        }
         // In Bazel, to keep things simple, we want all patterns to end in an extension
         // Unfortunately, Cocoapods patterns could end in anything, so we need to fix them all
         let suffixFixed: [[BazelGlobChunk]] = filtered
             .flatMap{ (bazelGlobChunks: [BazelGlobChunk]) -> [[BazelGlobChunk]] in
                 let lastChunk = bazelGlobChunks.last! // count != 0 already filtered out
-                
                 switch lastChunk {
                 // ending in * needs to map to *.m (except .*)
-                case .Wild:
+                case .Wild, .DotStarWild:
                     let lastTwo = Array(bazelGlobChunks.suffix(2))
                     // if we end in .*
                     if (lastTwo.count == 2 && lastTwo[0].hasSuffix(".")) {
-
                         return fileTypes.map{
                             // strip the last * and replace with the extension
                             bazelGlobChunks.prefix(upTo: bazelGlobChunks.count-1) + [BazelGlobChunk.Str($0)]
