@@ -1,0 +1,84 @@
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://bazel.build/versions/master/docs/bazel-user-manual.html
+native.config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+  )
+filegroup(
+  name = "boost_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "boost",
+  "boost_module_map",
+  "boost",
+  [
+    "boost_hdrs"
+  ]
+  )
+alias(
+  name = "boost-for-react-native",
+  actual = "boost",
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "boost",
+  enable_modules = 0,
+  hdrs = [
+    ":boost_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "boost-for-react-native",
+    [
+
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "boost_module_map"
+  ],
+  copts = [
+
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/boost-for-react-native/pod_support/Headers/Public/boost/"
+  ] + [
+    "-fmodule-name=boost_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "boost_acknowledgement",
+  deps = [
+
+  ],
+  value = "//Vendor/boost-for-react-native/pod_support_buildable:acknowledgement_fragment"
+  )

@@ -27,7 +27,8 @@ class BuildFileTests: XCTestCase {
                     resources: GlobNode.empty,
                     publicHeaders: AttrSet.empty,
 			        nonArcSrcs: GlobNode.empty,
-			        requiresArc: .left(true)
+			        requiresArc: .left(true),
+                    isTopLevelTarget: false
         )
     }
 

@@ -1,0 +1,114 @@
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://bazel.build/versions/master/docs/bazel-user-manual.html
+native.config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+  )
+filegroup(
+  name = "folly_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "folly",
+  "folly_module_map",
+  "folly",
+  [
+    "folly_hdrs"
+  ]
+  )
+alias(
+  name = "Folly",
+  actual = "folly",
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+objc_library(
+  name = "folly",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "folly/Bits.cpp",
+      "folly/Conv.cpp",
+      "folly/Demangle.cpp",
+      "folly/StringBase.cpp",
+      "folly/Unicode.cpp",
+      "folly/detail/MallocImpl.cpp",
+      "folly/dynamic.cpp",
+      "folly/json.cpp",
+      "folly/portability/BitsFunctexcept.cpp"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
+  hdrs = [
+    ":folly_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "Folly",
+    [
+      "folly/**/*.pch"
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "folly_module_map"
+  ],
+  sdk_dylibs = [
+    "stdc++"
+  ],
+  deps = [
+    "//Vendor/DoubleConversion:DoubleConversion",
+    "//Vendor/boost-for-react-native:boost-for-react-native",
+    "//Vendor/glog:glog"
+  ],
+  copts = [
+    "-IVendor/DoubleConversion",
+    "-IVendor/Folly",
+    "-IVendor/boost-for-react-native",
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/Folly/pod_support/Headers/Public/folly/"
+  ] + [
+    "-fmodule-name=folly_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "folly_acknowledgement",
+  deps = [
+    "//Vendor/DoubleConversion:DoubleConversion_acknowledgement",
+    "//Vendor/boost-for-react-native:boost-for-react-native_acknowledgement",
+    "//Vendor/glog:glog_acknowledgement"
+  ],
+  value = "//Vendor/Folly/pod_support_buildable:acknowledgement_fragment"
+  )

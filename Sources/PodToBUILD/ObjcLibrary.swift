@@ -197,7 +197,6 @@ public enum ObjcLibraryConfigurableKeys : String {
 // ObjcLibrary is an intermediate rep of an objc library
 public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     public let name: String
-    public let externalName: String
     public let sourceFiles: GlobNode
     public let headers: GlobNode
     public let headerName: AttrSet<String>
@@ -216,6 +215,9 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     public var copts: AttrSet<[String]>
     public var deps: AttrSet<[String]>
 
+    public let isTopLevelTarget: Bool
+    public let externalName: String
+
     init(name: String,
         externalName: String,
         sourceFiles: GlobNode,
@@ -230,7 +232,8 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         resources: GlobNode,
         publicHeaders: AttrSet<Set<String>>,
         nonArcSrcs: GlobNode,
-        requiresArc: Either<Bool, [String]>
+        requiresArc: Either<Bool, [String]>,
+        isTopLevelTarget: Bool
     ) {
         self.name = name
         self.externalName = externalName
@@ -247,6 +250,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.nonArcSrcs = nonArcSrcs
         self.publicHeaders = publicHeaders
         self.requiresArc = requiresArc
+        self.isTopLevelTarget = isTopLevelTarget
     }
 
     static func bazelLabel(fromString string: String) -> String {
@@ -264,7 +268,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             isSplitDep: Bool = false,
             sourceType: BazelSourceLibType = .objc) {
         let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].compactMap { $0 })
-
+        self.isTopLevelTarget = rootSpec == nil && isSplitDep == false
         let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
 
         let includeFileTypes = sourceType == .cpp ? CppLikeFileTypes :
@@ -283,14 +287,17 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.requiresArc = (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.requiresArc))) ?? .left(true)
         self.publicHeaders = (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.publicHeaders))).map{ Set($0) }
 
+        // Take the name of the primary spec
+        let primarySpec = ComposedSpec.create(fromSpecs: [spec, rootSpec].compactMap { $0 })
+        let primarySpecName = primarySpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
 
-        // We are not using the fallback spec here since
-        let fallbackName = ComposedSpec.create(fromSpecs: [spec, rootSpec].compactMap { $0 }) ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
-        let rootName = fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName)) ?? fallbackName
+        let fallbackModuleName = fallbackSpec ^*
+            ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
 
-        // If we split out a lib, it needs to take on a different name
-        // Assume that we only split out Cpp for now.
-        let splitSuffix = isSplitDep ? "_cxx" : ""
+        let rootName = fallbackModuleName ?? primarySpecName
+
+        // Split deps take the name of the source type.
+        let splitSuffix = isSplitDep ? sourceType.getLibNameSuffix() : ""
         let baseName = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
         self.name = baseName + splitSuffix
         self.externalName = rootSpec?.name ?? spec.name
@@ -333,7 +340,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         // Lift the deps to multiplatform, then get the names of these deps.
         let mpDeps = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.dependencies))
-        let mpPodSpecDeps = mpDeps.map { $0.map { getDependencyName(fromPodDepName: $0, inRootPodNamed: fallbackName, moduleName: rootName) } }
+        let mpPodSpecDeps = mpDeps.map { $0.map { getDependencyName(fromPodDepName: $0, inRootPodNamed: primarySpecName, moduleName: rootName) } }
 
         let extraDepNames = extraDeps.map { ObjcLibrary.bazelLabel(fromString: ":\($0)") }
 
@@ -441,14 +448,6 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let moduleName = bazelModuleName()
 
-        let isTopLevelTarget: Bool
-        if externalName != moduleName {
-             // Someone has a headername different than the external name
-             isTopLevelTarget = name == moduleName
-        } else {
-             isTopLevelTarget = name == externalName
-        }
-
         let depHdrs = deps.map {
             $0.filter { $0.hasPrefix(":") && !$0.contains("Vendored") && !$0.contains("_Bundle") }
                 .map { ($0 + "_hdrs").toSkylark() }
@@ -459,7 +458,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let podSupportHeaders = GlobNode(include: AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*"]),
                                                          exclude: AttrSet<Set<String>>.empty).toSkylark()
         
-        if isTopLevelTarget {
+        if lib.isTopLevelTarget {
             var exposedHeaders: SkylarkNode = podSupportHeaders
             // By Default we don't propage the headers anymore
             // come up with a way to expose this
@@ -489,10 +488,10 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let headerGlobNode = headers
 
-        let hdrsRuleBasename = isTopLevelTarget ? name : moduleName
+        let hdrsRuleBasename = lib.isTopLevelTarget ? name : moduleName
         let moduleMapDirectoryName = hdrsRuleBasename + "_module_map"
         let clangModuleName = headerName.basic?.replacingOccurrences(of: "-", with: "_")
-        if isTopLevelTarget {
+        if lib.isTopLevelTarget {
             inlineSkylark.append(.functionCall(
                 name: "gen_module_map",
                 arguments: [
@@ -502,6 +501,10 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                     .basic([name + "_hdrs"].toSkylark())
                 ]
                 ))
+             if lib.externalName != lib.name {
+                 inlineSkylark.append(makeAlias(name: lib.externalName, actual:
+                             lib.name))
+             }
         }
         
         if !lib.sourceFiles.include.isEmpty {
@@ -559,7 +562,8 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         if generateModuleMap {
             libArguments.append(.named(
                 name: "hdrs",
-                value: [moduleMapDirectoryName + "_module_map_file"].toSkylark() .+.  ([hdrsRuleBasename + "_hdrs"]).toSkylark()
+                value: [moduleMapDirectoryName + "_module_map_file"].toSkylark()
+                    .+.  ([hdrsRuleBasename + "_hdrs"]).toSkylark()
                 ))
         } else {
             libArguments.append(.named(
@@ -618,16 +622,14 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let buildConfigDependenctCOpts =
             SkylarkNode.functionCall(name: "select",
-                                     arguments: [
-                                         .basic(
-                                             [
-                                                 ":release":
-                                                    ["-DPOD_CONFIGURATION_RELEASE=1", "-DNS_BLOCK_ASSERTIONS=1"],
-                                                 "//conditions:default":
-                                                    ["-DPOD_CONFIGURATION_RELEASE=0"]
-                                             ].toSkylark()
-                                             )
-                                     ]
+                arguments: [
+                    .basic([
+                         ":release":
+                            ["-DPOD_CONFIGURATION_RELEASE=1", "-DNS_BLOCK_ASSERTIONS=1"],
+                         "//conditions:default":
+                            ["-DPOD_CONFIGURATION_RELEASE=0"]
+                     ].toSkylark()
+                     )]
             )
 
         // Include headders
@@ -667,25 +669,61 @@ extension ObjcLibrary {
     public enum lens {
         public static let sourceFiles: Lens<ObjcLibrary, GlobNode> = {
             return Lens<ObjcLibrary, GlobNode>(view: { $0.sourceFiles }, set: { sourceFiles, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
-            })
+                ObjcLibrary(name: lib.name, externalName: lib.externalName,
+                        sourceFiles: sourceFiles, headers: lib.headers,
+                        headerName: lib.headerName, sdkFrameworks:
+                        lib.sdkFrameworks, weakSdkFrameworks:
+                        lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
+                        lib.deps, copts: lib.copts, bundles: lib.bundles,
+                        resources: lib.resources, publicHeaders:
+                        lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs,
+                        requiresArc: lib.requiresArc, isTopLevelTarget:
+                        lib.isTopLevelTarget)
+                })
         }()
 
         public static let nonArcSrcs: Lens<ObjcLibrary, GlobNode> = {
             return Lens(view: { $0.nonArcSrcs }, set: { nonArcSrcs, lib  in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: nonArcSrcs, requiresArc: lib.requiresArc)
-            })
+                ObjcLibrary(name: lib.name, externalName: lib.externalName,
+                        sourceFiles: lib.sourceFiles, headers: lib.headers,
+                        headerName: lib.headerName, sdkFrameworks:
+                        lib.sdkFrameworks, weakSdkFrameworks:
+                        lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
+                        lib.deps, copts: lib.copts, bundles: lib.bundles,
+                        resources: lib.resources, publicHeaders:
+                        lib.publicHeaders, nonArcSrcs: nonArcSrcs,
+                        requiresArc: lib.requiresArc, isTopLevelTarget:
+                        lib.isTopLevelTarget)
+                })
         }()
 
         public static let deps: Lens<ObjcLibrary, AttrSet<[String]>> = {
             return Lens(view: { $0.deps }, set: { deps, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs, requiresArc: lib.requiresArc)
-            })
+                ObjcLibrary(name: lib.name, externalName: lib.externalName,
+                        sourceFiles: lib.sourceFiles, headers: lib.headers,
+                        headerName: lib.headerName, sdkFrameworks:
+                        lib.sdkFrameworks, weakSdkFrameworks:
+                        lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
+                        deps, copts: lib.copts, bundles: lib.bundles,
+                        resources: lib.resources, publicHeaders:
+                        lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs,
+                        requiresArc: lib.requiresArc, isTopLevelTarget:
+                        lib.isTopLevelTarget)
+                })
         }()
 
         public static let requiresArc: Lens<ObjcLibrary, Either<Bool, [String]>> = {
 	        return Lens(view: { $0.requiresArc }, set: { requiresArc, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName, sourceFiles: lib.sourceFiles, headers: lib.headers, headerName: lib.headerName, sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks: lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps: lib.deps, copts: lib.copts, bundles: lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs, requiresArc: requiresArc)
+                ObjcLibrary(name: lib.name, externalName: lib.externalName,
+                        sourceFiles: lib.sourceFiles, headers: lib.headers,
+                        headerName: lib.headerName, sdkFrameworks:
+                        lib.sdkFrameworks, weakSdkFrameworks:
+                        lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
+                        lib.deps, copts: lib.copts, bundles: lib.bundles,
+                        resources: lib.resources, publicHeaders:
+                        lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs,
+                        requiresArc: requiresArc, isTopLevelTarget:
+                        lib.isTopLevelTarget)
             })
         }()
 

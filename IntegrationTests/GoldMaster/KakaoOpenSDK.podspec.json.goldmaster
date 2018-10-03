@@ -13,22 +13,11 @@ native.config_setting(
   )
 filegroup(
   name = "KakaoOpenSDK_hdrs",
-  srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-    ),
+  srcs = [
+
+  ],
   visibility = [
     "//visibility:public"
-  ]
-  )
-gen_module_map(
-  "KakaoOpenSDK",
-  "KakaoOpenSDK_module_map",
-  "KakaoOpenSDK",
-  [
-    "KakaoOpenSDK_hdrs"
   ]
   )
 objc_library(
@@ -84,22 +73,11 @@ acknowledged_target(
   )
 filegroup(
   name = "KakaoOpenSDK_hdrs",
-  srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-    ),
+  srcs = [
+
+  ],
   visibility = [
     "//visibility:public"
-  ]
-  )
-gen_module_map(
-  "KakaoOpenSDK",
-  "KakaoOpenSDK_module_map",
-  "KakaoOpenSDK",
-  [
-    "KakaoOpenSDK_hdrs"
   ]
   )
 objc_library(

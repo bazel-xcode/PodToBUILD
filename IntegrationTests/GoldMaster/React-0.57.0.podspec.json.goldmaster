@@ -2308,20 +2308,14 @@ filegroup(
   name = "RCTAnimation_hdrs",
   srcs = glob(
     [
-      "pod_support/Headers/Public/**/*"
+      "Libraries/NativeAnimation/*.h",
+      "Libraries/NativeAnimation/Drivers/*.h",
+      "Libraries/NativeAnimation/Nodes/*.h"
     ],
     exclude_directories = 1
     ),
   visibility = [
     "//visibility:public"
-  ]
-  )
-gen_module_map(
-  "RCTAnimation",
-  "RCTAnimation_module_map",
-  "RCTAnimation",
-  [
-    "RCTAnimation_hdrs"
   ]
   )
 objc_library(
@@ -3305,20 +3299,12 @@ filegroup(
   name = "fishhook_hdrs",
   srcs = glob(
     [
-      "pod_support/Headers/Public/**/*"
+      "Libraries/fishhook/*.h"
     ],
     exclude_directories = 1
     ),
   visibility = [
     "//visibility:public"
-  ]
-  )
-gen_module_map(
-  "fishhook",
-  "fishhook_module_map",
-  "fishhook",
-  [
-    "fishhook_hdrs"
   ]
   )
 objc_library(
