@@ -25,11 +25,17 @@ build-impl-spm:
 	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13 \
 		| tee .build/last_build.log
 
+# Tee the error to a log file
+# Summarize the status
+# Exit with the status
 test-impl:
 	@mkdir -p .build
 	swift test $(SWIFT_TEST_OPTS) \
 	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13 \
-		| tee .build/last_build.log
+		2>&1 | tee .build/last_build.log; \
+		echo "SWIFT_TEST_STAT=$${PIPESTATUS[0]}" >> .build/last_build.log
+	@grep  -A 1 'Test Suite' .build/last_build.log
+	@grep SWIFT_TEST_STAT=0 .build/last_build.log || exit 1
 
 # Update the gold master directory
 goldmaster: release
