@@ -91,7 +91,6 @@ public struct PassthroughTransformer: XCConfigValueTransformer {
     }
 }
 
-
 public struct PreCompilePrefixHeaderTransformer: XCConfigValueTransformer {
     public var xcconfigKey: String {
         return "GCC_PRECOMPILE_PREFIX_HEADER"
@@ -179,3 +178,4 @@ public struct CXXLibraryTransformer: XCConfigValueTransformer {
         return "-stdlib=\(value)"
     }
 }
+

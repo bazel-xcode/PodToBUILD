@@ -126,7 +126,7 @@ def _make_module_map(pod_name, module_name, hdr_providers):
     template += "}\n"
     return template
 
-def _make_module_map_impl(ctx):
+def _gen_module_map_impl(ctx):
   # We figure out how to build
   out = _make_module_map(ctx.attr.pod_name, ctx.attr.module_name, ctx.attr.hdrs)
   ctx.file_action(
@@ -144,7 +144,7 @@ def _make_module_map_impl(ctx):
   )
 
 _gen_module_map = rule(
-    implementation=_make_module_map_impl,
+    implementation=_gen_module_map_impl,
     output_to_genfiles=True,
     attrs = {
         "pod_name": attr.string(mandatory=True),
@@ -172,4 +172,15 @@ def gen_module_map(pod_name,
                     hdrs=dep_hdrs,
                     module_map_name=module_map_name,
                     visibility = ["//visibility:public"])
+
+def _gen_includes_impl(ctx):
+    return apple_common.new_objc_provider(
+            include=depset(ctx.attr.include))
+
+gen_includes = rule(
+    implementation=_gen_includes_impl,
+    attrs = {
+        "include": attr.string_list(mandatory=True),
+    }
+)
 

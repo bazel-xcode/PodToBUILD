@@ -18,6 +18,7 @@ class BuildFileTests: XCTestCase {
                     sourceFiles: GlobNode.empty,
                     headers: GlobNode.empty,
                     headerName: AttrSet(basic: externalName),
+                    includes: [],
                     sdkFrameworks: AttrSet.empty,
                     weakSdkFrameworks: AttrSet.empty,
                     sdkDylibs: AttrSet.empty,

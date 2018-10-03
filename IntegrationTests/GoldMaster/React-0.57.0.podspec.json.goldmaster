@@ -1,6 +1,7 @@
 load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')
 load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')
 load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_includes')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -180,6 +181,12 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Core_cxx_includes",
+  include = [
+    "Vendor/React/ReactCommon"
   ]
   )
 objc_library(
@@ -550,9 +557,11 @@ objc_library(
   ],
   deps = [
     "//Vendor/Yoga:Yoga"
+  ] + [
+    "Core_cxx_includes"
   ],
   copts = [
-    "-IVendor/React/ReactCommon"
+
   ] + select(
     {
       "//conditions:default": [
@@ -669,6 +678,12 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Core_includes",
+  include = [
+    "Vendor/React/ReactCommon"
   ]
   )
 objc_library(
@@ -1036,9 +1051,11 @@ objc_library(
   deps = [
     "//Vendor/Yoga:Yoga",
     ":Core_cxx"
+  ] + [
+    "Core_includes"
   ],
   copts = [
-    "-IVendor/React/ReactCommon"
+
   ] + select(
     {
       "//conditions:default": [
@@ -1418,6 +1435,12 @@ filegroup(
     "//visibility:public"
   ]
   )
+gen_includes(
+  name = "RCTFabric_cxx_includes",
+  include = [
+    "Vendor/React/ReactCommon"
+  ]
+  )
 objc_library(
   name = "RCTFabric_cxx",
   enable_modules = 0,
@@ -1471,9 +1494,10 @@ objc_library(
     "//Vendor/Folly:Folly",
     ":Core",
     ":fabric"
+  ] + [
+    "RCTFabric_cxx_includes"
   ],
   copts = [
-    "-IVendor/React/ReactCommon",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -1516,6 +1540,12 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTFabric_includes",
+  include = [
+    "Vendor/React/ReactCommon"
   ]
   )
 objc_library(
@@ -1570,9 +1600,10 @@ objc_library(
     ":Core",
     ":RCTFabric_cxx",
     ":fabric"
+  ] + [
+    "RCTFabric_includes"
   ],
   copts = [
-    "-IVendor/React/ReactCommon",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -1682,6 +1713,12 @@ filegroup(
     "//visibility:public"
   ]
   )
+gen_includes(
+  name = "jschelpers_includes",
+  include = [
+    "Vendor/React/ReactCommon"
+  ]
+  )
 objc_library(
   name = "jschelpers",
   enable_modules = 0,
@@ -1728,9 +1765,10 @@ objc_library(
   deps = [
     "//Vendor/Folly:Folly",
     ":PrivateDatabase"
+  ] + [
+    "jschelpers_includes"
   ],
   copts = [
-    "-IVendor/React/ReactCommon",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -1768,6 +1806,12 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "jsinspector_includes",
+  include = [
+    "Vendor/React/ReactCommon"
   ]
   )
 objc_library(
@@ -1810,8 +1854,13 @@ objc_library(
     "pod_support/Headers/Public/",
     "React_module_map"
   ],
+  deps = [
+
+  ] + [
+    "jsinspector_includes"
+  ],
   copts = [
-    "-IVendor/React/ReactCommon"
+
   ] + select(
     {
       "//conditions:default": [
@@ -1848,6 +1897,12 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "PrivateDatabase_includes",
+  include = [
+    "Vendor/React/ReactCommon"
   ]
   )
 objc_library(
@@ -1891,8 +1946,13 @@ objc_library(
     "pod_support/Headers/Public/",
     "React_module_map"
   ],
+  deps = [
+
+  ] + [
+    "PrivateDatabase_includes"
+  ],
   copts = [
-    "-IVendor/React/ReactCommon"
+
   ] + select(
     {
       "//conditions:default": [
@@ -1934,6 +1994,15 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "cxxreact_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/boost-for-react-native",
+    "Vendor/DoubleConversion",
+    "Vendor/Folly"
   ]
   )
 objc_library(
@@ -1985,12 +2054,10 @@ objc_library(
     "//Vendor/boost-for-react-native:boost-for-react-native",
     ":jschelpers",
     ":jsinspector"
+  ] + [
+    "cxxreact_includes"
   ],
   copts = [
-    "-IVendor/DoubleConversion",
-    "-IVendor/Folly",
-    "-IVendor/React/ReactCommon",
-    "-IVendor/boost-for-react-native",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -2089,6 +2156,13 @@ filegroup(
     "//visibility:public"
   ]
   )
+gen_includes(
+  name = "RCTFabricSample_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly"
+  ]
+  )
 objc_library(
   name = "RCTFabricSample",
   enable_modules = 0,
@@ -2133,10 +2207,10 @@ objc_library(
   ],
   deps = [
     "//Vendor/Folly:Folly"
+  ] + [
+    "RCTFabricSample_includes"
   ],
   copts = [
-    "-IVendor/Folly",
-    "-IVendor/React/ReactCommon",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
