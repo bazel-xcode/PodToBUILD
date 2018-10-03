@@ -23,7 +23,8 @@ build-impl-spm:
 	@mkdir -p .build
 	swift build $(SWIFT_OPTS) \
 	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13 \
-		| tee .build/last_build.log
+		| tee .build/last_build.log \
+		exit $${PIPESTATUS[0]}
 
 # Tee the error to a log file
 # Summarize the status
@@ -68,7 +69,7 @@ test: test-impl integration-test
 
 # Run the BUILD compiler on an example
 example: build
-	.build/debug/Compiler Examples/$(POD)*
+	.build/debug/Compiler Examples/$(POD)* --always_split_rules
 
 # We're running into issues with SwiftPackageManager's
 # Build system on the CI. Blow away it's state

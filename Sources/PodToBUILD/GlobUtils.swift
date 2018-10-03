@@ -413,7 +413,7 @@ extension Sequence where Iterator.Element == BazelGlobChunk {
 //
 // Additionally, we need to create multiple insertions for each file type since
 // Bazel does not support character group globs
-func pattern(fromPattern pattern: String, includingFileTypes fileTypes: Set<String>) -> [String] {
+public func pattern(fromPattern pattern: String, includingFileTypes fileTypes: Set<String>) -> [String] {
     // if we have a proper ruby pattern,
     if let arr = parseGlob.parseFully(Array(pattern)) {
         // Remove empty empty chunks
@@ -448,11 +448,11 @@ func pattern(fromPattern pattern: String, includingFileTypes fileTypes: Set<Stri
                         }
                     } else {
                         // otherwise we can just append the extension
-                        return fileTypes.map{ bazelGlobChunks + [BazelGlobChunk.Str("." + $0)] }
+                        return fileTypes.map{ bazelGlobChunks + [BazelGlobChunk.Str($0)] }
                     }
                 // ending in ** needs to map to **/*.m
                 case .DirWild:
-                     return fileTypes.map{ bazelGlobChunks + [.Str("/"), .Wild, .Str("." + $0)] }
+                     return fileTypes.map{ bazelGlobChunks + [.Str("/"), .Wild, .Str($0)] }
                 // ending in a string if that string doesn't have an extension
                 // needs the full /**/*.m
                 case let .Str(s):
@@ -462,10 +462,11 @@ func pattern(fromPattern pattern: String, includingFileTypes fileTypes: Set<Stri
                     return fileTypes.map{ (fileType: String) -> [BazelGlobChunk] in
                         return regex.matches(in: s).count > 0 ?
                             allButLast + [lastChunk] :
-                            allButLast + [lastChunk, .Str("/"), .DirWild, .Str("/"), .Wild, .Str("." + fileType)]
+                            allButLast + [lastChunk, .Str("/"), .DirWild, .Str("/"), .Wild, .Str(fileType)]
                     }
                 }
             }
+
         // compile the bazel chunks
         let strs: [String] = suffixFixed
             .map{ (glob: [BazelGlobChunk]) -> String in glob.bazelString }

@@ -17,7 +17,7 @@
 import Foundation
 
 public protocol XCConfigValueTransformer {
-    func string(forXCConfigValue value: String) -> String
+    func string(forXCConfigValue value: String) -> String?
     var xcconfigKey: String { get }
 }
 
@@ -42,19 +42,19 @@ public struct XCConfigTransformer {
 
         let allValues = value.components(separatedBy: CharacterSet.whitespaces)
         return allValues.filter { $0 != "$(inherited)" }
-            .map { transformer.string(forXCConfigValue: $0) }
+            .compactMap { transformer.string(forXCConfigValue: $0) }
     }
 
-    public static func defaultTransformer(externalName: String) -> XCConfigTransformer {
+    public static func defaultTransformer(externalName: String, sourceType: BazelSourceLibType) -> XCConfigTransformer {
         return XCConfigTransformer(transformers: [
             PassthroughTransformer(xcconfigKey: "OTHER_CFLAGS"),
             PassthroughTransformer(xcconfigKey: "OTHER_LDFLAGS"),
             PassthroughTransformer(xcconfigKey: "OTHER_CPLUSPLUSFLAGS"),
             HeaderSearchPathTransformer(externalName: externalName),
+            CXXLibraryTransformer(enabled: sourceType == .cpp),
+            CXXLanguageStandardTransformer(enabled: sourceType == .cpp),
             PreprocessorDefinesTransformer(),
             AllowNonModularIncludesInFrameworkModulesTransformer(),
-            CXXLibraryTransformer(),
-            CXXLanguageStandardTransformer(),
             PreCompilePrefixHeaderTransformer(),
         ])
     }
@@ -82,7 +82,7 @@ public struct PassthroughTransformer: XCConfigValueTransformer {
         self.key = xcconfigKey
     }
 
-    public func string(forXCConfigValue value: String) -> String {
+    public func string(forXCConfigValue value: String) -> String? {
         return value
     }
 }
@@ -93,7 +93,7 @@ public struct PreCompilePrefixHeaderTransformer: XCConfigValueTransformer {
         return "GCC_PRECOMPILE_PREFIX_HEADER"
     }
 
-    public func string(forXCConfigValue _: String) -> String {
+    public func string(forXCConfigValue _: String) -> String? {
         // TODO: Implement precompiled header support in Bazel.
         return ""
     }
@@ -108,7 +108,7 @@ public struct HeaderSearchPathTransformer: XCConfigValueTransformer {
         self.externalName = externalName;
     }
     
-    public func string(forXCConfigValue value: String) -> String {
+    public func string(forXCConfigValue value: String) -> String? {
         let cleaned = value.replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)",
             with: "Vendor/\(externalName)").replacingOccurrences(of: "\"", with: "")
         return "-I\(cleaned)"
@@ -120,7 +120,7 @@ public struct PreprocessorDefinesTransformer: XCConfigValueTransformer {
         return "GCC_PREPROCESSOR_DEFINITIONS"
     }
 
-    public func string(forXCConfigValue value: String) -> String {
+    public func string(forXCConfigValue value: String) -> String? {
         return "-D\(value)"
     }
 }
@@ -130,27 +130,48 @@ public struct AllowNonModularIncludesInFrameworkModulesTransformer: XCConfigValu
         return "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES"
     }
 
-    public func string(forXCConfigValue _: String) -> String {
+    public func string(forXCConfigValue _: String) -> String? {
         return "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
     }
 }
 
+/// MARK - CXX specific settings
+/// Don't enable CXX specific settings for C/ObjC libs.
+/// It is possible that a user may create such a Podspec.
 public struct CXXLanguageStandardTransformer: XCConfigValueTransformer {
+    let enabled: Bool
+
+    init(enabled: Bool) {
+        self.enabled = enabled
+    }
+
     public var xcconfigKey: String {
         return "CLANG_CXX_LANGUAGE_STANDARD"
     }
 
-    public func string(forXCConfigValue value: String) -> String {
+    public func string(forXCConfigValue value: String) -> String? {
+        guard enabled else {
+            return nil
+        }
         return "-std=\(value)"
     }
 }
 
 public struct CXXLibraryTransformer: XCConfigValueTransformer {
+    let enabled: Bool
+
+    init(enabled: Bool) {
+        self.enabled = enabled
+    }
+
     public var xcconfigKey: String {
         return "CLANG_CXX_LIBRARY"
     }
 
-    public func string(forXCConfigValue value: String) -> String {
+    public func string(forXCConfigValue value: String) -> String? {
+        guard enabled else {
+            return nil
+        }
         return "-stdlib=\(value)"
     }
 }

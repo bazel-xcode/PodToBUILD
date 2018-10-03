@@ -1,8 +1,8 @@
 {
   "name": "Texture",
-  "version": "2.3.1",
+  "version": "2.7",
   "license": {
-    "type": "BSD and Apache 2"
+    "type": "Apache 2"
   },
   "homepage": "http://texturegroup.org",
   "authors": {
@@ -10,26 +10,26 @@
     "Garrett Moon": "garrett@excitedpixel.com",
     "Scott Goodson": "scottgoodson@gmail.com",
     "Michael Schneider": "schneider@pinterest.com",
-    "Adlai Hollar": "adlai@pinterest.com"
+    "Adlai Holler": "adlai@pinterest.com"
   },
   "summary": "Smooth asynchronous user interfaces for iOS apps.",
   "source": {
     "git": "https://github.com/TextureGroup/Texture.git",
-    "tag": "2.3.1"
+    "tag": "2.7"
   },
   "module_name": "AsyncDisplayKit",
   "header_dir": "AsyncDisplayKit",
   "documentation_url": "http://texturegroup.org/appledoc/",
-  "weak_frameworks": [
-    "Photos",
-    "MapKit",
-    "AssetsLibrary"
-  ],
-  "requires_arc": true,
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0",
+    "tvos": "9.0"
   },
-  "default_subspecs": "PINRemoteImage",
+  "default_subspecs": [
+    "PINRemoteImage",
+    "MapKit",
+    "AssetsLibrary",
+    "Photos"
+  ],
   "social_media_url": "https://twitter.com/TextureiOS",
   "libraries": "c++",
   "pod_target_xcconfig": {
@@ -39,6 +39,7 @@
   "subspecs": [
     {
       "name": "Core",
+      "compiler_flags": "-fno-exceptions -fno-objc-arc-exceptions",
       "public_header_files": [
         "Source/*.h",
         "Source/Details/**/*.h",
@@ -52,16 +53,13 @@
         "Source/**/*.{h,m,mm}",
         "Base/*.{h,m}",
         "Source/TextKit/*.h"
-      ],
-      "xcconfig": {
-        "GCC_PRECOMPILE_PREFIX_HEADER": "YES"
-      }
+      ]
     },
     {
       "name": "PINRemoteImage",
       "dependencies": {
         "PINRemoteImage/iOS": [
-          "= 3.0.0-beta.9"
+          "= 3.0.0-beta.13"
         ],
         "PINRemoteImage/PINCache": [
 
@@ -75,7 +73,7 @@
       "name": "IGListKit",
       "dependencies": {
         "IGListKit": [
-          "2.1.0"
+          "~> 3.0"
         ],
         "Texture/Core": [
 
@@ -89,8 +87,44 @@
       },
       "dependencies": {
         "Yoga": [
-          "1.0.2"
+          "1.6.0"
         ],
+        "Texture/Core": [
+
+        ]
+      }
+    },
+    {
+      "name": "MapKit",
+      "frameworks": "MapKit",
+      "xcconfig": {
+        "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) AS_USE_MAPKIT=1"
+      },
+      "dependencies": {
+        "Texture/Core": [
+
+        ]
+      }
+    },
+    {
+      "name": "Photos",
+      "frameworks": "Photos",
+      "xcconfig": {
+        "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) AS_USE_PHOTOS=1"
+      },
+      "dependencies": {
+        "Texture/Core": [
+
+        ]
+      }
+    },
+    {
+      "name": "AssetsLibrary",
+      "frameworks": "AssetsLibrary",
+      "xcconfig": {
+        "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) AS_USE_ASSETS_LIBRARY=1"
+      },
+      "dependencies": {
         "Texture/Core": [
 
         ]

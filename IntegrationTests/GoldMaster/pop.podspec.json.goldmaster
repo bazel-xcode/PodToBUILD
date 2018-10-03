@@ -12,10 +12,10 @@ native.config_setting(
   }
   )
 filegroup(
-  name = "pop_hdrs",
+  name = "pop_cxx_hdrs",
   srcs = glob(
     [
-      "pod_support/Headers/Public/**/*"
+      "pop/**/*.h"
     ],
     exclude_directories = 1
     ),
@@ -23,22 +23,16 @@ filegroup(
     "//visibility:public"
   ]
   )
-gen_module_map(
-  "pop",
-  "pop_module_map",
-  "pop",
-  [
-    "pop_hdrs"
-  ]
-  )
 objc_library(
-  name = "pop",
+  name = "pop_cxx",
   enable_modules = 0,
   srcs = glob(
     [
       "pop/**/*.cpp",
-      "pop/**/*.m",
       "pop/**/*.mm"
+    ],
+    exclude = [
+      "pop/**/*.m"
     ],
     exclude_directories = 1
     ) + glob(
@@ -66,6 +60,87 @@ objc_library(
   copts = [
     "-std=c++11",
     "-stdlib=libc++"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/pop/pod_support/Headers/Public/pop/"
+  ] + [
+    "-fmodule-name=pop_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "pop_cxx_acknowledgement",
+  deps = [
+
+  ],
+  value = "//Vendor/pop/pod_support_buildable:acknowledgement_fragment"
+  )
+filegroup(
+  name = "pop_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "pop",
+  "pop_module_map",
+  "pop",
+  [
+    "pop_hdrs"
+  ]
+  )
+objc_library(
+  name = "pop",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "pop/**/*.m"
+    ],
+    exclude_directories = 1
+    ) + glob(
+    [
+      "pop/**/*.h"
+    ],
+    exclude_directories = 1
+    ),
+  hdrs = [
+    ":pop_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "pop",
+    [
+      "pop/**/*.pch"
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "pop_module_map"
+  ],
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    ":pop_cxx"
+  ],
+  copts = [
+
   ] + select(
     {
       "//conditions:default": [

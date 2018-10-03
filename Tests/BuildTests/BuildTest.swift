@@ -72,5 +72,9 @@ class BuildTests: XCTestCase {
     func testPINRemoteImage() {
         build(pod: "PINRemoteImage", specs: ["Core"])
     }
+
+    func testTexture() {
+        build(pod: "Texture", specs: ["AsyncDisplayKit"])
+    }
 }
 
