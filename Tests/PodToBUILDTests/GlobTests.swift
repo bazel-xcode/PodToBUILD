@@ -66,11 +66,10 @@ class GlobTests: XCTestCase {
         XCTAssertEqual(testPattern, ["Source/Classes/**/*.m"])
     }
     
-    // This was broken at some point.
-    //func testEndsWithDotWild() {
-    //    let testPattern = pattern(fromPattern: "Source/Classes/**/*.*", includingFileTypes: [".m"])
-    //    XCTAssertEqual(testPattern, ["Source/Classes/**/*.m"])
-    //}
+    func testEndsWithDotWild() {
+        let testPattern = pattern(fromPattern: "Source/Classes/**/*.*", includingFileTypes: [".m"])
+        XCTAssertEqual(testPattern, ["Source/Classes/**/*.m"])
+    }
     
     func testFBSdkCorePattern() {
         let testPattern = pattern(fromPattern: "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*", includingFileTypes: [".m"])

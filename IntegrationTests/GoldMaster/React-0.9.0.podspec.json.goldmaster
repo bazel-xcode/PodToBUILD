@@ -63,7 +63,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -76,7 +76,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "Core_hdrs",
@@ -178,7 +178,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -191,7 +191,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "ART_hdrs",
@@ -248,7 +248,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -261,7 +261,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTActionSheet_hdrs",
@@ -318,7 +318,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -331,7 +331,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTAdSupport_hdrs",
@@ -388,7 +388,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -401,7 +401,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTGeolocation_hdrs",
@@ -458,7 +458,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -471,7 +471,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTImage_hdrs",
@@ -528,7 +528,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -541,7 +541,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTNetwork_hdrs",
@@ -598,7 +598,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -611,7 +611,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTPushNotification_hdrs",
@@ -668,7 +668,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -681,7 +681,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTSettings_hdrs",
@@ -738,7 +738,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -751,7 +751,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTText_hdrs",
@@ -808,7 +808,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -821,7 +821,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTVibration_hdrs",
@@ -878,7 +878,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -891,7 +891,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTWebSocket_hdrs",
@@ -948,7 +948,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -961,7 +961,7 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
 filegroup(
   name = "RCTLinkingIOS_hdrs",
@@ -1018,7 +1018,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/React/pod_support/Headers/Public/React/"
+    "-IVendor/React-0/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
   ],
@@ -1031,5 +1031,5 @@ acknowledged_target(
   deps = [
 
   ],
-  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
