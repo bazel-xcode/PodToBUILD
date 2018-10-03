@@ -109,6 +109,7 @@ objc_library(
     exclude = [
       "**/__tests__/*.S",
       "**/__tests__/*.c",
+      "**/__tests__/*.cc",
       "**/__tests__/*.cpp",
       "**/__tests__/*.cxx",
       "**/__tests__/*.m",
@@ -116,6 +117,7 @@ objc_library(
       "**/__tests__/*.s",
       "IntegrationTests/*.S",
       "IntegrationTests/*.c",
+      "IntegrationTests/*.cc",
       "IntegrationTests/*.cpp",
       "IntegrationTests/*.cxx",
       "IntegrationTests/*.m",
