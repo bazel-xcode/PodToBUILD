@@ -31,6 +31,13 @@ gen_module_map(
     "AsyncDisplayKit_hdrs"
   ]
   )
+alias(
+  name = "Texture",
+  actual = "AsyncDisplayKit",
+  visibility = [
+    "//visibility:public"
+  ]
+  )
 objc_library(
   name = "AsyncDisplayKit",
   enable_modules = 0,

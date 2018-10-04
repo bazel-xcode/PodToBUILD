@@ -10,6 +10,17 @@ public enum BazelSourceLibType {
     case objc
     case swift
     case cpp
+
+    func getLibNameSuffix() -> String {
+        switch self {
+        case .objc:
+            return "_objc"
+        case .cpp:
+            return "_cxx"
+        case .swift:
+            return "_swift"
+        }
+    }
 }
 
 /// Extract files from a source file pattern.
@@ -30,3 +41,15 @@ let ObjcLikeFileTypes = Set([".m", ".c", ".s", ".S"])
 let CppLikeFileTypes  = Set([".mm", ".cpp", ".cxx", ".cc"])
 let SwiftLikeFileTypes  = Set([".swift"])
 let HeaderFileTypes = Set([".h", ".hpp", ".hxx"])
+
+
+public func makeAlias(name: String, actual: String) -> SkylarkNode {
+    return SkylarkNode.functionCall(
+        name: "alias",
+        arguments: [
+            .named(name: "name", value: .string(name)),
+            .named(name: "actual", value: .string(actual)),
+            .named(name: "visibility", value: .list(["//visibility:public"]))
+        ])
+}
+

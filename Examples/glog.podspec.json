@@ -1,0 +1,41 @@
+{
+  "name": "glog",
+  "version": "0.3.5",
+  "license": {
+    "type": "Google",
+    "file": "COPYING"
+  },
+  "homepage": "https://github.com/google/glog",
+  "summary": "Google logging module",
+  "authors": "Google",
+  "source": {
+    "git": "https://github.com/google/glog.git",
+    "tag": "v0.3.5"
+  },
+  "module_name": "glog",
+  "header_dir": "glog",
+  "source_files": [
+    "src/glog/*.h",
+    "src/demangle.cc",
+    "src/logging.cc",
+    "src/raw_logging.cc",
+    "src/signalhandler.cc",
+    "src/symbolize.cc",
+    "src/utilities.cc",
+    "src/vlog_is_on.cc"
+  ],
+  "preserve_paths": [
+    "src/*.h",
+    "src/base/*.h"
+  ],
+  "exclude_files": "src/windows/**/*",
+  "libraries": "stdc++",
+  "pod_target_xcconfig": {
+    "USE_HEADERMAP": "NO",
+    "HEADER_SEARCH_PATHS": "$(PODS_TARGET_SRCROOT)/src"
+  },
+  "platforms": {
+    "ios": "9.0",
+    "tvos": "9.2"
+  }
+}

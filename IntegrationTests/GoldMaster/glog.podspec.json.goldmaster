@@ -1,0 +1,112 @@
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://bazel.build/versions/master/docs/bazel-user-manual.html
+native.config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+  )
+filegroup(
+  name = "glog_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+    ),
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_module_map(
+  "glog",
+  "glog_module_map",
+  "glog",
+  [
+    "glog_hdrs"
+  ]
+  )
+objc_library(
+  name = "glog",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "src/demangle.cc",
+      "src/logging.cc",
+      "src/raw_logging.cc",
+      "src/signalhandler.cc",
+      "src/symbolize.cc",
+      "src/utilities.cc",
+      "src/vlog_is_on.cc"
+    ],
+    exclude = [
+      "src/windows/**/*.S",
+      "src/windows/**/*.c",
+      "src/windows/**/*.cc",
+      "src/windows/**/*.cpp",
+      "src/windows/**/*.cxx",
+      "src/windows/**/*.m",
+      "src/windows/**/*.mm",
+      "src/windows/**/*.s"
+    ],
+    exclude_directories = 1
+    ) + glob(
+    [
+      "src/glog/*.h"
+    ],
+    exclude = [
+      "src/windows/**/*.h",
+      "src/windows/**/*.hpp",
+      "src/windows/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ),
+  hdrs = [
+    ":glog_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "glog",
+    [
+      "src/**/*.pch"
+    ]
+    ),
+  includes = [
+    "pod_support/Headers/Public/",
+    "glog_module_map"
+  ],
+  sdk_dylibs = [
+    "stdc++"
+  ],
+  copts = [
+    "-IVendor/glog/src"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+    ) + [
+    "-IVendor/glog/pod_support/Headers/Public/glog/"
+  ] + [
+    "-fmodule-name=glog_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+acknowledged_target(
+  name = "glog_acknowledgement",
+  deps = [
+
+  ],
+  value = "//Vendor/glog/pod_support_buildable:acknowledgement_fragment"
+  )
