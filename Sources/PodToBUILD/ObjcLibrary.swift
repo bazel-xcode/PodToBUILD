@@ -199,6 +199,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     public let name: String
     public let sourceFiles: GlobNode
     public let headers: GlobNode
+    public let includes: [String]
     public let headerName: AttrSet<String>
     public let weakSdkFrameworks: AttrSet<[String]>
     public let sdkDylibs: AttrSet<[String]>
@@ -206,7 +207,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     public let resources: GlobNode
     public let publicHeaders: AttrSet<Set<String>>
     public let nonArcSrcs: GlobNode
-    
+
     // only used later in transforms
     public let requiresArc: Either<Bool, [String]>
 
@@ -223,6 +224,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         sourceFiles: GlobNode,
         headers: GlobNode,
         headerName: AttrSet<String>,
+        includes: [String],
         sdkFrameworks: AttrSet<[String]>,
         weakSdkFrameworks: AttrSet<[String]>,
         sdkDylibs: AttrSet<[String]>,
@@ -238,6 +240,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.name = name
         self.externalName = externalName
         self.headerName = headerName
+        self.includes = includes
         self.sourceFiles = sourceFiles
         self.headers = headers
         self.sdkFrameworks = sdkFrameworks
@@ -306,12 +309,17 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             XCConfigTransformer.defaultTransformer(externalName: externalName,
                     sourceType: sourceType)
 
-
         let xcconfigFlags =
             xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
                 xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.userTargetXcconfig)))) +
                 xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.xcconfig))))
-        
+
+        let xcconfigCopts = xcconfigFlags.filter { !$0.hasPrefix("-I") }
+
+        self.includes = xcconfigFlags.filter { $0.hasPrefix("-I") }.map {
+            $0.substring(from: $0.characters.index($0.startIndex, offsetBy: 2))
+        }
+
         let moduleName = AttrSet<String>(
             value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
         )
@@ -346,7 +354,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         self.deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
 
-        self.copts = AttrSet(basic: xcconfigFlags.sorted(by: (<))) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
+        self.copts = AttrSet(basic: xcconfigCopts.sorted(by: (<))) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
 
         // Select resources that are not prebuilt bundles
         let resourceFiles = ((spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
@@ -473,7 +481,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                     .named(name: "srcs", value: exposedHeaders),
                     .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
                     ]
-                ))   
+                ))
             
         } else {
             inlineSkylark.append(.functionCall(
@@ -484,6 +492,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                     .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
                     ]
                 ))           
+        }
+
+        if lib.includes.count > 0 { 
+            inlineSkylark.append(.functionCall(
+                name: "gen_includes",
+                arguments: [
+                    .named(name: "name", value: (name + "_includes").toSkylark()),
+                    .named(name: "include", value: includes.toSkylark())
+                ]))
         }
 
         let headerGlobNode = headers
@@ -613,10 +630,18 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             ))
         }
 
+        var allDeps: SkylarkNode = SkylarkNode.empty
         if !lib.deps.isEmpty {
+            allDeps = lib.deps.sorted(by: (<)).toSkylark() 
+        }
+        if lib.includes.count > 0 {
+            allDeps = allDeps .+. [(name + "_includes")].toSkylark()
+        }
+
+        if allDeps.isEmpty == false { 
             libArguments.append(.named(
                 name: "deps",
-                value: lib.deps.sorted(by: (<)).toSkylark()
+                value: allDeps
             ))
         }
 
@@ -671,8 +696,8 @@ extension ObjcLibrary {
             return Lens<ObjcLibrary, GlobNode>(view: { $0.sourceFiles }, set: { sourceFiles, lib in
                 ObjcLibrary(name: lib.name, externalName: lib.externalName,
                         sourceFiles: sourceFiles, headers: lib.headers,
-                        headerName: lib.headerName, sdkFrameworks:
-                        lib.sdkFrameworks, weakSdkFrameworks:
+                        headerName: lib.headerName, includes: lib.includes,
+                        sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
                         lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
                         lib.deps, copts: lib.copts, bundles: lib.bundles,
                         resources: lib.resources, publicHeaders:
@@ -686,14 +711,13 @@ extension ObjcLibrary {
             return Lens(view: { $0.nonArcSrcs }, set: { nonArcSrcs, lib  in
                 ObjcLibrary(name: lib.name, externalName: lib.externalName,
                         sourceFiles: lib.sourceFiles, headers: lib.headers,
-                        headerName: lib.headerName, sdkFrameworks:
-                        lib.sdkFrameworks, weakSdkFrameworks:
+                        headerName: lib.headerName, includes: lib.includes,
+                        sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
                         lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
                         lib.deps, copts: lib.copts, bundles: lib.bundles,
                         resources: lib.resources, publicHeaders:
-                        lib.publicHeaders, nonArcSrcs: nonArcSrcs,
-                        requiresArc: lib.requiresArc, isTopLevelTarget:
-                        lib.isTopLevelTarget)
+                        lib.publicHeaders, nonArcSrcs: nonArcSrcs, requiresArc:
+                        lib.requiresArc, isTopLevelTarget: lib.isTopLevelTarget)
                 })
         }()
 
@@ -701,14 +725,13 @@ extension ObjcLibrary {
             return Lens(view: { $0.deps }, set: { deps, lib in
                 ObjcLibrary(name: lib.name, externalName: lib.externalName,
                         sourceFiles: lib.sourceFiles, headers: lib.headers,
-                        headerName: lib.headerName, sdkFrameworks:
-                        lib.sdkFrameworks, weakSdkFrameworks:
+                        headerName: lib.headerName, includes: lib.includes,
+                        sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
                         lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
-                        deps, copts: lib.copts, bundles: lib.bundles,
-                        resources: lib.resources, publicHeaders:
-                        lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs,
-                        requiresArc: lib.requiresArc, isTopLevelTarget:
-                        lib.isTopLevelTarget)
+                        deps, copts: lib.copts, bundles: lib.bundles, resources:
+                        lib.resources, publicHeaders: lib.publicHeaders,
+                        nonArcSrcs: lib.nonArcSrcs, requiresArc:
+                        lib.requiresArc, isTopLevelTarget: lib.isTopLevelTarget)
                 })
         }()
 
@@ -716,8 +739,8 @@ extension ObjcLibrary {
 	        return Lens(view: { $0.requiresArc }, set: { requiresArc, lib in
                 ObjcLibrary(name: lib.name, externalName: lib.externalName,
                         sourceFiles: lib.sourceFiles, headers: lib.headers,
-                        headerName: lib.headerName, sdkFrameworks:
-                        lib.sdkFrameworks, weakSdkFrameworks:
+                        headerName: lib.headerName, includes: lib.includes,
+                        sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
                         lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
                         lib.deps, copts: lib.copts, bundles: lib.bundles,
                         resources: lib.resources, publicHeaders:

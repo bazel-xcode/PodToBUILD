@@ -107,6 +107,7 @@ public func makePrefixNodes() -> SkylarkNode {
         SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')"),
         SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')"),
         SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')"),
+        SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_includes')"),
         makeConfigSettingNodes(),
     ])
 }

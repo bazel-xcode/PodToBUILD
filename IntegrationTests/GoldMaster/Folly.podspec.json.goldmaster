@@ -1,6 +1,7 @@
 load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')
 load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')
 load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')
+load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_includes')
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -21,6 +22,14 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "folly_includes",
+  include = [
+    "Vendor/Folly",
+    "Vendor/boost-for-react-native",
+    "Vendor/DoubleConversion"
   ]
   )
 gen_module_map(
@@ -77,11 +86,10 @@ objc_library(
     "//Vendor/DoubleConversion:DoubleConversion",
     "//Vendor/boost-for-react-native:boost-for-react-native",
     "//Vendor/glog:glog"
+  ] + [
+    "folly_includes"
   ],
   copts = [
-    "-IVendor/DoubleConversion",
-    "-IVendor/Folly",
-    "-IVendor/boost-for-react-native",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
