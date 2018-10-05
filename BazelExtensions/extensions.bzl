@@ -160,7 +160,9 @@ def gen_module_map(pod_name,
                    dir_name,
                    module_name,
                    dep_hdrs=[],
-                   module_map_name="module.modulemap"):
+                   module_map_name="module.modulemap",
+                   tags=["xchammer"],
+                   visibility=["//visibility:public"]):
     """
     Generate a module map based on a list of header file groups
     """
@@ -171,16 +173,26 @@ def gen_module_map(pod_name,
                     module_name=module_name,
                     hdrs=dep_hdrs,
                     module_map_name=module_map_name,
-                    visibility = ["//visibility:public"])
+                    visibility=visibility,
+                    tags=tags)
 
 def _gen_includes_impl(ctx):
     return apple_common.new_objc_provider(
             include=depset(ctx.attr.include))
 
-gen_includes = rule(
+_gen_includes = rule(
     implementation=_gen_includes_impl,
     attrs = {
         "include": attr.string_list(mandatory=True),
     }
 )
+
+def gen_includes(name,
+                 include,
+                 tags=["xchammer"],
+                 visibility=["//visibility:public"]):
+    _gen_includes(name=name,
+                  include=include,
+                  tags=tags,
+                  visibility=visibility)
 
