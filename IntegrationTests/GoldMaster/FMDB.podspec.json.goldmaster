@@ -19,9 +19,19 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + [
+
+  ] + [
+    ":standard_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "FMDB_includes",
+  include = [
+    "Vendor/FMDB/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -44,12 +54,10 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "FMDB_module_map"
-  ],
   deps = [
     ":standard"
+  ] + [
+    "FMDB_includes"
   ],
   copts = [
 
@@ -91,6 +99,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "standard_union_hdrs",
+  srcs = [
+    "standard_hdrs",
+    "FMDB_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "standard_includes",
+  include = [
+    "Vendor/FMDB/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "standard",
   enable_modules = 0,
@@ -103,14 +127,9 @@ objc_library(
       "src/fmdb.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "src/fmdb/FM*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":FMDB_hdrs"
+    ":standard_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -118,12 +137,13 @@ objc_library(
       "src/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "FMDB_module_map"
-  ],
   sdk_dylibs = [
     "sqlite3"
+  ],
+  deps = [
+
+  ] + [
+    "standard_includes"
   ],
   copts = [
 
@@ -165,6 +185,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "FTS_union_hdrs",
+  srcs = [
+    "FTS_hdrs",
+    "FMDB_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "FTS_includes",
+  include = [
+    "Vendor/FMDB/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "FTS",
   enable_modules = 0,
@@ -173,14 +209,9 @@ objc_library(
       "src/extra/fts3/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "src/extra/fts3/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":FMDB_hdrs"
+    ":FTS_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -188,12 +219,10 @@ objc_library(
       "src/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "FMDB_module_map"
-  ],
   deps = [
     ":standard"
+  ] + [
+    "FTS_includes"
   ],
   copts = [
 
@@ -232,11 +261,27 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "standalone_union_hdrs",
+  srcs = [
+    "standalone_hdrs",
+    "FMDB_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "standalone_includes",
+  include = [
+    "Vendor/FMDB/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "standalone",
   enable_modules = 0,
   hdrs = [
-    ":FMDB_hdrs"
+    ":standalone_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -244,9 +289,10 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "FMDB_module_map"
+  deps = [
+
+  ] + [
+    "standalone_includes"
   ],
   copts = [
     "-DFMDB_SQLITE_STANDALONE"
@@ -288,6 +334,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "SQLCipher_union_hdrs",
+  srcs = [
+    "SQLCipher_hdrs",
+    "FMDB_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "SQLCipher_includes",
+  include = [
+    "Vendor/FMDB/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "SQLCipher",
   enable_modules = 0,
@@ -299,14 +361,9 @@ objc_library(
       "src/fmdb.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "src/fmdb/FM*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":FMDB_hdrs"
+    ":SQLCipher_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -314,12 +371,10 @@ objc_library(
       "src/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "FMDB_module_map"
-  ],
   deps = [
     "//Vendor/SQLCipher:SQLCipher"
+  ] + [
+    "SQLCipher_includes"
   ],
   copts = [
     "-DHAVE_USLEEP=1",

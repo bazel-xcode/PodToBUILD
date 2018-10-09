@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "FBSDKLoginKit_includes",
+  include = [
+    "Vendor/FBSDKLoginKit/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "FBSDKLoginKit/FBSDKLoginKit/**/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":FBSDKLoginKit_hdrs"
@@ -55,10 +63,6 @@ objc_library(
       "FBSDKLoginKit/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "FBSDKLoginKit_module_map"
-  ],
   weak_sdk_frameworks = [
     "Accounts",
     "CoreLocation",
@@ -72,6 +76,8 @@ objc_library(
   ],
   deps = [
     "//Vendor/FBSDKCoreKit:FBSDKCoreKit"
+  ] + [
+    "FBSDKLoginKit_includes"
   ],
   copts = [
     "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"

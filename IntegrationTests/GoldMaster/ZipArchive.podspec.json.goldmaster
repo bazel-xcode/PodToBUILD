@@ -19,9 +19,27 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "*.h",
+      "minizip/crypt.h",
+      "minizip/ioapi.h",
+      "minizip/mztools.h",
+      "minizip/unzip.h",
+      "minizip/zip.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "ZipArchive_includes",
+  include = [
+    "Vendor/ZipArchive/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -44,16 +62,6 @@ objc_library(
       "minizip/zip.c"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "*.h",
-      "minizip/crypt.h",
-      "minizip/ioapi.h",
-      "minizip/mztools.h",
-      "minizip/unzip.h",
-      "minizip/zip.h"
-    ],
-    exclude_directories = 1
     ),
   non_arc_srcs = glob(
     [
@@ -70,12 +78,13 @@ objc_library(
       "minizip/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "ZipArchive_module_map"
-  ],
   sdk_dylibs = [
     "z"
+  ],
+  deps = [
+
+  ] + [
+    "ZipArchive_includes"
   ],
   copts = [
     "-Dunix"

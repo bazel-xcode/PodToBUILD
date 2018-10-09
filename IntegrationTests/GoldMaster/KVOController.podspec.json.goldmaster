@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "FBKVOController/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "KVOController_includes",
+  include = [
+    "Vendor/KVOController/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "FBKVOController/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "FBKVOController/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":KVOController_hdrs"
@@ -55,9 +63,10 @@ objc_library(
       "FBKVOController/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "KVOController_module_map"
+  deps = [
+
+  ] + [
+    "KVOController_includes"
   ],
   copts = [
 

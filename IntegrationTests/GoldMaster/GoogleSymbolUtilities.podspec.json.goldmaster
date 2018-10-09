@@ -19,9 +19,19 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + [
+
+  ] + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "GoogleSymbolUtilities_includes",
+  include = [
+    "Vendor/GoogleSymbolUtilities/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -44,12 +54,10 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "GoogleSymbolUtilities_module_map"
-  ],
   deps = [
     ":GoogleSymbolUtilities_VendoredFrameworks"
+  ] + [
+    "GoogleSymbolUtilities_includes"
   ],
   copts = [
 

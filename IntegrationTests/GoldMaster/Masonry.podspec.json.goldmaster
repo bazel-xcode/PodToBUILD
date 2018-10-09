@@ -37,9 +37,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "Masonry/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Masonry_includes",
+  include = [
+    "Vendor/Masonry/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -58,11 +71,6 @@ objc_library(
       "Masonry/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Masonry/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":Masonry_hdrs"
@@ -73,10 +81,6 @@ objc_library(
       "Masonry/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Masonry_module_map"
-  ],
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -93,6 +97,11 @@ objc_library(
       ]
     }
     ),
+  deps = [
+
+  ] + [
+    "Masonry_includes"
+  ],
   copts = [
 
   ] + select(

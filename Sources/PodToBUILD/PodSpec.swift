@@ -99,7 +99,9 @@ public enum PodSpecField: String {
     case weakFrameworks = "weak_frameworks"
     case excludeFiles = "exclude_files"
     case sourceFiles = "source_files"
-    case publicHeaders = "public_headers"
+    case publicHeaders = "public_header_files"
+    case privateHeaders = "private_header_files"
+    case preservePaths = "preserve_paths"
     case compilerFlags = "compiler_flags"
     case libraries
     case dependencies
@@ -145,6 +147,8 @@ public protocol PodSpecRepresentable {
     var moduleName: String? { get }
     var requiresArc: Either<Bool, [String]>? { get }
     var publicHeaders: [String] { get }
+    var privateHeaders: [String] { get }
+    var preservePaths: [String] { get }
     var defaultSubspecs: [String] { get }
 }
 
@@ -170,6 +174,8 @@ public struct PodSpec: PodSpecRepresentable {
     public let requiresArc: Either<Bool, [String]>?
 
     public let publicHeaders: [String]
+    public let privateHeaders: [String]
+    public let preservePaths: [String]
 
     public let vendoredFrameworks: [String]
     public let vendoredLibraries: [String]
@@ -210,6 +216,8 @@ public struct PodSpec: PodSpecRepresentable {
         excludeFiles = strings(fromJSON: fieldMap[.excludeFiles])
         sourceFiles = strings(fromJSON: fieldMap[.sourceFiles])
         publicHeaders = strings(fromJSON: fieldMap[.publicHeaders])
+        privateHeaders = strings(fromJSON: fieldMap[.privateHeaders])
+        preservePaths = strings(fromJSON: fieldMap[.preservePaths])
         compilerFlags = strings(fromJSON: fieldMap[.compilerFlags])
         libraries = strings(fromJSON: fieldMap[.libraries])
 
@@ -365,6 +373,12 @@ extension PodSpec {
         public static let publicHeaders: Lens<PodSpecRepresentable, [String]> = {
             ReadonlyLens { $0.publicHeaders }
         }()
+        public static let privateHeaders: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.privateHeaders }
+        }()
+        public static let preservePaths: Lens<PodSpecRepresentable, [String]> = {
+            ReadonlyLens { $0.preservePaths }
+        }()
         public static let requiresArc: Lens<PodSpecRepresentable, Either<Bool, [String]>?> = {
             ReadonlyLens { $0.requiresArc }
         }()
@@ -372,7 +386,6 @@ extension PodSpec {
         public static let resources: Lens<PodSpecRepresentable, [String]> = {
             ReadonlyLens { $0.resources }
         }()
-
         public static let ios: Lens<PodSpec, PodSpecRepresentable?> = {
             ReadonlyLens { $0.ios }
         }()

@@ -31,9 +31,19 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + [
+
+  ] + [
+    ":Core_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Adjust_includes",
+  include = [
+    "Vendor/Adjust/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -56,10 +66,6 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Adjust_module_map"
-  ],
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -76,6 +82,8 @@ objc_library(
     ),
   deps = [
     ":Core"
+  ] + [
+    "Adjust_includes"
   ],
   copts = [
 
@@ -118,6 +126,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "Core_union_hdrs",
+  srcs = [
+    "Core_hdrs",
+    "Adjust_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Core_includes",
+  include = [
+    "Vendor/Adjust/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "Core",
   enable_modules = 0,
@@ -132,15 +156,9 @@ objc_library(
       "plugin/Trademob/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Adjust/*.h",
-      "Adjust/ADJAdditions/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":Adjust_hdrs"
+    ":Core_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -148,10 +166,6 @@ objc_library(
       "Adjust/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Adjust_module_map"
-  ],
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -166,6 +180,11 @@ objc_library(
       ]
     }
     ),
+  deps = [
+
+  ] + [
+    "Core_includes"
+  ],
   copts = [
 
   ] + select(
@@ -206,6 +225,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "Sociomantic_union_hdrs",
+  srcs = [
+    "Sociomantic_hdrs",
+    "Adjust_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Sociomantic_includes",
+  include = [
+    "Vendor/Adjust/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "Sociomantic",
   enable_modules = 0,
@@ -214,14 +249,9 @@ objc_library(
       "plugin/Sociomantic/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "plugin/Sociomantic/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":Adjust_hdrs"
+    ":Sociomantic_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -229,10 +259,6 @@ objc_library(
       "plugin/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Adjust_module_map"
-  ],
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -249,6 +275,8 @@ objc_library(
     ),
   deps = [
     ":Core"
+  ] + [
+    "Sociomantic_includes"
   ],
   copts = [
 
@@ -290,6 +318,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "Criteo_union_hdrs",
+  srcs = [
+    "Criteo_hdrs",
+    "Adjust_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Criteo_includes",
+  include = [
+    "Vendor/Adjust/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "Criteo",
   enable_modules = 0,
@@ -298,14 +342,9 @@ objc_library(
       "plugin/Criteo/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "plugin/Criteo/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":Adjust_hdrs"
+    ":Criteo_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -313,10 +352,6 @@ objc_library(
       "plugin/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Adjust_module_map"
-  ],
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -333,6 +368,8 @@ objc_library(
     ),
   deps = [
     ":Core"
+  ] + [
+    "Criteo_includes"
   ],
   copts = [
 
@@ -374,6 +411,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "Trademob_union_hdrs",
+  srcs = [
+    "Trademob_hdrs",
+    "Adjust_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Trademob_includes",
+  include = [
+    "Vendor/Adjust/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "Trademob",
   enable_modules = 0,
@@ -382,14 +435,9 @@ objc_library(
       "plugin/Trademob/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "plugin/Trademob/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":Adjust_hdrs"
+    ":Trademob_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -397,10 +445,6 @@ objc_library(
       "plugin/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Adjust_module_map"
-  ],
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -417,6 +461,8 @@ objc_library(
     ),
   deps = [
     ":Core"
+  ] + [
+    "Trademob_includes"
   ],
   copts = [
 

@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "SDK1.6.2/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Weixin_includes",
+  include = [
+    "Vendor/Weixin/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -44,10 +57,6 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Weixin_module_map"
-  ],
   sdk_frameworks = [
     "CoreTelephony",
     "SystemConfiguration"
@@ -59,6 +68,8 @@ objc_library(
   ],
   deps = [
     ":Weixin_VendoredLibraries"
+  ] + [
+    "Weixin_includes"
   ],
   copts = [
 

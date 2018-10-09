@@ -21,11 +21,27 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "KakaoOpenSDK_union_hdrs",
+  srcs = [
+    "KakaoOpenSDK_hdrs",
+    "KakaoOpenSDK_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "KakaoOpenSDK_includes",
+  include = [
+    "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "KakaoOpenSDK",
   enable_modules = 0,
   hdrs = [
-    ":KakaoOpenSDK_hdrs"
+    ":KakaoOpenSDK_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
@@ -33,16 +49,14 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "KakaoOpenSDK_module_map"
-  ],
   sdk_frameworks = [
     "UIKit",
     "WebKit"
   ],
   deps = [
     ":KakaoOpenSDK_VendoredFrameworks"
+  ] + [
+    "KakaoOpenSDK_includes"
   ],
   copts = [
 
@@ -81,11 +95,27 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "KakaoOpenSDK_union_hdrs",
+  srcs = [
+    "KakaoOpenSDK_hdrs",
+    "KakaoOpenSDK_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "KakaoOpenSDK_includes",
+  include = [
+    "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "KakaoOpenSDK",
   enable_modules = 0,
   hdrs = [
-    ":KakaoOpenSDK_hdrs"
+    ":KakaoOpenSDK_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
@@ -93,16 +123,14 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "KakaoOpenSDK_module_map"
-  ],
   sdk_frameworks = [
     "UIKit",
     "WebKit"
   ],
   deps = [
     ":KakaoOpenSDK_VendoredFrameworks"
+  ] + [
+    "KakaoOpenSDK_includes"
   ],
   copts = [
 
@@ -154,11 +182,27 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "KakaoNavi_union_hdrs",
+  srcs = [
+    "KakaoNavi_hdrs",
+    "KakaoOpenSDK_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "KakaoNavi_includes",
+  include = [
+    "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "KakaoNavi",
   enable_modules = 0,
   hdrs = [
-    ":KakaoOpenSDK_hdrs"
+    ":KakaoNavi_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
@@ -166,15 +210,13 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "KakaoOpenSDK_module_map"
-  ],
   sdk_frameworks = [
     "UIKit"
   ],
   deps = [
     ":KakaoNavi_VendoredFrameworks"
+  ] + [
+    "KakaoNavi_includes"
   ],
   copts = [
 
@@ -226,11 +268,27 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "KakaoLink_union_hdrs",
+  srcs = [
+    "KakaoLink_hdrs",
+    "KakaoOpenSDK_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "KakaoLink_includes",
+  include = [
+    "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "KakaoLink",
   enable_modules = 0,
   hdrs = [
-    ":KakaoOpenSDK_hdrs"
+    ":KakaoLink_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
@@ -238,15 +296,13 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "KakaoOpenSDK_module_map"
-  ],
   sdk_frameworks = [
     "UIKit"
   ],
   deps = [
     ":KakaoLink_VendoredFrameworks"
+  ] + [
+    "KakaoLink_includes"
   ],
   copts = [
 
@@ -298,11 +354,27 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "KakaoS2_union_hdrs",
+  srcs = [
+    "KakaoS2_hdrs",
+    "KakaoOpenSDK_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "KakaoS2_includes",
+  include = [
+    "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "KakaoS2",
   enable_modules = 0,
   hdrs = [
-    ":KakaoOpenSDK_hdrs"
+    ":KakaoS2_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
@@ -310,15 +382,13 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "KakaoOpenSDK_module_map"
-  ],
   sdk_frameworks = [
     "Foundation"
   ],
   deps = [
     ":KakaoS2_VendoredFrameworks"
+  ] + [
+    "KakaoS2_includes"
   ],
   copts = [
 

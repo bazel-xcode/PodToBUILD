@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "RadarKit/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RadarKit_includes",
+  include = [
+    "Vendor/RadarKit/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "RadarKit/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "RadarKit/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":RadarKit_hdrs"
@@ -55,13 +63,14 @@ objc_library(
       "RadarKit/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "RadarKit_module_map"
-  ],
   sdk_frameworks = [
     "Foundation",
     "SystemConfiguration"
+  ],
+  deps = [
+
+  ] + [
+    "RadarKit_includes"
   ],
   copts = [
 

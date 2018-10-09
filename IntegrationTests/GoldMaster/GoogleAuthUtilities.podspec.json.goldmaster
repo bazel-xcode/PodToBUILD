@@ -19,9 +19,19 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + [
+
+  ] + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "GoogleAuthUtilities_includes",
+  include = [
+    "Vendor/GoogleAuthUtilities/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -44,10 +54,6 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "GoogleAuthUtilities_module_map"
-  ],
   sdk_frameworks = [
     "Security",
     "SystemConfiguration"
@@ -56,6 +62,8 @@ objc_library(
     "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities",
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
     ":GoogleAuthUtilities_VendoredFrameworks"
+  ] + [
+    "GoogleAuthUtilities_includes"
   ],
   copts = [
 

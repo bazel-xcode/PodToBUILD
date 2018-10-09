@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "kingpin/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "kingpin_includes",
+  include = [
+    "Vendor/kingpin/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "kingpin/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "kingpin/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":kingpin_hdrs"
@@ -55,13 +63,14 @@ objc_library(
       "kingpin/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "kingpin_module_map"
-  ],
   sdk_frameworks = [
     "MapKit",
     "CoreLocation"
+  ],
+  deps = [
+
+  ] + [
+    "kingpin_includes"
   ],
   copts = [
 

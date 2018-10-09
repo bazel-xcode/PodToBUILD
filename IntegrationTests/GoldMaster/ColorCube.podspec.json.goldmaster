@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "ColorCube/ColorCube/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "ColorCube_includes",
+  include = [
+    "Vendor/ColorCube/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "ColorCube/ColorCube/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "ColorCube/ColorCube/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":ColorCube_hdrs"
@@ -55,9 +63,10 @@ objc_library(
       "ColorCube/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "ColorCube_module_map"
+  deps = [
+
+  ] + [
+    "ColorCube_includes"
   ],
   copts = [
 

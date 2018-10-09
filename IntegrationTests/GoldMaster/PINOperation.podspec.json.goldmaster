@@ -24,6 +24,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "PINOperation_cxx_union_hdrs",
+  srcs = [
+    "PINOperation_cxx_hdrs",
+    "PINOperation_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "PINOperation_cxx_includes",
+  include = [
+    "Vendor/PINOperation/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "PINOperation_cxx",
   enable_modules = 0,
@@ -35,14 +51,9 @@ objc_library(
       "Source/**/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Source/**/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":PINOperation_hdrs"
+    ":PINOperation_cxx_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINOperation",
@@ -50,12 +61,13 @@ objc_library(
       "Source/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "PINOperation_module_map"
-  ],
   sdk_frameworks = [
     "Foundation"
+  ],
+  deps = [
+
+  ] + [
+    "PINOperation_cxx_includes"
   ],
   copts = [
 
@@ -92,9 +104,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "Source/**/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+    ":PINOperation_cxx_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "PINOperation_includes",
+  include = [
+    "Vendor/PINOperation/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -113,11 +138,6 @@ objc_library(
       "Source/**/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Source/**/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":PINOperation_hdrs"
@@ -128,15 +148,13 @@ objc_library(
       "Source/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "PINOperation_module_map"
-  ],
   sdk_frameworks = [
     "Foundation"
   ],
   deps = [
     ":PINOperation_cxx"
+  ] + [
+    "PINOperation_includes"
   ],
   copts = [
 

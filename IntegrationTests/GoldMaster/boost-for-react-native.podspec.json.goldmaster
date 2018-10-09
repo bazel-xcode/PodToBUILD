@@ -13,23 +13,38 @@ native.config_setting(
   }
   )
 filegroup(
-  name = "boost_hdrs",
+  name = "boost-for-react-native_hdrs",
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "boost/**/*.h",
+      "boost/**/*.hpp",
+      "boost/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
   ]
   )
+gen_includes(
+  name = "boost_includes",
+  include = [
+    "Vendor/boost-for-react-native/pod_support/Headers/Public/"
+  ]
+  )
 gen_module_map(
   "boost",
-  "boost_module_map",
+  "boost-for-react-native_module_map",
   "boost",
   [
-    "boost_hdrs"
+    "boost-for-react-native_hdrs"
   ]
   )
 alias(
@@ -43,7 +58,7 @@ objc_library(
   name = "boost",
   enable_modules = 0,
   hdrs = [
-    ":boost_hdrs"
+    ":boost-for-react-native_hdrs"
   ],
   pch = pch_with_name_hint(
     "boost-for-react-native",
@@ -51,9 +66,10 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "boost_module_map"
+  deps = [
+
+  ] + [
+    "boost_includes"
   ],
   copts = [
 

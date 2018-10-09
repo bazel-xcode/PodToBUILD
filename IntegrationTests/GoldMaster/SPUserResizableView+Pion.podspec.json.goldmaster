@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "SPUserResizableView/SPUserResizableView.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "SPUserResizableView+Pion_includes",
+  include = [
+    "Vendor/SPUserResizableView+Pion/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "SPUserResizableView/SPUserResizableView.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "SPUserResizableView/SPUserResizableView.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":SPUserResizableView+Pion_hdrs"
@@ -55,9 +63,10 @@ objc_library(
       "SPUserResizableView/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "SPUserResizableView+Pion_module_map"
+  deps = [
+
+  ] + [
+    "SPUserResizableView+Pion_includes"
   ],
   copts = [
 

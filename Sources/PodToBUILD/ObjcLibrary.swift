@@ -289,7 +289,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         // TODO: Handle multiplatform overrides of requiresArc
         self.requiresArc = (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.requiresArc))) ?? .left(true)
         self.publicHeaders = (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.publicHeaders))).map{ Set($0) }
-
+    
         // Take the name of the primary spec
         let primarySpec = ComposedSpec.create(fromSpecs: [spec, rootSpec].compactMap { $0 })
         let primarySpecName = primarySpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
@@ -303,7 +303,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let splitSuffix = isSplitDep ? sourceType.getLibNameSuffix() : ""
         let baseName = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
         self.name = baseName + splitSuffix
-        self.externalName = rootSpec?.name ?? spec.name
+        let externalName = rootSpec?.name ?? spec.name
 
         let xcconfigTransformer =
             XCConfigTransformer.defaultTransformer(externalName: externalName,
@@ -316,9 +316,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let xcconfigCopts = xcconfigFlags.filter { !$0.hasPrefix("-I") }
 
-        self.includes = xcconfigFlags.filter { $0.hasPrefix("-I") }.map {
-            $0.substring(from: $0.characters.index($0.startIndex, offsetBy: 2))
-        }
+
 
         let moduleName = AttrSet<String>(
             value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
@@ -326,19 +324,66 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let headerDirectoryName: AttrSet<String?> = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.headerDirectory))
 
-        self.headerName = (moduleName.isEmpty ? nil : moduleName) ??
+        let headerName = (moduleName.isEmpty ? nil : moduleName) ??
         (headerDirectoryName.basic == nil ? nil :
          headerDirectoryName.denormalize()) ??  AttrSet<String>(value: rootName)
+
+        let includePodHeaderDirs = {
+            () -> [String] in
+            let value = spec.podTargetXcconfig?["USE_HEADERMAP"]
+            let include = value == nil || (value?.lowercased() != "no" &&
+                    value?.lowercased() != "false")
+            guard include else { return [String]() }
+
+		    let externalDir = GetBuildOptions().podName
+            return ["Vendor/" +  externalDir + "/" + PodSupportSystemPublicHeaderDir]
+        }
+
+        self.includes = xcconfigFlags.filter { $0.hasPrefix("-I") }.map {
+            $0.substring(from: $0.characters.index($0.startIndex, offsetBy: 2))
+        } + includePodHeaderDirs()
+        self.headerName = headerName
+        self.externalName = externalName
 
         self.sourceFiles = GlobNode(
             include: implFiles,
             exclude: implExcludes)
 
+        // Build out header files
+        let getHeaderDirHeaders = {
+            () -> AttrSet<Set<String>> in 
+            guard !headerDirectoryName.isEmpty else {
+                return AttrSet<Set<String>>.empty
+            }
+            let pattern = headerDirectoryName.map {
+                (name: String?) -> [String] in
+                    guard let name = name else {
+                        return []
+                    }
+                    return [(name + "/**")]
+            }
+            return extractFiles(fromPattern: pattern,
+                includingFileTypes: HeaderFileTypes).map{ Set($0) }
+        }
+        let privateHeaders = (fallbackSpec ^*
+                ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.privateHeaders)))
+        // It's possible to use preserve_paths for header includes
+        // also, preserve path may be used for a file, so we'd need to touch
+        // the FS here to actually find out.
+        let preservePaths = (fallbackSpec ^*
+                ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.preservePaths))).map { $0.filter { !$0.contains("LICENSE") }}
+        let allSpecHeaders =  getHeaderDirHeaders() <>
+            extractFiles(fromPattern: allSourceFiles, includingFileTypes:
+                HeaderFileTypes).map{ Set($0) } <>
+            extractFiles(fromPattern: privateHeaders, includingFileTypes:
+                HeaderFileTypes).map{ Set($0) } <>
+            extractFiles(fromPattern: preservePaths, includingFileTypes:
+                HeaderFileTypes).map{ Set($0) }
         self.headers = GlobNode(
-            include: extractFiles(fromPattern: allSourceFiles,
-                includingFileTypes: HeaderFileTypes).map{ Set($0) },
+            include: allSpecHeaders,
             exclude: extractFiles(fromPattern: allExcludes,
                 includingFileTypes: HeaderFileTypes).map{ Set($0) })
+
         self.nonArcSrcs = GlobNode.empty
         self.sdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.frameworks))
 
@@ -440,8 +485,6 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let enableModules = options.enableModules
         //let enableModules = false
         let generateModuleMap = options.generateModuleMap
-        let headerVisibility = options.headerVisibility
-
         let lib = self
         let nameArgument = SkylarkFunctionArgument.named(name: "name", value: .string(lib.name))
 
@@ -456,28 +499,22 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let moduleName = bazelModuleName()
 
+        // note: trans headers aren't propagated here. The code requires that
+        // all deps are declared in the PodSpec.
         let depHdrs = deps.map {
             $0.filter { $0.hasPrefix(":") && !$0.contains("Vendored") && !$0.contains("_Bundle") }
                 .map { ($0 + "_hdrs").toSkylark() }
         }
        
-        let allModuleInternalHeaders = headers.toSkylark() .+. depHdrs.toSkylark()
-
         let podSupportHeaders = GlobNode(include: AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*"]),
                                                          exclude: AttrSet<Set<String>>.empty).toSkylark()
-        
         if lib.isTopLevelTarget {
-            var exposedHeaders: SkylarkNode = podSupportHeaders
-            // By Default we don't propage the headers anymore
-            // come up with a way to expose this
-            if headerVisibility == "everything" {
-                exposedHeaders = exposedHeaders .+. headers.toSkylark()
-            }
-            
+            var exposedHeaders: SkylarkNode = podSupportHeaders .+.
+                headers.toSkylark() .+. depHdrs.toSkylark()
             inlineSkylark.append(.functionCall(
                 name: "filegroup",
                 arguments: [
-                    .named(name: "name", value: (name + "_hdrs").toSkylark()),
+                    .named(name: "name", value: (externalName + "_hdrs").toSkylark()),
                     .named(name: "srcs", value: exposedHeaders),
                     .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
                     ]
@@ -491,7 +528,25 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                     .named(name: "srcs", value: headers.toSkylark()),
                     .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
                     ]
-                ))           
+                ))
+
+            // Union headers: it's possible, that some spec headers will not be
+            // include in the TopLevelTarget headers: e.g. when a spec is not a
+            // dep of the TopLevelTarget.  Additionally, we can include headers
+            // multiple times, and Bazel will emit warnings if they aren't
+            // union'd
+            inlineSkylark.append(.functionCall(
+                name: "filegroup",
+                arguments: [
+                    .named(name: "name", value: (name + "_union_hdrs").toSkylark()),
+                    .named(name: "srcs", value: [
+                        (name + "_hdrs"),
+                        (externalName + "_hdrs")
+                        ].toSkylark()),
+                    .named(name: "visibility", value:
+                        ["//visibility:public"].toSkylark()),
+                    ]
+                ))
         }
 
         if lib.includes.count > 0 { 
@@ -505,8 +560,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let headerGlobNode = headers
 
-        let hdrsRuleBasename = lib.isTopLevelTarget ? name : moduleName
-        let moduleMapDirectoryName = hdrsRuleBasename + "_module_map"
+        let moduleMapDirectoryName = externalName + "_module_map"
         let clangModuleName = headerName.basic?.replacingOccurrences(of: "-", with: "_")
         if lib.isTopLevelTarget {
             inlineSkylark.append(.functionCall(
@@ -515,7 +569,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                     .basic(moduleName.toSkylark()),
                     .basic(moduleMapDirectoryName.toSkylark()),
                     .basic(clangModuleName.toSkylark()),
-                    .basic([name + "_hdrs"].toSkylark())
+                    .basic([externalName + "_hdrs"].toSkylark())
                 ]
                 ))
              if lib.externalName != lib.name {
@@ -525,22 +579,10 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         }
         
         if !lib.sourceFiles.include.isEmpty {
-            if generateModuleMap {
-                // Assume that there is going to be headers if we are compiling a module
-                libArguments.append(.named(
-                    name: "srcs",
-                    value: lib.sourceFiles.toSkylark() .+. allModuleInternalHeaders
-                    ))
-            } else {
-                // Workaround: we should be able to add all of the headers here, but in some cases
-                // the file group is empty
-                // if the header visibility is everything, then the headers will be in hdrs
-                let additionalNonPropagatedHdrs: SkylarkNode = (headers.include.isEmpty || headerVisibility == "everything") ? SkylarkNode.empty : headers.toSkylark()
-                libArguments.append(.named(
-                    name: "srcs",
-                    value: lib.sourceFiles.toSkylark() .+. additionalNonPropagatedHdrs
-                    ))
-            }
+            libArguments.append(.named(
+                name: "srcs",
+                value: lib.sourceFiles.toSkylark()
+                ))
         }
         if !lib.nonArcSrcs.include.isEmpty {
             libArguments.append(.named(
@@ -571,23 +613,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             return arr + buildPCHList(sources: [multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 }.flatMap { Array($0) })
         })
 
-        let headerDirs = lib.headerName.map { PodSupportSystemPublicHeaderDir + "\($0)/" }
-        let headerSearchPaths: Set<String> = Set(headerDirs.fold(basic: { str in Set<String>([str].compactMap { $0 }) },
-                                  multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
-                                    return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
-                                }))
-        if generateModuleMap {
-            libArguments.append(.named(
+
+        let baseHeaders: [String] = isTopLevelTarget ?
+            [":" + externalName + "_hdrs"] : [":" + name + "_union_hdrs"]
+        let moduleHeaders: [String] = generateModuleMap ?
+            [":" + moduleMapDirectoryName + "_module_map_file"] : []
+        libArguments.append(.named(
                 name: "hdrs",
-                value: [moduleMapDirectoryName + "_module_map_file"].toSkylark()
-                    .+.  ([hdrsRuleBasename + "_hdrs"]).toSkylark()
+                value: (baseHeaders + moduleHeaders).toSkylark()
                 ))
-        } else {
-            libArguments.append(.named(
-                name: "hdrs",
-                value: ([":" + hdrsRuleBasename + "_hdrs"]).toSkylark()
-                ))
-        }
 
         libArguments.append(.named(
             name: "pch",
@@ -602,12 +636,14 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             )
         ))
 
-        // Include the public headers which are symlinked in
-        // All includes are bubbled up automatically
-        libArguments.append(.named(
-            name: "includes",
-            value: ([PodSupportSystemPublicHeaderDir] + [ moduleMapDirectoryName ]).toSkylark()
-        ))
+          if generateModuleMap {
+               // Include the public headers which are symlinked in
+               // All includes are bubbled up automatically
+               libArguments.append(.named(
+                    name: "includes",
+                    value: [ moduleMapDirectoryName ].toSkylark()
+               ))
+          }
 
         if !lib.sdkFrameworks.isEmpty {
             libArguments.append(.named(
@@ -656,22 +692,36 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                      ].toSkylark()
                      )]
             )
+        let getPodIQuotes = {
+            () -> [String] in
+			let podInclude = lib.includes.first(where: {
+					$0.contains(PodSupportSystemPublicHeaderDir) })
+			guard podInclude != nil else { return [] }
 
-        // Include headders
-        let iquotes = headerSearchPaths
-            .sorted(by: (<))
-            .reduce([String]()) {
-            accum, searchPath in
-            // Assume that the podspec matches the name of the directory.
-            // it is a convention that these are 1 in the same.
-            let externalDir = options.podName
-            return accum + ["-I" + "Vendor/" + externalDir + "/" + searchPath]
-        }
+			let headerDirs = self.headerName.map { PodSupportSystemPublicHeaderDir + "\($0)/" }
+			let headerSearchPaths: Set<String> = Set(headerDirs.fold(
+						basic: { str in Set<String>([str].compactMap { $0 }) },
+						multi: {
+						(result: Set<String>, multi: MultiPlatform<String>)
+							-> Set<String> in
+							return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
+						}))
+			return headerSearchPaths
+				.sorted(by: (<))
+				.reduce([String]()) {
+				accum, searchPath in
+				// Assume that the podspec matches the name of the directory.
+				// it is a convention that these are 1 in the same.
+				let externalDir = GetBuildOptions()
+.podName
+				return accum + ["-I" + "Vendor/" + externalDir + "/" + searchPath]
+			}
+		}
 
         libArguments.append(.named(
             name: "copts",
-            value: (lib.copts.toSkylark() .+. buildConfigDependenctCOpts .+.
-                iquotes.toSkylark()) <> ["-fmodule-name=" + moduleName + "_pod_module"].toSkylark()))
+            value: (lib.copts.toSkylark() .+. buildConfigDependenctCOpts .+. getPodIQuotes().toSkylark()
+                ) <> ["-fmodule-name=" + moduleName + "_pod_module"].toSkylark()))
 
         if !lib.resources.isEmpty {
             libArguments.append(.named(name: "resources",
@@ -736,7 +786,7 @@ extension ObjcLibrary {
         }()
 
         public static let requiresArc: Lens<ObjcLibrary, Either<Bool, [String]>> = {
-	        return Lens(view: { $0.requiresArc }, set: { requiresArc, lib in
+            return Lens(view: { $0.requiresArc }, set: { requiresArc, lib in
                 ObjcLibrary(name: lib.name, externalName: lib.externalName,
                         sourceFiles: lib.sourceFiles, headers: lib.headers,
                         headerName: lib.headerName, includes: lib.includes,
