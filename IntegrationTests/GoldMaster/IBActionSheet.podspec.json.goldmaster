@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "IBActionSheet_includes",
+  include = [
+    "Vendor/IBActionSheet/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "IBActionSheetSample/IBActionSheetSample/IBActionSheet.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":IBActionSheet_hdrs"
@@ -55,12 +63,13 @@ objc_library(
       "IBActionSheetSample/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "IBActionSheet_module_map"
-  ],
   sdk_frameworks = [
     "QuartzCore"
+  ],
+  deps = [
+
+  ] + [
+    "IBActionSheet_includes"
   ],
   copts = [
 

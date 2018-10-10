@@ -31,9 +31,20 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + [
+
+  ] + [
+    ":Core_hdrs",
+    ":Arc-exception-safe_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "PINCache_includes",
+  include = [
+    "Vendor/PINCache/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -56,10 +67,6 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "PINCache_module_map"
-  ],
   sdk_frameworks = [
     "Foundation"
   ],
@@ -76,6 +83,8 @@ objc_library(
   deps = [
     ":Arc-exception-safe",
     ":Core"
+  ] + [
+    "PINCache_includes"
   ],
   copts = [
 
@@ -117,6 +126,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "Core_union_hdrs",
+  srcs = [
+    "Core_hdrs",
+    "PINCache_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Core_includes",
+  include = [
+    "Vendor/PINCache/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "Core",
   enable_modules = 0,
@@ -128,14 +153,9 @@ objc_library(
       "Source/PINDiskCache.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Source/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":PINCache_hdrs"
+    ":Core_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINCache",
@@ -143,10 +163,6 @@ objc_library(
       "Source/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "PINCache_module_map"
-  ],
   sdk_frameworks = [
     "Foundation"
   ],
@@ -162,6 +178,8 @@ objc_library(
     ),
   deps = [
     "//Vendor/PINOperation:PINOperation"
+  ] + [
+    "Core_includes"
   ],
   copts = [
 
@@ -200,6 +218,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "Arc-exception-safe_union_hdrs",
+  srcs = [
+    "Arc-exception-safe_hdrs",
+    "PINCache_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Arc-exception-safe_includes",
+  include = [
+    "Vendor/PINCache/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "Arc-exception-safe",
   enable_modules = 0,
@@ -208,11 +242,9 @@ objc_library(
       "Source/PINDiskCache.m"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+    ),
   hdrs = [
-    ":PINCache_hdrs"
+    ":Arc-exception-safe_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINCache",
@@ -220,10 +252,6 @@ objc_library(
       "Source/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "PINCache_module_map"
-  ],
   sdk_frameworks = [
     "Foundation"
   ],
@@ -239,6 +267,8 @@ objc_library(
     ),
   deps = [
     ":Core"
+  ] + [
+    "Arc-exception-safe_includes"
   ],
   copts = [
     "-fobjc-arc-exceptions"

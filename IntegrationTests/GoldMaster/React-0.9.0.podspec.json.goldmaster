@@ -19,9 +19,36 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ) + [
+    ":Core_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "React_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -44,12 +71,10 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "React_includes"
   ],
   copts = [
 
@@ -83,7 +108,22 @@ filegroup(
   name = "Core_hdrs",
   srcs = glob(
     [
-      "React/**/*.h"
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "React/**/*.h",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude = [
       "**/__tests__/*.h",
@@ -97,6 +137,22 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+filegroup(
+  name = "Core_union_hdrs",
+  srcs = [
+    "Core_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Core_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
   ]
   )
 objc_library(
@@ -138,22 +194,9 @@ objc_library(
       "Libraries/WebSocket/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "React/**/*.h"
-    ],
-    exclude = [
-      "**/__tests__/*.h",
-      "**/__tests__/*.hpp",
-      "**/__tests__/*.hxx",
-      "IntegrationTests/*.h",
-      "IntegrationTests/*.hpp",
-      "IntegrationTests/*.hxx"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":Core_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -161,12 +204,13 @@ objc_library(
       "React/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   sdk_frameworks = [
     "JavaScriptCore"
+  ],
+  deps = [
+
+  ] + [
+    "Core_includes"
   ],
   copts = [
 
@@ -208,6 +252,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "ART_union_hdrs",
+  srcs = [
+    "ART_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "ART_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "ART",
   enable_modules = 0,
@@ -216,14 +276,9 @@ objc_library(
       "Libraries/ART/**/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/ART/**/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":ART_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -231,12 +286,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "ART_includes"
   ],
   copts = [
 
@@ -278,6 +331,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTActionSheet_union_hdrs",
+  srcs = [
+    "RCTActionSheet_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTActionSheet_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTActionSheet",
   enable_modules = 0,
@@ -286,14 +355,9 @@ objc_library(
       "Libraries/ActionSheetIOS/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/ActionSheetIOS/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTActionSheet_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -301,12 +365,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTActionSheet_includes"
   ],
   copts = [
 
@@ -348,6 +410,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTAdSupport_union_hdrs",
+  srcs = [
+    "RCTAdSupport_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTAdSupport_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTAdSupport",
   enable_modules = 0,
@@ -356,14 +434,9 @@ objc_library(
       "Libraries/AdSupport/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/AdSupport/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTAdSupport_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -371,12 +444,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTAdSupport_includes"
   ],
   copts = [
 
@@ -418,6 +489,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTGeolocation_union_hdrs",
+  srcs = [
+    "RCTGeolocation_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTGeolocation_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTGeolocation",
   enable_modules = 0,
@@ -426,14 +513,9 @@ objc_library(
       "Libraries/Geolocation/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/Geolocation/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTGeolocation_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -441,12 +523,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTGeolocation_includes"
   ],
   copts = [
 
@@ -488,6 +568,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTImage_union_hdrs",
+  srcs = [
+    "RCTImage_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTImage_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTImage",
   enable_modules = 0,
@@ -496,14 +592,9 @@ objc_library(
       "Libraries/Image/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/Image/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTImage_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -511,12 +602,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTImage_includes"
   ],
   copts = [
 
@@ -558,6 +647,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTNetwork_union_hdrs",
+  srcs = [
+    "RCTNetwork_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTNetwork_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTNetwork",
   enable_modules = 0,
@@ -566,14 +671,9 @@ objc_library(
       "Libraries/Network/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/Network/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTNetwork_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -581,12 +681,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTNetwork_includes"
   ],
   copts = [
 
@@ -628,6 +726,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTPushNotification_union_hdrs",
+  srcs = [
+    "RCTPushNotification_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTPushNotification_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTPushNotification",
   enable_modules = 0,
@@ -636,14 +750,9 @@ objc_library(
       "Libraries/PushNotificationIOS/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/PushNotificationIOS/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTPushNotification_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -651,12 +760,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTPushNotification_includes"
   ],
   copts = [
 
@@ -698,6 +805,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTSettings_union_hdrs",
+  srcs = [
+    "RCTSettings_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTSettings_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTSettings",
   enable_modules = 0,
@@ -706,14 +829,9 @@ objc_library(
       "Libraries/Settings/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/Settings/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTSettings_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -721,12 +839,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTSettings_includes"
   ],
   copts = [
 
@@ -768,6 +884,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTText_union_hdrs",
+  srcs = [
+    "RCTText_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTText_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTText",
   enable_modules = 0,
@@ -776,14 +908,9 @@ objc_library(
       "Libraries/Text/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/Text/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTText_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -791,12 +918,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTText_includes"
   ],
   copts = [
 
@@ -838,6 +963,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTVibration_union_hdrs",
+  srcs = [
+    "RCTVibration_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTVibration_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTVibration",
   enable_modules = 0,
@@ -846,14 +987,9 @@ objc_library(
       "Libraries/Vibration/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/Vibration/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTVibration_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -861,12 +997,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTVibration_includes"
   ],
   copts = [
 
@@ -908,6 +1042,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTWebSocket_union_hdrs",
+  srcs = [
+    "RCTWebSocket_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTWebSocket_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTWebSocket",
   enable_modules = 0,
@@ -916,14 +1066,9 @@ objc_library(
       "Libraries/WebSocket/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/WebSocket/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTWebSocket_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -931,12 +1076,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTWebSocket_includes"
   ],
   copts = [
 
@@ -978,6 +1121,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "RCTLinkingIOS_union_hdrs",
+  srcs = [
+    "RCTLinkingIOS_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "RCTLinkingIOS_includes",
+  include = [
+    "Vendor/React-0/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "RCTLinkingIOS",
   enable_modules = 0,
@@ -986,14 +1145,9 @@ objc_library(
       "Libraries/LinkingIOS/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Libraries/LinkingIOS/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":React_hdrs"
+    ":RCTLinkingIOS_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -1001,12 +1155,10 @@ objc_library(
       "Libraries/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "React_module_map"
-  ],
   deps = [
     ":Core"
+  ] + [
+    "RCTLinkingIOS_includes"
   ],
   copts = [
 

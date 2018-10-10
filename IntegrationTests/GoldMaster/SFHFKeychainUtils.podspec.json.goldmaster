@@ -26,6 +26,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "SFHFKeychainUtils_cxx_union_hdrs",
+  srcs = [
+    "SFHFKeychainUtils_cxx_hdrs",
+    "SFHFKeychainUtils_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "SFHFKeychainUtils_cxx_includes",
+  include = [
+    "Vendor/SFHFKeychainUtils/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "SFHFKeychainUtils_cxx",
   enable_modules = 0,
@@ -42,13 +58,6 @@ objc_library(
       "security/**/*.s"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "security/**/*.h",
-      "security/**/*.hpp",
-      "security/**/*.hxx"
-    ],
-    exclude_directories = 1
     ),
   non_arc_srcs = glob(
     [
@@ -60,7 +69,7 @@ objc_library(
     exclude_directories = 1
     ),
   hdrs = [
-    ":SFHFKeychainUtils_hdrs"
+    ":SFHFKeychainUtils_cxx_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "SFHFKeychainUtils",
@@ -68,12 +77,13 @@ objc_library(
       "security/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "SFHFKeychainUtils_module_map"
-  ],
   sdk_frameworks = [
     "Security"
+  ],
+  deps = [
+
+  ] + [
+    "SFHFKeychainUtils_cxx_includes"
   ],
   copts = [
 
@@ -110,9 +120,24 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ) + [
+    ":SFHFKeychainUtils_cxx_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "SFHFKeychainUtils_includes",
+  include = [
+    "Vendor/SFHFKeychainUtils/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -133,13 +158,6 @@ objc_library(
       "security/**/*.s"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "security/**/*.h",
-      "security/**/*.hpp",
-      "security/**/*.hxx"
-    ],
-    exclude_directories = 1
     ),
   non_arc_srcs = glob(
     [
@@ -156,15 +174,13 @@ objc_library(
       "security/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "SFHFKeychainUtils_module_map"
-  ],
   sdk_frameworks = [
     "Security"
   ],
   deps = [
     ":SFHFKeychainUtils_cxx"
+  ] + [
+    "SFHFKeychainUtils_includes"
   ],
   copts = [
 

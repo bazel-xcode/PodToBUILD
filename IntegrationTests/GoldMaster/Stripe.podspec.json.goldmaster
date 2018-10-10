@@ -25,9 +25,23 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "Stripe/*.h",
+      "Stripe/PublicHeaders/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Stripe_includes",
+  include = [
+    "Vendor/Stripe/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -46,12 +60,6 @@ objc_library(
       "Stripe/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Stripe/*.h",
-      "Stripe/PublicHeaders/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":Stripe_hdrs"
@@ -62,10 +70,6 @@ objc_library(
       "Stripe/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Stripe_module_map"
-  ],
   sdk_frameworks = [
     "Foundation",
     "Security",
@@ -75,6 +79,8 @@ objc_library(
   ],
   deps = [
     ":Stripe_Bundle_Stripe"
+  ] + [
+    "Stripe_includes"
   ],
   copts = [
 

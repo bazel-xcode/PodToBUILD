@@ -297,9 +297,10 @@ public enum RepoActions {
         // - Put them into the public header directory
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)
         let globResultsArr = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
-            .compactMap { $0.headers }
-            .flatMap { globNode in
-                globNode.include.fold(basic: { (patterns: Set<String>?) -> Set<String> in
+            .flatMap {
+                objcLibrary -> Set<String> in
+                let headers: GlobNode = objcLibrary.headers
+                return headers.include.fold(basic: { (patterns: Set<String>?) -> Set<String> in
                     let s: Set<String> = Set(patterns.map { $0.flatMap(podGlob) } ?? [])
                     return s
                 }, multi: { (set: Set<String>, multi: MultiPlatform<Set<String>>) -> Set<String> in

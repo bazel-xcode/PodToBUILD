@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "Source/**/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "SlackTextViewController_includes",
+  include = [
+    "Vendor/SlackTextViewController/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "Source/**/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Source/**/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":SlackTextViewController_hdrs"
@@ -55,9 +63,10 @@ objc_library(
       "Source/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "SlackTextViewController_module_map"
+  deps = [
+
+  ] + [
+    "SlackTextViewController_includes"
   ],
   copts = [
 

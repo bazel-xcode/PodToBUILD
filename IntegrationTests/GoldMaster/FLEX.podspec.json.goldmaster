@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "Classes/**/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "FLEX_includes",
+  include = [
+    "Vendor/FLEX/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "Classes/**/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Classes/**/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":FLEX_hdrs"
@@ -55,10 +63,6 @@ objc_library(
       "Classes/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "FLEX_module_map"
-  ],
   sdk_frameworks = [
     "Foundation",
     "UIKit",
@@ -67,6 +71,11 @@ objc_library(
   sdk_dylibs = [
     "z",
     "sqlite3"
+  ],
+  deps = [
+
+  ] + [
+    "FLEX_includes"
   ],
   copts = [
 

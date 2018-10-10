@@ -37,9 +37,19 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + [
+
+  ] + [
+    ":Default_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "IGListKit_includes",
+  include = [
+    "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -62,10 +72,6 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "IGListKit_module_map"
-  ],
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -84,6 +90,8 @@ objc_library(
   ],
   deps = [
     ":Default"
+  ] + [
+    "IGListKit_includes"
   ],
   copts = [
 
@@ -117,12 +125,29 @@ filegroup(
   name = "Diffing_cxx_hdrs",
   srcs = glob(
     [
-      "Source/Common/**/*.h"
+      "Source/Common/**/*.h",
+      "Source/Common/Internal/*.h"
     ],
     exclude_directories = 1
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+filegroup(
+  name = "Diffing_cxx_union_hdrs",
+  srcs = [
+    "Diffing_cxx_hdrs",
+    "IGListKit_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Diffing_cxx_includes",
+  include = [
+    "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
   )
 objc_library(
@@ -153,14 +178,9 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ) + glob(
-    [
-      "Source/Common/**/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":IGListKit_hdrs"
+    ":Diffing_cxx_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "IGListKit",
@@ -168,10 +188,6 @@ objc_library(
       "Source/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "IGListKit_module_map"
-  ],
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -187,6 +203,11 @@ objc_library(
     ),
   sdk_dylibs = [
     "c++"
+  ],
+  deps = [
+
+  ] + [
+    "Diffing_cxx_includes"
   ],
   copts = [
     "-std=c++11",
@@ -221,12 +242,29 @@ filegroup(
   name = "Diffing_hdrs",
   srcs = glob(
     [
-      "Source/Common/**/*.h"
+      "Source/Common/**/*.h",
+      "Source/Common/Internal/*.h"
     ],
     exclude_directories = 1
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+filegroup(
+  name = "Diffing_union_hdrs",
+  srcs = [
+    "Diffing_hdrs",
+    "IGListKit_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Diffing_includes",
+  include = [
+    "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
   )
 objc_library(
@@ -255,14 +293,9 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ) + glob(
-    [
-      "Source/Common/**/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":IGListKit_hdrs"
+    ":Diffing_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "IGListKit",
@@ -270,10 +303,6 @@ objc_library(
       "Source/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "IGListKit_module_map"
-  ],
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -292,6 +321,8 @@ objc_library(
   ],
   deps = [
     ":Diffing_cxx"
+  ] + [
+    "Diffing_includes"
   ],
   copts = [
 
@@ -327,13 +358,17 @@ filegroup(
     {
       "//conditions:default": glob(
         [
-          "Source/**/*.h"
+          "Source/**/*.h",
+          "Source/Common/Internal/*.h",
+          "Source/Internal/*.h"
         ],
         exclude_directories = 1
         ),
       ":tvosCase": glob(
         [
-          "Source/**/*.h"
+          "Source/**/*.h",
+          "Source/Common/Internal/*.h",
+          "Source/Internal/*.h"
         ],
         exclude_directories = 1
         )
@@ -341,6 +376,22 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+filegroup(
+  name = "Default_cxx_union_hdrs",
+  srcs = [
+    "Default_cxx_hdrs",
+    "IGListKit_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Default_cxx_includes",
+  include = [
+    "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
   )
 objc_library(
@@ -367,24 +418,9 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ) + select(
-    {
-      "//conditions:default": glob(
-        [
-          "Source/**/*.h"
-        ],
-        exclude_directories = 1
-        ),
-      ":tvosCase": glob(
-        [
-          "Source/**/*.h"
-        ],
-        exclude_directories = 1
-        )
-    }
     ),
   hdrs = [
-    ":IGListKit_hdrs"
+    ":Default_cxx_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "IGListKit",
@@ -392,10 +428,6 @@ objc_library(
       "Source/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "IGListKit_module_map"
-  ],
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -414,6 +446,8 @@ objc_library(
   ],
   deps = [
     ":Diffing"
+  ] + [
+    "Default_cxx_includes"
   ],
   copts = [
     "-std=c++11",
@@ -450,13 +484,17 @@ filegroup(
     {
       "//conditions:default": glob(
         [
-          "Source/**/*.h"
+          "Source/**/*.h",
+          "Source/Common/Internal/*.h",
+          "Source/Internal/*.h"
         ],
         exclude_directories = 1
         ),
       ":tvosCase": glob(
         [
-          "Source/**/*.h"
+          "Source/**/*.h",
+          "Source/Common/Internal/*.h",
+          "Source/Internal/*.h"
         ],
         exclude_directories = 1
         )
@@ -464,6 +502,22 @@ filegroup(
     ),
   visibility = [
     "//visibility:public"
+  ]
+  )
+filegroup(
+  name = "Default_union_hdrs",
+  srcs = [
+    "Default_hdrs",
+    "IGListKit_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Default_includes",
+  include = [
+    "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
   )
 objc_library(
@@ -484,24 +538,9 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ) + select(
-    {
-      "//conditions:default": glob(
-        [
-          "Source/**/*.h"
-        ],
-        exclude_directories = 1
-        ),
-      ":tvosCase": glob(
-        [
-          "Source/**/*.h"
-        ],
-        exclude_directories = 1
-        )
-    }
     ),
   hdrs = [
-    ":IGListKit_hdrs"
+    ":Default_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "IGListKit",
@@ -509,10 +548,6 @@ objc_library(
       "Source/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "IGListKit_module_map"
-  ],
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -532,6 +567,8 @@ objc_library(
   deps = [
     ":Default_cxx",
     ":Diffing"
+  ] + [
+    "Default_includes"
   ],
   copts = [
 

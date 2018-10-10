@@ -19,7 +19,24 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "glog/**/*.h",
+      "glog/**/*.hpp",
+      "glog/**/*.hxx",
+      "src/*.h",
+      "src/base/*.h",
+      "src/glog/*.h"
+    ],
+    exclude = [
+      "src/windows/**/*.h",
+      "src/windows/**/*.hpp",
+      "src/windows/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -62,16 +79,6 @@ objc_library(
       "src/windows/**/*.s"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "src/glog/*.h"
-    ],
-    exclude = [
-      "src/windows/**/*.h",
-      "src/windows/**/*.hpp",
-      "src/windows/**/*.hxx"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":glog_hdrs"
@@ -82,10 +89,6 @@ objc_library(
       "src/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "glog_module_map"
-  ],
   sdk_dylibs = [
     "stdc++"
   ],
@@ -107,7 +110,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/glog/pod_support/Headers/Public/glog/"
+
   ] + [
     "-fmodule-name=glog_pod_module"
   ],

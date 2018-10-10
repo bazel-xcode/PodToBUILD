@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "FLAnimatedImage/**/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "FLAnimatedImage_includes",
+  include = [
+    "Vendor/FLAnimatedImage/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "FLAnimatedImage/**/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "FLAnimatedImage/**/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":FLAnimatedImage_hdrs"
@@ -55,15 +63,16 @@ objc_library(
       "FLAnimatedImage/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "FLAnimatedImage_module_map"
-  ],
   sdk_frameworks = [
     "QuartzCore",
     "ImageIO",
     "MobileCoreServices",
     "CoreGraphics"
+  ],
+  deps = [
+
+  ] + [
+    "FLAnimatedImage_includes"
   ],
   copts = [
 

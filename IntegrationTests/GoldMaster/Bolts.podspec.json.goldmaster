@@ -43,9 +43,20 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + [
+
+  ] + [
+    ":Tasks_hdrs",
+    ":AppLinks_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Bolts_includes",
+  include = [
+    "Vendor/Bolts/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -68,13 +79,11 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Bolts_module_map"
-  ],
   deps = [
     ":AppLinks",
     ":Tasks"
+  ] + [
+    "Bolts_includes"
   ],
   copts = [
 
@@ -138,6 +147,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "Tasks_union_hdrs",
+  srcs = [
+    "Tasks_hdrs",
+    "Bolts_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Tasks_includes",
+  include = [
+    "Vendor/Bolts/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "Tasks",
   enable_modules = 0,
@@ -171,36 +196,9 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ) + select(
-    {
-      "//conditions:default": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-        ),
-      ":osxCase": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-        ),
-      ":tvosCase": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-        ),
-      ":watchosCase": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-        )
-    }
     ),
   hdrs = [
-    ":Bolts_hdrs"
+    ":Tasks_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "Bolts",
@@ -208,9 +206,10 @@ objc_library(
       "Bolts/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Bolts_module_map"
+  deps = [
+
+  ] + [
+    "Tasks_includes"
   ],
   copts = [
 
@@ -256,6 +255,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "AppLinks_union_hdrs",
+  srcs = [
+    "AppLinks_hdrs",
+    "Bolts_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "AppLinks_includes",
+  include = [
+    "Vendor/Bolts/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "AppLinks",
   enable_modules = 0,
@@ -268,18 +283,9 @@ objc_library(
         exclude_directories = 1
         )
     }
-    ) + select(
-    {
-      "//conditions:default": glob(
-        [
-          "Bolts/iOS/**/*.h"
-        ],
-        exclude_directories = 1
-        )
-    }
     ),
   hdrs = [
-    ":Bolts_hdrs"
+    ":AppLinks_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "Bolts",
@@ -287,12 +293,10 @@ objc_library(
       "Bolts/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Bolts_module_map"
-  ],
   deps = [
     ":Tasks"
+  ] + [
+    "AppLinks_includes"
   ],
   copts = [
 

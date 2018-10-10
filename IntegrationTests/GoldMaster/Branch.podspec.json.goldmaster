@@ -19,9 +19,20 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + [
+
+  ] + [
+    ":Core_hdrs",
+    ":without-IDFA_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Branch_includes",
+  include = [
+    "Vendor/Branch/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -44,13 +55,11 @@ objc_library(
 
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Branch_module_map"
-  ],
   deps = [
     ":Core",
     ":without-IDFA"
+  ] + [
+    "Branch_includes"
   ],
   copts = [
 
@@ -94,6 +103,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "Core_union_hdrs",
+  srcs = [
+    "Core_hdrs",
+    "Branch_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "Core_includes",
+  include = [
+    "Vendor/Branch/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "Core",
   enable_modules = 0,
@@ -103,16 +128,9 @@ objc_library(
       "Branch-SDK/Branch-SDK/Requests/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Branch-SDK/Branch-SDK/*.h",
-      "Branch-SDK/Branch-SDK/Requests/*.h",
-      "Branch-SDK/Fabric/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":Branch_hdrs"
+    ":Core_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "Branch",
@@ -120,14 +138,15 @@ objc_library(
       "Branch-SDK/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Branch_module_map"
-  ],
   sdk_frameworks = [
     "AdSupport",
     "CoreTelephony",
     "MobileCoreServices"
+  ],
+  deps = [
+
+  ] + [
+    "Core_includes"
   ],
   copts = [
 
@@ -171,6 +190,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "without-IDFA_union_hdrs",
+  srcs = [
+    "without-IDFA_hdrs",
+    "Branch_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "without-IDFA_includes",
+  include = [
+    "Vendor/Branch/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "without-IDFA",
   enable_modules = 0,
@@ -180,16 +215,9 @@ objc_library(
       "Branch-SDK/Branch-SDK/Requests/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "Branch-SDK/Branch-SDK/*.h",
-      "Branch-SDK/Branch-SDK/Requests/*.h",
-      "Branch-SDK/Fabric/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":Branch_hdrs"
+    ":without-IDFA_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "Branch",
@@ -197,13 +225,14 @@ objc_library(
       "Branch-SDK/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "Branch_module_map"
-  ],
   sdk_frameworks = [
     "CoreTelephony",
     "MobileCoreServices"
+  ],
+  deps = [
+
+  ] + [
+    "without-IDFA_includes"
   ],
   copts = [
 

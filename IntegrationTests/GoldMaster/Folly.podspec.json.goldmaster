@@ -13,13 +13,22 @@ native.config_setting(
   }
   )
 filegroup(
-  name = "folly_hdrs",
+  name = "Folly_hdrs",
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "folly/*.h",
+      "folly/detail/*.h",
+      "folly/portability/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -34,10 +43,10 @@ gen_includes(
   )
 gen_module_map(
   "folly",
-  "folly_module_map",
+  "Folly_module_map",
   "folly",
   [
-    "folly_hdrs"
+    "Folly_hdrs"
   ]
   )
 alias(
@@ -63,11 +72,9 @@ objc_library(
       "folly/portability/BitsFunctexcept.cpp"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+    ),
   hdrs = [
-    ":folly_hdrs"
+    ":Folly_hdrs"
   ],
   pch = pch_with_name_hint(
     "Folly",
@@ -75,10 +82,6 @@ objc_library(
       "folly/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "folly_module_map"
-  ],
   sdk_dylibs = [
     "stdc++"
   ],
@@ -103,7 +106,7 @@ objc_library(
       ]
     }
     ) + [
-    "-IVendor/Folly/pod_support/Headers/Public/folly/"
+
   ] + [
     "-fmodule-name=folly_pod_module"
   ],

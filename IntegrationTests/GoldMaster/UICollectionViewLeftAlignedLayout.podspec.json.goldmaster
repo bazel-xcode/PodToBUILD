@@ -26,6 +26,22 @@ filegroup(
     "//visibility:public"
   ]
   )
+filegroup(
+  name = "UICollectionViewLeftAlignedLayout_cxx_union_hdrs",
+  srcs = [
+    "UICollectionViewLeftAlignedLayout_cxx_hdrs",
+    "UICollectionViewLeftAlignedLayout_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "UICollectionViewLeftAlignedLayout_cxx_includes",
+  include = [
+    "Vendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/"
+  ]
+  )
 objc_library(
   name = "UICollectionViewLeftAlignedLayout_cxx",
   enable_modules = 0,
@@ -43,16 +59,9 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.s"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "UICollectionViewLeftAlignedLayout/**/*.h",
-      "UICollectionViewLeftAlignedLayout/**/*.hpp",
-      "UICollectionViewLeftAlignedLayout/**/*.hxx"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
-    ":UICollectionViewLeftAlignedLayout_hdrs"
+    ":UICollectionViewLeftAlignedLayout_cxx_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "UICollectionViewLeftAlignedLayout",
@@ -60,9 +69,10 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "UICollectionViewLeftAlignedLayout_module_map"
+  deps = [
+
+  ] + [
+    "UICollectionViewLeftAlignedLayout_cxx_includes"
   ],
   copts = [
 
@@ -99,9 +109,24 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "UICollectionViewLeftAlignedLayout/**/*.h",
+      "UICollectionViewLeftAlignedLayout/**/*.hpp",
+      "UICollectionViewLeftAlignedLayout/**/*.hxx"
+    ],
+    exclude_directories = 1
+    ) + [
+    ":UICollectionViewLeftAlignedLayout_cxx_hdrs"
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "UICollectionViewLeftAlignedLayout_includes",
+  include = [
+    "Vendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -123,13 +148,6 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.s"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "UICollectionViewLeftAlignedLayout/**/*.h",
-      "UICollectionViewLeftAlignedLayout/**/*.hpp",
-      "UICollectionViewLeftAlignedLayout/**/*.hxx"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":UICollectionViewLeftAlignedLayout_hdrs"
@@ -140,12 +158,10 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "UICollectionViewLeftAlignedLayout_module_map"
-  ],
   deps = [
     ":UICollectionViewLeftAlignedLayout_cxx"
+  ] + [
+    "UICollectionViewLeftAlignedLayout_includes"
   ],
   copts = [
 

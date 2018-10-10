@@ -19,9 +19,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ),
+    ) + glob(
+    [
+      "PaymentKit/*.h"
+    ],
+    exclude_directories = 1
+    ) + [
+
+  ],
   visibility = [
     "//visibility:public"
+  ]
+  )
+gen_includes(
+  name = "PaymentKit_includes",
+  include = [
+    "Vendor/PaymentKit/pod_support/Headers/Public/"
   ]
   )
 gen_module_map(
@@ -40,11 +53,6 @@ objc_library(
       "PaymentKit/*.m"
     ],
     exclude_directories = 1
-    ) + glob(
-    [
-      "PaymentKit/*.h"
-    ],
-    exclude_directories = 1
     ),
   hdrs = [
     ":PaymentKit_hdrs"
@@ -55,9 +63,10 @@ objc_library(
       "PaymentKit/**/*.pch"
     ]
     ),
-  includes = [
-    "pod_support/Headers/Public/",
-    "PaymentKit_module_map"
+  deps = [
+
+  ] + [
+    "PaymentKit_includes"
   ],
   copts = [
 
