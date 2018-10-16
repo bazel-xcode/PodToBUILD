@@ -12,7 +12,7 @@ import Foundation
 
 class BuildTests: XCTestCase {
     let shell = SystemShellContext(trace: true)
-    let bazelVersion = "0.12.0rc1"
+    let bazelVersion = "0.18.0"
 
     /// Build Tests: Test that a given Pod can build end to end.
     /// 1) Setup a test workspace.
