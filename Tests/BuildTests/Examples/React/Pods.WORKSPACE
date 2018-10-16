@@ -60,7 +60,7 @@ new_pod_repository(
 )
 
 new_pod_repository(
-  name = "Yoga",
+  name = "yoga",
   url = 'https://github.com/facebook/react-native/archive/v0.55.4.zip',
   strip_prefix = 'react-native-0.55.4/ReactCommon/yoga',
   install_script = """
@@ -68,14 +68,7 @@ new_pod_repository(
     # because the evaluation of the podspec in Ruby will fail. The package parameter
     # points to a JSON.parse of a file outside the yoga sandbox.
     /usr/bin/sed -i "" "s,^package.*,package = { 'version' => '0.46.3' },g" Yoga.podspec
-
-    
-    # The canonical version of Yoga uses the Podspec.name, 'Yoga'
-    # React uses the name of 'yoga'. To use this with Texture, we need to
-    # uppercase the name. This is an issue with React <-> Texture integration in
-    # Pods.
-    /usr/bin/sed -i "" "s,spec.module_name.*yoga,spec.module_name = 'Yoga,g" Yoga.podspec
-    __INIT_REPO__
+  	__INIT_REPO__
   """,
 
   generate_module_map = False
