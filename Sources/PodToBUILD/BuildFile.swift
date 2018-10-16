@@ -102,14 +102,20 @@ public func makeConfigSettingNodes() -> SkylarkNode {
 
 // Make Nodes to be inserted at the beginning of skylark output
 // public for test purposes
-public func makePrefixNodes() -> SkylarkNode {
-    return .lines([
+public func makePrefixNodes(includeSwift: Bool) -> SkylarkNode {
+    let lineNodes = [
         SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')"),
         SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')"),
         SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')"),
         SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_includes')"),
+        // TODO: If there is no swift_libraries, don't emit
         makeConfigSettingNodes(),
-    ])
+    ] + (includeSwift ? [
+        // Assume that the user is using the default naming convetion of
+        // swift_library.
+        SkylarkNode.skylark("load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')")
+    ] : [])
+    return .lines(lineNodes)
 }
 
 /// Acknowledgment node exposes an acknowledgment fragment including all of
@@ -167,7 +173,8 @@ public struct PodBuildFile: SkylarkConvertible {
     /// Return the skylark representation of the entire BUILD file
     public func toSkylark() -> SkylarkNode {
         let convertibleNodes: [SkylarkNode] = skylarkConvertibles.compactMap { $0.toSkylark() }
-        return .lines([makePrefixNodes()] + convertibleNodes)
+        let hasSwift = skylarkConvertibles.first(where: { $0 is SwiftLibrary }) != nil
+        return .lines([makePrefixNodes(includeSwift: hasSwift)] + convertibleNodes)
     }
 
     public static func with(podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions.shared) -> PodBuildFile {
@@ -222,23 +229,17 @@ public struct PodBuildFile: SkylarkConvertible {
         Set<BazelSourceLibType> {
         let sources = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
 
-        // Split all objc source files.
-        let options = GetBuildOptions()
         let objcLike = extractFiles(fromPattern: sources, includingFileTypes:
                 ObjcLikeFileTypes)
         var result: Set<BazelSourceLibType> = Set()
         if !objcLike.isEmpty {
-            if options.alwaysSplitRules {
-                result.insert(.objc)
-            }
+            result.insert(.objc)
         }
 
         let cppLike = extractFiles(fromPattern: sources, includingFileTypes:
                 CppLikeFileTypes)
         if !cppLike.isEmpty {
-            if options.alwaysSplitRules {
-                result.insert(.cpp)
-            }
+            result.insert(.cpp)
         }
 
         let swiftLike = extractFiles(fromPattern: sources, includingFileTypes:
@@ -250,9 +251,7 @@ public struct PodBuildFile: SkylarkConvertible {
             // those globs, or continue to emit the dep and determine if it
             // should be a dep in Bazel. The latter limiting based on the
             // current design.
-            if options.alwaysSplitRules {
-                result.insert(.swift)
-            }
+            result.insert(.swift)
         }
         return result
     }
@@ -271,7 +270,8 @@ public struct PodBuildFile: SkylarkConvertible {
                         .objc))
         } else if sourceTypes.count == 1 {
             if sourceTypes.first == .swift {
-                // Append a swift library
+                sourceLibs.append(SwiftLibrary(rootSpec: podSpec, spec: spec,
+                            extraDeps: extraDeps.map { $0.name }))
                 fputs("WARNING: swift support is currently WIP", __stderrp)
             } else {
                 sourceLibs.append(ObjcLibrary(rootSpec: podSpec, spec: spec,
@@ -294,6 +294,12 @@ public struct PodBuildFile: SkylarkConvertible {
 
             if sourceTypes.contains(.swift) {
                 // Append a swift library.
+                let swiftLib = SwiftLibrary(rootSpec: podSpec, spec: spec,
+                        extraDeps: extraDeps.map { $0.name },
+                        isSplitDep: true)
+                splitDeps.append(swiftLib)
+                sourceLibs.append(swiftLib)
+
                 fputs("WARNING: swift support is currently WIP", __stderrp)
             }
 
@@ -387,6 +393,10 @@ public struct PodBuildFile: SkylarkConvertible {
         output = InsertAcknowledgementsTransform.transform(convertibles: output,
                                                            options: buildOptions,
                                                            podSpec: podSpec)
+        output = EmptyDepPruneTransform.transform(convertibles: output,
+                                                           options: buildOptions,
+                                                           podSpec: podSpec)
+
         return output
     }
 }

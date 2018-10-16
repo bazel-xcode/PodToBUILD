@@ -12,3 +12,22 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
+swift_library(
+  name = "SevenSwitch",
+  srcs = glob(
+    [
+      "SevenSwitch.swift"
+    ],
+    exclude = [
+      "Classes/Exclude/**/*.swift"
+    ],
+    exclude_directories = 1
+    ),
+  deps = [
+
+  ],
+  resources = [
+
+  ]
+  )

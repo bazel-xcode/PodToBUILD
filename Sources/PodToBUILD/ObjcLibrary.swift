@@ -502,8 +502,12 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         // note: trans headers aren't propagated here. The code requires that
         // all deps are declared in the PodSpec.
         let depHdrs = deps.map {
-            $0.filter { $0.hasPrefix(":") && !$0.contains("Vendored") && !$0.contains("_Bundle") }
-                .map { ($0 + "_hdrs").toSkylark() }
+            $0.filter { depLabelName -> Bool in
+                depLabelName.hasPrefix(":") &&
+                !depLabelName.contains("Vendored") &&
+                !depLabelName.contains("_Bundle") &&
+                !depLabelName.contains("_swift")
+            }.map { ($0 + "_hdrs").toSkylark() }
         }
        
         let podSupportHeaders = GlobNode(include: AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*"]),

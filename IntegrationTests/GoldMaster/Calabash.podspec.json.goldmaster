@@ -12,6 +12,7 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 config_setting(
   name = "iosCase",
   values = {
@@ -125,6 +126,21 @@ acknowledged_target(
   ],
   value = "//Vendor/Calabash/pod_support_buildable:acknowledgement_fragment"
   )
+swift_library(
+  name = "Calabash_swift",
+  srcs = glob(
+    [
+      "calabash.framework/Versions/A/Headers/*.swift"
+    ],
+    exclude_directories = 1
+    ),
+  deps = [
+
+  ],
+  resources = [
+
+  ]
+  )
 filegroup(
   name = "Calabash_hdrs",
   srcs = glob(
@@ -194,7 +210,8 @@ objc_library(
     }
     ),
   deps = [
-    ":Calabash_cxx"
+    ":Calabash_cxx",
+    ":Calabash_swift"
   ] + [
     "Calabash_includes"
   ],

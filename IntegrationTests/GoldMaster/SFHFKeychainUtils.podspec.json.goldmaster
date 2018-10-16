@@ -12,6 +12,7 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 filegroup(
   name = "SFHFKeychainUtils_cxx_hdrs",
   srcs = glob(
@@ -113,6 +114,21 @@ acknowledged_target(
   ],
   value = "//Vendor/SFHFKeychainUtils/pod_support_buildable:acknowledgement_fragment"
   )
+swift_library(
+  name = "SFHFKeychainUtils_swift",
+  srcs = glob(
+    [
+      "security/**/*.swift"
+    ],
+    exclude_directories = 1
+    ),
+  deps = [
+
+  ],
+  resources = [
+
+  ]
+  )
 filegroup(
   name = "SFHFKeychainUtils_hdrs",
   srcs = glob(
@@ -178,7 +194,8 @@ objc_library(
     "Security"
   ],
   deps = [
-    ":SFHFKeychainUtils_cxx"
+    ":SFHFKeychainUtils_cxx",
+    ":SFHFKeychainUtils_swift"
   ] + [
     "SFHFKeychainUtils_includes"
   ],

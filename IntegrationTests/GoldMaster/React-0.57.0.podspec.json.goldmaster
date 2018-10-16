@@ -12,6 +12,7 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 config_setting(
   name = "iosCase",
   values = {
@@ -1211,6 +1212,23 @@ acknowledged_target(
   ],
   value = "//Vendor/React-0/pod_support_buildable:acknowledgement_fragment"
   )
+swift_library(
+  name = "DevSupport_swift",
+  srcs = glob(
+    [
+      "React/DevSupport/*.swift",
+      "React/Inspector/*.swift"
+    ],
+    exclude_directories = 1
+    ),
+  deps = [
+    ":Core",
+    ":RCTWebSocket"
+  ],
+  resources = [
+
+  ]
+  )
 filegroup(
   name = "DevSupport_hdrs",
   srcs = glob(
@@ -1272,6 +1290,7 @@ objc_library(
   deps = [
     ":Core",
     ":DevSupport_cxx",
+    ":DevSupport_swift",
     ":RCTWebSocket"
   ] + [
     "DevSupport_includes"

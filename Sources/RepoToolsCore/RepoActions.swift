@@ -137,7 +137,9 @@ public enum SerializedRepoToolsAction {
                                  trace: parsed["--trace"]?.first as? Bool ?? false,
                                  enableModules: parsed["--enable_modules"]?.first as? Bool ?? false,
                                  generateModuleMap: parsed["--generate_module_map"]?.first as? Bool ?? false,
-                                 headerVisibility: parsed["--header_visibility"]?.first as? String ?? ""
+                                 headerVisibility: parsed["--header_visibility"]?.first as? String ?? "",
+                                 alwaysSplitRules: false
+
         )
     }
 }

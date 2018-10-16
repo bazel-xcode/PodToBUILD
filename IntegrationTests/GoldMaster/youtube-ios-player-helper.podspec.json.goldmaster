@@ -12,6 +12,7 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 config_setting(
   name = "iosCase",
   values = {
@@ -174,6 +175,37 @@ acknowledged_target(
   ],
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
   )
+swift_library(
+  name = "youtube-ios-player-helper_swift",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Classes/**/*.swift"
+        ],
+        exclude = [
+          "Classes/osx/**/*.swift"
+        ],
+        exclude_directories = 1
+        ),
+      ":osxCase": glob(
+        [
+          "Classes/**/*.swift"
+        ],
+        exclude = [
+          "Classes/ios/**/*.swift"
+        ],
+        exclude_directories = 1
+        )
+    }
+    ),
+  deps = [
+    ":youtube-ios-player-helper_Bundle_Assets"
+  ],
+  resources = [
+
+  ]
+  )
 filegroup(
   name = "youtube-ios-player-helper_hdrs",
   srcs = glob(
@@ -287,7 +319,8 @@ objc_library(
     ),
   deps = [
     ":youtube-ios-player-helper_Bundle_Assets",
-    ":youtube-ios-player-helper_cxx"
+    ":youtube-ios-player-helper_cxx",
+    ":youtube-ios-player-helper_swift"
   ] + [
     "youtube-ios-player-helper_includes"
   ],

@@ -12,3 +12,34 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
+swift_library(
+  name = "FolioReaderKit",
+  srcs = glob(
+    [
+      "Source/**/*.swift",
+      "Source/*.swift",
+      "Vendor/**/*.swift"
+    ],
+    exclude_directories = 1
+    ),
+  deps = [
+    "//Vendor/AEXML:AEXML",
+    "//Vendor/FontBlaster:FontBlaster",
+    "//Vendor/JSQWebViewController:JSQWebViewController",
+    "//Vendor/MenuItemKit:MenuItemKit",
+    "//Vendor/RealmSwift:RealmSwift",
+    "//Vendor/SSZipArchive:SSZipArchive",
+    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition"
+  ],
+  resources = glob(
+    [
+      "Source/**/*.css",
+      "Source/**/*.js",
+      "Source/Resources/*.xcassets",
+      "Source/Resources/Fonts/**/*.otf",
+      "Source/Resources/Fonts/**/*.ttf"
+    ],
+    exclude_directories = 1
+    )
+  )

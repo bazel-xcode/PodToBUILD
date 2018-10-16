@@ -34,6 +34,7 @@ class BuildTests: XCTestCase {
         shell.dir(podSandbox)
         shell.shellOut("ditto $PWD \(sandbox)/Vendor/rules_pods")
         shell.shellOut("ditto \(rootDir)/Tests/BuildTests/Examples/\(pod)/* \(sandbox)/")
+        shell.shellOut("ditto \(rootDir)/Tests/BuildTests/Examples/WORKSPACE \(sandbox)/")
         shell.shellOut("ditto \(rootDir)/Tests/BuildTests/Examples/PodSpecs \(sandbox)/Vendor/PodSpecs")
         let task = ShellTask(command: "/bin/bash", arguments: [
                 "-c",

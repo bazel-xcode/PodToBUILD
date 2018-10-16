@@ -12,6 +12,7 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 filegroup(
   name = "UICollectionViewLeftAlignedLayout_cxx_hdrs",
   srcs = glob(
@@ -102,6 +103,21 @@ acknowledged_target(
   ],
   value = "//Vendor/UICollectionViewLeftAlignedLayout/pod_support_buildable:acknowledgement_fragment"
   )
+swift_library(
+  name = "UICollectionViewLeftAlignedLayout_swift",
+  srcs = glob(
+    [
+      "UICollectionViewLeftAlignedLayout/**/*.swift"
+    ],
+    exclude_directories = 1
+    ),
+  deps = [
+
+  ],
+  resources = [
+
+  ]
+  )
 filegroup(
   name = "UICollectionViewLeftAlignedLayout_hdrs",
   srcs = glob(
@@ -159,7 +175,8 @@ objc_library(
     ]
     ),
   deps = [
-    ":UICollectionViewLeftAlignedLayout_cxx"
+    ":UICollectionViewLeftAlignedLayout_cxx",
+    ":UICollectionViewLeftAlignedLayout_swift"
   ] + [
     "UICollectionViewLeftAlignedLayout_includes"
   ],

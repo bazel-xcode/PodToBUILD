@@ -27,7 +27,8 @@ func main() {
                                  trace: false,
                                  enableModules: false,
                                  generateModuleMap: false,
-                                 headerVisibility:  "")
+                                 headerVisibility:  "",
+                                 alwaysSplitRules: true)
 
     // Consider adding a split here to split out sublibs
     let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: options)
