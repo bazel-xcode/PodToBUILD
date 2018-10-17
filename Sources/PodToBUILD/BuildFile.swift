@@ -22,6 +22,7 @@ public protocol BuildOptions {
     var headerVisibility: String { get }
     
     var alwaysSplitRules: Bool { get }
+    var vendorize: Bool { get }
 }
 
 // Nullability is the root of all evil
@@ -35,6 +36,7 @@ public struct EmptyBuildOptions: BuildOptions {
     public let generateModuleMap: Bool = false
     public let headerVisibility: String = ""
     public let alwaysSplitRules: Bool = false
+    public let vendorize: Bool = true
 
     public static let shared = EmptyBuildOptions()
 }
@@ -49,6 +51,7 @@ public struct BasicBuildOptions: BuildOptions {
     public let generateModuleMap: Bool
     public let headerVisibility: String
     public let alwaysSplitRules: Bool
+    public let vendorize: Bool
 
     public init(podName: String,
                 userOptions: [String],
@@ -57,7 +60,8 @@ public struct BasicBuildOptions: BuildOptions {
                 enableModules: Bool = false,
                 generateModuleMap: Bool = false,
                 headerVisibility: String = "",
-                alwaysSplitRules: Bool = true
+                alwaysSplitRules: Bool = true,
+                vendorize: Bool = true
     ) {
         self.podName = podName
         self.userOptions = userOptions
@@ -67,6 +71,7 @@ public struct BasicBuildOptions: BuildOptions {
         self.generateModuleMap = generateModuleMap
         self.headerVisibility = headerVisibility
         self.alwaysSplitRules = alwaysSplitRules
+        self.vendorize = vendorize
     }
 }
 
@@ -103,12 +108,17 @@ public func makeConfigSettingNodes() -> SkylarkNode {
 // Make Nodes to be inserted at the beginning of skylark output
 // public for test purposes
 public func makePrefixNodes(includeSwift: Bool) -> SkylarkNode {
+    let options = GetBuildOptions()
+    let name = "rules_pods"
+    let extFile = getRulePrefix(name: name) + "BazelExtensions:extensions.bzl"
+
     let lineNodes = [
-        SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'pch_with_name_hint')"),
-        SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'acknowledged_target')"),
-        SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_module_map')"),
-        SkylarkNode.skylark("load('//Vendor/rules_pods/BazelExtensions:extensions.bzl', 'gen_includes')"),
-        // TODO: If there is no swift_libraries, don't emit
+        SkylarkNode.functionCall(name: "load", arguments: [
+            .basic(.string(extFile)),
+            .basic(.string("pch_with_name_hint")),
+            .basic(.string("acknowledged_target")),
+            .basic(.string("gen_module_map")),
+            .basic(.string("gen_includes"))]),
         makeConfigSettingNodes(),
     ] + (includeSwift ? [
         // Assume that the user is using the default naming convetion of
@@ -129,7 +139,7 @@ public struct AcknowledgmentNode: SkylarkConvertible {
         let nodeName = ObjcLibrary.bazelLabel(fromString: name + "_acknowledgement").toSkylark()
         let options = GetBuildOptions()
         let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
-        let value = ("//Vendor/" + options.podName + "/" +
+        let value = (getRulePrefix(name: options.podName) + 
              podSupportBuildableDir +
              ":acknowledgement_fragment").toSkylark()
         let target = SkylarkNode.functionCall(

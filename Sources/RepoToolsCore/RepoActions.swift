@@ -83,6 +83,7 @@ public enum SerializedRepoToolsAction {
             "--trace": .bool,
             "--enable_modules": .bool,
             "--generate_module_map": .bool,
+            "--vendorize": .bool,
             "--header_visibility": .string,
         ]
 
@@ -138,8 +139,8 @@ public enum SerializedRepoToolsAction {
                                  enableModules: parsed["--enable_modules"]?.first as? Bool ?? false,
                                  generateModuleMap: parsed["--generate_module_map"]?.first as? Bool ?? false,
                                  headerVisibility: parsed["--header_visibility"]?.first as? String ?? "",
-                                 alwaysSplitRules: false
-
+                                 alwaysSplitRules: false,
+                                 vendorize: parsed["--vendorize"]?.first as? Bool ?? true
         )
     }
 }

@@ -8,6 +8,7 @@ cd $SCRIPTPATH
 mkdir -p IntegrationTests/GoldMaster
 
 for f in $(find Examples/*); do
+    echo "Writing goldmaster for $f"
     bin/Compiler $f --always_split_rules \
         > IntegrationTests/GoldMaster/$(basename $f).goldmaster
 done
