@@ -37,7 +37,7 @@ filegroup(
   ]
   )
 gen_includes(
-  name = "folly_includes",
+  name = "Folly_includes",
   include = [
     "Vendor/Folly",
     "Vendor/boost-for-react-native",
@@ -52,15 +52,8 @@ gen_module_map(
     "Folly_hdrs"
   ]
   )
-alias(
-  name = "Folly",
-  actual = "folly",
-  visibility = [
-    "//visibility:public"
-  ]
-  )
 objc_library(
-  name = "folly",
+  name = "Folly",
   enable_modules = 0,
   srcs = glob(
     [
@@ -93,7 +86,7 @@ objc_library(
     "//Vendor/boost-for-react-native:boost-for-react-native",
     "//Vendor/glog:glog"
   ] + [
-    "folly_includes"
+    "Folly_includes"
   ],
   copts = [
     "-std=c++14",
@@ -118,7 +111,7 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "folly_acknowledgement",
+  name = "Folly_acknowledgement",
   deps = [
     "//Vendor/DoubleConversion:DoubleConversion_acknowledgement",
     "//Vendor/boost-for-react-native:boost-for-react-native_acknowledgement",

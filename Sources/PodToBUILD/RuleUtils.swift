@@ -1,5 +1,5 @@
 //
-//  ObjcLibrary.swift
+//  RuleUtils.swift
 //  PodToBUILD
 //
 //  Created by Jerry Marino on 9/20/2018.
@@ -63,6 +63,45 @@ public func getRulePrefix(name: String, preceedsTarget: Bool = false) -> String 
 public func getPodBaseDir() -> String {
     let options = GetBuildOptions()
     return options.vendorize ? "Vendor" : "external"
+}
+
+/// Compute the name of a lib
+public func computeLibName(rootSpec: PodSpec? = nil, spec: PodSpec, podName: String, isSplitDep: Bool = false, sourceType: BazelSourceLibType) -> String {
+    let splitSuffix = isSplitDep ? sourceType.getLibNameSuffix() : ""
+    let baseName = rootSpec == nil ? podName : bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
+    return baseName + splitSuffix
+}
+
+/// Get a dependency name from a name in accordance with
+/// CocoaPods dependency naming ( slashes )
+/// Versions are ignored!
+/// When a given dependency is locally speced, it should
+/// Match the PodName i.e. PINCache/Core
+public func getDependencyName(fromPodDepName podDepName: String, podName: String) -> String  {
+    let results = podDepName.components(separatedBy: "/")
+    if results.count > 1 && results[0] == podName {
+        // This is a local subspec reference
+        let join = results[1 ... results.count - 1].joined(separator: "/")
+        return ":\(bazelLabel(fromString: join))"
+    } else {
+        if results.count > 1 {
+            return getRulePrefix(name: results[0],
+                    preceedsTarget: true) +
+                "\(bazelLabel(fromString: results[1]))"
+        } else {
+            // This is a reference to another pod library
+            return getRulePrefix(name:
+                    bazelLabel(fromString: results[0]),
+                    preceedsTarget: true)  +
+                "\(bazelLabel(fromString: results[0]))"
+        }
+    }
+}
+
+/// Convert a string to a Bazel label conventional string
+public func bazelLabel(fromString string: String) -> String {
+	return string.replacingOccurrences(of: "/", with: "_")
+				 .replacingOccurrences(of: "+", with: "_")
 }
 
 

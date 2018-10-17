@@ -25,19 +25,10 @@ public struct SwiftLibrary: BazelTarget {
         let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].compactMap { $0 })
         self.isTopLevelTarget = rootSpec == nil && isSplitDep == false
 
-        // Take the name of the primary spec
-        let primarySpec = ComposedSpec.create(fromSpecs: [spec, rootSpec].compactMap { $0 })
-        let primarySpecName = primarySpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
+        let podName = GetBuildOptions().podName
+		self.name = computeLibName(rootSpec: rootSpec, spec: spec, podName:
+				podName, isSplitDep: isSplitDep, sourceType: .swift)
 
-        let fallbackModuleName = fallbackSpec ^*
-            ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
-
-        let rootName = fallbackModuleName ?? primarySpecName
-
-        // Split deps take the name of the source type.
-        let splitSuffix = isSplitDep ? BazelSourceLibType.swift.getLibNameSuffix() : ""
-        let baseName = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
-        self.name = baseName + splitSuffix
         let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
         let implFiles = extractFiles(fromPattern: allSourceFiles,
                 includingFileTypes: SwiftLikeFileTypes)
@@ -65,9 +56,10 @@ public struct SwiftLibrary: BazelTarget {
 
         // Lift the deps to multiplatform, then get the names of these deps.
         let mpDeps = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.dependencies))
-        let mpPodSpecDeps = mpDeps.map { $0.map { getDependencyName(fromPodDepName: $0, inRootPodNamed: primarySpecName, moduleName: rootName) } }
+        let mpPodSpecDeps = mpDeps.map { $0.map {
+            getDependencyName(fromPodDepName: $0, podName: podName) } }
 
-        let extraDepNames = extraDeps.map { ObjcLibrary.bazelLabel(fromString: ":\($0)") }
+        let extraDepNames = extraDeps.map { bazelLabel(fromString: ":\($0)") }
 
         self.deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
     }

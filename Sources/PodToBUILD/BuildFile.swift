@@ -108,7 +108,6 @@ public func makeConfigSettingNodes() -> SkylarkNode {
 // Make Nodes to be inserted at the beginning of skylark output
 // public for test purposes
 public func makePrefixNodes(includeSwift: Bool) -> SkylarkNode {
-    let options = GetBuildOptions()
     let name = "rules_pods"
     let extFile = getRulePrefix(name: name) + "BazelExtensions:extensions.bzl"
 
@@ -136,7 +135,7 @@ public struct AcknowledgmentNode: SkylarkConvertible {
     let deps: [String]
 
     public func toSkylark() -> SkylarkNode {
-        let nodeName = ObjcLibrary.bazelLabel(fromString: name + "_acknowledgement").toSkylark()
+        let nodeName = bazelLabel(fromString: name + "_acknowledgement").toSkylark()
         let options = GetBuildOptions()
         let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
         let value = (getRulePrefix(name: options.podName) + 

@@ -40,7 +40,7 @@ filegroup(
   ]
   )
 gen_includes(
-  name = "AsyncDisplayKit_includes",
+  name = "Texture_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
@@ -53,15 +53,8 @@ gen_module_map(
     "Texture_hdrs"
   ]
   )
-alias(
-  name = "Texture",
-  actual = "AsyncDisplayKit",
-  visibility = [
-    "//visibility:public"
-  ]
-  )
 objc_library(
-  name = "AsyncDisplayKit",
+  name = "Texture",
   enable_modules = 0,
   hdrs = [
     ":Texture_hdrs"
@@ -81,7 +74,7 @@ objc_library(
     ":PINRemoteImage",
     ":Photos"
   ] + [
-    "AsyncDisplayKit_includes"
+    "Texture_includes"
   ],
   copts = [
 
@@ -105,7 +98,7 @@ objc_library(
   ]
   )
 acknowledged_target(
-  name = "AsyncDisplayKit_acknowledgement",
+  name = "Texture_acknowledgement",
   deps = [
 
   ],
