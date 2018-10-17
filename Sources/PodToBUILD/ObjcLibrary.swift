@@ -119,10 +119,15 @@ func getDependencyName(fromPodDepName podDepName: String, inRootPodNamed rootNam
         return ":\(ObjcLibrary.bazelLabel(fromString: join))"
     } else {
         if results.count > 1 {
-            return "//Vendor/\(results[0]):\(ObjcLibrary.bazelLabel(fromString: results[1]))"
+            return getRulePrefix(name: results[0],
+                    preceedsTarget: true) +
+                "\(ObjcLibrary.bazelLabel(fromString: results[1]))"
         } else {
             // This is a reference to another pod library
-            return "//Vendor/\(ObjcLibrary.bazelLabel(fromString: results[0])):\(ObjcLibrary.bazelLabel(fromString: results[0]))"
+            return getRulePrefix(name:
+                    ObjcLibrary.bazelLabel(fromString: results[0]),
+                    preceedsTarget: true)  +
+                "\(ObjcLibrary.bazelLabel(fromString: results[0]))"
         }
     }
 }
@@ -336,7 +341,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             guard include else { return [String]() }
 
 		    let externalDir = GetBuildOptions().podName
-            return ["Vendor/" +  externalDir + "/" + PodSupportSystemPublicHeaderDir]
+            return [ getPodBaseDir() + "/" +  externalDir + "/" + PodSupportSystemPublicHeaderDir]
         }
 
         self.includes = xcconfigFlags.filter { $0.hasPrefix("-I") }.map {
@@ -718,7 +723,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 				// it is a convention that these are 1 in the same.
 				let externalDir = GetBuildOptions()
 .podName
-				return accum + ["-I" + "Vendor/" + externalDir + "/" + searchPath]
+				return accum + ["-I" + getPodBaseDir() + "/" + externalDir + "/" + searchPath]
 			}
 		}
 

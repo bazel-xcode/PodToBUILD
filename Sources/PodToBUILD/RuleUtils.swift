@@ -53,3 +53,16 @@ public func makeAlias(name: String, actual: String) -> SkylarkNode {
         ])
 }
 
+public func getRulePrefix(name: String, preceedsTarget: Bool = false) -> String {
+    let options = GetBuildOptions()
+    return options.vendorize ?
+        "//Vendor/\(name)" + (preceedsTarget ? ":" : "/") :
+        "@\(name)" + (preceedsTarget ? "//:" : "//")
+}
+
+public func getPodBaseDir() -> String {
+    let options = GetBuildOptions()
+    return options.vendorize ? "Vendor" : "external"
+}
+
+

@@ -18,17 +18,19 @@ protocol SourceExcludable : BazelTarget {
 
     var deps: AttrSet<[String]> { get }
 }
+
+
 extension Dictionary where Key == String, Value == SourceExcludable {
     // Do not rewrite names for @
     // the below logic only works for internal deps.
     func get(bazelName: String) -> SourceExcludable? {
-        if bazelName.contains("//Vendor") {
+        if bazelName.contains("//Vendor") || bazelName.contains("@") {
             return self[bazelName]
         }
         return bazelName.components(separatedBy: ":").last.flatMap { self[$0] }
 	}
     mutating func set(bazelName: String, newValue: SourceExcludable) {
-        if bazelName.contains("//Vendor") {
+        if bazelName.contains("//Vendor") || bazelName.contains("@") {
             self[bazelName] = newValue
         }
         if let key = bazelName.components(separatedBy: ":").last {

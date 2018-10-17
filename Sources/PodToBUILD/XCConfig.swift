@@ -44,8 +44,8 @@ public struct XCConfigTransformer {
         return allValues.filter { $0 != "$(inherited)" }
             .compactMap { val in
                 return transformer.string(forXCConfigValue: val)?
-                    .replacingOccurrences(of: "$(PODS_ROOT)", with: "Vendor")
-                    .replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)", with: "Vendor")
+                    .replacingOccurrences(of: "$(PODS_ROOT)", with: getPodBaseDir())
+                    .replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)", with: getPodBaseDir())
             }
     }
 
@@ -113,7 +113,7 @@ public struct HeaderSearchPathTransformer: XCConfigValueTransformer {
     
     public func string(forXCConfigValue value: String) -> String? {
         let cleaned = value.replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)",
-            with: "Vendor/\(externalName)").replacingOccurrences(of: "\"", with: "")
+            with: "\(getPodBaseDir())/\(externalName)").replacingOccurrences(of: "\"", with: "")
         return "-I\(cleaned)"
     }
 }
