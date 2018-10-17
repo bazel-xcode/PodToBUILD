@@ -55,7 +55,7 @@ public struct ObjcBundle: BazelTarget {
         return .functionCall(
             name: "objc_bundle",
             arguments: [
-                .named(name: "name", value: ObjcLibrary.bazelLabel(fromString: name).toSkylark()),
+                .named(name: "name", value: bazelLabel(fromString: name).toSkylark()),
                 .named(name: "bundle_imports",
                        value: GlobNode(include: bundleImports.map{ Set($0) },
                                        exclude: AttrSet.empty).toSkylark()),
@@ -83,7 +83,7 @@ public struct ObjcBundleLibrary: BazelTarget {
         return .functionCall(
             name: "objc_bundle_library",
             arguments: [
-                .named(name: "name", value: ObjcLibrary.bazelLabel(fromString: name).toSkylark()),
+                .named(name: "name", value: bazelLabel(fromString: name).toSkylark()),
                 .named(name: "resources",
                        value: GlobNode(include: resources.map{ Set($0) },
                                        exclude: AttrSet.empty).toSkylark()),
@@ -103,32 +103,6 @@ public struct ConfigSetting: BazelTarget {
                 .named(name: "name", value: name.toSkylark()),
                 .named(name: "values", value: values.toSkylark())
             ])
-    }
-}
-
-/// Get a dependency name from a name in accordance with
-/// CocoaPods dependency naming ( slashes )
-/// Versions are ignored!
-/// When a given dependency is locally speced, it should
-/// Match the PodName i.e. PINCache/Core
-func getDependencyName(fromPodDepName podDepName: String, inRootPodNamed rootName: String, moduleName: String?) -> String  {
-    let results = podDepName.components(separatedBy: "/")
-    if results.count > 1 && results[0] == rootName {
-        // This is a local subspec reference
-        let join = results[1 ... results.count - 1].joined(separator: "/")
-        return ":\(ObjcLibrary.bazelLabel(fromString: join))"
-    } else {
-        if results.count > 1 {
-            return getRulePrefix(name: results[0],
-                    preceedsTarget: true) +
-                "\(ObjcLibrary.bazelLabel(fromString: results[1]))"
-        } else {
-            // This is a reference to another pod library
-            return getRulePrefix(name:
-                    ObjcLibrary.bazelLabel(fromString: results[0]),
-                    preceedsTarget: true)  +
-                "\(ObjcLibrary.bazelLabel(fromString: results[0]))"
-        }
     }
 }
 
@@ -261,10 +235,6 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.isTopLevelTarget = isTopLevelTarget
     }
 
-    static func bazelLabel(fromString string: String) -> String {
-        return string.replacingOccurrences(of: "/", with: "_")
-                     .replacingOccurrences(of: "+", with: "_")
-    }
 
     /// Helper to allocate with a podspec
     /// objc_library is used for either C++ compilation or ObjC/C compilation.
@@ -295,19 +265,9 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.requiresArc = (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.requiresArc))) ?? .left(true)
         self.publicHeaders = (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.publicHeaders))).map{ Set($0) }
     
-        // Take the name of the primary spec
-        let primarySpec = ComposedSpec.create(fromSpecs: [spec, rootSpec].compactMap { $0 })
-        let primarySpecName = primarySpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.name))
-
-        let fallbackModuleName = fallbackSpec ^*
-            ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
-
-        let rootName = fallbackModuleName ?? primarySpecName
-
-        // Split deps take the name of the source type.
-        let splitSuffix = isSplitDep ? sourceType.getLibNameSuffix() : ""
-        let baseName = rootSpec == nil ? rootName : ObjcLibrary.bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
-        self.name = baseName + splitSuffix
+        let podName = GetBuildOptions().podName
+        self.name = computeLibName(rootSpec: rootSpec, spec: spec, podName:
+                podName, isSplitDep: isSplitDep, sourceType: sourceType)
         let externalName = rootSpec?.name ?? spec.name
 
         let xcconfigTransformer =
@@ -321,8 +281,6 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let xcconfigCopts = xcconfigFlags.filter { !$0.hasPrefix("-I") }
 
-
-
         let moduleName = AttrSet<String>(
             value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
         )
@@ -331,7 +289,8 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let headerName = (moduleName.isEmpty ? nil : moduleName) ??
         (headerDirectoryName.basic == nil ? nil :
-         headerDirectoryName.denormalize()) ??  AttrSet<String>(value: rootName)
+         headerDirectoryName.denormalize()) ??  AttrSet<String>(value:
+         externalName)
 
         let includePodHeaderDirs = {
             () -> [String] in
@@ -340,8 +299,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                     value?.lowercased() != "false")
             guard include else { return [String]() }
 
-		    let externalDir = GetBuildOptions().podName
-            return [ getPodBaseDir() + "/" +  externalDir + "/" + PodSupportSystemPublicHeaderDir]
+            return [ getPodBaseDir() + "/" +  podName + "/" + PodSupportSystemPublicHeaderDir]
         }
 
         self.includes = xcconfigFlags.filter { $0.hasPrefix("-I") }.map {
@@ -398,9 +356,11 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         // Lift the deps to multiplatform, then get the names of these deps.
         let mpDeps = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.dependencies))
-        let mpPodSpecDeps = mpDeps.map { $0.map { getDependencyName(fromPodDepName: $0, inRootPodNamed: primarySpecName, moduleName: rootName) } }
+        let mpPodSpecDeps = mpDeps.map { $0.map {
+            getDependencyName(fromPodDepName: $0, podName:
+                    podName) } }
 
-        let extraDepNames = extraDeps.map { ObjcLibrary.bazelLabel(fromString: ":\($0)") }
+        let extraDepNames = extraDeps.map { bazelLabel(fromString: ":\($0)") }
 
         self.deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
 
@@ -420,9 +380,9 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             $0.filter { s in s.hasSuffix(".bundle") }
               .map(ObjcBundle.extractBundleName)
               .map { k in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }
-              .map(ObjcLibrary.bazelLabel)})
+              .map(bazelLabel)})
 
-        self.bundles = prebuiltBundles <> (spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }.map(ObjcLibrary.bazelLabel) }))
+        self.bundles = prebuiltBundles <> (spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }.map(bazelLabel) }))
     }
 
     mutating func add(configurableKey: String, value: Any) {
@@ -703,29 +663,29 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             )
         let getPodIQuotes = {
             () -> [String] in
-			let podInclude = lib.includes.first(where: {
-					$0.contains(PodSupportSystemPublicHeaderDir) })
-			guard podInclude != nil else { return [] }
+            let podInclude = lib.includes.first(where: {
+                    $0.contains(PodSupportSystemPublicHeaderDir) })
+            guard podInclude != nil else { return [] }
 
-			let headerDirs = self.headerName.map { PodSupportSystemPublicHeaderDir + "\($0)/" }
-			let headerSearchPaths: Set<String> = Set(headerDirs.fold(
-						basic: { str in Set<String>([str].compactMap { $0 }) },
-						multi: {
-						(result: Set<String>, multi: MultiPlatform<String>)
-							-> Set<String> in
-							return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
-						}))
-			return headerSearchPaths
-				.sorted(by: (<))
-				.reduce([String]()) {
-				accum, searchPath in
-				// Assume that the podspec matches the name of the directory.
-				// it is a convention that these are 1 in the same.
-				let externalDir = GetBuildOptions()
+            let headerDirs = self.headerName.map { PodSupportSystemPublicHeaderDir + "\($0)/" }
+            let headerSearchPaths: Set<String> = Set(headerDirs.fold(
+                        basic: { str in Set<String>([str].compactMap { $0 }) },
+                        multi: {
+                        (result: Set<String>, multi: MultiPlatform<String>)
+                            -> Set<String> in
+                            return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
+                        }))
+            return headerSearchPaths
+                .sorted(by: (<))
+                .reduce([String]()) {
+                accum, searchPath in
+                // Assume that the podspec matches the name of the directory.
+                // it is a convention that these are 1 in the same.
+                let externalDir = GetBuildOptions()
 .podName
-				return accum + ["-I" + getPodBaseDir() + "/" + externalDir + "/" + searchPath]
-			}
-		}
+                return accum + ["-I" + getPodBaseDir() + "/" + externalDir + "/" + searchPath]
+            }
+        }
 
         libArguments.append(.named(
             name: "copts",

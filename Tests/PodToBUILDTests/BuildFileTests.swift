@@ -175,14 +175,6 @@ class BuildFileTests: XCTestCase {
         XCTAssert(lib.sdkFrameworks == expectedFrameworks)
     }
 
-    func testNameFromPodspec() {
-        let podspec = examplePodSpecNamed(name: "IGListKit")
-        let lib = ObjcLibrary(rootSpec: nil, spec: podspec)
-
-        XCTAssertEqual(lib.name, podspec.name)
-    }
-
-
     func testDependOnDefaultSubspecs() {
         let podspec = examplePodSpecNamed(name: "IGListKit")
         let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)

@@ -89,7 +89,7 @@ class BuildTests: XCTestCase {
     }
 
     func testTexture() {
-        build(pod: "Texture", specs: ["AsyncDisplayKit"])
+        build(pod: "Texture", specs: ["Texture"])
     }
 }
 
