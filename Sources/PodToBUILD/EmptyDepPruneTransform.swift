@@ -80,12 +80,18 @@ struct EmptyDepPruneTransform : SkylarkConvertibleTransform {
             }
             return prunedDeps
         }
-        return convertibles.map {
+        return convertibles.compactMap {
             convertible in
-            guard let lib = convertible as? ObjcLibrary else {
-                return convertible
+            if let lib = convertible as? ObjcLibrary {
+                return lib |> (ObjcLibrary.lens.deps %~~ prune)
             }
-            return lib |> (ObjcLibrary.lens.deps %~~ prune)
+            if let lib = convertible as? SwiftLibrary {
+                guard hasSourcesOnDisk(globNode: lib.sourceFiles) else {
+                    return nil
+                }
+                return lib
+            }
+            return convertible
         }
     }
 }
