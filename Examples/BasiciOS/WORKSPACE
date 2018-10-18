@@ -1,0 +1,44 @@
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+# TODO: point this at a release ( this doesn't actually work because of
+# compiling `RepoTools` ATM
+git_repository(
+    name = "rules_pods",
+    remote = "https://github.com/pinterest/PodToBUILD.git",
+    branch = "master",
+)
+
+git_repository(
+    name = "build_bazel_rules_apple",
+    remote = "https://github.com/bazelbuild/rules_apple.git",
+    tag = "0.6.0",
+)
+
+load(
+    "@build_bazel_rules_apple//apple:repositories.bzl",
+    "apple_rules_dependencies",
+)
+
+apple_rules_dependencies()
+
+git_repository(
+    name = "build_bazel_rules_swift",
+    remote = "https://github.com/bazelbuild/rules_swift.git",
+    tag = "0.3.0",
+)
+
+load(
+    "@build_bazel_rules_swift//swift:repositories.bzl",
+    "swift_rules_dependencies",
+)
+
+swift_rules_dependencies()
+
+load("@rules_pods//BazelExtensions:workspace.bzl", "new_pod_repository")
+
+new_pod_repository(
+    name = "SlackTextViewController",
+    url = "https://github.com/slackhq/SlackTextViewController/archive/v1.9.6.zip",
+    inhibit_warnings = True
+)
+
