@@ -25,23 +25,6 @@ public let PodSupportDir = "pod_support/"
 /// initialization phase, all Public headers are symlinked into this directory.
 public let PodSupportSystemPublicHeaderDir = "pod_support/Headers/Public/"
 
-/// Law: Names must be valid bazel names; see the spec
-protocol BazelTarget: SkylarkConvertible {
-    var name: String { get }
-    var acknowledgedDeps: [String]? { get }
-    var acknowledged: Bool { get }
-}
-
-extension BazelTarget {
-    var acknowledgedDeps: [String]? {
-        return nil
-    }
-
-    var acknowledged: Bool {
-        return false
-    }
-}
-
 // https://docs.bazel.build/versions/master/be/objective-c.html#objc_bundle
 public struct ObjcBundle: BazelTarget {
     let name: String
@@ -466,12 +449,19 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         // note: trans headers aren't propagated here. The code requires that
         // all deps are declared in the PodSpec.
+        // Depend on header file groups for ObjcLibrary's in this build file
         let depHdrs = deps.map {
             $0.filter { depLabelName -> Bool in
-                depLabelName.hasPrefix(":") &&
-                !depLabelName.contains("Vendored") &&
-                !depLabelName.contains("_Bundle") &&
-                !depLabelName.contains("_swift")
+                guard depLabelName.hasPrefix(":") else {
+                    return false
+                }
+                let offsetIdx = depLabelName.utf8
+                        .index(depLabelName.utf8.startIndex, offsetBy: 1)
+                let labelName = String(
+                        depLabelName[offsetIdx ..< depLabelName.utf8.endIndex])
+                let target = BuildFileContext.get()?.getBazelTarget(name:
+                        labelName)
+                return target is ObjcLibrary
             }.map { ($0 + "_hdrs").toSkylark() }
         }
        

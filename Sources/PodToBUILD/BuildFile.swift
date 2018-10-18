@@ -181,7 +181,9 @@ public struct PodBuildFile: SkylarkConvertible {
 
     /// Return the skylark representation of the entire BUILD file
     public func toSkylark() -> SkylarkNode {
+        BuildFileContext.set(BuildFileContext(convertibles: skylarkConvertibles))
         let convertibleNodes: [SkylarkNode] = skylarkConvertibles.compactMap { $0.toSkylark() }
+        BuildFileContext.set(nil)
         let hasSwift = skylarkConvertibles.first(where: { $0 is SwiftLibrary }) != nil
         return .lines([makePrefixNodes(includeSwift: hasSwift)] + convertibleNodes)
     }
