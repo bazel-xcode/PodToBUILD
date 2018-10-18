@@ -40,7 +40,7 @@ test-impl:
 
 # Update the gold master directory
 goldmaster: release
-	./MakeGoldMaster.sh
+	@./MakeGoldMaster.sh
 
 unit-test: SWIFT_TEST_OPTS= --filter PodToBUILDTests
 unit-test: test-impl
@@ -76,9 +76,9 @@ example: build
 ci: clean test
 
 release:
-	tools/bazelwrapper build :RepoTools :Compiler
-	ditto bazel-bin/RepoTools bin/RepoTools
-	ditto bazel-bin/Compiler bin/Compiler
+	@tools/bazelwrapper build :RepoTools :Compiler
+	@ditto bazel-bin/RepoTools bin/RepoTools
+	@ditto bazel-bin/Compiler bin/Compiler
 
 
 # https://github.com/swift-vim/SwiftPackageManager.vim
