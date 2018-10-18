@@ -8,7 +8,7 @@ make compiler
 CMD=bin/Compiler
 
 # Loop through all the examples and compare outputs
-for f in $(find Examples/*); do
+for f in $(find Examples/PodSpecs/*); do
     GOLD_MASTER=`cat IntegrationTests/GoldMaster/$(basename $f).goldmaster`
 	TEMP_F=$(mktemp)
 	OUTPUT=$($CMD $f | tee $TEMP_F)
