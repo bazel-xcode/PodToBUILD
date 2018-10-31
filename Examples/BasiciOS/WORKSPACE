@@ -1,12 +1,17 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-# TODO: point this at a release ( this doesn't actually work because of
-# compiling `RepoTools` ATM
+# This is a fake repository - `override-repository` handles this in practice
 git_repository(
     name = "rules_pods",
     remote = "https://github.com/pinterest/PodToBUILD.git",
     branch = "master",
 )
+
+# In real usage, point rules_pods at a release.
+#http_archive(
+#    name = "rules_pods",
+#    urls = ["https://github.com/Pinterst/PodToBUILD/releases/__RELEASE__.zip"],
+#)
 
 git_repository(
     name = "build_bazel_rules_apple",

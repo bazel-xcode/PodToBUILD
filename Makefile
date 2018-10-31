@@ -79,10 +79,11 @@ ci: clean
 	$(MAKE) build-test
 
 release:
-	@tools/bazelwrapper build :RepoTools :Compiler
+	@tools/bazelwrapper build \
+		-c opt \
+		--swiftcopt=-whole-module-optimization :RepoTools :Compiler
 	@ditto bazel-bin/RepoTools bin/RepoTools
 	@ditto bazel-bin/Compiler bin/Compiler
-
 
 # https://github.com/swift-vim/SwiftPackageManager.vim
 compile_commands.json:
@@ -91,4 +92,42 @@ compile_commands.json:
 	swift build --build-tests \
 		-Xswiftc -parseable-output | tee .build/commands_build.log
 	cat .build/commands_build.log | spm-vim compile_commands
+
+
+
+TESTED_BAZEL_VERSION=0.18.0
+
+# Make a binary archive of PodToBUILD with the official github cli `hub`
+github_release:
+	@which hub || (echo "this command relies on github cli" && exit 1)
+	@git diff --quiet || echo "Dirty tree" && exit 1
+	@git checkout master
+	@git pull --rebase origin master
+	@echo "creating release: $(TESTED_BAZEL_VERSION)-($(shell git rev-parse --short HEAD)"
+	$(MAKE) archive
+	@hub release create -p -a PodToBUILD.zip \
+   		-m "PodToBUILD  $(TESTED_BAZEL_VERSION)-$(shell git rev-parse --sort HEAD)" \
+		$(TESTED_BAZEL_VERSION)-$(shell git rev-parse --short HEAD)
+
+# Create an archive of `rules_pods`.
+# There should be no behaviorial differences between this package and a source
+# checkout, other than the not building.
+archive:
+	$(eval BUILD_DIR=$(shell mktemp -d))
+	@echo "Archiving to $(BUILD_DIR).."
+	@ditto bin $(BUILD_DIR)/bin
+	@ditto BazelExtensions $(BUILD_DIR)/BazelExtensions
+	@echo "release:\n\t@echo 'skipping build..'" > $(BUILD_DIR)/Makefile
+	@touch $(BUILD_DIR)/WORKSPACE
+	@echo "alias(name = 'update_pods', actual = '//bin:update_pods')" \
+		> $(BUILD_DIR)/BUILD
+	@ditto LICENSE $(BUILD_DIR)/
+	@cd $(BUILD_DIR) && zip -r \
+		$(PWD)/PodToBUILD.zip \
+		bin/* \
+		BazelExtensions \
+		Makefile \
+		WORKSPACE \
+		BUILD \
+		LICENSE
 
