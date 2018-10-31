@@ -1,9 +1,9 @@
 # PodToBUILD Examples
 
-CI tested, usage examples of using PodToBUILD.
+CI tested, usage examples of using CocoaPods with Bazel via `PodToBUILD`.
 
-_Note, that the installation of `PodToBUILD` is non-normal and setup for testing
-conditions - see the README.md for installation and usage._
+_Note, that the installation of `rules_pods` is non-normal and setup for testing
+conditions - see the README.md for more info._
 
 Each example directory contains:
 - a `BUILD` file. Under tests, Bazel builds the targets defined here
