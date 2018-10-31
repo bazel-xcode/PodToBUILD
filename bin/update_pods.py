@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# update_pods.py Installs pods specified in Pods.WORKSPACE to $SRC_ROOT/Vendor/
 
 from subprocess import Popen, PIPE
 import os
@@ -11,12 +12,13 @@ SRC_ROOT = None
 # All known pods, populated after execing `Pods.WORKSPACE`
 POD_PATHS = []
 
+# RepoTools binary is adjacent to update_pods.py
 def _getRepoToolPath():
     return os.path.dirname(os.path.realpath(__file__)) + "/RepoTools"
 
 def _exec(repository_ctx, command, cwd = None):
     if repository_ctx.GetTrace():
-        print("__Running CMD", " ".join(command))
+        print("running: " + " ".join(command))
     if cwd:
         origWD = os.getcwd()
         os.chdir(os.path.join(os.path.abspath(sys.path[0]), cwd))
@@ -28,7 +30,6 @@ def _exec(repository_ctx, command, cwd = None):
         sys.exit(1)
 
     if repository_ctx.GetTrace():
-        print("__Result")
         print(result)
     if cwd:
         os.chdir(origWD)
@@ -271,9 +272,8 @@ def _update_repo_impl(repository_ctx):
             ["/bin/bash", "-c", script],
             repository_ctx.GetPodRootDir())
 
-    version_file = open(repository_ctx.GetPodRootDir() + "/.pod-version", "w")
-    version_file.write(GetVersion(repository_ctx))
-    version_file.close()
+    with open(repository_ctx.GetPodRootDir() + "/.pod-version", "w") as version_file:
+        version_file.write(GetVersion(repository_ctx))
 
 def new_pod_repository(name,
             url = None,
@@ -370,7 +370,7 @@ def new_pod_repository(name,
             src_root = SRC_ROOT)
     _update_repo_impl(repository_ctx)
 
-def cleanup_pods():
+def _cleanupPods():
     """Cleanup removed Pods from Vendor"""
     pods_dir = SRC_ROOT + "/Vendor"
     known_pods = set(POD_PATHS)
@@ -383,15 +383,30 @@ def cleanup_pods():
             continue
         shutil.rmtree(full_path)
 
-
+# Build a release of `RepoTools` if needed. Under a release package,
+# the makefile is a noop.
 def _buildRepoToolsRelease():
-    """We currently rely on the `RepoTools` binary."""
-
     print("Building PodToBUILD dependencies...")
     _exec(RepositoryContext(None, None, None, None, None, None, None, trace=True), [
         "make",
         "release"],
         os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+# If using `bazel run` to Vendorize pods, copy the contents required into
+# //Vendor/rules_pods. This is required to ensure consistency.
+def _vendorizeBazelExtensionsIfNeeded():
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    rules_pods_root = os.path.dirname(current_dir)
+    install_root = os.path.dirname(rules_pods_root)
+    if os.path.basename(install_root) == "external":
+        bazel_extension_dir = os.path.join(rules_pods_root, "BazelExtensions")
+        pods_dir = SRC_ROOT + "/Vendor"
+        rules_pods_root =  os.path.join(pods_dir, "rules_pods")
+        vendor_path =  os.path.join(rules_pods_root, "BazelExtensions")
+        if os.path.isdir(rules_pods_root):
+            shutil.rmtree(rules_pods_root)
+        os.makedirs(rules_pods_root)
+        shutil.copytree(bazel_extension_dir, vendor_path)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -426,6 +441,7 @@ def main():
         d = dict(locals(), **globals())
         exec(workspace_str, d, d)
 
-    cleanup_pods()
+    _cleanupPods()
+    _vendorizeBazelExtensionsIfNeeded()
 
 main()

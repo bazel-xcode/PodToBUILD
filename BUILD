@@ -49,3 +49,5 @@ swift_library(
     copts = ["-swift-version", "4", "-static-stdlib"],
 )
 
+alias(name = "update_pods", actual = "//bin:update_pods")
+

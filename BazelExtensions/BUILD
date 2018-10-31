@@ -15,3 +15,9 @@ py_binary(
     visibility = ["//visibility:public"]
 )
 
+sh_library(
+    name = "vendored_srcs",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"]
+)
+
