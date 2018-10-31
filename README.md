@@ -1,29 +1,29 @@
 # PodToBUILD
-An easy way to integrate `CocoaPods.org` into Bazel. `PodToBUILD` integrates Pod dependencies end to end with an easy to use
-macro.
+
+An easy way to build CocoaPods with Bazel - it integrates pods end to end with
+an easy to use macro.
 
 [![Build Status](https://travis-ci.org/pinterest/PodToBUILD.svg?branch=master)](https://travis-ci.org/pinterest/PodToBUILD)
 
 ### Quickstart Instructions:
 
-In the root directory, clone `rules_pods` into `Vendor/rules_pods`.
+In the root directory, add `rules_pods` to the Bazel `WORKSPACE`.
 
 ```
-git clone https://github.com/pinterest/PodToBUILD.git Vendor/rules_pods
+http_archive(
+    name = "rules_pods",
+    urls = ["https://github.com/pinterest/PodToBUILD/releases/download/0.18.0-95fd009/PodToBUILD.zip"],
+)
 ```
 
 ### Adding Pods
 
-That's it. Now you're ready to add Pods.
-
-Repositories are initialized in the `Pods.WORKSPACE` file with the macro,
-`new_pod_repository`.
-
-Create the file `Pods.WORKSPACE`:
-
-Pod repositories are described using the `new_pod_repository` macro.
+Pods are defined in the `WORKSPACE` file with the macro, `new_pod_repository`.
 
 ```
+# Load the new_pod_repository macro - needed for `WORKSPACE` usage
+load("@rules_pods//BazelExtensions:workspace.bzl", "new_pod_repository")
+
 new_pod_repository(
   name = "PINOperation",
   url = "https://github.com/pinterest/PINOperation/archive/1.0.3.zip",
@@ -32,24 +32,51 @@ new_pod_repository(
 
 The package `PINOperation` and the associated `objc_library` target,
 `PINOperation`, is available for use within Bazel. The package and target name
-are combined to form the label `//Vendor/PINOperation:PINOperation`.
+are combined to form the label `@PINOperation//:PINOperation`.
 
-#### Installation
+Thats all! Bazel will automatically setup pods along with the build.
 
-The script `bin/update_pods.py` loads the Pod into `Vendor/__POD_NAME__`.
-_This notion is similar to `pod install`._
+_See the [examples](https://github.com/pinterest/PodToBUILD/tree/master/Examples) for end to end usage_.
+
+### Vendoring Pods via Pods.WORKSPACE
+
+By default, `rules_pods` supports Bazel's [conventional dependency management
+system](https://docs.bazel.build/versions/master/external.html) via the
+`WORKSPACE` / `new_pod_repository` macro.
+
+However, loading external files as part of the build may have implications on
+stability, Xcode usage, network bandwidth, and build times. e.g. downloading
+dependencies from an external service ties build time and reliability to that
+service.
+
+As a solution, it supports `vendoring` aka out of band, in tree dependency
+installation. Similar to `CocoaPods`, it can download and initialize Pods
+relative to the project, in the `Vendor` directory. 
+
+The program, `bin/update_pods`, installs Pods into `Vendor/__POD_NAME__`.  This
+notion is similar to `pod install`.
+
+_Usage:_
+
+Create the file `Pods.WORKSPACE` and add `new_pod_repository`s' there -
+`rules_pods`'s `http_archive` remains declared in the `WORKSPACE`.
+
+Anytime `Pods.WORKSPACE` is changed, `update_pods` must be ran to ensure all
+pods are updated.
 
 ```
-# SRC_ROOT is the root workspace directory
-./Vendor/rules_pods/bin/update_pods.py --src_root $PWD
+# src_root is the root workspace directory
+bazel run @rules_pods//:update_pods -- --src_root $PWD
 ```
 
-Anytime `Pods.WORKSPACE` is changed, `bin/update_pods.py` should be
-ran to ensure all dependencies are updated.
+In addition to out of band updating, labels are formed via the convention
+`//Vendor:__POD_NAME__:__TARGET__`. Otherwise, the API of `new_pods_repository`
+is identical across `WORKSPACE` and `Pods.WORKSPACE`, the only difference is
+that the `load` statement isn't required in `Pods.WORKSPACE`.
 
-_PodToBUILD puts stabilty and predictablity at the core of managing
-dependencies. Loading files in `external` has implications on Tulsi, Xcode,
-network bandwidth, and build times._
+_See the
+[Texture](https://github.com/pinterest/PodToBUILD/tree/master/Examples/Texture)
+example for a comprehensive example._
 
 ## new_pod_repository
 
@@ -57,13 +84,13 @@ This macro is the main point of integration for pod dependencies.
 
 Each pod is integrated as a repository and each repository is self contained.
 
-By declaring a `new_pod_repository` in `Pods.WORKSPACE`, the dependency is
-automatically availble within all Bazel targets.
+By declaring a `new_pod_repository`, the dependency is available to all Bazel
+targets.
 
 ### Naming Convention
 
 In Bazel a label is a build target identifier. Pod labels are all formed using
-the same logic.
+the same logic. _The remainder of this document uses the `Vendor` convention._
 
 The first part of the label is the package name, followed by the name of the
 target: `//Vendor/__PACKAGE__:__TARGET__`
@@ -102,8 +129,7 @@ new_pod_repository(
 )
 ```
 
-Upon running `bin/update_pods.py`, the local files are sym-linked into the pod
-directory.
+Upon updating pods, the local files are sym-linked into the pod directory.
 
 This can aid in local development of Pod dependencies, and was originally
 designed for such a use case.
@@ -118,7 +144,7 @@ issues with such dependencies.
 
 For example, in `PINRemoteImage` source files are in folders that have spaces in
 the name. This is not supported in Bazel. Please see the [Known
-incompatibilities section]() for more info.
+complications section](#known-complications) for more info.
 
 ### Customizing rule attributes
 
@@ -167,7 +193,7 @@ acknowledgments_plist(
 )
 ```
 
-### `new_pod_repository` Attribute reference
+### `new_pod_repository` API reference
 
 `name`: the name of this repo
 
@@ -234,7 +260,7 @@ the least common denominator, the Linux convention. For now, use an
 
 ### __has_include directive
 
-Some code, like [Texture](https://github.com/TextureGroup/Texture), uses
+Some code, like [Texture](https://github.com/pinterest/PodToBUILD/tree/master/Examples/Texture), uses
 `__has_include` to conditionally include code.
 
 In Bazel, if that include is not explicitly added, then this feature will not
@@ -268,7 +294,67 @@ new_pod_repository(
 ```
 
 Now, in Bazel, the target is accessible via `SPUserResizableView_Pion` instead
-of `SPUserResizableView_Pion`.
+of `SPUserResizableView+Pion`.
 
 This should eventually be handled by default.
+
+
+## FAQ
+
+### How many pods are supported?
+
+Most ObjC/C++/C Pods should work out of the box and the goal is support all
+CocoaPods. _Please do file issues and PRs for pods that don't work._
+
+### Does it work with Swift?
+
+The short answer is yes, but probably not. Swift support in `rules_pods`, and
+Bazel ( `swift_library` / `rules_swift` ) is still under development.
+
+### Should I do source builds of rules_pods?
+
+The short answer is probably not. Consider that building `rules_pods` along with
+an iOS application ties the build environment of `rules_pods` to that of the iOS
+application. This includes the Bazel rules version and swift version. In
+addition to coupling the environment, it may be slow overall.
+
+However, `update_pods` automatically does source builds of `rules_pods` with
+Bazel if it is checked out as such. Simply use `git_repository` instead of
+`http_archive` as mentioned in the quickstart guide. `building` with Bazel isn't
+well supported in `repository_rules`, and isn't supported at the moment.
+
+### How do I update rules_pods?
+
+See the [quickstart
+instructions](https://github.com/pinterest/PodToBUILD/tree/master#quickstart-instructions).
+
+### How can I generate an Xcode project for Bazel built pods?
+
+Please find info in the [Bazel
+documentation](https://docs.bazel.build/versions/master/migrate-xcode.html).
+
+### How can I build an iOS applicaiton with Bazel with CocoaPod dependencies?
+
+The documentation of building an iOS application resides in the [Bazel
+documentation](https://docs.bazel.build/versions/master/tutorial/ios-app.html).
+This README and examples are intended to cover the rest.
+
+### How can I develop rules_pods?
+
+`make` is the canonical build system of `rules_pods` - see the `Makefile` for up
+to date development workflows.
+
+The [examples](https://github.com/pinterest/PodToBUILD/tree/master/Examples) are intended to be tested, minimal, end to end, use cases of
+`rules_pods`. The examples do a source build of `rules_pods`, and setup pods.
+Simply cd into an example, and run `make`.
+
+For developing the `BUILD` file compiler, use `make run EXAMPLE=_some pod_`
+
+Additionally, Xcode development is supported via Swift Package Manager. To
+generate an Xcode project, run:
+```
+swift package generate-xcodeproj
+```
+
+PRs welcome :)!
 

@@ -23,7 +23,7 @@ build-impl-spm:
 	@mkdir -p .build
 	swift build $(SWIFT_OPTS) \
 	    -Xswiftc -target -Xswiftc x86_64-apple-macosx10.13 \
-		| tee .build/last_build.log \
+		| tee .build/last_build.log; \
 		exit $${PIPESTATUS[0]}
 
 # Tee the error to a log file
@@ -106,7 +106,7 @@ github_release:
 	@echo "creating release: $(TESTED_BAZEL_VERSION)-($(shell git rev-parse --short HEAD)"
 	$(MAKE) archive
 	@hub release create -p -a PodToBUILD.zip \
-   		-m "PodToBUILD  $(TESTED_BAZEL_VERSION)-$(shell git rev-parse --sort HEAD)" \
+   		-m "PodToBUILD  $(TESTED_BAZEL_VERSION)-$(shell git rev-parse --short HEAD)" \
 		$(TESTED_BAZEL_VERSION)-$(shell git rev-parse --short HEAD)
 
 # Create an archive of `rules_pods`.
