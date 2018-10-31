@@ -73,7 +73,10 @@ example: build
 
 # We're running into issues with SwiftPackageManager's
 # Build system on the CI. Blow away it's state
-ci: clean test
+ci: clean
+	$(MAKE) unit-test
+	$(MAKE) integration-test
+	$(MAKE) build-test
 
 release:
 	@tools/bazelwrapper build :RepoTools :Compiler

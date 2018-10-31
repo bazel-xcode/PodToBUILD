@@ -2,7 +2,7 @@ new_pod_repository(
   name = "boost-for-react-native",
   url = 'https://github.com/react-native-community/boost-for-react-native/archive/v1.63.0-0.zip',
   # This podspec isn't included in the http archives of boost.
-  podspec_url = 'Vendor/PodSpecs/boost-for-react-native-1.63.0-0/boost-for-react-native.podspec',
+  podspec_url = 'PodSpecs/boost-for-react-native-1.63.0-0/boost-for-react-native.podspec',
   generate_module_map = False,
   install_script = """
     __INIT_REPO__
@@ -13,7 +13,7 @@ new_pod_repository(
 
 new_pod_repository(
   name = "Folly",
-  podspec_url = "Vendor/PodSpecs/react-0.57/third-party-podspecs/Folly.podspec",
+  podspec_url = "PodSpecs/react-0.57/third-party-podspecs/Folly.podspec",
   url = "https://github.com/facebook/folly/archive/v2016.09.26.00.zip",
   generate_module_map = False
 )
@@ -21,7 +21,7 @@ new_pod_repository(
 new_pod_repository(
   name = "DoubleConversion",
   url = 'https://github.com/google/double-conversion/archive/v1.1.5.zip',
-  podspec_url = 'Vendor/PodSpecs/react-0.57/third-party-podspecs/DoubleConversion.podspec',
+  podspec_url = 'PodSpecs/react-0.57/third-party-podspecs/DoubleConversion.podspec',
   install_script = """
     # prepare_command
     mv src double-conversion
@@ -34,17 +34,18 @@ new_pod_repository(
 new_pod_repository(
   name = "glog",
   url = 'https://github.com/google/glog/archive/v0.3.4.zip',
-  podspec_url = 'Vendor/PodSpecs/react-0.57/third-party-podspecs/GLog.podspec',
+  podspec_url = 'PodSpecs/react-0.57/third-party-podspecs/GLog.podspec',
   install_script = """
     # prepare_command
-  	sh ../PodSpecs/glog-0.3.4/ios-configure-glog.sh || exit 1
+    pwd
+    sh ../../PodSpecs/glog-0.3.4/ios-configure-glog.sh || exit 1
   	__INIT_REPO__
   """,
   generate_module_map = False
 )
 
 # Prior, required manual changes
-# - Copy over third-party-podspecs to Vendor/Podspecs
+# - Copy over third-party-podspecs to Podspecs
 # - Comment out busted prepare commands
 new_pod_repository(
   name = "React",

@@ -41,7 +41,7 @@ private func srcRoot() -> String {
 }
 
 public func examplePodSpecFilePath(name: String) -> String {
-    let dir = "\(srcRoot())/Examples/"
+    let dir = "\(srcRoot())/Examples/PodSpecs/"
     let path = Bundle.path(forResource: "\(name).podspec", ofType: "json", inDirectory: dir)
     return path!
 }

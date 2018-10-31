@@ -18,7 +18,6 @@ public protocol CommandOutput {
 
 public struct CommandBinary {
     public static let mkdir = "/bin/mkdir"
-    public static let mktemp = "/usr/bin/mktemp"
     public static let ln = "/bin/ln"
     public static let pwd = "/bin/pwd"
     public static let sh = "/bin/sh"
@@ -272,7 +271,11 @@ public struct SystemShellContext : ShellContext {
     
     public func tmpdir() -> String {
         log("CREATE TMPDIR")
-        return command(CommandBinary.mktemp, arguments: ["-d"]).standardOutputAsString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let result = NSTemporaryDirectory() as String
+        guard !result.isEmpty else {
+            fatalError("Can't create temp dir")
+        }
+        return result
     }
 
     // MARK: - Private
