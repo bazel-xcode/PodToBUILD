@@ -80,6 +80,8 @@ ci: clean
 
 release:
 	@tools/bazelwrapper build \
+		--disk_cache=$(HOME)/Library/Caches/Bazel \
+		--spawn_strategy=standalone \
 		-c opt \
 		--swiftcopt=-whole-module-optimization :RepoTools :Compiler
 	@ditto bazel-bin/RepoTools bin/RepoTools

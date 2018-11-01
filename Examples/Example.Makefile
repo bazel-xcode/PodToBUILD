@@ -8,15 +8,20 @@ BAZEL_WRAPPER=$(RULES_PODS_DIR)/tools/bazelwrapper
 # Currently `bazelwrapper` relies on pwd, which causes issues here
 BAZEL=~/.bazelenv/versions/0.18.0/bin/bazel
 
+# Override the repository to point at the source. It does a source build of the
+# current code.
+BAZEL_OPTS=--override_repository=rules_pods=$(RULES_PODS_DIR) \
+		--disk_cache=$(HOME)/Library/Caches/Bazel
+
 all: fetch build
 
 # Build everything in this workspace
 .PHONY: build
 build: info 
-	$(BAZEL) build :* --override_repository=rules_pods=$(RULES_PODS_DIR)
+	$(BAZEL) build :* $(BAZEL_OPTS)
 
 test: info 
-	$(BAZEL) test :* --override_repository=rules_pods=$(RULES_PODS_DIR)
+	$(BAZEL) test :* $(BAZEL_OPTS)
 
 # Fetch vendored pods if there's a Pods.WORKSPACE. In normal operation it isn't
 # expected to run `update_pods` along with a build.
