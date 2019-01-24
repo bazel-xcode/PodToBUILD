@@ -35,7 +35,7 @@ swift_library(
     "//Vendor/SSZipArchive:SSZipArchive",
     "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition"
   ],
-  resources = glob(
+  data = glob(
     [
       "Source/**/*.css",
       "Source/**/*.js",

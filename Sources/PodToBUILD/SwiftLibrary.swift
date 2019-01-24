@@ -18,7 +18,7 @@ public struct SwiftLibrary: BazelTarget {
 
     public let isTopLevelTarget: Bool
     public let externalName: String
-    public let resources: GlobNode
+    public let data: GlobNode
 
     init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = [],
             isSplitDep: Bool = false) {
@@ -50,7 +50,7 @@ public struct SwiftLibrary: BazelTarget {
                 !str.hasSuffix(".bundle")
             })
         }).map(extractResources)
-        self.resources = GlobNode(
+        self.data = GlobNode(
             include: resourceFiles.map{ Set($0) },
             exclude: AttrSet.empty)
 
@@ -71,7 +71,7 @@ public struct SwiftLibrary: BazelTarget {
                 .named(name: "name", value: name.toSkylark()),
                 .named(name: "srcs", value: sourceFiles.toSkylark()),
                 .named(name: "deps", value: deps.sorted(by: (<)).toSkylark()),
-                .named(name: "resources", value: resources.toSkylark())
+                .named(name: "data", value: data.toSkylark())
             ])
     }
 }

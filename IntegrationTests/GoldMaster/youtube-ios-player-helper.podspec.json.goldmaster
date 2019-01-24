@@ -205,7 +205,7 @@ swift_library(
   deps = [
     ":youtube-ios-player-helper_Bundle_Assets"
   ],
-  resources = [
+  data = [
 
   ]
   )

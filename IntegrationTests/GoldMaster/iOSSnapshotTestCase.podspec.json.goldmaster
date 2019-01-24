@@ -198,7 +198,7 @@ swift_library(
   deps = [
     ":Core"
   ],
-  resources = [
+  data = [
 
   ]
   )

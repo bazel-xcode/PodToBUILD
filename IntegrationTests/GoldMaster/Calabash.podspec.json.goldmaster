@@ -140,7 +140,7 @@ swift_library(
   deps = [
 
   ],
-  resources = [
+  data = [
 
   ]
   )
