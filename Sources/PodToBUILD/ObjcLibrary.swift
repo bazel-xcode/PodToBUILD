@@ -53,8 +53,8 @@ public struct ObjcBundle: BazelTarget {
 
 }
 
-// https://bazel.build/versions/master/docs/be/objective-c.html#objc_bundle_library
-public struct ObjcBundleLibrary: BazelTarget {
+// https://github.com/bazelbuild/rules_apple/blob/0.13.0/doc/rules-resources.md#apple_resource_bundle
+public struct AppleResourceBundle: BazelTarget {
     let name: String
     let resources: AttrSet<[String]>
 
@@ -64,7 +64,7 @@ public struct ObjcBundleLibrary: BazelTarget {
 
     public func toSkylark() -> SkylarkNode {
         return .functionCall(
-            name: "objc_bundle_library",
+            name: "apple_resource_bundle",
             arguments: [
                 .named(name: "name", value: bazelLabel(fromString: name).toSkylark()),
                 .named(name: "resources",

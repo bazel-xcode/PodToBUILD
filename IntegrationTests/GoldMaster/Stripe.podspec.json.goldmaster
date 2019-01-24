@@ -120,7 +120,7 @@ acknowledged_target(
   ],
   value = "//Vendor/Stripe/pod_support_buildable:acknowledgement_fragment"
   )
-objc_bundle_library(
+apple_resource_bundle(
   name = "Stripe_Bundle_Stripe",
   resources = select(
     {
