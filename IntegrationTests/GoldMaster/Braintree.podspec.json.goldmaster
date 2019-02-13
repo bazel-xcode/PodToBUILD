@@ -606,7 +606,7 @@ acknowledged_target(
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
-objc_bundle_library(
+apple_resource_bundle(
   name = "UI_Bundle_Braintree-Drop-In-Localization",
   resources = glob(
     [
@@ -615,7 +615,7 @@ objc_bundle_library(
     exclude_directories = 1
     )
   )
-objc_bundle_library(
+apple_resource_bundle(
   name = "UI_Bundle_Braintree-UI-Localization",
   resources = glob(
     [
@@ -794,7 +794,7 @@ acknowledged_target(
   ],
   value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
   )
-objc_bundle_library(
+apple_resource_bundle(
   name = "3D-Secure_Bundle_Braintree-3D-Secure-Localization",
   resources = glob(
     [

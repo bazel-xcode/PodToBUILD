@@ -204,7 +204,7 @@ public struct PodBuildFile: SkylarkConvertible {
             })
         }
 
-        // For all prebuilt bundles we found, create an ObjcBundle target. This target differs from ObjCBundleLibrary
+        // For all prebuilt bundles we found, create an ObjcBundle target. This target differs from AppleResourceBundle
         // because it is stricter about keeping the structure of the bundle contents intact.
         let bundleTargets = bundleResources.map { (strArr: [String]) -> [BazelTarget] in
             strArr.map { (bundlePath: String) -> BazelTarget in
@@ -220,7 +220,7 @@ public struct PodBuildFile: SkylarkConvertible {
             .sequence(attrSet: resourceBundleAttrSet)
             .map { k, v -> BazelTarget in
                 let name = "\(spec.moduleName ?? spec.name)_Bundle_\(k)"
-                return ObjcBundleLibrary(name: name, resources: v)
+                return AppleResourceBundle(name: name, resources: v)
             })
 
         return (resourceBundles + (bundleTargets.basic ?? [])).sorted { $0.name < $1.name }
