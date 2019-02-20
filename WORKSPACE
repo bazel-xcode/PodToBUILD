@@ -3,7 +3,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 git_repository(
     name = "build_bazel_rules_apple",
     remote = "https://github.com/bazelbuild/rules_apple.git",
-    tag = "0.6.0",
+    tag = "0.13.0",
 )
 
 load(
@@ -16,7 +16,7 @@ apple_rules_dependencies()
 git_repository(
     name = "build_bazel_rules_swift",
     remote = "https://github.com/bazelbuild/rules_swift.git",
-    tag = "0.3.0",
+    tag = "0.6.0",
 )
 
 load(

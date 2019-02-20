@@ -93,7 +93,7 @@ class ShellTask : NSObject {
     /// By default, it runs under bash for the current path.
     public static func with(script: String, timeout: Double, cwd: String? = nil) -> ShellTask {
         let path = ProcessInfo.processInfo.environment["PATH"]!
-        let script = "PATH=\(path) /bin/sh -c '\(script)'"
+        let script = "PATH=\"\(path)\" /bin/sh -c '\(script)'"
         return ShellTask(command: "/bin/bash", arguments: ["-c", script],
                 timeout: timeout, cwd: cwd)
     }
