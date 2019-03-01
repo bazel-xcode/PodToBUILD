@@ -25,8 +25,8 @@ public let PodSupportDir = "pod_support/"
 /// initialization phase, all Public headers are symlinked into this directory.
 public let PodSupportSystemPublicHeaderDir = "pod_support/Headers/Public/"
 
-// https://docs.bazel.build/versions/master/be/objective-c.html#objc_bundle
-public struct ObjcBundle: BazelTarget {
+// https://github.com/bazelbuild/rules_apple/blob/master/doc/rules-resources.md#apple_bundle_import
+public struct AppleBundleImport: BazelTarget {
     let name: String
     let bundleImports: AttrSet<[String]>
 
@@ -36,7 +36,7 @@ public struct ObjcBundle: BazelTarget {
 
     public func toSkylark() -> SkylarkNode {
         return .functionCall(
-            name: "objc_bundle",
+            name: "apple_bundle_import",
             arguments: [
                 .named(name: "name", value: bazelLabel(fromString: name).toSkylark()),
                 .named(name: "bundle_imports",
@@ -52,6 +52,7 @@ public struct ObjcBundle: BazelTarget {
     }
 
 }
+
 
 // https://github.com/bazelbuild/rules_apple/blob/0.13.0/doc/rules-resources.md#apple_resource_bundle
 public struct AppleResourceBundle: BazelTarget {
@@ -361,7 +362,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let prebuiltBundles = spec ^* liftToAttr(PodSpec.lens.resources .. ReadonlyLens {
             $0.filter { s in s.hasSuffix(".bundle") }
-              .map(ObjcBundle.extractBundleName)
+              .map(AppleBundleImport.extractBundleName)
               .map { k in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }
               .map(bazelLabel)})
 
@@ -682,15 +683,28 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             value: (lib.copts.toSkylark() .+. buildConfigDependenctCOpts .+. getPodIQuotes().toSkylark()
                 ) <> ["-fmodule-name=" + moduleName + "_pod_module"].toSkylark()))
 
-        if !lib.resources.isEmpty {
-            libArguments.append(.named(name: "resources",
-                                       value: lib.resources.toSkylark()))
+
+        if !lib.bundles.isEmpty || !lib.resources.isEmpty {
+            let dataVal: SkylarkNode = [
+                lib.bundles.isEmpty ? nil : lib.bundles.sorted(by: { (s1, s2) -> Bool in
+                    return s1 < s2
+                }).toSkylark(),
+                lib.resources.isEmpty ? nil : lib.resources.toSkylark()
+                ]
+                .compactMap { $0 }
+                .reduce([].toSkylark()) { (res, node) -> SkylarkNode in
+                    if res.isEmpty {
+                        return node
+                    }
+                    if node.isEmpty {
+                        return res
+                    }
+                    return res .+. node
+                }
+            libArguments.append(.named(name: "data",
+                                       value: dataVal.toSkylark()))
         }
 
-        if !lib.bundles.isEmpty {
-            libArguments.append(.named(name: "bundles",
-                                       value: lib.bundles.sorted(by: (<)).toSkylark()))
-        }
         libArguments.append(.named(
             name: "visibility",
             value: ["//visibility:public"].toSkylark()

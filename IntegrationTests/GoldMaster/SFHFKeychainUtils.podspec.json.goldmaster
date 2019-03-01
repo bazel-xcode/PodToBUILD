@@ -1,3 +1,4 @@
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "pch_with_name_hint",
@@ -15,7 +16,6 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 filegroup(
   name = "SFHFKeychainUtils_cxx_hdrs",
   srcs = glob(

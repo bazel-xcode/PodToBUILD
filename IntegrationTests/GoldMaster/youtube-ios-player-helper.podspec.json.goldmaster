@@ -1,3 +1,5 @@
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
+load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "pch_with_name_hint",
@@ -15,7 +17,6 @@ native.config_setting(
     "compilation_mode": "opt"
   }
   )
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 config_setting(
   name = "iosCase",
   values = {
@@ -164,7 +165,7 @@ objc_library(
   ] + [
     "-fmodule-name=youtube-ios-player-helper_pod_module"
   ],
-  bundles = [
+  data = [
     ":youtube-ios-player-helper_Bundle_Assets"
   ],
   visibility = [
@@ -344,7 +345,7 @@ objc_library(
   ] + [
     "-fmodule-name=youtube-ios-player-helper_pod_module"
   ],
-  bundles = [
+  data = [
     ":youtube-ios-player-helper_Bundle_Assets"
   ],
   visibility = [
@@ -358,7 +359,7 @@ acknowledged_target(
   ],
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
   )
-objc_bundle(
+apple_bundle_import(
   name = "youtube-ios-player-helper_Bundle_Assets",
   bundle_imports = glob(
     [

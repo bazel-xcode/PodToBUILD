@@ -85,7 +85,7 @@ objc_library(
   ] + [
     "-fmodule-name=GoogleAuthUtilities_pod_module"
   ],
-  resources = glob(
+  data = glob(
     [
       "Frameworks/frameworks/GoogleAuthUtilities.framework/Resources/GTMOAuth2ViewTouch.xib"
     ],

@@ -1,3 +1,4 @@
+load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "pch_with_name_hint",
@@ -88,7 +89,7 @@ objc_library(
   ] + [
     "-fmodule-name=iRate_pod_module"
   ],
-  bundles = [
+  data = [
     ":iRate_Bundle_iRate"
   ],
   visibility = [
@@ -102,7 +103,7 @@ acknowledged_target(
   ],
   value = "//Vendor/iRate/pod_support_buildable:acknowledgement_fragment"
   )
-objc_bundle(
+apple_bundle_import(
   name = "iRate_Bundle_iRate",
   bundle_imports = glob(
     [

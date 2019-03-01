@@ -81,6 +81,7 @@ public func GetBuildOptions() -> BuildOptions {
     return sharedBuildOptions
 }
 
+
 /// Config Setting Nodes
 /// Write Build dependent COPTS.
 /// @note We consume this as an expression in ObjCLibrary
@@ -105,9 +106,22 @@ public func makeConfigSettingNodes() -> SkylarkNode {
     return .lines([.lines(comment), releaseConfig])
 }
 
+
+public func makeLoadNodes(forConvertibles skylarkConvertibles: [SkylarkConvertible]) -> SkylarkNode {
+    let hasSwift = skylarkConvertibles.first(where: { $0 is SwiftLibrary }) != nil
+    let hasAppleBundleImport = skylarkConvertibles.first(where: { $0 is AppleBundleImport }) != nil
+    let hasAppleResourceBundle = skylarkConvertibles.first(where: { $0 is AppleResourceBundle }) != nil
+    return .lines( [
+        hasSwift ?  SkylarkNode.skylark("load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')") : nil,
+        hasAppleBundleImport ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')") : nil,
+        hasAppleResourceBundle ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_resource_bundle')") : nil
+        ].compactMap { $0 }
+    )
+}
+
 // Make Nodes to be inserted at the beginning of skylark output
 // public for test purposes
-public func makePrefixNodes(includeSwift: Bool) -> SkylarkNode {
+public func makePrefixNodes() -> SkylarkNode {
     let name = "rules_pods"
     let extFile = getRulePrefix(name: name) + "BazelExtensions:extensions.bzl"
 
@@ -119,11 +133,7 @@ public func makePrefixNodes(includeSwift: Bool) -> SkylarkNode {
             .basic(.string("gen_module_map")),
             .basic(.string("gen_includes"))]),
         makeConfigSettingNodes(),
-    ] + (includeSwift ? [
-        // Assume that the user is using the default naming convetion of
-        // swift_library.
-        SkylarkNode.skylark("load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')")
-    ] : [])
+    ]
     return .lines(lineNodes)
 }
 
@@ -184,8 +194,7 @@ public struct PodBuildFile: SkylarkConvertible {
         BuildFileContext.set(BuildFileContext(convertibles: skylarkConvertibles))
         let convertibleNodes: [SkylarkNode] = skylarkConvertibles.compactMap { $0.toSkylark() }
         BuildFileContext.set(nil)
-        let hasSwift = skylarkConvertibles.first(where: { $0 is SwiftLibrary }) != nil
-        return .lines([makePrefixNodes(includeSwift: hasSwift)] + convertibleNodes)
+        return .lines([makeLoadNodes(forConvertibles: skylarkConvertibles)] + [makePrefixNodes()] + convertibleNodes)
     }
 
     public static func with(podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions.shared) -> PodBuildFile {
@@ -204,17 +213,14 @@ public struct PodBuildFile: SkylarkConvertible {
             })
         }
 
-        // For all prebuilt bundles we found, create an ObjcBundle target. This target differs from AppleResourceBundle
-        // because it is stricter about keeping the structure of the bundle contents intact.
         let bundleTargets = bundleResources.map { (strArr: [String]) -> [BazelTarget] in
             strArr.map { (bundlePath: String) -> BazelTarget in
-                let bundleName = ObjcBundle.extractBundleName(fromPath: bundlePath)
+                let bundleName = AppleBundleImport.extractBundleName(fromPath: bundlePath)
                 let name = "\(spec.moduleName ?? spec.name)_Bundle_\(bundleName)"
                 let bundleImports = AttrSet<[String]>(basic: ["\(bundlePath)/**"])
-                return ObjcBundle(name: name, bundleImports: bundleImports)
+                return AppleBundleImport(name: name, bundleImports: bundleImports)
             }
         }
-
 
         let resourceBundles = (AttrSet<[String: [String]]>
             .sequence(attrSet: resourceBundleAttrSet)
