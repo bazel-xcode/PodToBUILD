@@ -69,7 +69,7 @@ objc_library(
   deps = [
 
   ] + [
-    "SlackTextViewController_includes"
+    ":SlackTextViewController_includes"
   ],
   copts = [
 

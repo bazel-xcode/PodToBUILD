@@ -145,7 +145,7 @@ objc_library(
   deps = [
     ":youtube-ios-player-helper_Bundle_Assets"
   ] + [
-    "youtube-ios-player-helper_cxx_includes"
+    ":youtube-ios-player-helper_cxx_includes"
   ],
   copts = [
 
@@ -325,7 +325,7 @@ objc_library(
     ":youtube-ios-player-helper_cxx",
     ":youtube-ios-player-helper_swift"
   ] + [
-    "youtube-ios-player-helper_includes"
+    ":youtube-ios-player-helper_includes"
   ],
   copts = [
 

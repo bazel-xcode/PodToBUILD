@@ -64,7 +64,7 @@ objc_library(
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
     ":GoogleNetworkingUtilities_VendoredFrameworks"
   ] + [
-    "GoogleNetworkingUtilities_includes"
+    ":GoogleNetworkingUtilities_includes"
   ],
   copts = [
 

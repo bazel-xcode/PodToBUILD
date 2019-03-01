@@ -87,7 +87,7 @@ objc_library(
   deps = [
 
   ] + [
-    "ZipArchive_includes"
+    ":ZipArchive_includes"
   ],
   copts = [
     "-Dunix"

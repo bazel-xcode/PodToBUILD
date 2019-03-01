@@ -97,7 +97,7 @@ objc_library(
   deps = [
 
   ] + [
-    "Calabash_cxx_includes"
+    ":Calabash_cxx_includes"
   ],
   copts = [
     ""Vendor/Calabash/calabash.framework/calabash"",
@@ -216,7 +216,7 @@ objc_library(
     ":Calabash_cxx",
     ":Calabash_swift"
   ] + [
-    "Calabash_includes"
+    ":Calabash_includes"
   ],
   copts = [
     ""Vendor/Calabash/calabash.framework/calabash"",

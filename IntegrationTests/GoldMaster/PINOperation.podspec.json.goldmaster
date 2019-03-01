@@ -70,7 +70,7 @@ objc_library(
   deps = [
 
   ] + [
-    "PINOperation_cxx_includes"
+    ":PINOperation_cxx_includes"
   ],
   copts = [
 
@@ -157,7 +157,7 @@ objc_library(
   deps = [
     ":PINOperation_cxx"
   ] + [
-    "PINOperation_includes"
+    ":PINOperation_includes"
   ],
   copts = [
 

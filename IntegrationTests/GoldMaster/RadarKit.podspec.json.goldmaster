@@ -73,7 +73,7 @@ objc_library(
   deps = [
 
   ] + [
-    "RadarKit_includes"
+    ":RadarKit_includes"
   ],
   copts = [
 

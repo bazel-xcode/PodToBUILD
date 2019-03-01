@@ -62,7 +62,7 @@ objc_library(
     ":Core",
     ":without-IDFA"
   ] + [
-    "Branch_includes"
+    ":Branch_includes"
   ],
   copts = [
 
@@ -149,7 +149,7 @@ objc_library(
   deps = [
 
   ] + [
-    "Core_includes"
+    ":Core_includes"
   ],
   copts = [
 
@@ -235,7 +235,7 @@ objc_library(
   deps = [
 
   ] + [
-    "without-IDFA_includes"
+    ":without-IDFA_includes"
   ],
   copts = [
 

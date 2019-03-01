@@ -60,7 +60,7 @@ objc_library(
   deps = [
     ":GoogleSymbolUtilities_VendoredFrameworks"
   ] + [
-    "GoogleSymbolUtilities_includes"
+    ":GoogleSymbolUtilities_includes"
   ],
   copts = [
 

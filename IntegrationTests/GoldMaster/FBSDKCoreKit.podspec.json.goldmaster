@@ -285,7 +285,7 @@ objc_library(
       ]
     }
     ) + [
-    "FBSDKCoreKit_includes"
+    ":FBSDKCoreKit_includes"
   ],
   copts = [
 

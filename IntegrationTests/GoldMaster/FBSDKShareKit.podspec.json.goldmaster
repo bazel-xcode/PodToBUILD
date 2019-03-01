@@ -179,7 +179,7 @@ objc_library(
   deps = [
     "//Vendor/FBSDKCoreKit:FBSDKCoreKit"
   ] + [
-    "FBSDKShareKit_includes"
+    ":FBSDKShareKit_includes"
   ],
   copts = [
     "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"

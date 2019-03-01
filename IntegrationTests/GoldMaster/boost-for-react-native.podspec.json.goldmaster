@@ -65,7 +65,7 @@ objc_library(
   deps = [
 
   ] + [
-    "boost-for-react-native_includes"
+    ":boost-for-react-native_includes"
   ],
   copts = [
 

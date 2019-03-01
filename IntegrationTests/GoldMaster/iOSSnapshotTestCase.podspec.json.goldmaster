@@ -67,7 +67,7 @@ objc_library(
   deps = [
     ":SwiftSupport"
   ] + [
-    "iOSSnapshotTestCase_includes"
+    ":iOSSnapshotTestCase_includes"
   ],
   copts = [
 
@@ -157,7 +157,7 @@ objc_library(
   deps = [
 
   ] + [
-    "Core_includes"
+    ":Core_includes"
   ],
   copts = [
 

@@ -76,7 +76,7 @@ objc_library(
   deps = [
     ":EarlGrey_VendoredFrameworks"
   ] + [
-    "EarlGrey_includes"
+    ":EarlGrey_includes"
   ],
   copts = [
     "-fobjc-arc-exceptions"

@@ -72,7 +72,7 @@ objc_library(
   deps = [
     ":Weixin_VendoredLibraries"
   ] + [
-    "Weixin_includes"
+    ":Weixin_includes"
   ],
   copts = [
 

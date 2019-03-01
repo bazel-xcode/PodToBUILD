@@ -69,7 +69,7 @@ objc_library(
   deps = [
 
   ] + [
-    "KVOController_includes"
+    ":KVOController_includes"
   ],
   copts = [
 

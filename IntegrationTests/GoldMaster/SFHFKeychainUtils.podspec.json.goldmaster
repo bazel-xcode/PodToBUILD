@@ -87,7 +87,7 @@ objc_library(
   deps = [
 
   ] + [
-    "SFHFKeychainUtils_cxx_includes"
+    ":SFHFKeychainUtils_cxx_includes"
   ],
   copts = [
 
@@ -200,7 +200,7 @@ objc_library(
     ":SFHFKeychainUtils_cxx",
     ":SFHFKeychainUtils_swift"
   ] + [
-    "SFHFKeychainUtils_includes"
+    ":SFHFKeychainUtils_includes"
   ],
   copts = [
 

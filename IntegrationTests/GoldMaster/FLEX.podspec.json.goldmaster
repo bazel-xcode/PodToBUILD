@@ -78,7 +78,7 @@ objc_library(
   deps = [
 
   ] + [
-    "FLEX_includes"
+    ":FLEX_includes"
   ],
   copts = [
 

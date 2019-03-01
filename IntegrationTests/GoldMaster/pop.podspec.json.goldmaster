@@ -71,7 +71,7 @@ objc_library(
   deps = [
 
   ] + [
-    "pop_cxx_includes"
+    ":pop_cxx_includes"
   ],
   copts = [
     "-std=c++11",
@@ -159,7 +159,7 @@ objc_library(
   deps = [
     ":pop_cxx"
   ] + [
-    "pop_includes"
+    ":pop_includes"
   ],
   copts = [
 
