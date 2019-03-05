@@ -74,7 +74,7 @@ objc_library(
     ":PINRemoteImage",
     ":Photos"
   ] + [
-    "Texture_includes"
+    ":Texture_includes"
   ],
   copts = [
 
@@ -165,7 +165,7 @@ objc_library(
   deps = [
 
   ] + [
-    "Core_cxx_includes"
+    ":Core_cxx_includes"
   ],
   copts = [
     "-std=c++11",
@@ -256,7 +256,7 @@ objc_library(
   deps = [
     ":Core_cxx"
   ] + [
-    "Core_includes"
+    ":Core_includes"
   ],
   copts = [
     "-fno-exceptions -fno-objc-arc-exceptions"
@@ -336,7 +336,7 @@ objc_library(
     "//Vendor/PINRemoteImage:iOS",
     ":Core"
   ] + [
-    "PINRemoteImage_includes"
+    ":PINRemoteImage_includes"
   ],
   copts = [
 
@@ -416,7 +416,7 @@ objc_library(
     "//Vendor/IGListKit:IGListKit",
     ":Core"
   ] + [
-    "IGListKit_includes"
+    ":IGListKit_includes"
   ],
   copts = [
 
@@ -495,7 +495,7 @@ objc_library(
     "//Vendor/Yoga:Yoga",
     ":Core"
   ] + [
-    "Yoga_includes"
+    ":Yoga_includes"
   ],
   copts = [
     "-DYOGA=1"
@@ -576,7 +576,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "MapKit_includes"
+    ":MapKit_includes"
   ],
   copts = [
     "-DAS_USE_MAPKIT=1"
@@ -657,7 +657,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "Photos_includes"
+    ":Photos_includes"
   ],
   copts = [
     "-DAS_USE_PHOTOS=1"
@@ -738,7 +738,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "AssetsLibrary_includes"
+    ":AssetsLibrary_includes"
   ],
   copts = [
     "-DAS_USE_ASSETS_LIBRARY=1"

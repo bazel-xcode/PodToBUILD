@@ -103,7 +103,7 @@ objc_library(
   deps = [
 
   ] + [
-    "Masonry_includes"
+    ":Masonry_includes"
   ],
   copts = [
 

@@ -630,7 +630,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             allDeps = lib.deps.sorted(by: (<)).toSkylark() 
         }
         if lib.includes.count > 0 {
-            allDeps = allDeps .+. [(name + "_includes")].toSkylark()
+            allDeps = allDeps .+. [":\(name)_includes"].toSkylark()
         }
 
         if allDeps.isEmpty == false { 

@@ -72,7 +72,7 @@ objc_library(
   deps = [
 
   ] + [
-    "FBSDKMessengerShareKit_includes"
+    ":FBSDKMessengerShareKit_includes"
   ],
   copts = [
 

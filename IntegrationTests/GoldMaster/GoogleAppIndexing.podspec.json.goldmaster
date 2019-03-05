@@ -70,7 +70,7 @@ objc_library(
     ":GoogleAppIndexing_Bundle_GoogleAppIndexingResources",
     ":GoogleAppIndexing_VendoredFrameworks"
   ] + [
-    "GoogleAppIndexing_includes"
+    ":GoogleAppIndexing_includes"
   ],
   copts = [
 

@@ -66,7 +66,7 @@ objc_library(
     ":PayPal",
     ":UI"
   ] + [
-    "Braintree_includes"
+    ":Braintree_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -163,7 +163,7 @@ objc_library(
   deps = [
 
   ] + [
-    "Core_includes"
+    ":Core_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -245,7 +245,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "Apple-Pay_includes"
+    ":Apple-Pay_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -329,7 +329,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "Card_includes"
+    ":Card_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -409,7 +409,7 @@ objc_library(
     ":Core",
     ":DataCollector_VendoredLibraries"
   ] + [
-    "DataCollector_includes"
+    ":DataCollector_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -496,7 +496,7 @@ objc_library(
     ":Core",
     ":PayPalOneTouch"
   ] + [
-    "PayPal_includes"
+    ":PayPal_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -576,7 +576,7 @@ objc_library(
     ":Core",
     ":PayPalDataCollector"
   ] + [
-    "Venmo_includes"
+    ":Venmo_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -677,7 +677,7 @@ objc_library(
     ":Card",
     ":Core"
   ] + [
-    "UI_includes"
+    ":UI_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -764,7 +764,7 @@ objc_library(
     ":Card",
     ":Core"
   ] + [
-    "UnionPay_includes"
+    ":UnionPay_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -856,7 +856,7 @@ objc_library(
     ":Card",
     ":Core"
   ] + [
-    "3D-Secure_includes"
+    ":3D-Secure_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -949,7 +949,7 @@ objc_library(
     ":PayPalDataCollector",
     ":PayPalUtils"
   ] + [
-    "PayPalOneTouch_includes"
+    ":PayPalOneTouch_includes"
   ],
   copts = [
     "-ObjC",
@@ -1043,7 +1043,7 @@ objc_library(
     ":PayPalDataCollector_VendoredLibraries",
     ":PayPalUtils"
   ] + [
-    "PayPalDataCollector_includes"
+    ":PayPalDataCollector_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"
@@ -1140,7 +1140,7 @@ objc_library(
   deps = [
 
   ] + [
-    "PayPalUtils_includes"
+    ":PayPalUtils_includes"
   ],
   copts = [
     "-Wall -Werror -Wextra"

@@ -72,7 +72,7 @@ objc_library(
   deps = [
 
   ] + [
-    "IBActionSheet_includes"
+    ":IBActionSheet_includes"
   ],
   copts = [
 

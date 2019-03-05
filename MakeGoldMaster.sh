@@ -6,8 +6,7 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
 cd $SCRIPTPATH
 
 mkdir -p IntegrationTests/GoldMaster
-
-for f in $(find Examples/*); do
+for f in $(find Examples/PodSpecs/*); do
     echo "Writing goldmaster for $f"
     bin/Compiler $f --always_split_rules \
         > IntegrationTests/GoldMaster/$(basename $f).goldmaster

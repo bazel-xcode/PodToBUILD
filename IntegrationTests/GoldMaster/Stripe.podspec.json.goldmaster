@@ -83,7 +83,7 @@ objc_library(
   deps = [
     ":Stripe_Bundle_Stripe"
   ] + [
-    "Stripe_includes"
+    ":Stripe_includes"
   ],
   copts = [
 

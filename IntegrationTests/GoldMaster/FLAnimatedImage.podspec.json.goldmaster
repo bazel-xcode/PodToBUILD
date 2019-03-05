@@ -75,7 +75,7 @@ objc_library(
   deps = [
 
   ] + [
-    "FLAnimatedImage_includes"
+    ":FLAnimatedImage_includes"
   ],
   copts = [
 

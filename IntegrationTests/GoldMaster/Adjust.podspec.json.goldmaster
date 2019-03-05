@@ -86,7 +86,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "Adjust_includes"
+    ":Adjust_includes"
   ],
   copts = [
 
@@ -186,7 +186,7 @@ objc_library(
   deps = [
 
   ] + [
-    "Core_includes"
+    ":Core_includes"
   ],
   copts = [
 
@@ -279,7 +279,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "Sociomantic_includes"
+    ":Sociomantic_includes"
   ],
   copts = [
 
@@ -372,7 +372,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "Criteo_includes"
+    ":Criteo_includes"
   ],
   copts = [
 
@@ -465,7 +465,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "Trademob_includes"
+    ":Trademob_includes"
   ],
   copts = [
 

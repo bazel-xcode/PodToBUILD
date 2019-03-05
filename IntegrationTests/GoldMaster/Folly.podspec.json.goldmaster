@@ -86,7 +86,7 @@ objc_library(
     "//Vendor/boost-for-react-native:boost-for-react-native",
     "//Vendor/glog:glog"
   ] + [
-    "Folly_includes"
+    ":Folly_includes"
   ],
   copts = [
     "-std=c++14",

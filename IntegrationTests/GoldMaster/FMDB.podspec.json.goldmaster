@@ -60,7 +60,7 @@ objc_library(
   deps = [
     ":standard"
   ] + [
-    "FMDB_includes"
+    ":FMDB_includes"
   ],
   copts = [
 
@@ -146,7 +146,7 @@ objc_library(
   deps = [
 
   ] + [
-    "standard_includes"
+    ":standard_includes"
   ],
   copts = [
 
@@ -225,7 +225,7 @@ objc_library(
   deps = [
     ":standard"
   ] + [
-    "FTS_includes"
+    ":FTS_includes"
   ],
   copts = [
 
@@ -295,7 +295,7 @@ objc_library(
   deps = [
 
   ] + [
-    "standalone_includes"
+    ":standalone_includes"
   ],
   copts = [
     "-DFMDB_SQLITE_STANDALONE"
@@ -377,7 +377,7 @@ objc_library(
   deps = [
     "//Vendor/SQLCipher:SQLCipher"
   ] + [
-    "SQLCipher_includes"
+    ":SQLCipher_includes"
   ],
   copts = [
     "-DHAVE_USLEEP=1",

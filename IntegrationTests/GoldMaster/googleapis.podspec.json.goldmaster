@@ -63,7 +63,7 @@ objc_library(
     ":Messages",
     ":Services"
   ] + [
-    "googleapis_includes"
+    ":googleapis_includes"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
@@ -145,7 +145,7 @@ objc_library(
   deps = [
     "//Vendor/Protobuf:Protobuf"
   ] + [
-    "Messages_includes"
+    ":Messages_includes"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
@@ -225,7 +225,7 @@ objc_library(
     "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
     ":Messages"
   ] + [
-    "Services_includes"
+    ":Services_includes"
   ],
   copts = [
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"

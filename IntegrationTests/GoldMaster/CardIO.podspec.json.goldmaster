@@ -78,7 +78,7 @@ objc_library(
   deps = [
     ":CardIO_VendoredLibraries"
   ] + [
-    "CardIO_includes"
+    ":CardIO_includes"
   ],
   copts = [
 

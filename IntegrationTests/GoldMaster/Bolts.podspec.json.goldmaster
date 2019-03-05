@@ -86,7 +86,7 @@ objc_library(
     ":AppLinks",
     ":Tasks"
   ] + [
-    "Bolts_includes"
+    ":Bolts_includes"
   ],
   copts = [
 
@@ -212,7 +212,7 @@ objc_library(
   deps = [
 
   ] + [
-    "Tasks_includes"
+    ":Tasks_includes"
   ],
   copts = [
 
@@ -299,7 +299,7 @@ objc_library(
   deps = [
     ":Tasks"
   ] + [
-    "AppLinks_includes"
+    ":AppLinks_includes"
   ],
   copts = [
 

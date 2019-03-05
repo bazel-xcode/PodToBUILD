@@ -76,7 +76,7 @@ objc_library(
   deps = [
 
   ] + [
-    "UICollectionViewLeftAlignedLayout_cxx_includes"
+    ":UICollectionViewLeftAlignedLayout_cxx_includes"
   ],
   copts = [
 
@@ -181,7 +181,7 @@ objc_library(
     ":UICollectionViewLeftAlignedLayout_cxx",
     ":UICollectionViewLeftAlignedLayout_swift"
   ] + [
-    "UICollectionViewLeftAlignedLayout_includes"
+    ":UICollectionViewLeftAlignedLayout_includes"
   ],
   copts = [
 

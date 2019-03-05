@@ -59,7 +59,7 @@ objc_library(
   deps = [
     ":KakaoOpenSDK_VendoredFrameworks"
   ] + [
-    "KakaoOpenSDK_includes"
+    ":KakaoOpenSDK_includes"
   ],
   copts = [
 
@@ -133,7 +133,7 @@ objc_library(
   deps = [
     ":KakaoOpenSDK_VendoredFrameworks"
   ] + [
-    "KakaoOpenSDK_includes"
+    ":KakaoOpenSDK_includes"
   ],
   copts = [
 
@@ -219,7 +219,7 @@ objc_library(
   deps = [
     ":KakaoNavi_VendoredFrameworks"
   ] + [
-    "KakaoNavi_includes"
+    ":KakaoNavi_includes"
   ],
   copts = [
 
@@ -305,7 +305,7 @@ objc_library(
   deps = [
     ":KakaoLink_VendoredFrameworks"
   ] + [
-    "KakaoLink_includes"
+    ":KakaoLink_includes"
   ],
   copts = [
 
@@ -391,7 +391,7 @@ objc_library(
   deps = [
     ":KakaoS2_VendoredFrameworks"
   ] + [
-    "KakaoS2_includes"
+    ":KakaoS2_includes"
   ],
   copts = [
 

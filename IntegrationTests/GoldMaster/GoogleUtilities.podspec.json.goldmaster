@@ -68,7 +68,7 @@ objc_library(
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
     ":GoogleUtilities_VendoredFrameworks"
   ] + [
-    "GoogleUtilities_includes"
+    ":GoogleUtilities_includes"
   ],
   copts = [
 

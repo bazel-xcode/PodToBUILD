@@ -87,7 +87,7 @@ objc_library(
     ":Arc-exception-safe",
     ":Core"
   ] + [
-    "PINCache_includes"
+    ":PINCache_includes"
   ],
   copts = [
 
@@ -182,7 +182,7 @@ objc_library(
   deps = [
     "//Vendor/PINOperation:PINOperation"
   ] + [
-    "Core_includes"
+    ":Core_includes"
   ],
   copts = [
 
@@ -271,7 +271,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "Arc-exception-safe_includes"
+    ":Arc-exception-safe_includes"
   ],
   copts = [
     "-fobjc-arc-exceptions"

@@ -73,7 +73,7 @@ objc_library(
   deps = [
 
   ] + [
-    "kingpin_includes"
+    ":kingpin_includes"
   ],
   copts = [
 

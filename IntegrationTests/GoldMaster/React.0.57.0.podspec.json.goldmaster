@@ -73,7 +73,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "React_includes"
+    ":React_includes"
   ],
   copts = [
 
@@ -496,7 +496,7 @@ objc_library(
   deps = [
     "//Vendor/Yoga:Yoga"
   ] + [
-    "Core_cxx_includes"
+    ":Core_cxx_includes"
   ],
   copts = [
 
@@ -916,7 +916,7 @@ objc_library(
     "//Vendor/Yoga:Yoga",
     ":Core_cxx"
   ] + [
-    "Core_includes"
+    ":Core_includes"
   ],
   copts = [
 
@@ -1000,7 +1000,7 @@ objc_library(
     ":Core",
     ":cxxreact"
   ] + [
-    "CxxBridge_cxx_includes"
+    ":CxxBridge_cxx_includes"
   ],
   copts = [
     "-std=c++14",
@@ -1083,7 +1083,7 @@ objc_library(
     ":CxxBridge_cxx",
     ":cxxreact"
   ] + [
-    "CxxBridge_includes"
+    ":CxxBridge_includes"
   ],
   copts = [
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
@@ -1185,7 +1185,7 @@ objc_library(
     ":Core",
     ":RCTWebSocket"
   ] + [
-    "DevSupport_cxx_includes"
+    ":DevSupport_cxx_includes"
   ],
   copts = [
     "-std=c++14"
@@ -1296,7 +1296,7 @@ objc_library(
     ":DevSupport_swift",
     ":RCTWebSocket"
   ] + [
-    "DevSupport_includes"
+    ":DevSupport_includes"
   ],
   copts = [
 
@@ -1403,7 +1403,7 @@ objc_library(
     ":Core",
     ":fabric"
   ] + [
-    "RCTFabric_cxx_includes"
+    ":RCTFabric_cxx_includes"
   ],
   copts = [
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
@@ -1509,7 +1509,7 @@ objc_library(
     ":RCTFabric_cxx",
     ":fabric"
   ] + [
-    "RCTFabric_includes"
+    ":RCTFabric_includes"
   ],
   copts = [
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
@@ -1588,7 +1588,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "tvOS_includes"
+    ":tvOS_includes"
   ],
   copts = [
 
@@ -1685,7 +1685,7 @@ objc_library(
     "//Vendor/Folly:Folly",
     ":PrivateDatabase"
   ] + [
-    "jschelpers_includes"
+    ":jschelpers_includes"
   ],
   copts = [
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
@@ -1778,7 +1778,7 @@ objc_library(
   deps = [
 
   ] + [
-    "jsinspector_includes"
+    ":jsinspector_includes"
   ],
   copts = [
 
@@ -1872,7 +1872,7 @@ objc_library(
   deps = [
 
   ] + [
-    "PrivateDatabase_includes"
+    ":PrivateDatabase_includes"
   ],
   copts = [
 
@@ -1975,7 +1975,7 @@ objc_library(
     ":jschelpers",
     ":jsinspector"
   ] + [
-    "cxxreact_includes"
+    ":cxxreact_includes"
   ],
   copts = [
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
@@ -2046,7 +2046,7 @@ objc_library(
   deps = [
 
   ] + [
-    "fabric_includes"
+    ":fabric_includes"
   ],
   copts = [
 
@@ -2145,7 +2145,7 @@ objc_library(
   deps = [
     "//Vendor/Folly:Folly"
   ] + [
-    "RCTFabricSample_includes"
+    ":RCTFabricSample_includes"
   ],
   copts = [
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
@@ -2224,7 +2224,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "ART_includes"
+    ":ART_includes"
   ],
   copts = [
 
@@ -2303,7 +2303,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTActionSheet_includes"
+    ":RCTActionSheet_includes"
   ],
   copts = [
 
@@ -2389,7 +2389,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTAnimation_includes"
+    ":RCTAnimation_includes"
   ],
   copts = [
 
@@ -2488,7 +2488,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTBlob_cxx_includes"
+    ":RCTBlob_cxx_includes"
   ],
   copts = [
     "-std=c++14"
@@ -2587,7 +2587,7 @@ objc_library(
     ":Core",
     ":RCTBlob_cxx"
   ] + [
-    "RCTBlob_includes"
+    ":RCTBlob_includes"
   ],
   copts = [
 
@@ -2667,7 +2667,7 @@ objc_library(
     ":Core",
     ":RCTImage"
   ] + [
-    "RCTCameraRoll_includes"
+    ":RCTCameraRoll_includes"
   ],
   copts = [
 
@@ -2746,7 +2746,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTGeolocation_includes"
+    ":RCTGeolocation_includes"
   ],
   copts = [
 
@@ -2829,7 +2829,7 @@ objc_library(
     ":Core",
     ":RCTNetwork"
   ] + [
-    "RCTImage_includes"
+    ":RCTImage_includes"
   ],
   copts = [
 
@@ -2913,7 +2913,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTNetwork_cxx_includes"
+    ":RCTNetwork_cxx_includes"
   ],
   copts = [
     "-std=c++14"
@@ -2997,7 +2997,7 @@ objc_library(
     ":Core",
     ":RCTNetwork_cxx"
   ] + [
-    "RCTNetwork_includes"
+    ":RCTNetwork_includes"
   ],
   copts = [
 
@@ -3076,7 +3076,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTPushNotification_includes"
+    ":RCTPushNotification_includes"
   ],
   copts = [
 
@@ -3155,7 +3155,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTSettings_includes"
+    ":RCTSettings_includes"
   ],
   copts = [
 
@@ -3234,7 +3234,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTText_includes"
+    ":RCTText_includes"
   ],
   copts = [
 
@@ -3313,7 +3313,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTVibration_includes"
+    ":RCTVibration_includes"
   ],
   copts = [
 
@@ -3412,7 +3412,7 @@ objc_library(
     ":RCTBlob",
     ":fishhook"
   ] + [
-    "RCTWebSocket_includes"
+    ":RCTWebSocket_includes"
   ],
   copts = [
 
@@ -3513,7 +3513,7 @@ objc_library(
   deps = [
 
   ] + [
-    "fishhook_includes"
+    ":fishhook_includes"
   ],
   copts = [
 
@@ -3592,7 +3592,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTLinkingIOS_includes"
+    ":RCTLinkingIOS_includes"
   ],
   copts = [
 
@@ -3674,7 +3674,7 @@ objc_library(
   deps = [
     ":Core"
   ] + [
-    "RCTTest_includes"
+    ":RCTTest_includes"
   ],
   copts = [
 
@@ -3745,7 +3745,7 @@ objc_library(
     ":Core",
     ":CxxBridge"
   ] + [
-    "_ignore_me_subspec_for_linting__includes"
+    ":_ignore_me_subspec_for_linting__includes"
   ],
   copts = [
 
