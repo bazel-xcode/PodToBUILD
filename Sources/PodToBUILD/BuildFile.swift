@@ -234,7 +234,7 @@ public struct PodBuildFile: SkylarkConvertible {
 
     private static func vendoredFrameworks(withPodspec spec: PodSpec) -> [BazelTarget] {
         let frameworks = spec ^* liftToAttr(PodSpec.lens.vendoredFrameworks)
-        return frameworks.isEmpty ? [] : [ObjcFramework(name: "\(spec.moduleName ?? spec.name)_VendoredFrameworks", frameworkImports: frameworks)]
+        return frameworks.isEmpty ? [] : [AppleStaticFrameworkImport(name: "\(spec.moduleName ?? spec.name)_VendoredFrameworks", frameworkImports: frameworks)]
     }
 
     private static func vendoredLibraries(withPodspec spec: PodSpec) -> [BazelTarget] {

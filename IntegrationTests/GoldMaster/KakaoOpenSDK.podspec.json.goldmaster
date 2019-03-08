@@ -163,7 +163,7 @@ acknowledged_target(
   ],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
-objc_framework(
+apple_static_framework_import(
   name = "KakaoOpenSDK_VendoredFrameworks",
   framework_imports = glob(
     [
@@ -171,7 +171,6 @@ objc_framework(
     ],
     exclude_directories = 1
     ),
-  is_dynamic = 0,
   visibility = [
     "//visibility:public"
   ]
@@ -249,7 +248,7 @@ acknowledged_target(
   ],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
-objc_framework(
+apple_static_framework_import(
   name = "KakaoNavi_VendoredFrameworks",
   framework_imports = glob(
     [
@@ -257,7 +256,6 @@ objc_framework(
     ],
     exclude_directories = 1
     ),
-  is_dynamic = 0,
   visibility = [
     "//visibility:public"
   ]
@@ -335,7 +333,7 @@ acknowledged_target(
   ],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
-objc_framework(
+apple_static_framework_import(
   name = "KakaoLink_VendoredFrameworks",
   framework_imports = glob(
     [
@@ -343,7 +341,6 @@ objc_framework(
     ],
     exclude_directories = 1
     ),
-  is_dynamic = 0,
   visibility = [
     "//visibility:public"
   ]
@@ -421,7 +418,7 @@ acknowledged_target(
   ],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
   )
-objc_framework(
+apple_static_framework_import(
   name = "KakaoS2_VendoredFrameworks",
   framework_imports = glob(
     [
@@ -429,7 +426,6 @@ objc_framework(
     ],
     exclude_directories = 1
     ),
-  is_dynamic = 0,
   visibility = [
     "//visibility:public"
   ]

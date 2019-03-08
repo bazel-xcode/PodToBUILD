@@ -103,7 +103,7 @@ acknowledged_target(
   ],
   value = "//Vendor/GoogleAuthUtilities/pod_support_buildable:acknowledgement_fragment"
   )
-objc_framework(
+apple_static_framework_import(
   name = "GoogleAuthUtilities_VendoredFrameworks",
   framework_imports = glob(
     [
@@ -111,7 +111,6 @@ objc_framework(
     ],
     exclude_directories = 1
     ),
-  is_dynamic = 0,
   visibility = [
     "//visibility:public"
   ]

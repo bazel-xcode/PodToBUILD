@@ -116,7 +116,7 @@ apple_bundle_import(
     exclude_directories = 1
     )
   )
-objc_framework(
+apple_static_framework_import(
   name = "GoogleSignIn_VendoredFrameworks",
   framework_imports = glob(
     [
@@ -124,7 +124,6 @@ objc_framework(
     ],
     exclude_directories = 1
     ),
-  is_dynamic = 0,
   visibility = [
     "//visibility:public"
   ]

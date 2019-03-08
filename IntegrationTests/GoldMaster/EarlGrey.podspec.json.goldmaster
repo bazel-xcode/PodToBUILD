@@ -106,7 +106,7 @@ acknowledged_target(
   ],
   value = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_fragment"
   )
-objc_framework(
+apple_static_framework_import(
   name = "EarlGrey_VendoredFrameworks",
   framework_imports = select(
     {
@@ -118,7 +118,6 @@ objc_framework(
         )
     }
     ),
-  is_dynamic = 0,
   visibility = [
     "//visibility:public"
   ]
