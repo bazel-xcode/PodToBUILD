@@ -106,6 +106,7 @@ github_release:
 	@git checkout master
 	@git pull --rebase origin master
 	@echo "creating release: $(TESTED_BAZEL_VERSION)-($(shell git rev-parse --short HEAD)"
+	$(MAKE) release
 	$(MAKE) archive
 	@hub release create -p -a PodToBUILD.zip \
    		-m "PodToBUILD  $(TESTED_BAZEL_VERSION)-$(shell git rev-parse --short HEAD)" \
