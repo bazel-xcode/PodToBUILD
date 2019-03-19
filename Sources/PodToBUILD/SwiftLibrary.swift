@@ -7,7 +7,7 @@
 //
 
 // Represent a swift_library in Bazel
-// https://github.com/bazelbuild/rules_apple/blob/master/doc/rules-swift.md
+// https://github.com/bazelbuild/rules_swift/blob/master/doc/rules.md#swift_library
 // Note: Swift support is currently in progress
 // TODO:
 // - XCConfig / compiler flags

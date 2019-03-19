@@ -88,7 +88,7 @@ objc_library(
   ] + [
     "-fmodule-name=PaymentKit_pod_module"
   ],
-  resources = glob(
+  data = glob(
     [
       "PaymentKit/Resources/*.png",
       "PaymentKit/Resources/Cards/*.png"

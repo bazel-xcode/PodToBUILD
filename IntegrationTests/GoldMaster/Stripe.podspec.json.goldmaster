@@ -1,3 +1,4 @@
+load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_resource_bundle')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "pch_with_name_hint",
@@ -102,7 +103,7 @@ objc_library(
   ] + [
     "-fmodule-name=Stripe_pod_module"
   ],
-  bundles = select(
+  data = select(
     {
       "//conditions:default": [
         ":Stripe_Bundle_Stripe"

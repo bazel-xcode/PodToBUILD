@@ -1,3 +1,4 @@
+load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "pch_with_name_hint",
@@ -304,7 +305,7 @@ objc_library(
   ] + [
     "-fmodule-name=FBSDKCoreKit_pod_module"
   ],
-  bundles = [
+  data = [
     ":FBSDKCoreKit_Bundle_FacebookSDKStrings"
   ],
   visibility = [
@@ -318,7 +319,7 @@ acknowledged_target(
   ],
   value = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_fragment"
   )
-objc_bundle(
+apple_bundle_import(
   name = "FBSDKCoreKit_Bundle_FacebookSDKStrings",
   bundle_imports = glob(
     [
