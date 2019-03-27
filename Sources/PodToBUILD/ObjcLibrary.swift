@@ -285,7 +285,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         }
 
         self.includes = xcconfigFlags.filter { $0.hasPrefix("-I") }.map {
-            $0.substring(from: $0.characters.index($0.startIndex, offsetBy: 2))
+            String($0[$0.index($0.startIndex, offsetBy: 2)...])
         } + includePodHeaderDirs()
         self.headerName = headerName
         self.externalName = externalName
