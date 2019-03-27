@@ -8,5 +8,5 @@ cache:
     - $HOME/.bazelenv
     - $HOME/Library/Caches/Bazel
     - $HOME/.bazel_pod_store
-osx_image: xcode10
+osx_image: xcode10.2
 script: make ci
