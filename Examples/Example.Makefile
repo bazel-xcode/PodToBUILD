@@ -6,7 +6,7 @@ BAZEL_WRAPPER=$(RULES_PODS_DIR)/tools/bazelwrapper
 
 # Workaround for symlink weirdness.
 # Currently `bazelwrapper` relies on pwd, which causes issues here
-BAZEL=~/.bazelenv/versions/0.18.0/bin/bazel
+BAZEL=~/.bazelenv/versions/0.24.0/bin/bazel
 
 # Override the repository to point at the source. It does a source build of the
 # current code.
