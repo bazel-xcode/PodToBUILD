@@ -32,7 +32,12 @@ class BuildTests: XCTestCase {
             let fetchResult = fetchTask.launch()
             XCTAssertEqual(fetchResult.terminationStatus, 0)
             guard fetchResult.terminationStatus == 0 else {
-                fatalError("Can't setup test root")
+                fatalError(
+                        "Can't setup test root."
+                                + "\nCMD:\n\(fetchTask.debugDescription)"
+                                + "\nSTDOUT:\n\(fetchResult.standardOutputAsString)"
+                                + "\nSTDERR:\n\(fetchResult.standardErrorAsString)"
+                )
             }
             let bazelScript = "make -C \(rootDir)/Examples/\(example)"
             print("running bazel:", bazelScript)
