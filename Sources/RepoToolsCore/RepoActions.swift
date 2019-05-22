@@ -401,7 +401,7 @@ public enum RepoActions {
         // Extract the downloaded archive
         let extractDir = shell.tmpdir()
         func extract() -> CommandOutput {
-            var extractionHandler = fetchOptions.extractionHandler.isEmpty ? "default" : fetchOpts.extractionHandler;
+            var extractionHandler = fetchOptions.extractionHandler.isEmpty ? "default" : fetchOptions.extractionHandler;
             if extractionHandler == "default" {
                 let lowercasedFileName = fileName.lowercased()
                 if lowercasedFileName.hasSuffix("zip") {
