@@ -58,7 +58,8 @@ class RepositoryContext(object):
             enable_modules = True,
             generate_module_map = True,
             header_visibility = "pod_support",
-            src_root = None):
+            src_root = None,
+            extraction_handler = "default"):
         self.target_name = target_name
         self.url = url
         self.podspec_url = podspec_url
@@ -71,6 +72,7 @@ class RepositoryContext(object):
         self.generate_module_map = generate_module_map
         self.header_visibility = header_visibility
         self.src_root = src_root
+        self.extraction_handler = extraction_handler
 
     def GetPodRootDir(self):
         return self.src_root + "/Vendor/" + self.target_name
@@ -129,7 +131,9 @@ def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
         "--sub_dir",
         repository_ctx.strip_prefix,
         "--trace",
-        "true" if repository_ctx.GetTrace() else "false"
+        "true" if repository_ctx.GetTrace() else "false",
+        "--handler",
+        repository_ctx.extraction_handler,
     ]
 
     _exec(repository_ctx, fetch_cmd, repository_ctx.GetPodRootDir())
@@ -280,13 +284,14 @@ def new_pod_repository(name,
             podspec_url = None,
             strip_prefix = "",
             user_options = [],
-            install_script = None, 
+            install_script = None,
             inhibit_warnings = False,
             trace = False,
             enable_modules = True,
             generate_module_map = True,
             owner = "", # This is a Noop
-            header_visibility = "pod_support"):
+            header_visibility = "pod_support"
+            extraction_handler = "default"):
     """Declare a repository for a Pod
     Args:
          name: the name of this repo
@@ -347,6 +352,10 @@ def new_pod_repository(name,
 
          header_visibility: DEPRECATED: This is replaced by headermaps:
          https://github.com/bazelbuild/bazel/pull/3712
+
+         extraction_handler: override for what archive type to treat the file as
+         when extracting it, supports `tar` and `zip`.  The default is `default`
+         which will try and infer from the file extension of the target file.
     """
 
     # The SRC_ROOT is the directory of the WORKSPACE and Pods.WORKSPACE
@@ -367,7 +376,8 @@ def new_pod_repository(name,
             enable_modules = enable_modules,
             generate_module_map = generate_module_map,
             header_visibility = header_visibility,
-            src_root = SRC_ROOT)
+            src_root = SRC_ROOT,
+            extraction_handler = extraction_handler)
     _update_repo_impl(repository_ctx)
 
 def _cleanupPods():

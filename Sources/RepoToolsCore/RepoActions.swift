@@ -25,6 +25,7 @@ public struct FetchOptions {
     public let url: String
     public let trace: Bool
     public let subDir: String?
+    public let extractionHandler: String?
 }
 
 /// Parse in Command Line arguments
@@ -69,8 +70,10 @@ public enum SerializedRepoToolsAction {
         let name = args[1]
         let trace = UserDefaults.standard.bool(forKey: "-trace")
         let subDir = UserDefaults.standard.string(forKey: "-sub_dir")
+        let extractionHandler = UserDefaults.standard.string(forKey: "-handler")
         let fetchOpts = FetchOptions(podName: name, url: url, trace: trace,
-                                     subDir: subDir)
+                                     subDir: subDir,
+                                     extractionHandler: extractionHandler)
         return fetchOpts
     }
 
@@ -209,7 +212,7 @@ public enum RepoActions {
             hasFile(FileManager.default.currentDirectoryPath + "/" + podspecName
                     + ".podspec") }
         let hasPodspecJson: () -> Bool = {
-            hasFile(FileManager.default.currentDirectoryPath + "/" 
+            hasFile(FileManager.default.currentDirectoryPath + "/"
                     + podspecName + ".podspec.json") }
 
         if hasPodspecJson() {
@@ -331,7 +334,7 @@ public enum RepoActions {
                 shell.symLink(from: from, to: to)
             }
         }
-        
+
         guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
             fatalError("Can't change path back to original directory after creating symlinks")
         }
@@ -398,8 +401,22 @@ public enum RepoActions {
         // Extract the downloaded archive
         let extractDir = shell.tmpdir()
         func extract() -> CommandOutput {
-            let lowercasedFileName = fileName.lowercased()
-            if lowercasedFileName.hasSuffix("zip") {
+            var extractionHandler = fetchOptions.extractionHandler.isEmpty ? "default" : fetchOpts.extractionHandler;
+            if extractionHandler == "default" {
+                let lowercasedFileName = fileName.lowercased()
+                if lowercasedFileName.hasSuffix("zip") {
+                    extractionHandler = "zip"
+                } else if (
+                    lowercasedFileName.hasSuffix("tar.gz") ||
+                    lowercasedFileName.hasSuffix("tar") ||
+                    lowercasedFileName.hasSuffix("tgz")) {
+                    extractionHandler = "tar"
+                } else {
+                    fatalError("Cannot extract files other than .zip, .tar, .tar.gz, or .tgz")
+                }
+            }
+
+            if extractionHandler == "zip" {
                 return shell.command(CommandBinary.sh, arguments: [
                     "-c",
                     unzipTransaction(
@@ -407,7 +424,7 @@ public enum RepoActions {
                         fileName: escape(download)
                     ),
                 ])
-            } else if lowercasedFileName.hasSuffix("tar.gz") {
+            } else if extractionHandler == "tar" {
                 return shell.command(CommandBinary.sh, arguments: [
                     "-c",
                     untarTransaction(
@@ -415,8 +432,9 @@ public enum RepoActions {
                         fileName: escape(download)
                     ),
                 ])
+            } else {
+                fatalError("The extraction handler value is invalid: \(extractionHandler)")
             }
-            fatalError("Cannot extract files other than .zip or .tar")
         }
 
         assertCommandOutput(extract(), message: "Extraction of \(podName) failed")

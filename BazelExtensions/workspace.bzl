@@ -41,7 +41,9 @@ def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
         "--sub_dir",
         repository_ctx.attr.strip_prefix,
         "--trace",
-        "true" if repository_ctx.attr.trace else "false"
+        "true" if repository_ctx.attr.trace else "false",
+        "--handler",
+        repository_ctx.attr.extraction_handler
     ]
 
     fetch_output = _exec(repository_ctx, fetch_cmd)
@@ -180,6 +182,8 @@ pod_repo_ = repository_rule(
         "enable_modules": attr.bool(default=True, mandatory=True),
         "generate_module_map": attr.bool(default=True, mandatory=True),
         "header_visibility": attr.string(),
+        "extraction_handler": attr.string(values=["zip", "tar", "default"],
+                                          default="default"),
     }
 )
 
@@ -198,6 +202,7 @@ def new_pod_repository(name,
                        enable_modules=True,
                        generate_module_map=None,
                        header_visibility="pod_support",
+                       extraction_handler="default",
                        ):
     """Declare a repository for a Pod
     Args:
@@ -258,6 +263,10 @@ def new_pod_repository(name,
 
          header_visibility: DEPRECATED: This is replaced by headermaps:
          https://github.com/bazelbuild/bazel/pull/3712
+
+         extraction_handler: override for how the target file from `url` is
+         extracted as, can be either `tar` or `zip`.  The default is `default`
+         which will try and infer from the file extension of the target file.
     """
     if generate_module_map == None:
         generate_module_map = enable_modules
@@ -279,5 +288,6 @@ def new_pod_repository(name,
         trace=trace,
         enable_modules=enable_modules,
         generate_module_map=generate_module_map,
-        header_visibility=header_visibility
+        header_visibility=header_visibility,
+        extraction_handler=extraction_handler
     )
