@@ -15,22 +15,23 @@ let testPodName = "Foo"
 let fetchOpts = FetchOptions(podName: testPodName,
                     url: "http://pinner.com/foo.zip",
                     trace: false,
-                    subDir: nil)
+                    subDir: nil,
+                    extractionHandler: "default")
 
 class PodStoreTests: XCTestCase {
 
     var downloads: String {
         return "%TMP%"
     }
-    
+
     var extractDir: String {
         return "%TMP%"
     }
-    
+
 	var downloadPath: String {
         return downloads + "/" + testPodName + "-" + "foo.zip"
-    }   
-        
+    }
+
     var hasDir: ShellInvocation {
         return MakeShellInvocation("/bin/[", arguments: ["-e", cacheRoot(forPod:
                 testPodName, url: "http://pinner.com/foo.zip"), "]"], exitCode: 1)
@@ -51,13 +52,13 @@ class PodStoreTests: XCTestCase {
             )
         )
     }
-    
+
     func testZipExtraction() {
         let hasDir =  MakeShellInvocation("/bin/[", arguments: ["-e",
                 cacheRoot(forPod: testPodName, url: "http://pinner.com/foo.zip"),
                 "]"], exitCode: 1)
 
-        
+
         let extract = MakeShellInvocation("/bin/sh",
                                           arguments: ["-c", RepoActions.unzipTransaction(
                                             rootDir: escape(extractDir),
@@ -81,7 +82,7 @@ class PodStoreTests: XCTestCase {
         let shell = LogicalShellContext(commandInvocations: [
             hasDir,
             ])
-        
+
         RepoActions.fetch(shell: shell, fetchOptions: fetchOpts)
         XCTAssertFalse(shell.executed(encodedCommand:
                 LogicalShellContext.encodeDownload(url: URL(string: fetchOpts.url)!, toFile: downloadPath)
