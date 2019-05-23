@@ -290,7 +290,7 @@ def new_pod_repository(name,
             enable_modules = True,
             generate_module_map = True,
             owner = "", # This is a Noop
-            header_visibility = "pod_support"
+            header_visibility = "pod_support",
             extraction_handler = "default"):
     """Declare a repository for a Pod
     Args:

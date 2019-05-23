@@ -433,7 +433,7 @@ public enum RepoActions {
                     ),
                 ])
             } else {
-                fatalError("The extraction handler value is invalid: \(extractionHandler)")
+                fatalError("The extraction handler value is invalid: \(extractionHandler ?? 'default')")
             }
         }
 
