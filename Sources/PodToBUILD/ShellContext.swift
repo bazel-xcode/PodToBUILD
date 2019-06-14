@@ -271,11 +271,14 @@ public struct SystemShellContext : ShellContext {
     
     public func tmpdir() -> String {
         log("CREATE TMPDIR")
-        let result = NSTemporaryDirectory() as String
-        guard !result.isEmpty else {
+        // Taken from https://stackoverflow.com/a/46701313/3000133
+        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
+        do {
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        } catch {
             fatalError("Can't create temp dir")
         }
-        return result
+        return url.path
     }
 
     // MARK: - Private

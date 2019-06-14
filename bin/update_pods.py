@@ -167,7 +167,7 @@ def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
     if not url:
         # We allow putting source code in the Vendor/PodName and then initing
         # the repo with that code.
-	return
+        return
 
     # Note: the pod is not cleaned out if the sourcecode is loaded from the
     # current directory
