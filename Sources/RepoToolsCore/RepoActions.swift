@@ -500,7 +500,7 @@ public enum RepoActions {
         return "mkdir -p " + rootDir + " && " +
             "cd " + rootDir + " && " +
             "mkdir -p OUT && " +
-            "tar -xzvf " + fileName + " -C OUT > /dev/null && " +
+            "tar -xzvf " + fileName + " -C OUT > /dev/null 2>&1 && " +
             "rm -rf " + fileName
     }
 }
