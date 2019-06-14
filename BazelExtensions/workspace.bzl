@@ -150,8 +150,14 @@ def _impl(repository_ctx):
 
     # For now, we curl the podspec url before the script runs
     if repository_ctx.attr.podspec_url:
+        if repository_ctx.attr.podspec_file:
+            fail("Cannot specify both podspec_url and podspec_file")
         script += "curl -O " + repository_ctx.attr.podspec_url
         script += "\n"
+    elif repository_ctx.attr.podspec_file:
+        if repository_ctx.attr.podspec_url:
+            fail("Cannot specify both podspec_url and podspec_file")
+        script += "cp " + str(repository_ctx.path(repository_ctx.attr.podspec_file)) + " .\n"
 
     if repository_ctx.attr.install_script_tpl:
         for sub in substitutions:
@@ -170,6 +176,7 @@ pod_repo_ = repository_rule(
         "target_name": attr.string(mandatory=True),
         "url": attr.string(mandatory=True),
         "podspec_url": attr.string(),
+        "podspec_file": attr.label(),
         "strip_prefix": attr.string(),
         "user_options": attr.string_list(),
         "repo_tools_labels": attr.label_list(),
@@ -187,6 +194,7 @@ def new_pod_repository(name,
                        url,
                        owner="",
                        podspec_url=None,
+                       podspec_file=None,
                        strip_prefix="",
                        user_options=[],
                        install_script=None,
@@ -209,6 +217,9 @@ def new_pod_repository(name,
          the repository, and read a .podspec file. This requires having
          CocoaPods installed on build nodes. If a JSON podspec is provided here,
          then it is not required to run CocoaPods.
+
+         podspec_file: like podspec_url, but specifies a podspec in the project,
+         rather than downloading one from a URL.
 
          owner: the owner of this dependency
 
@@ -270,6 +281,7 @@ def new_pod_repository(name,
         target_name=name,
         url=url,
         podspec_url=podspec_url,
+        podspec_file=podspec_file,
         user_options=user_options,
         strip_prefix=strip_prefix,
         install_script_tpl=install_script,
