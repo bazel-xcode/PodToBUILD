@@ -250,6 +250,10 @@ there is no need to add an entry for them.
 
 `header_visibility`: DEPRECATED: This is replaced by headermaps: https://github.com/Bazelbuild/Bazel/pull/3712
 
+`extraction_handler`: explicitly define what filetype to treat the remote 
+target as.  Supports `tar` and `zip`.  If unset, will try and infer from the
+file extension.
+
 ### Known Complications
 
 ### Incompatible file paths
