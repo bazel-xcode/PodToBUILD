@@ -6,12 +6,12 @@ BAZEL_WRAPPER=$(RULES_PODS_DIR)/tools/bazelwrapper
 
 # Workaround for symlink weirdness.
 # Currently `bazelwrapper` relies on pwd, which causes issues here
-BAZEL=~/.bazelenv/versions/0.18.0/bin/bazel
+BAZEL=~/.bazelenv/versions/0.25.2/bin/bazel
 
 # Override the repository to point at the source. It does a source build of the
 # current code.
 BAZEL_OPTS=--override_repository=rules_pods=$(RULES_PODS_DIR) \
-		--disk_cache=$(HOME)/Library/Caches/Bazel
+		--disk_cache=$(HOME)/Library/Caches/Bazel  --apple_platform_type=ios
 
 all: fetch build
 
