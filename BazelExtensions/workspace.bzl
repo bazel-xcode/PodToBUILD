@@ -148,16 +148,20 @@ def _impl(repository_ctx):
     # Build up the script
     script = ""
 
-    # For now, we curl the podspec url before the script runs
     if repository_ctx.attr.podspec_url:
+        # For now, we curl the podspec url before the script runs
         if repository_ctx.attr.podspec_file:
             fail("Cannot specify both podspec_url and podspec_file")
         script += "curl -O " + repository_ctx.attr.podspec_url
         script += "\n"
     elif repository_ctx.attr.podspec_file:
+        # Note that we can't re-use the podspec_url attribute for this since
+        # that would require being able to determine the root of the main
+        # workspace (to resolve relative paths) which isn't possible in this context.
         if repository_ctx.attr.podspec_url:
             fail("Cannot specify both podspec_url and podspec_file")
-        script += "cp " + str(repository_ctx.path(repository_ctx.attr.podspec_file)) + " .\n"
+        script += "ditto " + str(repository_ctx.path(repository_ctx.attr.podspec_file)) + " ."
+        script += "\n"
 
     if repository_ctx.attr.install_script_tpl:
         for sub in substitutions:
