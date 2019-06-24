@@ -291,6 +291,19 @@ public enum RepoActions {
             }))
             // and add the xcconfig header searchpaths here
             .union(xcconfigHeaderSearchPaths)
+            // do case-insensitive de-duplication in a deterministic manner. Sort the entries, then create a mapping
+            // from lowercase entry to actual entry, only keeping the first of each lowercase entry we see. Then just
+            // use the values of the mapping.
+            .sorted()
+            .reduce([:]) { mapping, path in
+                var updatedMapping = mapping;
+                let canonicalPath = path.lowercased()
+                if !updatedMapping.keys.contains(canonicalPath) {
+                    updatedMapping[canonicalPath] = path
+                }
+                return updatedMapping
+            }
+            .values
             .map { PodSupportSystemPublicHeaderDir + "\($0)/" }
 
         customHeaderSearchPaths.forEach(shell.dir)
@@ -331,7 +344,7 @@ public enum RepoActions {
                 shell.symLink(from: from, to: to)
             }
         }
-        
+
         guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
             fatalError("Can't change path back to original directory after creating symlinks")
         }
