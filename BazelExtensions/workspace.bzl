@@ -78,6 +78,12 @@ REPO_TOOL_NAME = "RepoTool"
 INIT_REPO_PLACEHOLDER = "__INIT_REPO__"
 
 def _impl(repository_ctx):
+    if repository_ctx.os.name != "mac os x":
+        # No-op on non-mac platforms, since they won't be able to run the RepoTool binary.
+        # While the dependencies/targets inside this pod won't exist or be available on these
+        # platforms, you will still at least be able to run things like `bazel query //...`
+        return
+
     if repository_ctx.attr.trace:
         print("__RUN with repository_ctx", repository_ctx.attr)
     # Note: the root directory that these commands execute is external/name
