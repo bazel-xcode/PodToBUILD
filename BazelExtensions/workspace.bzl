@@ -82,6 +82,7 @@ def _impl(repository_ctx):
         # No-op on non-mac platforms, since they won't be able to run the RepoTool binary.
         # While the dependencies/targets inside this pod won't exist or be available on these
         # platforms, you will still at least be able to run things like `bazel query //...`
+        print('No-op on non-macOS platform, repository ' + repository_ctx.attr.target_name + ' will be empty!')
         return
 
     if repository_ctx.attr.trace:
