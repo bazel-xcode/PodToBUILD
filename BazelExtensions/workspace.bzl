@@ -198,7 +198,6 @@ def new_pod_repository(name,
                        url,
                        owner="",
                        podspec_url=None,
-                       podspec_file=None,
                        strip_prefix="",
                        user_options=[],
                        install_script=None,
@@ -217,13 +216,12 @@ def new_pod_repository(name,
 
          url: the url of this repo
 
-         podspec_url: the podspec url. By default, we will look in the root of
-         the repository, and read a .podspec file. This requires having
-         CocoaPods installed on build nodes. If a JSON podspec is provided here,
-         then it is not required to run CocoaPods.
+         podspec_url: an override podspec file. Can be either a URL or a Bazel
+         label.
 
-         podspec_file: like podspec_url, but specifies a podspec in the project,
-         rather than downloading one from a URL.
+         By default, we will look in the root of the repository, and read a .podspec file.
+         This requires having CocoaPods installed on build nodes. If a JSON podspec is
+         provided here, then it is not required to run CocoaPods.
 
          owner: the owner of this dependency
 
@@ -276,6 +274,11 @@ def new_pod_repository(name,
     """
     if generate_module_map == None:
         generate_module_map = enable_modules
+
+    podspec_file = None
+    if podspec_url and not podspec_url.startswith("http"):
+         podspec_file = podspec_url
+         podspec_url = None
 
     tool_labels = []
     for tool in repo_tools:
