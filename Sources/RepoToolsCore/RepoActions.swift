@@ -209,7 +209,7 @@ public enum RepoActions {
             hasFile(FileManager.default.currentDirectoryPath + "/" + podspecName
                     + ".podspec") }
         let hasPodspecJson: () -> Bool = {
-            hasFile(FileManager.default.currentDirectoryPath + "/" 
+            hasFile(FileManager.default.currentDirectoryPath + "/"
                     + podspecName + ".podspec.json") }
 
         if hasPodspecJson() {
@@ -420,7 +420,11 @@ public enum RepoActions {
                         fileName: escape(download)
                     ),
                 ])
-            } else if lowercasedFileName.hasSuffix("tar.gz") {
+            } else if
+                lowercasedFileName.hasSuffix("tar")
+                || lowercasedFileName.hasSuffix("tar.gz")
+                || lowercasedFileName.hasSuffix("tgz")
+            {
                 return shell.command(CommandBinary.sh, arguments: [
                     "-c",
                     untarTransaction(
@@ -429,7 +433,7 @@ public enum RepoActions {
                     ),
                 ])
             }
-            fatalError("Cannot extract files other than .zip or .tar")
+            fatalError("Cannot extract files other than .zip, .tar, .tar.gz, or .tgz")
         }
 
         assertCommandOutput(extract(), message: "Extraction of \(podName) failed")
