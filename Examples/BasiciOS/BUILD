@@ -19,6 +19,7 @@ objc_library(
     srcs = [
         "main.m",
     ],
+    enable_modules = True,
     deps = [
         "@SlackTextViewController//:SlackTextViewController",
     ],
