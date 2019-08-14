@@ -8,8 +8,8 @@ load(
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
-# https://bazel.build/versions/master/docs/bazel-user-manual.html
-native.config_setting(
+# https://docs.bazel.build/versions/master/be/general.html#config_setting
+config_setting(
   name = "release",
   values = {
     "compilation_mode": "opt"
