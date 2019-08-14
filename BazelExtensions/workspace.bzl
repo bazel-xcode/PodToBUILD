@@ -117,7 +117,7 @@ def _impl(repository_ctx):
         if not repo_tool_bin:
             fail("invalid repo_tool:" + name)
 
-        entry = [repo_tool_bin]
+        entry = [str(repo_tool_bin)]
 
         # RepoTool in this context is a special placeholder for a RepoTool
         # invocation ( INIT_REPO_PLACEHOLDER )
