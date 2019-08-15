@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,7 +15,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "GoogleAppUtilities_hdrs",
   srcs = glob(
@@ -23,21 +23,17 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + [
-
-  ] + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "GoogleAppUtilities_includes",
   include = [
     "Vendor/GoogleAppUtilities/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "GoogleAppUtilities",
   "GoogleAppUtilities_module_map",
@@ -45,7 +41,7 @@ gen_module_map(
   [
     "GoogleAppUtilities_hdrs"
   ]
-  )
+)
 objc_library(
   name = "GoogleAppUtilities",
   enable_modules = 0,
@@ -54,19 +50,14 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "GoogleAppUtilities",
-    [
-
-    ]
-    ),
+    []
+  ),
   deps = [
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
-    ":GoogleAppUtilities_VendoredFrameworks"
-  ] + [
+    ":GoogleAppUtilities_VendoredFrameworks",
     ":GoogleAppUtilities_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -76,7 +67,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/GoogleAppUtilities/pod_support/Headers/Public/GoogleAppUtilities/"
   ] + [
     "-fmodule-name=GoogleAppUtilities_pod_module"
@@ -84,14 +75,14 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "GoogleAppUtilities_acknowledgement",
   deps = [
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities_acknowledgement"
   ],
   value = "//Vendor/GoogleAppUtilities/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_static_framework_import(
   name = "GoogleAppUtilities_VendoredFrameworks",
   framework_imports = glob(
@@ -99,8 +90,8 @@ apple_static_framework_import(
       "Frameworks/frameworks/GoogleAppUtilities.framework/**"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)

@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "googleapis_hdrs",
   srcs = glob(
@@ -22,22 +22,20 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + [
-
-  ] + [
+  ) + [
     ":Messages_hdrs",
     ":Services_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "googleapis_includes",
   include = [
     "Vendor/googleapis/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "googleapis",
   "googleapis_module_map",
@@ -45,7 +43,7 @@ gen_module_map(
   [
     "googleapis_hdrs"
   ]
-  )
+)
 objc_library(
   name = "googleapis",
   enable_modules = 0,
@@ -54,15 +52,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "googleapis",
-    [
-
-    ]
-    ),
+    []
+  ),
   deps = [
     "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin",
     ":Messages",
-    ":Services"
-  ] + [
+    ":Services",
     ":googleapis_includes"
   ],
   copts = [
@@ -77,7 +72,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
     "-fmodule-name=googleapis_pod_module"
@@ -85,14 +80,14 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "googleapis_acknowledgement",
   deps = [
     "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin_acknowledgement"
   ],
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Messages_hdrs",
   srcs = glob(
@@ -100,11 +95,11 @@ filegroup(
       "google/**/*.pbobjc.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Messages_union_hdrs",
   srcs = [
@@ -114,13 +109,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Messages_includes",
   include = [
     "Vendor/googleapis/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Messages",
   enable_modules = 0,
@@ -132,7 +127,7 @@ objc_library(
       "google/**/*.pbrpc.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Messages_union_hdrs"
   ],
@@ -141,10 +136,9 @@ objc_library(
     [
       "google/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    "//Vendor/Protobuf:Protobuf"
-  ] + [
+    "//Vendor/Protobuf:Protobuf",
     ":Messages_includes"
   ],
   copts = [
@@ -159,7 +153,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
     "-fmodule-name=googleapis_pod_module"
@@ -167,14 +161,14 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Messages_acknowledgement",
   deps = [
     "//Vendor/Protobuf:Protobuf_acknowledgement"
   ],
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Services_hdrs",
   srcs = glob(
@@ -182,11 +176,11 @@ filegroup(
       "google/**/*.pbrpc.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Services_union_hdrs",
   srcs = [
@@ -196,13 +190,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Services_includes",
   include = [
     "Vendor/googleapis/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Services",
   enable_modules = 0,
@@ -211,7 +205,7 @@ objc_library(
       "google/**/*.pbrpc.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Services_union_hdrs"
   ],
@@ -220,11 +214,10 @@ objc_library(
     [
       "google/**/*.pch"
     ]
-    ),
+  ),
   deps = [
     "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
-    ":Messages"
-  ] + [
+    ":Messages",
     ":Services_includes"
   ],
   copts = [
@@ -239,7 +232,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
     "-fmodule-name=googleapis_pod_module"
@@ -247,11 +240,11 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Services_acknowledgement",
   deps = [
     "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC_acknowledgement"
   ],
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
-  )
+)

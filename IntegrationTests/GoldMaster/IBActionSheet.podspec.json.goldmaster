@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "IBActionSheet_hdrs",
   srcs = glob(
@@ -22,24 +22,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "IBActionSheet_includes",
   include = [
     "Vendor/IBActionSheet/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "IBActionSheet",
   "IBActionSheet_module_map",
@@ -47,7 +45,7 @@ gen_module_map(
   [
     "IBActionSheet_hdrs"
   ]
-  )
+)
 objc_library(
   name = "IBActionSheet",
   enable_modules = 0,
@@ -56,7 +54,7 @@ objc_library(
       "IBActionSheetSample/IBActionSheetSample/IBActionSheet.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":IBActionSheet_hdrs"
   ],
@@ -65,18 +63,14 @@ objc_library(
     [
       "IBActionSheetSample/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "QuartzCore"
   ],
   deps = [
-
-  ] + [
     ":IBActionSheet_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -86,7 +80,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/IBActionSheet/pod_support/Headers/Public/IBActionSheet/"
   ] + [
     "-fmodule-name=IBActionSheet_pod_module"
@@ -94,11 +88,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "IBActionSheet_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/IBActionSheet/pod_support_buildable:acknowledgement_fragment"
-  )
+)

@@ -6,7 +6,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -16,7 +16,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "GoogleSignIn_hdrs",
   srcs = glob(
@@ -24,21 +24,17 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + [
-
-  ] + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "GoogleSignIn_includes",
   include = [
     "Vendor/GoogleSignIn/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "GoogleSignIn",
   "GoogleSignIn_module_map",
@@ -46,7 +42,7 @@ gen_module_map(
   [
     "GoogleSignIn_hdrs"
   ]
-  )
+)
 objc_library(
   name = "GoogleSignIn",
   enable_modules = 0,
@@ -55,10 +51,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "GoogleSignIn",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "CoreText",
     "SafariServices",
@@ -70,13 +64,10 @@ objc_library(
     "//Vendor/GoogleToolboxForMac:NSDictionary_URLArguments",
     "//Vendor/GoogleToolboxForMac:NSString_URLArguments",
     ":GoogleSignIn_Bundle_GoogleSignIn",
-    ":GoogleSignIn_VendoredFrameworks"
-  ] + [
+    ":GoogleSignIn_VendoredFrameworks",
     ":GoogleSignIn_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -86,7 +77,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/GoogleSignIn/pod_support/Headers/Public/GoogleSignIn/"
   ] + [
     "-fmodule-name=GoogleSignIn_pod_module"
@@ -97,7 +88,7 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "GoogleSignIn_acknowledgement",
   deps = [
@@ -107,7 +98,7 @@ acknowledged_target(
     "//Vendor/GoogleToolboxForMac:NSString_URLArguments_acknowledgement"
   ],
   value = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_bundle_import(
   name = "GoogleSignIn_Bundle_GoogleSignIn",
   bundle_imports = glob(
@@ -115,8 +106,8 @@ apple_bundle_import(
       "Resources/GoogleSignIn.bundle/**"
     ],
     exclude_directories = 1
-    )
   )
+)
 apple_static_framework_import(
   name = "GoogleSignIn_VendoredFrameworks",
   framework_imports = glob(
@@ -124,8 +115,8 @@ apple_static_framework_import(
       "Frameworks/GoogleSignIn.framework/**"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)

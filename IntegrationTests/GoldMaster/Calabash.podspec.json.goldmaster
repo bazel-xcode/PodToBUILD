@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,13 +15,13 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 config_setting(
   name = "iosCase",
   values = {
     "cpu": "powerpc1"
   }
-  )
+)
 filegroup(
   name = "Calabash_cxx_hdrs",
   srcs = glob(
@@ -31,11 +31,11 @@ filegroup(
       "calabash.framework/Versions/A/Headers/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Calabash_cxx_union_hdrs",
   srcs = [
@@ -45,13 +45,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Calabash_cxx_includes",
   include = [
     "Vendor/Calabash/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Calabash_cxx",
   enable_modules = 0,
@@ -68,7 +68,7 @@ objc_library(
       "calabash.framework/Versions/A/Headers/*.s"
     ],
     exclude_directories = 1
-    ),
+  ),
   non_arc_srcs = glob(
     [
       "calabash.framework/Versions/A/Headers/*.mm"
@@ -77,7 +77,7 @@ objc_library(
       "calabash.framework/Versions/A/Headers/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Calabash_cxx_union_hdrs"
   ],
@@ -86,17 +86,15 @@ objc_library(
     [
       "calabash.framework/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = select(
     {
       "//conditions:default": [
         "CFNetwork"
       ]
     }
-    ),
+  ),
   deps = [
-
-  ] + [
     ":Calabash_cxx_includes"
   ],
   copts = [
@@ -113,7 +111,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Calabash/pod_support/Headers/Public/Calabash/"
   ] + [
     "-fmodule-name=Calabash_pod_module"
@@ -121,14 +119,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Calabash_cxx_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Calabash/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 swift_library(
   name = "Calabash_swift",
   srcs = glob(
@@ -136,14 +132,10 @@ swift_library(
       "calabash.framework/Versions/A/Headers/*.swift"
     ],
     exclude_directories = 1
-    ),
-  deps = [
-
-  ],
-  data = [
-
-  ]
-  )
+  ),
+  deps = [],
+  data = []
+)
 filegroup(
   name = "Calabash_hdrs",
   srcs = glob(
@@ -151,26 +143,26 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "calabash.framework/Versions/A/Headers/*.h",
       "calabash.framework/Versions/A/Headers/*.hpp",
       "calabash.framework/Versions/A/Headers/*.hxx"
     ],
     exclude_directories = 1
-    ) + [
+  ) + [
     ":Calabash_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Calabash_includes",
   include = [
     "Vendor/Calabash/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "Calabash",
   "Calabash_module_map",
@@ -178,7 +170,7 @@ gen_module_map(
   [
     "Calabash_hdrs"
   ]
-  )
+)
 objc_library(
   name = "Calabash",
   enable_modules = 0,
@@ -189,13 +181,13 @@ objc_library(
       "calabash.framework/Versions/A/Headers/*.s"
     ],
     exclude_directories = 1
-    ),
+  ),
   non_arc_srcs = glob(
     [
       "calabash.framework/Versions/A/Headers/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Calabash_hdrs"
   ],
@@ -204,18 +196,17 @@ objc_library(
     [
       "calabash.framework/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = select(
     {
       "//conditions:default": [
         "CFNetwork"
       ]
     }
-    ),
+  ),
   deps = [
     ":Calabash_cxx",
-    ":Calabash_swift"
-  ] + [
+    ":Calabash_swift",
     ":Calabash_includes"
   ],
   copts = [
@@ -232,7 +223,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Calabash/pod_support/Headers/Public/Calabash/"
   ] + [
     "-fmodule-name=Calabash_pod_module"
@@ -240,11 +231,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Calabash_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Calabash/pod_support_buildable:acknowledgement_fragment"
-  )
+)

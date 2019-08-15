@@ -18,7 +18,7 @@ class PodSpecToBUILDTests: XCTestCase {
         let expected = compilerOutput([
             "objc_library(",
             "  name = \"test\"",
-            "  )",
+            ")",
         ])
         print(compiler.run())
         XCTAssertEqual(expected, compiler.run())
@@ -38,8 +38,8 @@ class PodSpecToBUILDTests: XCTestCase {
             "      \"a.m\",",
             "      \"b.m\"",
             "    ]",
-            "    )",
             "  )",
+            ")",
         ])
 
         let expectedLines = expected.components(separatedBy: "\n")

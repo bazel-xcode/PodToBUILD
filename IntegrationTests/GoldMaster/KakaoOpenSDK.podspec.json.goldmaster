@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,16 +15,14 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "KakaoOpenSDK_hdrs",
-  srcs = [
-
-  ],
+  srcs = [],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "KakaoOpenSDK_union_hdrs",
   srcs = [
@@ -34,13 +32,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "KakaoOpenSDK_includes",
   include = [
     "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "KakaoOpenSDK",
   enable_modules = 0,
@@ -49,22 +47,17 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "UIKit",
     "WebKit"
   ],
   deps = [
-    ":KakaoOpenSDK_VendoredFrameworks"
-  ] + [
+    ":KakaoOpenSDK_VendoredFrameworks",
     ":KakaoOpenSDK_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -74,7 +67,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
@@ -82,23 +75,19 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "KakaoOpenSDK_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "KakaoOpenSDK_hdrs",
-  srcs = [
-
-  ],
+  srcs = [],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "KakaoOpenSDK_union_hdrs",
   srcs = [
@@ -108,13 +97,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "KakaoOpenSDK_includes",
   include = [
     "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "KakaoOpenSDK",
   enable_modules = 0,
@@ -123,22 +112,17 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "UIKit",
     "WebKit"
   ],
   deps = [
-    ":KakaoOpenSDK_VendoredFrameworks"
-  ] + [
+    ":KakaoOpenSDK_VendoredFrameworks",
     ":KakaoOpenSDK_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -148,7 +132,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
@@ -156,14 +140,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "KakaoOpenSDK_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_static_framework_import(
   name = "KakaoOpenSDK_VendoredFrameworks",
   framework_imports = glob(
@@ -171,20 +153,18 @@ apple_static_framework_import(
       "KakaoOpenSDK.framework/**"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "KakaoNavi_hdrs",
-  srcs = [
-
-  ],
+  srcs = [],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "KakaoNavi_union_hdrs",
   srcs = [
@@ -194,13 +174,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "KakaoNavi_includes",
   include = [
     "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "KakaoNavi",
   enable_modules = 0,
@@ -209,21 +189,16 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "UIKit"
   ],
   deps = [
-    ":KakaoNavi_VendoredFrameworks"
-  ] + [
+    ":KakaoNavi_VendoredFrameworks",
     ":KakaoNavi_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -233,7 +208,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
@@ -241,14 +216,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "KakaoNavi_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_static_framework_import(
   name = "KakaoNavi_VendoredFrameworks",
   framework_imports = glob(
@@ -256,20 +229,18 @@ apple_static_framework_import(
       "KakaoNavi.framework/**"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "KakaoLink_hdrs",
-  srcs = [
-
-  ],
+  srcs = [],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "KakaoLink_union_hdrs",
   srcs = [
@@ -279,13 +250,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "KakaoLink_includes",
   include = [
     "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "KakaoLink",
   enable_modules = 0,
@@ -294,21 +265,16 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "UIKit"
   ],
   deps = [
-    ":KakaoLink_VendoredFrameworks"
-  ] + [
+    ":KakaoLink_VendoredFrameworks",
     ":KakaoLink_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -318,7 +284,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
@@ -326,14 +292,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "KakaoLink_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_static_framework_import(
   name = "KakaoLink_VendoredFrameworks",
   framework_imports = glob(
@@ -341,20 +305,18 @@ apple_static_framework_import(
       "KakaoLink.framework/**"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "KakaoS2_hdrs",
-  srcs = [
-
-  ],
+  srcs = [],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "KakaoS2_union_hdrs",
   srcs = [
@@ -364,13 +326,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "KakaoS2_includes",
   include = [
     "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "KakaoS2",
   enable_modules = 0,
@@ -379,21 +341,16 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "Foundation"
   ],
   deps = [
-    ":KakaoS2_VendoredFrameworks"
-  ] + [
+    ":KakaoS2_VendoredFrameworks",
     ":KakaoS2_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -403,7 +360,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/KakaoOpenSDK/pod_support/Headers/Public/KakaoOpenSDK/"
   ] + [
     "-fmodule-name=KakaoOpenSDK_pod_module"
@@ -411,14 +368,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "KakaoS2_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_static_framework_import(
   name = "KakaoS2_VendoredFrameworks",
   framework_imports = glob(
@@ -426,8 +381,8 @@ apple_static_framework_import(
       "KakaoS2.framework/**"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)

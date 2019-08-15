@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "Weixin_hdrs",
   srcs = glob(
@@ -22,24 +22,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "SDK1.6.2/*.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Weixin_includes",
   include = [
     "Vendor/Weixin/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "Weixin",
   "Weixin_module_map",
@@ -47,7 +45,7 @@ gen_module_map(
   [
     "Weixin_hdrs"
   ]
-  )
+)
 objc_library(
   name = "Weixin",
   enable_modules = 0,
@@ -56,10 +54,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Weixin",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "CoreTelephony",
     "SystemConfiguration"
@@ -70,13 +66,10 @@ objc_library(
     "z"
   ],
   deps = [
-    ":Weixin_VendoredLibraries"
-  ] + [
+    ":Weixin_VendoredLibraries",
     ":Weixin_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -86,7 +79,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Weixin/pod_support/Headers/Public/Weixin/"
   ] + [
     "-fmodule-name=Weixin_pod_module"
@@ -94,17 +87,15 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Weixin_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Weixin/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 objc_import(
   name = "Weixin_VendoredLibraries",
   archives = [
     "SDK1.6.2/libWeChatSDK.a"
   ]
-  )
+)

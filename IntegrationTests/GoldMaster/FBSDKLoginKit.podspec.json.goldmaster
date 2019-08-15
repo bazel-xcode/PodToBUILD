@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "FBSDKLoginKit_hdrs",
   srcs = glob(
@@ -22,24 +22,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "FBSDKLoginKit_includes",
   include = [
     "Vendor/FBSDKLoginKit/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "FBSDKLoginKit",
   "FBSDKLoginKit_module_map",
@@ -47,7 +45,7 @@ gen_module_map(
   [
     "FBSDKLoginKit_hdrs"
   ]
-  )
+)
 objc_library(
   name = "FBSDKLoginKit",
   enable_modules = 0,
@@ -56,7 +54,7 @@ objc_library(
       "FBSDKLoginKit/FBSDKLoginKit/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":FBSDKLoginKit_hdrs"
   ],
@@ -65,7 +63,7 @@ objc_library(
     [
       "FBSDKLoginKit/**/*.pch"
     ]
-    ),
+  ),
   weak_sdk_frameworks = [
     "Accounts",
     "CoreLocation",
@@ -78,8 +76,7 @@ objc_library(
     "AudioToolbox"
   ],
   deps = [
-    "//Vendor/FBSDKCoreKit:FBSDKCoreKit"
-  ] + [
+    "//Vendor/FBSDKCoreKit:FBSDKCoreKit",
     ":FBSDKLoginKit_includes"
   ],
   copts = [
@@ -94,7 +91,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
   ] + [
     "-fmodule-name=FBSDKLoginKit_pod_module"
@@ -102,11 +99,11 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "FBSDKLoginKit_acknowledgement",
   deps = [
     "//Vendor/FBSDKCoreKit:FBSDKCoreKit_acknowledgement"
   ],
   value = "//Vendor/FBSDKLoginKit/pod_support_buildable:acknowledgement_fragment"
-  )
+)

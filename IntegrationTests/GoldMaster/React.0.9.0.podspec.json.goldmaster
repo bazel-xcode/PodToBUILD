@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "React_hdrs",
   srcs = glob(
@@ -22,7 +22,7 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "PATENTS/**/*.h",
       "PATENTS/**/*.hpp",
@@ -41,19 +41,19 @@ filegroup(
       "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
-    ) + [
+  ) + [
     ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "React_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "React",
   "React_module_map",
@@ -61,7 +61,7 @@ gen_module_map(
   [
     "React_hdrs"
   ]
-  )
+)
 objc_library(
   name = "React",
   enable_modules = 0,
@@ -70,18 +70,13 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-
-    ]
-    ),
+    []
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":React_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -91,7 +86,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -99,14 +94,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "React_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
@@ -137,11 +130,11 @@ filegroup(
       "IntegrationTests/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Core_union_hdrs",
   srcs = [
@@ -151,13 +144,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Core_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Core",
   enable_modules = 0,
@@ -197,7 +190,7 @@ objc_library(
       "Libraries/WebSocket/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Core_union_hdrs"
   ],
@@ -206,18 +199,14 @@ objc_library(
     [
       "React/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "JavaScriptCore"
   ],
   deps = [
-
-  ] + [
     ":Core_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -227,7 +216,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -235,14 +224,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Core_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "ART_hdrs",
   srcs = glob(
@@ -250,11 +237,11 @@ filegroup(
       "Libraries/ART/**/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "ART_union_hdrs",
   srcs = [
@@ -264,13 +251,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "ART_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "ART",
   enable_modules = 0,
@@ -279,7 +266,7 @@ objc_library(
       "Libraries/ART/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":ART_union_hdrs"
   ],
@@ -288,15 +275,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":ART_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -306,7 +290,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -314,14 +298,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "ART_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTActionSheet_hdrs",
   srcs = glob(
@@ -329,11 +311,11 @@ filegroup(
       "Libraries/ActionSheetIOS/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTActionSheet_union_hdrs",
   srcs = [
@@ -343,13 +325,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTActionSheet_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTActionSheet",
   enable_modules = 0,
@@ -358,7 +340,7 @@ objc_library(
       "Libraries/ActionSheetIOS/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTActionSheet_union_hdrs"
   ],
@@ -367,15 +349,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTActionSheet_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -385,7 +364,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -393,14 +372,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTActionSheet_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTAdSupport_hdrs",
   srcs = glob(
@@ -408,11 +385,11 @@ filegroup(
       "Libraries/AdSupport/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTAdSupport_union_hdrs",
   srcs = [
@@ -422,13 +399,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTAdSupport_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTAdSupport",
   enable_modules = 0,
@@ -437,7 +414,7 @@ objc_library(
       "Libraries/AdSupport/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTAdSupport_union_hdrs"
   ],
@@ -446,15 +423,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTAdSupport_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -464,7 +438,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -472,14 +446,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTAdSupport_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTGeolocation_hdrs",
   srcs = glob(
@@ -487,11 +459,11 @@ filegroup(
       "Libraries/Geolocation/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTGeolocation_union_hdrs",
   srcs = [
@@ -501,13 +473,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTGeolocation_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTGeolocation",
   enable_modules = 0,
@@ -516,7 +488,7 @@ objc_library(
       "Libraries/Geolocation/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTGeolocation_union_hdrs"
   ],
@@ -525,15 +497,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTGeolocation_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -543,7 +512,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -551,14 +520,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTGeolocation_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTImage_hdrs",
   srcs = glob(
@@ -566,11 +533,11 @@ filegroup(
       "Libraries/Image/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTImage_union_hdrs",
   srcs = [
@@ -580,13 +547,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTImage_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTImage",
   enable_modules = 0,
@@ -595,7 +562,7 @@ objc_library(
       "Libraries/Image/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTImage_union_hdrs"
   ],
@@ -604,15 +571,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTImage_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -622,7 +586,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -630,14 +594,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTImage_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTNetwork_hdrs",
   srcs = glob(
@@ -645,11 +607,11 @@ filegroup(
       "Libraries/Network/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTNetwork_union_hdrs",
   srcs = [
@@ -659,13 +621,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTNetwork_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTNetwork",
   enable_modules = 0,
@@ -674,7 +636,7 @@ objc_library(
       "Libraries/Network/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTNetwork_union_hdrs"
   ],
@@ -683,15 +645,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTNetwork_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -701,7 +660,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -709,14 +668,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTNetwork_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTPushNotification_hdrs",
   srcs = glob(
@@ -724,11 +681,11 @@ filegroup(
       "Libraries/PushNotificationIOS/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTPushNotification_union_hdrs",
   srcs = [
@@ -738,13 +695,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTPushNotification_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTPushNotification",
   enable_modules = 0,
@@ -753,7 +710,7 @@ objc_library(
       "Libraries/PushNotificationIOS/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTPushNotification_union_hdrs"
   ],
@@ -762,15 +719,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTPushNotification_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -780,7 +734,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -788,14 +742,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTPushNotification_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTSettings_hdrs",
   srcs = glob(
@@ -803,11 +755,11 @@ filegroup(
       "Libraries/Settings/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTSettings_union_hdrs",
   srcs = [
@@ -817,13 +769,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTSettings_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTSettings",
   enable_modules = 0,
@@ -832,7 +784,7 @@ objc_library(
       "Libraries/Settings/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTSettings_union_hdrs"
   ],
@@ -841,15 +793,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTSettings_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -859,7 +808,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -867,14 +816,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTSettings_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTText_hdrs",
   srcs = glob(
@@ -882,11 +829,11 @@ filegroup(
       "Libraries/Text/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTText_union_hdrs",
   srcs = [
@@ -896,13 +843,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTText_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTText",
   enable_modules = 0,
@@ -911,7 +858,7 @@ objc_library(
       "Libraries/Text/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTText_union_hdrs"
   ],
@@ -920,15 +867,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTText_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -938,7 +882,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -946,14 +890,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTText_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTVibration_hdrs",
   srcs = glob(
@@ -961,11 +903,11 @@ filegroup(
       "Libraries/Vibration/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTVibration_union_hdrs",
   srcs = [
@@ -975,13 +917,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTVibration_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTVibration",
   enable_modules = 0,
@@ -990,7 +932,7 @@ objc_library(
       "Libraries/Vibration/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTVibration_union_hdrs"
   ],
@@ -999,15 +941,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTVibration_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -1017,7 +956,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -1025,14 +964,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTVibration_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTWebSocket_hdrs",
   srcs = glob(
@@ -1040,11 +977,11 @@ filegroup(
       "Libraries/WebSocket/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTWebSocket_union_hdrs",
   srcs = [
@@ -1054,13 +991,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTWebSocket_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTWebSocket",
   enable_modules = 0,
@@ -1069,7 +1006,7 @@ objc_library(
       "Libraries/WebSocket/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTWebSocket_union_hdrs"
   ],
@@ -1078,15 +1015,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTWebSocket_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -1096,7 +1030,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -1104,14 +1038,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTWebSocket_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "RCTLinkingIOS_hdrs",
   srcs = glob(
@@ -1119,11 +1051,11 @@ filegroup(
       "Libraries/LinkingIOS/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "RCTLinkingIOS_union_hdrs",
   srcs = [
@@ -1133,13 +1065,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "RCTLinkingIOS_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "RCTLinkingIOS",
   enable_modules = 0,
@@ -1148,7 +1080,7 @@ objc_library(
       "Libraries/LinkingIOS/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":RCTLinkingIOS_union_hdrs"
   ],
@@ -1157,15 +1089,12 @@ objc_library(
     [
       "Libraries/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":RCTLinkingIOS_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -1175,7 +1104,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
     "-fmodule-name=React_pod_module"
@@ -1183,11 +1112,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "RCTLinkingIOS_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
-  )
+)

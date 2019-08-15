@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "CardIO_hdrs",
   srcs = glob(
@@ -22,24 +22,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "CardIO/*.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "CardIO_includes",
   include = [
     "Vendor/CardIO/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "CardIO",
   "CardIO_module_map",
@@ -47,7 +45,7 @@ gen_module_map(
   [
     "CardIO_hdrs"
   ]
-  )
+)
 objc_library(
   name = "CardIO",
   enable_modules = 0,
@@ -56,10 +54,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "CardIO",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "Accelerate",
     "AVFoundation",
@@ -76,13 +72,10 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":CardIO_VendoredLibraries"
-  ] + [
+    ":CardIO_VendoredLibraries",
     ":CardIO_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -92,7 +85,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/CardIO/pod_support/Headers/Public/CardIO/"
   ] + [
     "-fmodule-name=CardIO_pod_module"
@@ -100,14 +93,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "CardIO_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/CardIO/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 objc_import(
   name = "CardIO_VendoredLibraries",
   archives = [
@@ -115,4 +106,4 @@ objc_import(
     "CardIO/libopencv_core.a",
     "CardIO/libopencv_imgproc.a"
   ]
-  )
+)

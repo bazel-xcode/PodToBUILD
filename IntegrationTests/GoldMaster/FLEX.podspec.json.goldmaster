@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "FLEX_hdrs",
   srcs = glob(
@@ -22,24 +22,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "Classes/**/*.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "FLEX_includes",
   include = [
     "Vendor/FLEX/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "FLEX",
   "FLEX_module_map",
@@ -47,7 +45,7 @@ gen_module_map(
   [
     "FLEX_hdrs"
   ]
-  )
+)
 objc_library(
   name = "FLEX",
   enable_modules = 0,
@@ -56,7 +54,7 @@ objc_library(
       "Classes/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":FLEX_hdrs"
   ],
@@ -65,7 +63,7 @@ objc_library(
     [
       "Classes/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "Foundation",
     "UIKit",
@@ -76,13 +74,9 @@ objc_library(
     "sqlite3"
   ],
   deps = [
-
-  ] + [
     ":FLEX_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -92,7 +86,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/FLEX/pod_support/Headers/Public/FLEX/"
   ] + [
     "-fmodule-name=FLEX_pod_module"
@@ -100,11 +94,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "FLEX_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/FLEX/pod_support_buildable:acknowledgement_fragment"
-  )
+)

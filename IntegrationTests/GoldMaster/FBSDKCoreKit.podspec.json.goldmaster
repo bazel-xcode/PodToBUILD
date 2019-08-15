@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,19 +15,19 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 config_setting(
   name = "iosCase",
   values = {
     "cpu": "powerpc1"
   }
-  )
+)
 config_setting(
   name = "tvosCase",
   values = {
     "cpu": "powerpc3"
   }
-  )
+)
 filegroup(
   name = "FBSDKCoreKit_hdrs",
   srcs = glob(
@@ -35,7 +35,7 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + select(
+  ) + select(
     {
       "//conditions:default": glob(
         [
@@ -49,7 +49,7 @@ filegroup(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hxx"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":tvosCase": glob(
         [
           "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
@@ -84,21 +84,19 @@ filegroup(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "FBSDKCoreKit_includes",
   include = [
     "Vendor/FBSDKCoreKit/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "FBSDKCoreKit",
   "FBSDKCoreKit_module_map",
@@ -106,7 +104,7 @@ gen_module_map(
   [
     "FBSDKCoreKit_hdrs"
   ]
-  )
+)
 objc_library(
   name = "FBSDKCoreKit",
   enable_modules = 0,
@@ -132,7 +130,7 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.s"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":tvosCase": glob(
         [
           "FBSDKCoreKit/FBSDKCoreKit/*.m",
@@ -188,9 +186,9 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   non_arc_srcs = select(
     {
       "//conditions:default": glob(
@@ -208,7 +206,7 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":tvosCase": glob(
         [
           "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
@@ -241,9 +239,9 @@ objc_library(
           "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   hdrs = [
     ":FBSDKCoreKit_hdrs"
   ],
@@ -252,7 +250,7 @@ objc_library(
     [
       "FBSDKCoreKit/**/*.pch"
     ]
-    ),
+  ),
   weak_sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -276,7 +274,7 @@ objc_library(
         "AudioToolbox"
       ]
     }
-    ),
+  ),
   deps = [
     ":FBSDKCoreKit_Bundle_FacebookSDKStrings"
   ] + select(
@@ -285,12 +283,10 @@ objc_library(
         "//Vendor/Bolts:Bolts"
       ]
     }
-    ) + [
+  ) + [
     ":FBSDKCoreKit_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -300,7 +296,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/"
   ] + [
     "-fmodule-name=FBSDKCoreKit_pod_module"
@@ -311,14 +307,14 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "FBSDKCoreKit_acknowledgement",
   deps = [
     "//Vendor/Bolts:Bolts_acknowledgement"
   ],
   value = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_bundle_import(
   name = "FBSDKCoreKit_Bundle_FacebookSDKStrings",
   bundle_imports = glob(
@@ -326,5 +322,5 @@ apple_bundle_import(
       "FacebookSDKStrings.bundle/**"
     ],
     exclude_directories = 1
-    )
   )
+)

@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "kingpin_hdrs",
   srcs = glob(
@@ -22,24 +22,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "kingpin/*.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "kingpin_includes",
   include = [
     "Vendor/kingpin/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "kingpin",
   "kingpin_module_map",
@@ -47,7 +45,7 @@ gen_module_map(
   [
     "kingpin_hdrs"
   ]
-  )
+)
 objc_library(
   name = "kingpin",
   enable_modules = 0,
@@ -56,7 +54,7 @@ objc_library(
       "kingpin/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":kingpin_hdrs"
   ],
@@ -65,19 +63,15 @@ objc_library(
     [
       "kingpin/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "MapKit",
     "CoreLocation"
   ],
   deps = [
-
-  ] + [
     ":kingpin_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -87,7 +81,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/kingpin/pod_support/Headers/Public/kingpin/"
   ] + [
     "-fmodule-name=kingpin_pod_module"
@@ -95,11 +89,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "kingpin_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/kingpin/pod_support_buildable:acknowledgement_fragment"
-  )
+)

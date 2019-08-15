@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,7 +15,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "SFHFKeychainUtils_cxx_hdrs",
   srcs = glob(
@@ -25,11 +25,11 @@ filegroup(
       "security/**/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "SFHFKeychainUtils_cxx_union_hdrs",
   srcs = [
@@ -39,13 +39,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "SFHFKeychainUtils_cxx_includes",
   include = [
     "Vendor/SFHFKeychainUtils/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "SFHFKeychainUtils_cxx",
   enable_modules = 0,
@@ -62,7 +62,7 @@ objc_library(
       "security/**/*.s"
     ],
     exclude_directories = 1
-    ),
+  ),
   non_arc_srcs = glob(
     [
       "security/**/*.mm"
@@ -71,7 +71,7 @@ objc_library(
       "security/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":SFHFKeychainUtils_cxx_union_hdrs"
   ],
@@ -80,18 +80,14 @@ objc_library(
     [
       "security/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "Security"
   ],
   deps = [
-
-  ] + [
     ":SFHFKeychainUtils_cxx_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -101,7 +97,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/SFHFKeychainUtils/pod_support/Headers/Public/SFHFKeychainUtils/"
   ] + [
     "-fmodule-name=SFHFKeychainUtils_pod_module"
@@ -109,14 +105,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "SFHFKeychainUtils_cxx_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/SFHFKeychainUtils/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 swift_library(
   name = "SFHFKeychainUtils_swift",
   srcs = glob(
@@ -124,14 +118,10 @@ swift_library(
       "security/**/*.swift"
     ],
     exclude_directories = 1
-    ),
-  deps = [
-
-  ],
-  data = [
-
-  ]
-  )
+  ),
+  deps = [],
+  data = []
+)
 filegroup(
   name = "SFHFKeychainUtils_hdrs",
   srcs = glob(
@@ -139,26 +129,26 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "security/**/*.h",
       "security/**/*.hpp",
       "security/**/*.hxx"
     ],
     exclude_directories = 1
-    ) + [
+  ) + [
     ":SFHFKeychainUtils_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "SFHFKeychainUtils_includes",
   include = [
     "Vendor/SFHFKeychainUtils/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "SFHFKeychainUtils",
   "SFHFKeychainUtils_module_map",
@@ -166,7 +156,7 @@ gen_module_map(
   [
     "SFHFKeychainUtils_hdrs"
   ]
-  )
+)
 objc_library(
   name = "SFHFKeychainUtils",
   enable_modules = 0,
@@ -177,13 +167,13 @@ objc_library(
       "security/**/*.s"
     ],
     exclude_directories = 1
-    ),
+  ),
   non_arc_srcs = glob(
     [
       "security/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":SFHFKeychainUtils_hdrs"
   ],
@@ -192,19 +182,16 @@ objc_library(
     [
       "security/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "Security"
   ],
   deps = [
     ":SFHFKeychainUtils_cxx",
-    ":SFHFKeychainUtils_swift"
-  ] + [
+    ":SFHFKeychainUtils_swift",
     ":SFHFKeychainUtils_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -214,7 +201,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/SFHFKeychainUtils/pod_support/Headers/Public/SFHFKeychainUtils/"
   ] + [
     "-fmodule-name=SFHFKeychainUtils_pod_module"
@@ -222,11 +209,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "SFHFKeychainUtils_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/SFHFKeychainUtils/pod_support_buildable:acknowledgement_fragment"
-  )
+)
