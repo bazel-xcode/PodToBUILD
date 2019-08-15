@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "Texture_hdrs",
   srcs = glob(
@@ -22,14 +22,14 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "AsyncDisplayKit/**/*.h",
       "AsyncDisplayKit/**/*.hpp",
       "AsyncDisplayKit/**/*.hxx"
     ],
     exclude_directories = 1
-    ) + [
+  ) + [
     ":PINRemoteImage_hdrs",
     ":MapKit_hdrs",
     ":Photos_hdrs",
@@ -38,13 +38,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Texture_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "AsyncDisplayKit",
   "Texture_module_map",
@@ -52,7 +52,7 @@ gen_module_map(
   [
     "Texture_hdrs"
   ]
-  )
+)
 objc_library(
   name = "Texture",
   enable_modules = 0,
@@ -61,10 +61,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Texture",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_dylibs = [
     "c++"
   ],
@@ -72,13 +70,10 @@ objc_library(
     ":AssetsLibrary",
     ":MapKit",
     ":PINRemoteImage",
-    ":Photos"
-  ] + [
+    ":Photos",
     ":Texture_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -88,7 +83,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
@@ -96,14 +91,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Texture_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Core_cxx_hdrs",
   srcs = glob(
@@ -116,11 +109,11 @@ filegroup(
       "Source/TextKit/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Core_cxx_union_hdrs",
   srcs = [
@@ -130,13 +123,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Core_cxx_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Core_cxx",
   enable_modules = 0,
@@ -149,7 +142,7 @@ objc_library(
       "Source/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Core_cxx_union_hdrs"
   ],
@@ -158,13 +151,11 @@ objc_library(
     [
       "Source/**/*.pch"
     ]
-    ),
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
-
-  ] + [
     ":Core_cxx_includes"
   ],
   copts = [
@@ -181,7 +172,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
@@ -189,14 +180,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Core_cxx_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
@@ -209,11 +198,11 @@ filegroup(
       "Source/TextKit/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Core_union_hdrs",
   srcs = [
@@ -223,13 +212,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Core_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Core",
   enable_modules = 0,
@@ -239,7 +228,7 @@ objc_library(
       "Source/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Core_union_hdrs"
   ],
@@ -249,13 +238,12 @@ objc_library(
       "Base/**/*.pch",
       "Source/**/*.pch"
     ]
-    ),
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
-    ":Core_cxx"
-  ] + [
+    ":Core_cxx",
     ":Core_includes"
   ],
   copts = [
@@ -270,7 +258,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
@@ -278,14 +266,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Core_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "PINRemoteImage_hdrs",
   srcs = glob(
@@ -295,11 +281,11 @@ filegroup(
       "AsyncDisplayKit/**/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "PINRemoteImage_union_hdrs",
   srcs = [
@@ -309,13 +295,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "PINRemoteImage_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "PINRemoteImage",
   enable_modules = 0,
@@ -324,23 +310,18 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Texture",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
     "//Vendor/PINRemoteImage:PINCache",
     "//Vendor/PINRemoteImage:iOS",
-    ":Core"
-  ] + [
+    ":Core",
     ":PINRemoteImage_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -350,7 +331,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
@@ -358,7 +339,7 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "PINRemoteImage_acknowledgement",
   deps = [
@@ -366,7 +347,7 @@ acknowledged_target(
     "//Vendor/PINRemoteImage:iOS_acknowledgement"
   ],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "IGListKit_hdrs",
   srcs = glob(
@@ -376,11 +357,11 @@ filegroup(
       "AsyncDisplayKit/**/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "IGListKit_union_hdrs",
   srcs = [
@@ -390,13 +371,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "IGListKit_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "IGListKit",
   enable_modules = 0,
@@ -405,22 +386,17 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Texture",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
     "//Vendor/IGListKit:IGListKit",
-    ":Core"
-  ] + [
+    ":Core",
     ":IGListKit_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -430,7 +406,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
@@ -438,14 +414,14 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "IGListKit_acknowledgement",
   deps = [
     "//Vendor/IGListKit:IGListKit_acknowledgement"
   ],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Yoga_hdrs",
   srcs = glob(
@@ -455,11 +431,11 @@ filegroup(
       "AsyncDisplayKit/**/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Yoga_union_hdrs",
   srcs = [
@@ -469,13 +445,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Yoga_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Yoga",
   enable_modules = 0,
@@ -484,17 +460,14 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Texture",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
     "//Vendor/Yoga:Yoga",
-    ":Core"
-  ] + [
+    ":Core",
     ":Yoga_includes"
   ],
   copts = [
@@ -509,7 +482,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
@@ -517,14 +490,14 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Yoga_acknowledgement",
   deps = [
     "//Vendor/Yoga:Yoga_acknowledgement"
   ],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "MapKit_hdrs",
   srcs = glob(
@@ -534,11 +507,11 @@ filegroup(
       "AsyncDisplayKit/**/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "MapKit_union_hdrs",
   srcs = [
@@ -548,13 +521,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "MapKit_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "MapKit",
   enable_modules = 0,
@@ -563,10 +536,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Texture",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "MapKit"
   ],
@@ -574,8 +545,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":MapKit_includes"
   ],
   copts = [
@@ -590,7 +560,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
@@ -598,14 +568,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "MapKit_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Photos_hdrs",
   srcs = glob(
@@ -615,11 +583,11 @@ filegroup(
       "AsyncDisplayKit/**/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Photos_union_hdrs",
   srcs = [
@@ -629,13 +597,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Photos_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Photos",
   enable_modules = 0,
@@ -644,10 +612,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Texture",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "Photos"
   ],
@@ -655,8 +621,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":Photos_includes"
   ],
   copts = [
@@ -671,7 +636,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
@@ -679,14 +644,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Photos_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "AssetsLibrary_hdrs",
   srcs = glob(
@@ -696,11 +659,11 @@ filegroup(
       "AsyncDisplayKit/**/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "AssetsLibrary_union_hdrs",
   srcs = [
@@ -710,13 +673,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "AssetsLibrary_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "AssetsLibrary",
   enable_modules = 0,
@@ -725,10 +688,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Texture",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "AssetsLibrary"
   ],
@@ -736,8 +697,7 @@ objc_library(
     "c++"
   ],
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":AssetsLibrary_includes"
   ],
   copts = [
@@ -752,7 +712,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
     "-fmodule-name=AsyncDisplayKit_pod_module"
@@ -760,11 +720,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "AssetsLibrary_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Texture/pod_support_buildable:acknowledgement_fragment"
-  )
+)

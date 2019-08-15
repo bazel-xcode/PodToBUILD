@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,7 +15,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "iRate_hdrs",
   srcs = glob(
@@ -23,24 +23,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "iRate/iRate.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "iRate_includes",
   include = [
     "Vendor/iRate/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "iRate",
   "iRate_module_map",
@@ -48,7 +46,7 @@ gen_module_map(
   [
     "iRate_hdrs"
   ]
-  )
+)
 objc_library(
   name = "iRate",
   enable_modules = 0,
@@ -57,7 +55,7 @@ objc_library(
       "iRate/iRate.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":iRate_hdrs"
   ],
@@ -66,15 +64,12 @@ objc_library(
     [
       "iRate/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":iRate_Bundle_iRate"
-  ] + [
+    ":iRate_Bundle_iRate",
     ":iRate_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -84,7 +79,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/iRate/pod_support/Headers/Public/iRate/"
   ] + [
     "-fmodule-name=iRate_pod_module"
@@ -95,14 +90,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "iRate_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/iRate/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_bundle_import(
   name = "iRate_Bundle_iRate",
   bundle_imports = glob(
@@ -110,5 +103,5 @@ apple_bundle_import(
       "iRate/iRate.bundle/**"
     ],
     exclude_directories = 1
-    )
   )
+)

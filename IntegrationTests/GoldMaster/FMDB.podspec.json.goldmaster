@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "FMDB_hdrs",
   srcs = glob(
@@ -22,21 +22,19 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + [
-
-  ] + [
+  ) + [
     ":standard_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "FMDB_includes",
   include = [
     "Vendor/FMDB/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "FMDB",
   "FMDB_module_map",
@@ -44,7 +42,7 @@ gen_module_map(
   [
     "FMDB_hdrs"
   ]
-  )
+)
 objc_library(
   name = "FMDB",
   enable_modules = 0,
@@ -53,18 +51,13 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FMDB",
-    [
-
-    ]
-    ),
+    []
+  ),
   deps = [
-    ":standard"
-  ] + [
+    ":standard",
     ":FMDB_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -74,7 +67,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
@@ -82,14 +75,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "FMDB_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "standard_hdrs",
   srcs = glob(
@@ -97,11 +88,11 @@ filegroup(
       "src/fmdb/FM*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "standard_union_hdrs",
   srcs = [
@@ -111,13 +102,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "standard_includes",
   include = [
     "Vendor/FMDB/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "standard",
   enable_modules = 0,
@@ -130,7 +121,7 @@ objc_library(
       "src/fmdb.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":standard_union_hdrs"
   ],
@@ -139,18 +130,14 @@ objc_library(
     [
       "src/**/*.pch"
     ]
-    ),
+  ),
   sdk_dylibs = [
     "sqlite3"
   ],
   deps = [
-
-  ] + [
     ":standard_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -160,7 +147,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
@@ -168,14 +155,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "standard_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "FTS_hdrs",
   srcs = glob(
@@ -183,11 +168,11 @@ filegroup(
       "src/extra/fts3/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "FTS_union_hdrs",
   srcs = [
@@ -197,13 +182,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "FTS_includes",
   include = [
     "Vendor/FMDB/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "FTS",
   enable_modules = 0,
@@ -212,7 +197,7 @@ objc_library(
       "src/extra/fts3/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":FTS_union_hdrs"
   ],
@@ -221,15 +206,12 @@ objc_library(
     [
       "src/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":standard"
-  ] + [
+    ":standard",
     ":FTS_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -239,7 +221,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
@@ -247,23 +229,19 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "FTS_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "standalone_hdrs",
-  srcs = [
-
-  ],
+  srcs = [],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "standalone_union_hdrs",
   srcs = [
@@ -273,13 +251,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "standalone_includes",
   include = [
     "Vendor/FMDB/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "standalone",
   enable_modules = 0,
@@ -288,13 +266,9 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FMDB",
-    [
-
-    ]
-    ),
+    []
+  ),
   deps = [
-
-  ] + [
     ":standalone_includes"
   ],
   copts = [
@@ -309,7 +283,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
@@ -317,14 +291,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "standalone_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "SQLCipher_hdrs",
   srcs = glob(
@@ -332,11 +304,11 @@ filegroup(
       "src/fmdb/FM*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "SQLCipher_union_hdrs",
   srcs = [
@@ -346,13 +318,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "SQLCipher_includes",
   include = [
     "Vendor/FMDB/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "SQLCipher",
   enable_modules = 0,
@@ -364,7 +336,7 @@ objc_library(
       "src/fmdb.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":SQLCipher_union_hdrs"
   ],
@@ -373,10 +345,9 @@ objc_library(
     [
       "src/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    "//Vendor/SQLCipher:SQLCipher"
-  ] + [
+    "//Vendor/SQLCipher:SQLCipher",
     ":SQLCipher_includes"
   ],
   copts = [
@@ -392,7 +363,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
     "-fmodule-name=FMDB_pod_module"
@@ -400,11 +371,11 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "SQLCipher_acknowledgement",
   deps = [
     "//Vendor/SQLCipher:SQLCipher_acknowledgement"
   ],
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
-  )
+)

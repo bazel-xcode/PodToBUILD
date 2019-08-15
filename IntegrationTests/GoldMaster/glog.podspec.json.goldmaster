@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "glog_hdrs",
   srcs = glob(
@@ -22,7 +22,7 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "glog/**/*.h",
       "glog/**/*.hpp",
@@ -37,19 +37,17 @@ filegroup(
       "src/windows/**/*.hxx"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "glog_includes",
   include = [
     "Vendor/glog/src"
   ]
-  )
+)
 gen_module_map(
   "glog",
   "glog_module_map",
@@ -57,7 +55,7 @@ gen_module_map(
   [
     "glog_hdrs"
   ]
-  )
+)
 objc_library(
   name = "glog",
   enable_modules = 0,
@@ -82,7 +80,7 @@ objc_library(
       "src/windows/**/*.s"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":glog_hdrs"
   ],
@@ -91,18 +89,14 @@ objc_library(
     [
       "src/**/*.pch"
     ]
-    ),
+  ),
   sdk_dylibs = [
     "stdc++"
   ],
   deps = [
-
-  ] + [
     ":glog_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -112,19 +106,15 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
-
-  ] + [
+  ) + [
     "-fmodule-name=glog_pod_module"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "glog_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/glog/pod_support_buildable:acknowledgement_fragment"
-  )
+)

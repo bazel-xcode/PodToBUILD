@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,7 +15,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 swift_library(
   name = "FolioReaderKit",
   srcs = glob(
@@ -25,7 +25,7 @@ swift_library(
       "Vendor/**/*.swift"
     ],
     exclude_directories = 1
-    ),
+  ),
   deps = [
     "//Vendor/AEXML:AEXML",
     "//Vendor/FontBlaster:FontBlaster",
@@ -44,5 +44,5 @@ swift_library(
       "Source/Resources/Fonts/**/*.ttf"
     ],
     exclude_directories = 1
-    )
   )
+)

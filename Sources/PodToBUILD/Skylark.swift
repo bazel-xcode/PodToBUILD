@@ -79,7 +79,12 @@ extension SkylarkNode: Monoid, EmptyAwareness {
 // because it must be done
 infix operator .+.: AdditionPrecedence
 func .+.(lhs: SkylarkNode, rhs: SkylarkNode) -> SkylarkNode {
-    return .expr(lhs: lhs, op: "+", rhs: rhs)
+    switch (lhs, rhs) {
+    case (.list(let l), .list(let r)): return .list(l + r)
+    case (_, .list(let v)) where v.isEmpty: return lhs
+    case (.list(let v), _) where v.isEmpty: return rhs
+    default: return .expr(lhs: lhs, op: "+", rhs: rhs)
+    }
 }
 
 infix operator .=.: AdditionPrecedence
@@ -237,16 +242,18 @@ public struct SkylarkCompiler {
             return "\"\"\"\(value)\"\"\""
         case let .functionCall(call, arguments):
             let compiler = SkylarkCompiler(node, indent: indent + 2)
-            return compiler.compile(call: call, arguments: arguments)
+            return compiler.compile(call: call, arguments: arguments, closeParenWhitespace: whitespace)
         case let .skylark(value):
             return value
         case let .list(value):
+            guard !value.isEmpty else { return "[]" }
             return "[\n" + value.map { node in
                 "\(SkylarkCompiler.white(indent: indent + 2))\(compile(node))"
             }.joined(separator: ",\n") + "\n\(whitespace)]"
         case let .expr(lhs, op, rhs):
             return compile(lhs) + " \(op) " + compile(rhs)
         case let .dict(dict):
+            guard !dict.isEmpty else { return "{}" }
             // Stabilize dict keys here. Other inputs are required to be stable.
             let sortedKeys = Array(dict.keys).sorted { $0 < $1 }
             let compiler = SkylarkCompiler(node, indent: indent + 2)
@@ -261,7 +268,7 @@ public struct SkylarkCompiler {
 
     // MARK: - Private
 
-    private func compile(call: String, arguments: [SkylarkFunctionArgument]) -> String {
+    private func compile(call: String, arguments: [SkylarkFunctionArgument], closeParenWhitespace: String) -> String {
         var buildFile = ""
         buildFile += "\(call)(\n"
         for (idx, argument) in arguments.enumerated() {
@@ -273,11 +280,13 @@ public struct SkylarkCompiler {
                 buildFile += "\(whitespace)\(compile(argValue))\(comma)\n"
             }
         }
-        buildFile += "\(whitespace))"
+        buildFile += "\(closeParenWhitespace))"
         return buildFile
     }
 
     private static func white(indent: Int) -> String {
+        precondition(indent >= 0)
+
         if indent == 0 {
             return ""
         }

@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,7 +15,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "UICollectionViewLeftAlignedLayout_cxx_hdrs",
   srcs = glob(
@@ -25,11 +25,11 @@ filegroup(
       "UICollectionViewLeftAlignedLayout/**/*.hxx"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "UICollectionViewLeftAlignedLayout_cxx_union_hdrs",
   srcs = [
@@ -39,13 +39,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "UICollectionViewLeftAlignedLayout_cxx_includes",
   include = [
     "Vendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "UICollectionViewLeftAlignedLayout_cxx",
   enable_modules = 0,
@@ -63,7 +63,7 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.s"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":UICollectionViewLeftAlignedLayout_cxx_union_hdrs"
   ],
@@ -72,15 +72,11 @@ objc_library(
     [
       "UICollectionViewLeftAlignedLayout/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-
-  ] + [
     ":UICollectionViewLeftAlignedLayout_cxx_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -90,7 +86,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/"
   ] + [
     "-fmodule-name=UICollectionViewLeftAlignedLayout_pod_module"
@@ -98,14 +94,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "UICollectionViewLeftAlignedLayout_cxx_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/UICollectionViewLeftAlignedLayout/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 swift_library(
   name = "UICollectionViewLeftAlignedLayout_swift",
   srcs = glob(
@@ -113,14 +107,10 @@ swift_library(
       "UICollectionViewLeftAlignedLayout/**/*.swift"
     ],
     exclude_directories = 1
-    ),
-  deps = [
-
-  ],
-  data = [
-
-  ]
-  )
+  ),
+  deps = [],
+  data = []
+)
 filegroup(
   name = "UICollectionViewLeftAlignedLayout_hdrs",
   srcs = glob(
@@ -128,26 +118,26 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "UICollectionViewLeftAlignedLayout/**/*.h",
       "UICollectionViewLeftAlignedLayout/**/*.hpp",
       "UICollectionViewLeftAlignedLayout/**/*.hxx"
     ],
     exclude_directories = 1
-    ) + [
+  ) + [
     ":UICollectionViewLeftAlignedLayout_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "UICollectionViewLeftAlignedLayout_includes",
   include = [
     "Vendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "UICollectionViewLeftAlignedLayout",
   "UICollectionViewLeftAlignedLayout_module_map",
@@ -155,7 +145,7 @@ gen_module_map(
   [
     "UICollectionViewLeftAlignedLayout_hdrs"
   ]
-  )
+)
 objc_library(
   name = "UICollectionViewLeftAlignedLayout",
   enable_modules = 0,
@@ -167,7 +157,7 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.s"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":UICollectionViewLeftAlignedLayout_hdrs"
   ],
@@ -176,16 +166,13 @@ objc_library(
     [
       "UICollectionViewLeftAlignedLayout/**/*.pch"
     ]
-    ),
+  ),
   deps = [
     ":UICollectionViewLeftAlignedLayout_cxx",
-    ":UICollectionViewLeftAlignedLayout_swift"
-  ] + [
+    ":UICollectionViewLeftAlignedLayout_swift",
     ":UICollectionViewLeftAlignedLayout_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -195,7 +182,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/"
   ] + [
     "-fmodule-name=UICollectionViewLeftAlignedLayout_pod_module"
@@ -203,11 +190,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "UICollectionViewLeftAlignedLayout_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/UICollectionViewLeftAlignedLayout/pod_support_buildable:acknowledgement_fragment"
-  )
+)

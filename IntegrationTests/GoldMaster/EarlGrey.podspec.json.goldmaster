@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,13 +15,13 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 config_setting(
   name = "iosCase",
   values = {
     "cpu": "powerpc1"
   }
-  )
+)
 filegroup(
   name = "EarlGrey_hdrs",
   srcs = glob(
@@ -29,21 +29,17 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + [
-
-  ] + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "EarlGrey_includes",
   include = [
     "Vendor/EarlGrey/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "EarlGrey",
   "EarlGrey_module_map",
@@ -51,7 +47,7 @@ gen_module_map(
   [
     "EarlGrey_hdrs"
   ]
-  )
+)
 objc_library(
   name = "EarlGrey",
   enable_modules = 0,
@@ -60,10 +56,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "EarlGrey",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "CoreData",
     "CoreFoundation",
@@ -75,8 +69,7 @@ objc_library(
     "XCTest"
   ],
   deps = [
-    ":EarlGrey_VendoredFrameworks"
-  ] + [
+    ":EarlGrey_VendoredFrameworks",
     ":EarlGrey_includes"
   ],
   copts = [
@@ -91,7 +84,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/EarlGrey/pod_support/Headers/Public/EarlGrey/"
   ] + [
     "-fmodule-name=EarlGrey_pod_module"
@@ -99,14 +92,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "EarlGrey_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_static_framework_import(
   name = "EarlGrey_VendoredFrameworks",
   framework_imports = select(
@@ -116,10 +107,10 @@ apple_static_framework_import(
           "EarlGrey/EarlGrey.framework/**"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)

@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,7 +15,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 swift_library(
   name = "SevenSwitch",
   srcs = glob(
@@ -26,11 +26,7 @@ swift_library(
       "Classes/Exclude/**/*.swift"
     ],
     exclude_directories = 1
-    ),
-  deps = [
-
-  ],
-  data = [
-
-  ]
-  )
+  ),
+  deps = [],
+  data = []
+)

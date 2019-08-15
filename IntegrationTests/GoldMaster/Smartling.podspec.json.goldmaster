@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "Smartling_hdrs",
   srcs = glob(
@@ -22,24 +22,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "*.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Smartling_includes",
   include = [
     "Vendor/Smartling/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "Smartling",
   "Smartling_module_map",
@@ -47,7 +45,7 @@ gen_module_map(
   [
     "Smartling_hdrs"
   ]
-  )
+)
 objc_library(
   name = "Smartling",
   enable_modules = 0,
@@ -56,10 +54,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Smartling",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "UIKit"
   ],
@@ -67,13 +63,9 @@ objc_library(
     "Smartling"
   ],
   deps = [
-
-  ] + [
     ":Smartling_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -83,7 +75,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Smartling/pod_support/Headers/Public/Smartling/"
   ] + [
     "-fmodule-name=Smartling_pod_module"
@@ -91,11 +83,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Smartling_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Smartling/pod_support_buildable:acknowledgement_fragment"
-  )
+)

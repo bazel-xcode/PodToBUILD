@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,25 +14,25 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 config_setting(
   name = "iosCase",
   values = {
     "cpu": "powerpc1"
   }
-  )
+)
 config_setting(
   name = "osxCase",
   values = {
     "cpu": "powerpc2"
   }
-  )
+)
 config_setting(
   name = "tvosCase",
   values = {
     "cpu": "powerpc3"
   }
-  )
+)
 filegroup(
   name = "IGListKit_hdrs",
   srcs = glob(
@@ -40,21 +40,19 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + [
-
-  ] + [
+  ) + [
     ":Default_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "IGListKit_includes",
   include = [
     "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "IGListKit",
   "IGListKit_module_map",
@@ -62,7 +60,7 @@ gen_module_map(
   [
     "IGListKit_hdrs"
   ]
-  )
+)
 objc_library(
   name = "IGListKit",
   enable_modules = 0,
@@ -71,10 +69,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "IGListKit",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -87,18 +83,15 @@ objc_library(
         "UIKit"
       ]
     }
-    ),
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
-    ":Default"
-  ] + [
+    ":Default",
     ":IGListKit_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -108,7 +101,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
     "-fmodule-name=IGListKit_pod_module"
@@ -116,14 +109,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "IGListKit_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Diffing_cxx_hdrs",
   srcs = glob(
@@ -132,11 +123,11 @@ filegroup(
       "Source/Common/Internal/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Diffing_cxx_union_hdrs",
   srcs = [
@@ -146,13 +137,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Diffing_cxx_includes",
   include = [
     "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Diffing_cxx",
   enable_modules = 0,
@@ -168,7 +159,7 @@ objc_library(
           "Source/Common/**/*.m"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":tvosCase": glob(
         [
           "Source/Common/**/*.mm"
@@ -179,9 +170,9 @@ objc_library(
           "Source/Common/**/*.m"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   hdrs = [
     ":Diffing_cxx_union_hdrs"
   ],
@@ -190,7 +181,7 @@ objc_library(
     [
       "Source/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -203,13 +194,11 @@ objc_library(
         "UIKit"
       ]
     }
-    ),
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
-
-  ] + [
     ":Diffing_cxx_includes"
   ],
   copts = [
@@ -225,7 +214,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
     "-fmodule-name=IGListKit_pod_module"
@@ -233,14 +222,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Diffing_cxx_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Diffing_hdrs",
   srcs = glob(
@@ -249,11 +236,11 @@ filegroup(
       "Source/Common/Internal/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Diffing_union_hdrs",
   srcs = [
@@ -263,13 +250,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Diffing_includes",
   include = [
     "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Diffing",
   enable_modules = 0,
@@ -284,7 +271,7 @@ objc_library(
           "Source/**/*.mm"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":tvosCase": glob(
         [
           "Source/Common/**/*.m"
@@ -294,9 +281,9 @@ objc_library(
           "Source/**/*.mm"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   hdrs = [
     ":Diffing_union_hdrs"
   ],
@@ -305,7 +292,7 @@ objc_library(
     [
       "Source/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -318,18 +305,15 @@ objc_library(
         "UIKit"
       ]
     }
-    ),
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
-    ":Diffing_cxx"
-  ] + [
+    ":Diffing_cxx",
     ":Diffing_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -339,7 +323,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
     "-fmodule-name=IGListKit_pod_module"
@@ -347,14 +331,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Diffing_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Default_cxx_hdrs",
   srcs = select(
@@ -366,7 +348,7 @@ filegroup(
           "Source/Internal/*.h"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":tvosCase": glob(
         [
           "Source/**/*.h",
@@ -374,13 +356,13 @@ filegroup(
           "Source/Internal/*.h"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Default_cxx_union_hdrs",
   srcs = [
@@ -390,13 +372,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Default_cxx_includes",
   include = [
     "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Default_cxx",
   enable_modules = 0,
@@ -410,7 +392,7 @@ objc_library(
           "Source/**/*.m"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":tvosCase": glob(
         [
           "Source/**/*.mm"
@@ -419,9 +401,9 @@ objc_library(
           "Source/**/*.m"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   hdrs = [
     ":Default_cxx_union_hdrs"
   ],
@@ -430,7 +412,7 @@ objc_library(
     [
       "Source/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -443,13 +425,12 @@ objc_library(
         "UIKit"
       ]
     }
-    ),
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
-    ":Diffing"
-  ] + [
+    ":Diffing",
     ":Default_cxx_includes"
   ],
   copts = [
@@ -465,7 +446,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
     "-fmodule-name=IGListKit_pod_module"
@@ -473,14 +454,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Default_cxx_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Default_hdrs",
   srcs = select(
@@ -492,7 +471,7 @@ filegroup(
           "Source/Internal/*.h"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":tvosCase": glob(
         [
           "Source/**/*.h",
@@ -500,13 +479,13 @@ filegroup(
           "Source/Internal/*.h"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Default_union_hdrs",
   srcs = [
@@ -516,13 +495,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Default_includes",
   include = [
     "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Default",
   enable_modules = 0,
@@ -533,15 +512,15 @@ objc_library(
           "Source/**/*.m"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":tvosCase": glob(
         [
           "Source/**/*.m"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   hdrs = [
     ":Default_union_hdrs"
   ],
@@ -550,7 +529,7 @@ objc_library(
     [
       "Source/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -563,19 +542,16 @@ objc_library(
         "UIKit"
       ]
     }
-    ),
+  ),
   sdk_dylibs = [
     "c++"
   ],
   deps = [
     ":Default_cxx",
-    ":Diffing"
-  ] + [
+    ":Diffing",
     ":Default_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -585,7 +561,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
     "-fmodule-name=IGListKit_pod_module"
@@ -593,11 +569,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Default_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
-  )
+)

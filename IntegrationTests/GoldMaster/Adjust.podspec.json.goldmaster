@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,19 +14,19 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 config_setting(
   name = "iosCase",
   values = {
     "cpu": "powerpc1"
   }
-  )
+)
 config_setting(
   name = "tvosCase",
   values = {
     "cpu": "powerpc3"
   }
-  )
+)
 filegroup(
   name = "Adjust_hdrs",
   srcs = glob(
@@ -34,21 +34,19 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + [
-
-  ] + [
+  ) + [
     ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Adjust_includes",
   include = [
     "Vendor/Adjust/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "Adjust",
   "Adjust_module_map",
@@ -56,7 +54,7 @@ gen_module_map(
   [
     "Adjust_hdrs"
   ]
-  )
+)
 objc_library(
   name = "Adjust",
   enable_modules = 0,
@@ -65,10 +63,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Adjust",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -82,15 +78,12 @@ objc_library(
         "AdSupport"
       ]
     }
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":Adjust_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -100,7 +93,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
@@ -108,14 +101,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Adjust_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
@@ -124,11 +115,11 @@ filegroup(
       "Adjust/ADJAdditions/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Core_union_hdrs",
   srcs = [
@@ -138,13 +129,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Core_includes",
   include = [
     "Vendor/Adjust/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Core",
   enable_modules = 0,
@@ -159,7 +150,7 @@ objc_library(
       "plugin/Trademob/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Core_union_hdrs"
   ],
@@ -168,7 +159,7 @@ objc_library(
     [
       "Adjust/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -182,15 +173,11 @@ objc_library(
         "AdSupport"
       ]
     }
-    ),
+  ),
   deps = [
-
-  ] + [
     ":Core_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -200,7 +187,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
@@ -208,14 +195,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Core_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Sociomantic_hdrs",
   srcs = glob(
@@ -223,11 +208,11 @@ filegroup(
       "plugin/Sociomantic/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Sociomantic_union_hdrs",
   srcs = [
@@ -237,13 +222,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Sociomantic_includes",
   include = [
     "Vendor/Adjust/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Sociomantic",
   enable_modules = 0,
@@ -252,7 +237,7 @@ objc_library(
       "plugin/Sociomantic/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Sociomantic_union_hdrs"
   ],
@@ -261,7 +246,7 @@ objc_library(
     [
       "plugin/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -275,15 +260,12 @@ objc_library(
         "AdSupport"
       ]
     }
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":Sociomantic_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -293,7 +275,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
@@ -301,14 +283,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Sociomantic_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Criteo_hdrs",
   srcs = glob(
@@ -316,11 +296,11 @@ filegroup(
       "plugin/Criteo/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Criteo_union_hdrs",
   srcs = [
@@ -330,13 +310,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Criteo_includes",
   include = [
     "Vendor/Adjust/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Criteo",
   enable_modules = 0,
@@ -345,7 +325,7 @@ objc_library(
       "plugin/Criteo/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Criteo_union_hdrs"
   ],
@@ -354,7 +334,7 @@ objc_library(
     [
       "plugin/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -368,15 +348,12 @@ objc_library(
         "AdSupport"
       ]
     }
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":Criteo_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -386,7 +363,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
@@ -394,14 +371,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Criteo_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Trademob_hdrs",
   srcs = glob(
@@ -409,11 +384,11 @@ filegroup(
       "plugin/Trademob/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Trademob_union_hdrs",
   srcs = [
@@ -423,13 +398,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Trademob_includes",
   include = [
     "Vendor/Adjust/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Trademob",
   enable_modules = 0,
@@ -438,7 +413,7 @@ objc_library(
       "plugin/Trademob/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Trademob_union_hdrs"
   ],
@@ -447,7 +422,7 @@ objc_library(
     [
       "plugin/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -461,15 +436,12 @@ objc_library(
         "AdSupport"
       ]
     }
-    ),
+  ),
   deps = [
-    ":Core"
-  ] + [
+    ":Core",
     ":Trademob_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -479,7 +451,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
     "-fmodule-name=Adjust_pod_module"
@@ -487,11 +459,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Trademob_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
-  )
+)

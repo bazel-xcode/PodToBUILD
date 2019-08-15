@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "ZipArchive_hdrs",
   srcs = glob(
@@ -22,7 +22,7 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "*.h",
       "minizip/crypt.h",
@@ -32,19 +32,17 @@ filegroup(
       "minizip/zip.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "ZipArchive_includes",
   include = [
     "Vendor/ZipArchive/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "ZipArchive",
   "ZipArchive_module_map",
@@ -52,7 +50,7 @@ gen_module_map(
   [
     "ZipArchive_hdrs"
   ]
-  )
+)
 objc_library(
   name = "ZipArchive",
   enable_modules = 0,
@@ -65,13 +63,13 @@ objc_library(
       "minizip/zip.c"
     ],
     exclude_directories = 1
-    ),
+  ),
   non_arc_srcs = glob(
     [
       "*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":ZipArchive_hdrs"
   ],
@@ -80,13 +78,11 @@ objc_library(
     [
       "minizip/**/*.pch"
     ]
-    ),
+  ),
   sdk_dylibs = [
     "z"
   ],
   deps = [
-
-  ] + [
     ":ZipArchive_includes"
   ],
   copts = [
@@ -101,7 +97,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/ZipArchive/pod_support/Headers/Public/ZipArchive/"
   ] + [
     "-fmodule-name=ZipArchive_pod_module"
@@ -109,11 +105,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "ZipArchive_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/ZipArchive/pod_support_buildable:acknowledgement_fragment"
-  )
+)

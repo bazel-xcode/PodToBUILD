@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "PINOperation_cxx_hdrs",
   srcs = glob(
@@ -22,11 +22,11 @@ filegroup(
       "Source/**/*.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "PINOperation_cxx_union_hdrs",
   srcs = [
@@ -36,13 +36,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "PINOperation_cxx_includes",
   include = [
     "Vendor/PINOperation/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "PINOperation_cxx",
   enable_modules = 0,
@@ -54,7 +54,7 @@ objc_library(
       "Source/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":PINOperation_cxx_union_hdrs"
   ],
@@ -63,18 +63,14 @@ objc_library(
     [
       "Source/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "Foundation"
   ],
   deps = [
-
-  ] + [
     ":PINOperation_cxx_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -84,7 +80,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/PINOperation/pod_support/Headers/Public/PINOperation/"
   ] + [
     "-fmodule-name=PINOperation_pod_module"
@@ -92,14 +88,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "PINOperation_cxx_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/PINOperation/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "PINOperation_hdrs",
   srcs = glob(
@@ -107,24 +101,24 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "Source/**/*.h"
     ],
     exclude_directories = 1
-    ) + [
+  ) + [
     ":PINOperation_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "PINOperation_includes",
   include = [
     "Vendor/PINOperation/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "PINOperation",
   "PINOperation_module_map",
@@ -132,7 +126,7 @@ gen_module_map(
   [
     "PINOperation_hdrs"
   ]
-  )
+)
 objc_library(
   name = "PINOperation",
   enable_modules = 0,
@@ -141,7 +135,7 @@ objc_library(
       "Source/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":PINOperation_hdrs"
   ],
@@ -150,18 +144,15 @@ objc_library(
     [
       "Source/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "Foundation"
   ],
   deps = [
-    ":PINOperation_cxx"
-  ] + [
+    ":PINOperation_cxx",
     ":PINOperation_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -171,7 +162,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/PINOperation/pod_support/Headers/Public/PINOperation/"
   ] + [
     "-fmodule-name=PINOperation_pod_module"
@@ -179,11 +170,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "PINOperation_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/PINOperation/pod_support_buildable:acknowledgement_fragment"
-  )
+)

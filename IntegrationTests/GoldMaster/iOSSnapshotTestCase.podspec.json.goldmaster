@@ -5,7 +5,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -15,7 +15,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "iOSSnapshotTestCase_hdrs",
   srcs = glob(
@@ -23,21 +23,17 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + [
-
-  ] + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "iOSSnapshotTestCase_includes",
   include = [
     "Vendor/iOSSnapshotTestCase/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "FBSnapshotTestCase",
   "iOSSnapshotTestCase_module_map",
@@ -45,7 +41,7 @@ gen_module_map(
   [
     "iOSSnapshotTestCase_hdrs"
   ]
-  )
+)
 objc_library(
   name = "iOSSnapshotTestCase",
   enable_modules = 0,
@@ -54,10 +50,8 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "iOSSnapshotTestCase",
-    [
-
-    ]
-    ),
+    []
+  ),
   sdk_frameworks = [
     "XCTest",
     "UIKit",
@@ -65,13 +59,10 @@ objc_library(
     "QuartzCore"
   ],
   deps = [
-    ":SwiftSupport"
-  ] + [
+    ":SwiftSupport",
     ":iOSSnapshotTestCase_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -81,7 +72,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
   ] + [
     "-fmodule-name=FBSnapshotTestCase_pod_module"
@@ -89,14 +80,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "iOSSnapshotTestCase_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/iOSSnapshotTestCase/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
@@ -108,11 +97,11 @@ filegroup(
       "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
     ],
     exclude_directories = 1
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "Core_union_hdrs",
   srcs = [
@@ -122,13 +111,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "Core_includes",
   include = [
     "Vendor/iOSSnapshotTestCase/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "Core",
   enable_modules = 0,
@@ -138,7 +127,7 @@ objc_library(
       "FBSnapshotTestCase/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":Core_union_hdrs"
   ],
@@ -147,7 +136,7 @@ objc_library(
     [
       "FBSnapshotTestCase/**/*.pch"
     ]
-    ),
+  ),
   sdk_frameworks = [
     "XCTest",
     "UIKit",
@@ -155,13 +144,9 @@ objc_library(
     "QuartzCore"
   ],
   deps = [
-
-  ] + [
     ":Core_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -171,7 +156,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
   ] + [
     "-fmodule-name=FBSnapshotTestCase_pod_module"
@@ -179,14 +164,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "Core_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/iOSSnapshotTestCase/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 swift_library(
   name = "SwiftSupport",
   srcs = glob(
@@ -194,11 +177,9 @@ swift_library(
       "FBSnapshotTestCase/**/*.swift"
     ],
     exclude_directories = 1
-    ),
+  ),
   deps = [
     ":Core"
   ],
-  data = [
-
-  ]
-  )
+  data = []
+)

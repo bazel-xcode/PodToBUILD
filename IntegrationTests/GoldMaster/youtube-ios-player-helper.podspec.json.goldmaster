@@ -6,7 +6,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -16,19 +16,19 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 config_setting(
   name = "iosCase",
   values = {
     "cpu": "powerpc1"
   }
-  )
+)
 config_setting(
   name = "osxCase",
   values = {
     "cpu": "powerpc2"
   }
-  )
+)
 filegroup(
   name = "youtube-ios-player-helper_cxx_hdrs",
   srcs = select(
@@ -45,7 +45,7 @@ filegroup(
           "Classes/osx/**/*.hxx"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":osxCase": glob(
         [
           "Classes/**/*.h",
@@ -58,13 +58,13 @@ filegroup(
           "Classes/ios/**/*.hxx"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 filegroup(
   name = "youtube-ios-player-helper_cxx_union_hdrs",
   srcs = [
@@ -74,13 +74,13 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "youtube-ios-player-helper_cxx_includes",
   include = [
     "Vendor/youtube-ios-player-helper/pod_support/Headers/Public/"
   ]
-  )
+)
 objc_library(
   name = "youtube-ios-player-helper_cxx",
   enable_modules = 0,
@@ -108,7 +108,7 @@ objc_library(
           "Classes/osx/**/*.s"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":osxCase": glob(
         [
           "Classes/**/*.cc",
@@ -131,9 +131,9 @@ objc_library(
           "Classes/ios/**/*.s"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   hdrs = [
     ":youtube-ios-player-helper_cxx_union_hdrs"
   ],
@@ -142,15 +142,12 @@ objc_library(
     [
       "Classes/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-    ":youtube-ios-player-helper_Bundle_Assets"
-  ] + [
+    ":youtube-ios-player-helper_Bundle_Assets",
     ":youtube-ios-player-helper_cxx_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -160,7 +157,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/youtube-ios-player-helper/pod_support/Headers/Public/youtube-ios-player-helper/"
   ] + [
     "-fmodule-name=youtube-ios-player-helper_pod_module"
@@ -171,14 +168,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "youtube-ios-player-helper_cxx_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 swift_library(
   name = "youtube-ios-player-helper_swift",
   srcs = select(
@@ -191,7 +186,7 @@ swift_library(
           "Classes/osx/**/*.swift"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":osxCase": glob(
         [
           "Classes/**/*.swift"
@@ -200,16 +195,14 @@ swift_library(
           "Classes/ios/**/*.swift"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   deps = [
     ":youtube-ios-player-helper_Bundle_Assets"
   ],
-  data = [
-
-  ]
-  )
+  data = []
+)
 filegroup(
   name = "youtube-ios-player-helper_hdrs",
   srcs = glob(
@@ -217,7 +210,7 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + select(
+  ) + select(
     {
       "//conditions:default": glob(
         [
@@ -231,7 +224,7 @@ filegroup(
           "Classes/osx/**/*.hxx"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":osxCase": glob(
         [
           "Classes/**/*.h",
@@ -244,21 +237,21 @@ filegroup(
           "Classes/ios/**/*.hxx"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ) + [
+  ) + [
     ":youtube-ios-player-helper_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "youtube-ios-player-helper_includes",
   include = [
     "Vendor/youtube-ios-player-helper/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "youtube-ios-player-helper",
   "youtube-ios-player-helper_module_map",
@@ -266,7 +259,7 @@ gen_module_map(
   [
     "youtube-ios-player-helper_hdrs"
   ]
-  )
+)
 objc_library(
   name = "youtube-ios-player-helper",
   enable_modules = 0,
@@ -290,7 +283,7 @@ objc_library(
           "Classes/osx/**/*.s"
         ],
         exclude_directories = 1
-        ),
+      ),
       ":osxCase": glob(
         [
           "Classes/**/*.S",
@@ -309,9 +302,9 @@ objc_library(
           "Classes/ios/**/*.s"
         ],
         exclude_directories = 1
-        )
+      )
     }
-    ),
+  ),
   hdrs = [
     ":youtube-ios-player-helper_hdrs"
   ],
@@ -320,17 +313,14 @@ objc_library(
     [
       "Classes/**/*.pch"
     ]
-    ),
+  ),
   deps = [
     ":youtube-ios-player-helper_Bundle_Assets",
     ":youtube-ios-player-helper_cxx",
-    ":youtube-ios-player-helper_swift"
-  ] + [
+    ":youtube-ios-player-helper_swift",
     ":youtube-ios-player-helper_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -340,7 +330,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/youtube-ios-player-helper/pod_support/Headers/Public/youtube-ios-player-helper/"
   ] + [
     "-fmodule-name=youtube-ios-player-helper_pod_module"
@@ -351,14 +341,12 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "youtube-ios-player-helper_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
-  )
+)
 apple_bundle_import(
   name = "youtube-ios-player-helper_Bundle_Assets",
   bundle_imports = glob(
@@ -366,5 +354,5 @@ apple_bundle_import(
       "youtube-ios-player-helper/Assets.bundle/**"
     ],
     exclude_directories = 1
-    )
   )
+)

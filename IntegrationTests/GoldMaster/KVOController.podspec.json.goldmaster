@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "KVOController_hdrs",
   srcs = glob(
@@ -22,24 +22,22 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "FBKVOController/*.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "KVOController_includes",
   include = [
     "Vendor/KVOController/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "KVOController",
   "KVOController_module_map",
@@ -47,7 +45,7 @@ gen_module_map(
   [
     "KVOController_hdrs"
   ]
-  )
+)
 objc_library(
   name = "KVOController",
   enable_modules = 0,
@@ -56,7 +54,7 @@ objc_library(
       "FBKVOController/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":KVOController_hdrs"
   ],
@@ -65,15 +63,11 @@ objc_library(
     [
       "FBKVOController/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-
-  ] + [
     ":KVOController_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -83,7 +77,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/KVOController/pod_support/Headers/Public/KVOController/"
   ] + [
     "-fmodule-name=KVOController_pod_module"
@@ -91,11 +85,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "KVOController_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/KVOController/pod_support_buildable:acknowledgement_fragment"
-  )
+)

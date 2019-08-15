@@ -4,7 +4,7 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes"
-  )
+)
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
@@ -14,7 +14,7 @@ config_setting(
   values = {
     "compilation_mode": "opt"
   }
-  )
+)
 filegroup(
   name = "FBSDKMessengerShareKit_hdrs",
   srcs = glob(
@@ -22,7 +22,7 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-    ) + glob(
+  ) + glob(
     [
       "FBSDKMessengerShareKit/**/*.h",
       "FBSDKMessengerShareKit/**/*.hpp",
@@ -30,19 +30,17 @@ filegroup(
       "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h"
     ],
     exclude_directories = 1
-    ) + [
-
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 gen_includes(
   name = "FBSDKMessengerShareKit_includes",
   include = [
     "Vendor/FBSDKMessengerShareKit/pod_support/Headers/Public/"
   ]
-  )
+)
 gen_module_map(
   "FBSDKMessengerShareKit",
   "FBSDKMessengerShareKit_module_map",
@@ -50,7 +48,7 @@ gen_module_map(
   [
     "FBSDKMessengerShareKit_hdrs"
   ]
-  )
+)
 objc_library(
   name = "FBSDKMessengerShareKit",
   enable_modules = 0,
@@ -59,7 +57,7 @@ objc_library(
       "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.m"
     ],
     exclude_directories = 1
-    ),
+  ),
   hdrs = [
     ":FBSDKMessengerShareKit_hdrs"
   ],
@@ -68,15 +66,11 @@ objc_library(
     [
       "FBSDKMessengerShareKit/**/*.pch"
     ]
-    ),
+  ),
   deps = [
-
-  ] + [
     ":FBSDKMessengerShareKit_includes"
   ],
-  copts = [
-
-  ] + select(
+  copts = select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -86,7 +80,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-    ) + [
+  ) + [
     "-IVendor/FBSDKMessengerShareKit/pod_support/Headers/Public/FBSDKMessengerShareKit/"
   ] + [
     "-fmodule-name=FBSDKMessengerShareKit_pod_module"
@@ -94,11 +88,9 @@ objc_library(
   visibility = [
     "//visibility:public"
   ]
-  )
+)
 acknowledged_target(
   name = "FBSDKMessengerShareKit_acknowledgement",
-  deps = [
-
-  ],
+  deps = [],
   value = "//Vendor/FBSDKMessengerShareKit/pod_support_buildable:acknowledgement_fragment"
-  )
+)
