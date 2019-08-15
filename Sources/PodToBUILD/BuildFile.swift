@@ -90,9 +90,9 @@ public func makeConfigSettingNodes() -> SkylarkNode {
         "# Add a config setting release for compilation mode",
         "# Assume that people are using `opt` for release mode",
         "# see the bazel user manual for more information",
-        "# https://bazel.build/versions/master/docs/bazel-user-manual.html",
+        "# https://docs.bazel.build/versions/master/be/general.html#config_setting",
     ].map { SkylarkNode.skylark($0) }
-    let releaseConfig = SkylarkNode.functionCall(name: "native.config_setting",
+    let releaseConfig = SkylarkNode.functionCall(name: "config_setting",
                                                  arguments: [
                                                      .named(name: "name", value: .string("release")),
                                                      .named(name: "values",

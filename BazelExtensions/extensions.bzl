@@ -120,7 +120,7 @@ def _make_module_map(pod_name, module_name, hdr_providers):
     template = "module " + module_name + " {\n"
     template += "    export * \n"
     for provider in hdr_providers:
-        for input_file in provider.files:
+        for input_file in provider.files.to_list():
             hdr = input_file
             template += "    header \"%s%s\"\n" % (relative_path, hdr.path)
     template += "}\n"
@@ -129,7 +129,7 @@ def _make_module_map(pod_name, module_name, hdr_providers):
 def _gen_module_map_impl(ctx):
   # We figure out how to build
   out = _make_module_map(ctx.attr.pod_name, ctx.attr.module_name, ctx.attr.hdrs)
-  ctx.file_action(
+  ctx.actions.write(
       content=out,
       output=ctx.outputs.module_map
   )
