@@ -401,7 +401,7 @@ public enum RepoActions {
         }
 
         let downloadsDir = shell.tmpdir()
-        let url = NSURL(fileURLWithPath: urlString)
+        let url = NSURL(string: urlString)!
         let fileName = url.lastPathComponent!
         let download = downloadsDir + "/" + podName + "-" + fileName
         guard let wwwUrl = NSURL(string: urlString).map({ $0 as URL }),
@@ -434,7 +434,7 @@ public enum RepoActions {
                     ),
                 ])
             }
-            fatalError("Cannot extract files other than .zip, .tar, .tar.gz, or .tgz")
+            fatalError("Cannot extract files other than .zip, .tar, .tar.gz, or .tgz. Got \(lowercasedFileName)")
         }
 
         assertCommandOutput(extract(), message: "Extraction of \(podName) failed")
