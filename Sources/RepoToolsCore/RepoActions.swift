@@ -330,7 +330,8 @@ public enum RepoActions {
         // creating thousands of processes in few milliseconds will
         // blow up otherwise.
         let currentDirectoryPath = FileManager.default.currentDirectoryPath
-        let globResults = Set(globResultsArr)
+        // Get a de-duplicated, sorted (for determinism) list of all headers
+        let globResults = Array(Set(globResultsArr)).sorted()
         customHeaderSearchPaths.forEach { searchPath in
             let linkPath = currentDirectoryPath + "/" + searchPath
             guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
