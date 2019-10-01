@@ -333,7 +333,7 @@ instructions](https://github.com/pinterest/PodToBUILD/tree/master#quickstart-ins
 Please find info in the [Bazel
 documentation](https://docs.bazel.build/versions/master/migrate-xcode.html).
 
-### How can I build an iOS applicaiton with Bazel with CocoaPod dependencies?
+### How can I build an iOS application with Bazel with CocoaPod dependencies?
 
 The documentation of building an iOS application resides in the [Bazel
 documentation](https://docs.bazel.build/versions/master/tutorial/ios-app.html).
