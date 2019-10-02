@@ -79,23 +79,30 @@ class ShellTask : NSObject {
     let timeout: CFTimeInterval
     let command: String
     let path: String?
+    let printOutput: Bool
     let arguments: [String]
+    private var standardOutputData: Data
+    private var standardErrorData: Data
 
     init(command: String, arguments: [String], timeout: CFTimeInterval, cwd:
-            String? = nil) {
+         String? = nil, printOutput: Bool = false) {
         self.command = command
         self.arguments = arguments
         self.timeout = timeout
         self.path = cwd
+        self.printOutput = printOutput
+        self.standardErrorData = Data()
+        self.standardOutputData = Data()
     }
 
     /// Create a task with a script and timeout
     /// By default, it runs under bash for the current path.
-    public static func with(script: String, timeout: Double, cwd: String? = nil) -> ShellTask {
+    public static func with(script: String, timeout: Double, cwd: String? = nil,
+                            printOutput: Bool = false) -> ShellTask {
         let path = ProcessInfo.processInfo.environment["PATH"]!
         let script = "PATH=\"\(path)\" /bin/sh -c '\(script)'"
         return ShellTask(command: "/bin/bash", arguments: ["-c", script],
-                timeout: timeout, cwd: cwd)
+                timeout: timeout, cwd: cwd, printOutput: printOutput)
     }
 
     override var description: String {
@@ -152,6 +159,29 @@ class ShellTask : NSObject {
         // Setup the process.
         let stdout = Pipe()
         let stderr  = Pipe()
+
+        stdout.fileHandleForReading.readabilityHandler = {
+            handle in
+            let data = handle.availableData
+            guard data.count > 0 else {
+                return
+            }
+            if self.printOutput {
+                FileHandle.standardOutput.write(data)
+            }
+            self.standardOutputData.append(data)
+        }
+        stderr.fileHandleForReading.readabilityHandler = {
+            handle in
+            let data = handle.availableData
+            guard data.count > 0 else {
+                return
+            }
+            if self.printOutput {
+                FileHandle.standardError.write(data)
+            }
+            self.standardErrorData.append(data)
+        }
         var env = ProcessInfo.processInfo.environment
         env["LANG"] = "en_US.UTF-8"
         process.environment = env
@@ -176,15 +206,11 @@ class ShellTask : NSObject {
         NotificationCenter.default.removeObserver(taskObserver)
 
         if exception != nil {
-            // Attempt to read standard output
-            let standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
             return ShellTaskResult(standardErrorData: standardErrorData,
                                    standardOutputData: Data(),
                                    terminationStatus: 42)
         }
 
-        let standardOutputData = stdout.fileHandleForReading.readDataToEndOfFile()
-        let standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
         return ShellTaskResult(standardErrorData: standardErrorData,
                                standardOutputData: standardOutputData,
                                terminationStatus: didTerminateStatus
@@ -217,12 +243,13 @@ public struct SystemShellContext : ShellContext {
     @discardableResult public func shellOut(_ script: String) -> CommandOutput {
         log("SHELL:\(script)")
         let task = ShellTask.with(script: script,
-                                  timeout: FOUR_HOURS_TIME_CONSTANT)
+                                  timeout: FOUR_HOURS_TIME_CONSTANT,
+                                  printOutput: trace)
         let result = task.launch()
         let stderrData = result.standardErrorData
         let stdoutData = result.standardOutputData
         let statusCode = result.terminationStatus
-        log("PIPE OUTPUT\(script) stderr:\(readData(stderrData))  stdout:\(readData(stdoutData)) code:\(statusCode )")
+        log("PIPE OUTPUT\(script) stderr:\(readData(stderrData))  stdout:\(readData(stdoutData)) code:\(statusCode)")
         return result
     }
 
@@ -289,12 +316,10 @@ public struct SystemShellContext : ShellContext {
             [String]()) -> CommandOutput {
         log("COMMAND:\(launchPath) \(arguments)")
         let task = ShellTask(command: launchPath, arguments: arguments,
-                timeout: FOUR_HOURS_TIME_CONSTANT)
+                timeout: FOUR_HOURS_TIME_CONSTANT, printOutput: trace)
         let result = task.launch()
-        let stderrData = result.standardErrorData
-        let stdoutData = result.standardOutputData
         let statusCode = result.terminationStatus
-        log("PIPE OUTPUT\(launchPath) \(arguments) stderr:\(readData(stderrData))  stdout:\(readData(stdoutData)) code:\(statusCode )")
+        log("TASK EXITED\(launchPath) \(arguments) code:\(statusCode )")
         return result
     }
 
