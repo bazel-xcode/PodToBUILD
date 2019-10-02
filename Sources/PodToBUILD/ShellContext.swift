@@ -85,7 +85,7 @@ class ShellTask : NSObject {
     private var standardErrorData: Data
 
     init(command: String, arguments: [String], timeout: CFTimeInterval, cwd:
-            String? = nil, printOutput: Bool = false) {
+         String? = nil, printOutput: Bool = false) {
         self.command = command
         self.arguments = arguments
         self.timeout = timeout

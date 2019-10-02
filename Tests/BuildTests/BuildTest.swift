@@ -47,16 +47,8 @@ class BuildTest: XCTestCase {
         print("running bazel:", bazelScript)
         let buildResult = ShellTask(command: "/bin/bash", arguments: [
                 "-c", bazelScript ], timeout: 1200.0, printOutput: true).launch()
-        XCTAssertEqual(buildResult.terminationStatus, 0, "building \(example)")
-        print("Bazel completed with stderror:", buildResult.standardErrorAsString)
-        print("Bazel completed with stdout:", buildResult.standardOutputAsString)
-
-        // For now, we assume that the if bazel exits with 0 it passed.
-        if buildResult.terminationStatus != 0 {
-            print("Bazel failed with stderror:", buildResult.standardErrorAsString)
-            print("Bazel failed with stdout:", buildResult.standardOutputAsString)
-        }
         timer.invalidate()
+        XCTAssertEqual(buildResult.terminationStatus, 0, "building \(example)")
     }
 
     func testReact() {
