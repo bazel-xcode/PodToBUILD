@@ -274,8 +274,11 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
          headerDirectoryName.denormalize()) ??  AttrSet<String>(value:
          externalName)
 
-        let includePodHeaderDirs = {
-            () -> [String] in
+        let includePodHeaderDirs: (() -> [String]) = {
+            let options = GetBuildOptions()
+            if options.generateHeaderMap {
+                return []
+            }
             let value = spec.podTargetXcconfig?["USE_HEADERMAP"]
             let include = value == nil || (value?.lowercased() != "no" &&
                     value?.lowercased() != "false")
@@ -646,6 +649,9 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         if lib.includes.count > 0 {
             allDeps = allDeps .+. [":\(name)_includes"].toSkylark()
         }
+        if options.generateHeaderMap {
+            allDeps = allDeps .+. [":" + name + "_hmap"].toSkylark()
+        }
 
         if allDeps.isEmpty == false { 
             libArguments.append(.named(
@@ -667,19 +673,13 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             )
         let getPodIQuotes = {
             () -> [String] in
-	    let headerMapOpts: [String]
-            let podName = GetBuildOptions().podName
             if options.generateHeaderMap {
-		// __BAZEL_GEN_DIR__ currently subbed in the toolchain, as implemented 2 years ago.
-		// Add a PR to bazel to have a "make variable" instead
-                headerMapOpts = [
+                let podName = GetBuildOptions().podName
+                return [
                     "-I$(GENDIR)/\(getPodBaseDir())/\(podName)/" + lib.name + "_hmap.hmap",
                     "-I.", 
                 ]
-            } else {
-                headerMapOpts = []
-	    }
-
+            }
             let podInclude = lib.includes.first(where: {
                     $0.contains(PodSupportSystemPublicHeaderDir) })
             guard podInclude != nil else { return [] }
@@ -692,7 +692,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                             -> Set<String> in
                             return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
                         }))
-            return headerMapOpts + headerSearchPaths
+            return headerSearchPaths
                 .sorted(by: (<))
                 .reduce([String]()) {
                 accum, searchPath in
