@@ -115,7 +115,6 @@ TESTED_BAZEL_VERSION=0.25.2
 # Make a binary archive of PodToBUILD with the official github cli `hub`
 github_release:
 	@which hub || (echo "this command relies on github cli" && exit 1)
-	@git diff --quiet || echo "Dirty tree" && exit 1
 	@git checkout master
 	@git pull --rebase origin master
 	@echo "creating release: $(TESTED_BAZEL_VERSION)-($(shell git rev-parse --short HEAD)"
