@@ -80,7 +80,6 @@ objc_library(
     ]
   ),
   deps = [
-    ":iRate_Bundle_iRate",
     ":iRate_includes"
   ],
   copts = select(

@@ -94,7 +94,6 @@ objc_library(
     "AddressBook"
   ],
   deps = [
-    ":Stripe_Bundle_Stripe",
     ":Stripe_includes"
   ],
   copts = select(

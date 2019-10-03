@@ -22,7 +22,7 @@ public protocol BuildOptions {
 
     // pod_support, everything, none
     var headerVisibility: String { get }
-    
+
     var alwaysSplitRules: Bool { get }
     var vendorize: Bool { get }
 }
@@ -157,7 +157,7 @@ public struct AcknowledgmentNode: SkylarkConvertible {
         let nodeName = bazelLabel(fromString: name + "_acknowledgement").toSkylark()
         let options = GetBuildOptions()
         let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
-        let value = (getRulePrefix(name: options.podName) + 
+        let value = (getRulePrefix(name: options.podName) +
              podSupportBuildableDir +
              ":acknowledgement_fragment").toSkylark()
         let target = SkylarkNode.functionCall(
@@ -368,8 +368,7 @@ public struct PodBuildFile: SkylarkConvertible {
             return result + (filteredSpecs.contains(target.name) ? [target] : [])
         }
 
-        let extraDeps = bundleLibraries(withPodSpec: podSpec) +
-            vendoredFrameworks(withPodspec: podSpec) +
+        let extraDeps = vendoredFrameworks(withPodspec: podSpec) +
             vendoredLibraries(withPodspec: podSpec)
 
         let allRootDeps = ((defaultSubspecTargets.isEmpty ? subspecTargets :
@@ -403,7 +402,9 @@ public struct PodBuildFile: SkylarkConvertible {
                                           values: ["cpu": "powerpc4"])]))
         ) ?? []
 
-        var output: [SkylarkConvertible] = configs + sourceLibs + subspecTargets + extraDeps
+        var output: [SkylarkConvertible] = configs + sourceLibs + subspecTargets +
+            bundleLibraries(withPodSpec: podSpec) + extraDeps
+
         // Execute transforms manually
         // Don't use unneeded abstractions to make a few function calls
         // (bkase) but this is isomorphic to `BuildOptions -> Endo<SkylarkConvertible>` which means we *could* make a monoid out of it http://swift.sandbox.bluemix.net/#/repl/59090e9f9def327b2a45b255
