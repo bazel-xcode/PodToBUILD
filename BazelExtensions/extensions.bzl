@@ -233,8 +233,10 @@ def _make_headermap_impl(ctx):
     inputs = [json_f]
 
     # Extract propagated headermaps
-    # FIXME: Add safety around this
     for hdr_provider in ctx.attr.deps:
+        if not hasattr(hdr_provider, "objc"):
+            continue
+
         hdrs = hdr_provider.objc.header.to_list()
         for hdr in hdrs:
             if hdr.path.endswith(".hmap"):
