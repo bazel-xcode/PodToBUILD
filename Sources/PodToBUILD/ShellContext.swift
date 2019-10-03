@@ -160,27 +160,35 @@ class ShellTask : NSObject {
         let stdout = Pipe()
         let stderr  = Pipe()
 
-        stdout.fileHandleForReading.readabilityHandler = {
-            handle in
-            let data = handle.availableData
-            guard data.count > 0 else {
-                return
-            }
-            if self.printOutput {
-                FileHandle.standardOutput.write(data)
-            }
-            self.standardOutputData.append(data)
+        let stream: Bool
+        if #available(OSX 10.14.5, *) {
+            stream = true
+        } else {
+            stream = false
         }
-        stderr.fileHandleForReading.readabilityHandler = {
-            handle in
-            let data = handle.availableData
-            guard data.count > 0 else {
-                return
+        if stream {
+            stdout.fileHandleForReading.readabilityHandler = {
+                handle in
+                let data = handle.availableData
+                guard data.count > 0 else {
+                    return
+                }
+                if self.printOutput {
+                    FileHandle.standardOutput.write(data)
+                }
+                self.standardOutputData.append(data)
             }
-            if self.printOutput {
-                FileHandle.standardError.write(data)
-            }
-            self.standardErrorData.append(data)
+            stderr.fileHandleForReading.readabilityHandler = {
+                handle in
+                let data = handle.availableData
+                guard data.count > 0 else {
+                    return
+                }
+                if self.printOutput {
+                    FileHandle.standardError.write(data)
+                }
+                self.standardErrorData.append(data)
+             }
         }
         var env = ProcessInfo.processInfo.environment
         env["LANG"] = "en_US.UTF-8"
@@ -206,11 +214,25 @@ class ShellTask : NSObject {
         NotificationCenter.default.removeObserver(taskObserver)
 
         if exception != nil {
+            if stream == false {
+                self.standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
+                if self.printOutput {
+                    FileHandle.standardError.write(self.standardErrorData)
+                }
+            }
             return ShellTaskResult(standardErrorData: standardErrorData,
                                    standardOutputData: Data(),
                                    terminationStatus: 42)
         }
 
+        if stream == false {
+            self.standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
+            self.standardOutputData = stdout.fileHandleForReading.readDataToEndOfFile()
+            if self.printOutput {
+                FileHandle.standardError.write(self.standardErrorData)
+                FileHandle.standardError.write(self.standardOutputData)
+            }
+        }
         return ShellTaskResult(standardErrorData: standardErrorData,
                                standardOutputData: standardOutputData,
                                terminationStatus: didTerminateStatus

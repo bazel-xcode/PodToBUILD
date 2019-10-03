@@ -18,7 +18,7 @@ class ShellTaskTest: XCTestCase {
     }
     
     func testBashScript() {
-        let task = ShellTask.with(script: "echo \"hi\"", timeout: 0.5)
+        let task = ShellTask.with(script: "echo \"hi\"", timeout: 1)
         let resultStr = task.launch().standardOutputAsString
         // For now, this is required. There is a new line in this output
         XCTAssertEqual(resultStr.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines), "hi")
