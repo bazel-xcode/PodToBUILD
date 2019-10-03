@@ -6,16 +6,19 @@ new_pod_repository(
   user_options = ["Core.deps += //Vendor/PINCache:PINCache"],
 
   # TODO:
-  generate_module_map = False
+  generate_module_map = False,
+  generate_header_map = True
 )
 
 new_pod_repository(
   name = "PINOperation",
-  url = "https://github.com/pinterest/PINOperation/archive/1.1.zip"
+  url = "https://github.com/pinterest/PINOperation/archive/1.1.zip",
+  generate_header_map = True
 )
 
 new_pod_repository(
   name = "PINCache",
-  url = "https://github.com/pinterest/PINCache/archive/d886490de6d297e38f80bb750ff2dec4822fb870.zip"
+  url = "https://github.com/pinterest/PINCache/archive/d886490de6d297e38f80bb750ff2dec4822fb870.zip",
+  generate_header_map = True
 )
 

@@ -5,7 +5,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -25,6 +26,24 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "GoogleSignIn_hmap",
+  namespace = "GoogleSignIn",
+  hdrs = [
+    ":GoogleSignIn_hdrs"
+  ],
+  deps = [
+    "//Vendor/GTMOAuth2:GTMOAuth2",
+    "//Vendor/GTMSessionFetcher:Core",
+    "//Vendor/GoogleToolboxForMac:NSDictionary_URLArguments",
+    "//Vendor/GoogleToolboxForMac:NSString_URLArguments",
+    ":GoogleSignIn_Bundle_GoogleSignIn",
+    ":GoogleSignIn_VendoredFrameworks"
+  ],
   visibility = [
     "//visibility:public"
   ]

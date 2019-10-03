@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -25,6 +26,20 @@ filegroup(
   ) + [
     ":Core_hdrs",
     ":without-IDFA_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Branch_hmap",
+  namespace = "Branch",
+  hdrs = [
+    ":Branch_hdrs"
+  ],
+  deps = [
+    ":Core",
+    ":without-IDFA"
   ],
   visibility = [
     "//visibility:public"
@@ -107,6 +122,17 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Core_hmap",
+  namespace = "Branch",
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Core_includes",
   include = [
@@ -184,6 +210,17 @@ filegroup(
     "without-IDFA_hdrs",
     "Branch_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "without-IDFA_hmap",
+  namespace = "Branch",
+  hdrs = [
+    ":without-IDFA_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

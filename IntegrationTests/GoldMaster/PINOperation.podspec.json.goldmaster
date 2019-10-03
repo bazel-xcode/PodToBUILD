@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -33,6 +34,17 @@ filegroup(
     "PINOperation_cxx_hdrs",
     "PINOperation_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "PINOperation_cxx_hmap",
+  namespace = "PINOperation",
+  hdrs = [
+    ":PINOperation_cxx_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -108,6 +120,19 @@ filegroup(
     exclude_directories = 1
   ) + [
     ":PINOperation_cxx_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "PINOperation_hmap",
+  namespace = "PINOperation",
+  hdrs = [
+    ":PINOperation_hdrs"
+  ],
+  deps = [
+    ":PINOperation_cxx"
   ],
   visibility = [
     "//visibility:public"

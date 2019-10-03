@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -37,6 +38,20 @@ filegroup(
   ) + [
     ":Core_hdrs",
     ":Arc-exception-safe_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "PINCache_hmap",
+  namespace = "PINCache",
+  hdrs = [
+    ":PINCache_hdrs"
+  ],
+  deps = [
+    ":Arc-exception-safe",
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -130,6 +145,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Core_hmap",
+  namespace = "PINCache",
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/PINOperation:PINOperation"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Core_includes",
   include = [
@@ -212,6 +240,19 @@ filegroup(
   srcs = [
     "Arc-exception-safe_hdrs",
     "PINCache_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Arc-exception-safe_hmap",
+  namespace = "PINCache",
+  hdrs = [
+    ":Arc-exception-safe_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"

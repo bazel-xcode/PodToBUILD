@@ -20,7 +20,7 @@ def _acknowledgement_merger_impl(ctx):
         args.append(f.path)
 
     # Write the final output. Bazel only writes the file when required
-    ctx.action(
+    ctx.actions.run_shell(
         inputs=concat,
         arguments=args,
         executable=ctx.attr.merger.files.to_list()[0],
@@ -112,15 +112,17 @@ def pch_with_name_hint(hint, sources):
     return None
 
 
-def _make_module_map(pod_name, module_name, hdr_providers):
+def _make_module_map(pod_name, module_name, deps):
     # Up some dirs to the compilation root
     # bazel-out/ios_x86_64-fastbuild/genfiles/external/__Pod__
     relative_path = "../../../../../../"
 
     template = "module " + module_name + " {\n"
     template += "    export * \n"
-    for provider in hdr_providers:
+    for provider in deps:
         for input_file in provider.files.to_list():
+            if input_file.path.endswith(".hmap"):
+                continue
             hdr = input_file
             template += "    header \"%s%s\"\n" % (relative_path, hdr.path)
     template += "}\n"
@@ -177,22 +179,117 @@ def gen_module_map(pod_name,
                     tags=tags)
 
 def _gen_includes_impl(ctx):
+    includes = []
+    includes.extend(ctx.attr.include)
+    for target in ctx.attr.include_files:
+        for f in target.files:
+            includes.append(f.path)
+
     return apple_common.new_objc_provider(
-            include=depset(ctx.attr.include))
+            include=depset(includes))
 
 _gen_includes = rule(
     implementation=_gen_includes_impl,
     attrs = {
         "include": attr.string_list(mandatory=True),
+        "include_files": attr.label_list(mandatory=True),
     }
 )
 
 def gen_includes(name,
-                 include,
+                 include=[],
+                 include_files=[],
                  tags=["xchammer"],
                  visibility=["//visibility:public"]):
     _gen_includes(name=name,
                   include=include,
+                  include_files=include_files,
                   tags=tags,
                   visibility=visibility)
+
+
+def _make_headermap_json(namespace, hdrs):
+    mappings = {}
+    for provider in hdrs:
+        for input_file in provider.files.to_list():
+            hdr = input_file
+            namespaced_key = namespace + "/" + hdr.basename
+            mappings[namespaced_key] = hdr.path
+            mappings[hdr.basename] = hdr.path
+    return struct(mappings=mappings).to_json()
+
+
+def _make_headermap_impl(ctx):
+    # Write a JSON file for *this* headermap
+    json_f = ctx.actions.declare_file(ctx.label.name + "_internal.json")
+    out = _make_headermap_json(ctx.attr.namespace, ctx.attr.hdrs)
+    ctx.actions.write(
+        content=out,
+        output=json_f
+    )
+
+    # Add a list of headermaps in JSON or hmap format
+    args = [ctx.outputs.headermap.path, json_f.path]
+    inputs = [json_f]
+
+    # Extract propagated headermaps
+    for hdr_provider in ctx.attr.deps:
+        if not hasattr(hdr_provider, "objc"):
+            continue
+
+        hdrs = hdr_provider.objc.header.to_list()
+        for hdr in hdrs:
+            if hdr.path.endswith(".hmap"):
+                # Add headermaps
+                inputs.append(hdr)
+                args.append(hdr.path)
+
+    ctx.actions.run(
+        inputs=inputs,
+        arguments=args,
+        executable=ctx.attr.headermap_builder.files.to_list()[0],
+        outputs=[ctx.outputs.headermap]
+    )
+
+    objc_provider = apple_common.new_objc_provider(
+        header=depset([ctx.outputs.headermap]),
+    )
+    return struct(
+        files=depset([ctx.outputs.headermap]),
+        providers=[objc_provider],
+        objc=objc_provider,
+        headers=depset([ctx.outputs.headermap]),
+    )
+
+def headermap(
+    tags=["xchammer"],**kwargs):
+    _headermap(tags=tags, **kwargs)
+
+# Derive a headermap from transitive headermaps
+# hdrs: a file group containing headers for this rule
+# namespace: the Apple style namespace these header should be under
+# deps: rules providing headers. i.e. an `objc_library`
+# Note: this intententionally does not propgate the include. We don't want to
+# end up with O(N) includes.
+# The pattern in PodToBUILD is:
+# - Add all deps to a headermap
+# - Include the headermap
+# TODO(Add the ability to disallow propagation of "internal" includes )
+# e.g. "MyLib.h" instead of <MyLib/MyLib.h>
+_headermap = rule(
+    implementation=_make_headermap_impl,
+    output_to_genfiles=True,
+    attrs={
+        "namespace": attr.string(mandatory=True),
+        "hdrs": attr.label_list(mandatory=True),
+        "deps": attr.label_list(mandatory=False),
+        "headermap_builder": attr.label(
+            executable=True,
+            cfg="host",
+            default=Label(
+                "//Vendor/rules_pods/BazelExtensions:headermap_builder"),
+        )
+    },
+    outputs={"headermap": "%{name}.hmap"}
+)
 

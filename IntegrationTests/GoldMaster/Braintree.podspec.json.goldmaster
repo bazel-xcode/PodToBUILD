@@ -4,7 +4,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -28,6 +29,22 @@ filegroup(
     ":Card_hdrs",
     ":PayPal_hdrs",
     ":UI_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Braintree_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":Braintree_hdrs"
+  ],
+  deps = [
+    ":Card",
+    ":Core",
+    ":PayPal",
+    ":UI"
   ],
   visibility = [
     "//visibility:public"
@@ -108,6 +125,17 @@ filegroup(
     "Core_hdrs",
     "Braintree_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Core_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -205,6 +233,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Apple-Pay_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":Apple-Pay_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Apple-Pay_includes",
   include = [
@@ -279,6 +320,19 @@ filegroup(
   srcs = [
     "Card_hdrs",
     "Braintree_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Card_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":Card_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -360,6 +414,20 @@ filegroup(
   srcs = [
     "DataCollector_hdrs",
     "Braintree_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "DataCollector_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":DataCollector_union_hdrs"
+  ],
+  deps = [
+    ":Core",
+    ":DataCollector_VendoredLibraries"
   ],
   visibility = [
     "//visibility:public"
@@ -449,6 +517,20 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "PayPal_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":PayPal_union_hdrs"
+  ],
+  deps = [
+    ":Core",
+    ":PayPalOneTouch"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "PayPal_includes",
   include = [
@@ -521,6 +603,20 @@ filegroup(
   srcs = [
     "Venmo_hdrs",
     "Braintree_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Venmo_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":Venmo_union_hdrs"
+  ],
+  deps = [
+    ":Core",
+    ":PayPalDataCollector"
   ],
   visibility = [
     "//visibility:public"
@@ -621,6 +717,20 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "UI_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":UI_union_hdrs"
+  ],
+  deps = [
+    ":Card",
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "UI_includes",
   include = [
@@ -700,6 +810,20 @@ filegroup(
   srcs = [
     "UnionPay_hdrs",
     "Braintree_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "UnionPay_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":UnionPay_union_hdrs"
+  ],
+  deps = [
+    ":Card",
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -794,6 +918,20 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "3D-Secure_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":3D-Secure_union_hdrs"
+  ],
+  deps = [
+    ":Card",
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "3D-Secure_includes",
   include = [
@@ -872,6 +1010,21 @@ filegroup(
   srcs = [
     "PayPalOneTouch_hdrs",
     "Braintree_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "PayPalOneTouch_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":PayPalOneTouch_union_hdrs"
+  ],
+  deps = [
+    ":Core",
+    ":PayPalDataCollector",
+    ":PayPalUtils"
   ],
   visibility = [
     "//visibility:public"
@@ -961,6 +1114,21 @@ filegroup(
   srcs = [
     "PayPalDataCollector_hdrs",
     "Braintree_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "PayPalDataCollector_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":PayPalDataCollector_union_hdrs"
+  ],
+  deps = [
+    ":Core",
+    ":PayPalDataCollector_VendoredLibraries",
+    ":PayPalUtils"
   ],
   visibility = [
     "//visibility:public"
@@ -1057,6 +1225,17 @@ filegroup(
     "PayPalUtils_hdrs",
     "Braintree_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "PayPalUtils_hmap",
+  namespace = "Braintree",
+  hdrs = [
+    ":PayPalUtils_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

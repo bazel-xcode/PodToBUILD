@@ -10,3 +10,4 @@ bin/Compiler
 bin/RepoTools
 compile_commands.json
 *.xcode_select_env
+*.pyc

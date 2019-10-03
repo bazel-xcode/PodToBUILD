@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -30,6 +31,17 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "boost-for-react-native_hmap",
+  namespace = "boost",
+  hdrs = [
+    ":boost-for-react-native_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

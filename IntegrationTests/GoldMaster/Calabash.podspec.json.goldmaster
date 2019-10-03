@@ -4,7 +4,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -42,6 +43,17 @@ filegroup(
     "Calabash_cxx_hdrs",
     "Calabash_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Calabash_cxx_hmap",
+  namespace = "Calabash",
+  hdrs = [
+    ":Calabash_cxx_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -152,6 +164,20 @@ filegroup(
     exclude_directories = 1
   ) + [
     ":Calabash_cxx_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Calabash_hmap",
+  namespace = "Calabash",
+  hdrs = [
+    ":Calabash_hdrs"
+  ],
+  deps = [
+    ":Calabash_cxx",
+    ":Calabash_swift"
   ],
   visibility = [
     "//visibility:public"

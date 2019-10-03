@@ -18,6 +18,8 @@ public protocol BuildOptions {
 
     var enableModules: Bool { get }
     var generateModuleMap: Bool { get }
+    var generateHeaderMap: Bool { get }
+
     // pod_support, everything, none
     var headerVisibility: String { get }
     
@@ -34,6 +36,7 @@ public struct EmptyBuildOptions: BuildOptions {
 
     public let enableModules: Bool = false
     public let generateModuleMap: Bool = false
+    public let generateHeaderMap: Bool = false
     public let headerVisibility: String = ""
     public let alwaysSplitRules: Bool = false
     public let vendorize: Bool = true
@@ -49,6 +52,7 @@ public struct BasicBuildOptions: BuildOptions {
 
     public let enableModules: Bool
     public let generateModuleMap: Bool
+    public let generateHeaderMap: Bool
     public let headerVisibility: String
     public let alwaysSplitRules: Bool
     public let vendorize: Bool
@@ -59,6 +63,7 @@ public struct BasicBuildOptions: BuildOptions {
                 trace: Bool,
                 enableModules: Bool = false,
                 generateModuleMap: Bool = false,
+                generateHeaderMap: Bool = false,
                 headerVisibility: String = "",
                 alwaysSplitRules: Bool = true,
                 vendorize: Bool = true
@@ -69,6 +74,7 @@ public struct BasicBuildOptions: BuildOptions {
         self.trace = trace
         self.enableModules = enableModules
         self.generateModuleMap = generateModuleMap
+        self.generateHeaderMap = generateHeaderMap
         self.headerVisibility = headerVisibility
         self.alwaysSplitRules = alwaysSplitRules
         self.vendorize = vendorize
@@ -133,7 +139,8 @@ public func makePrefixNodes() -> SkylarkNode {
             .basic(.string("pch_with_name_hint")),
             .basic(.string("acknowledged_target")),
             .basic(.string("gen_module_map")),
-            .basic(.string("gen_includes"))]),
+            .basic(.string("gen_includes")),
+            .basic(.string("headermap"))]),
         makeConfigSettingNodes(),
     ]
     return .lines(lineNodes)

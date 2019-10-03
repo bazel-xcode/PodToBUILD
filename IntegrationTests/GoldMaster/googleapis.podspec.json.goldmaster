@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -25,6 +26,21 @@ filegroup(
   ) + [
     ":Messages_hdrs",
     ":Services_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "googleapis_hmap",
+  namespace = "googleapis",
+  hdrs = [
+    ":googleapis_hdrs"
+  ],
+  deps = [
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin",
+    ":Messages",
+    ":Services"
   ],
   visibility = [
     "//visibility:public"
@@ -110,6 +126,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Messages_hmap",
+  namespace = "googleapis",
+  hdrs = [
+    ":Messages_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Protobuf:Protobuf"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Messages_includes",
   include = [
@@ -186,6 +215,20 @@ filegroup(
   srcs = [
     "Services_hdrs",
     "googleapis_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Services_hmap",
+  namespace = "googleapis",
+  hdrs = [
+    ":Services_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
+    ":Messages"
   ],
   visibility = [
     "//visibility:public"

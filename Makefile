@@ -62,6 +62,19 @@ build-test: test-impl
 
 # Run the integration tests a few times. We want to make sure output is working
 # and stable.
+debug-spm: CONFIG = debug
+debug-spm: SWIFT_OPTS= --configuration $(CONFIG) -Xswiftc -static-stdlib
+debug-spm: build-impl-spm
+
+build-example: EXAMPLE=Examples/PINCache.podspec.json
+build-example: CONFIG = debug
+build-example: debug-spm
+	@ditto .build/$(CONFIG)/Compiler bin/Compiler
+	@ditto .build/$(CONFIG)/RepoTools bin/RepoTools
+	stat $(EXAMPLE) || exit 1
+	bin/Compiler $(EXAMPLE)
+
+
 integration-test: release
 	for i in $$(seq 1 10); do ./IntegrationTests/RunTests.sh; done
 

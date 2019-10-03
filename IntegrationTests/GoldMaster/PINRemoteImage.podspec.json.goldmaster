@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -25,6 +26,20 @@ filegroup(
   ) + [
     ":FLAnimatedImage_hdrs",
     ":PINCache_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "PINRemoteImage_hmap",
+  namespace = "PINRemoteImage",
+  hdrs = [
+    ":PINRemoteImage_hdrs"
+  ],
+  deps = [
+    ":FLAnimatedImage",
+    ":PINCache"
   ],
   visibility = [
     "//visibility:public"
@@ -109,6 +124,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Core_hmap",
+  namespace = "PINRemoteImage",
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/PINOperation:PINOperation"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Core_includes",
   include = [
@@ -188,6 +216,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "iOS_hmap",
+  namespace = "PINRemoteImage",
+  hdrs = [
+    ":iOS_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "iOS_includes",
   include = [
@@ -247,6 +288,19 @@ filegroup(
   srcs = [
     "OSX_hdrs",
     "PINRemoteImage_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "OSX_hmap",
+  namespace = "PINRemoteImage",
+  hdrs = [
+    ":OSX_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -317,6 +371,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "tvOS_hmap",
+  namespace = "PINRemoteImage",
+  hdrs = [
+    ":tvOS_union_hdrs"
+  ],
+  deps = [
+    ":iOS"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "tvOS_includes",
   include = [
@@ -378,6 +445,20 @@ filegroup(
   srcs = [
     "FLAnimatedImage_hdrs",
     "PINRemoteImage_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "FLAnimatedImage_hmap",
+  namespace = "PINRemoteImage",
+  hdrs = [
+    ":FLAnimatedImage_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/FLAnimatedImage:FLAnimatedImage",
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -455,6 +536,20 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "WebP_hmap",
+  namespace = "PINRemoteImage",
+  hdrs = [
+    ":WebP_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/libwebp:libwebp",
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "WebP_includes",
   include = [
@@ -521,6 +616,20 @@ filegroup(
   srcs = [
     "PINCache_hdrs",
     "PINRemoteImage_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "PINCache_hmap",
+  namespace = "PINRemoteImage",
+  hdrs = [
+    ":PINCache_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/PINCache:PINCache",
+    ":Core"
   ],
   visibility = [
     "//visibility:public"

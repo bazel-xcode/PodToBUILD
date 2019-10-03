@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -42,6 +43,19 @@ filegroup(
     exclude_directories = 1
   ) + [
     ":Default_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "IGListKit_hmap",
+  namespace = "IGListKit",
+  hdrs = [
+    ":IGListKit_hdrs"
+  ],
+  deps = [
+    ":Default"
   ],
   visibility = [
     "//visibility:public"
@@ -134,6 +148,17 @@ filegroup(
     "Diffing_cxx_hdrs",
     "IGListKit_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Diffing_cxx_hmap",
+  namespace = "IGListKit",
+  hdrs = [
+    ":Diffing_cxx_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -246,6 +271,19 @@ filegroup(
   srcs = [
     "Diffing_hdrs",
     "IGListKit_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Diffing_hmap",
+  namespace = "IGListKit",
+  hdrs = [
+    ":Diffing_union_hdrs"
+  ],
+  deps = [
+    ":Diffing_cxx"
   ],
   visibility = [
     "//visibility:public"
@@ -373,6 +411,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Default_cxx_hmap",
+  namespace = "IGListKit",
+  hdrs = [
+    ":Default_cxx_union_hdrs"
+  ],
+  deps = [
+    ":Diffing"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Default_cxx_includes",
   include = [
@@ -491,6 +542,20 @@ filegroup(
   srcs = [
     "Default_hdrs",
     "IGListKit_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Default_hmap",
+  namespace = "IGListKit",
+  hdrs = [
+    ":Default_union_hdrs"
+  ],
+  deps = [
+    ":Default_cxx",
+    ":Diffing"
   ],
   visibility = [
     "//visibility:public"

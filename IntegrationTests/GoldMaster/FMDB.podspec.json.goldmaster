@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -24,6 +25,19 @@ filegroup(
     exclude_directories = 1
   ) + [
     ":standard_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "FMDB_hmap",
+  namespace = "FMDB",
+  hdrs = [
+    ":FMDB_hdrs"
+  ],
+  deps = [
+    ":standard"
   ],
   visibility = [
     "//visibility:public"
@@ -99,6 +113,17 @@ filegroup(
     "standard_hdrs",
     "FMDB_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "standard_hmap",
+  namespace = "FMDB",
+  hdrs = [
+    ":standard_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -183,6 +208,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "FTS_hmap",
+  namespace = "FMDB",
+  hdrs = [
+    ":FTS_union_hdrs"
+  ],
+  deps = [
+    ":standard"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "FTS_includes",
   include = [
@@ -252,6 +290,17 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "standalone_hmap",
+  namespace = "FMDB",
+  hdrs = [
+    ":standalone_union_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "standalone_includes",
   include = [
@@ -314,6 +363,19 @@ filegroup(
   srcs = [
     "SQLCipher_hdrs",
     "FMDB_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "SQLCipher_hmap",
+  namespace = "FMDB",
+  hdrs = [
+    ":SQLCipher_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/SQLCipher:SQLCipher"
   ],
   visibility = [
     "//visibility:public"

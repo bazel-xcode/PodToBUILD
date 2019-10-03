@@ -57,6 +57,7 @@ class RepositoryContext(object):
             trace = False,
             enable_modules = True,
             generate_module_map = True,
+            generate_header_map = False,
             header_visibility = "pod_support",
             src_root = None):
         self.target_name = target_name
@@ -69,6 +70,7 @@ class RepositoryContext(object):
         self.trace = trace
         self.enable_modules = enable_modules
         self.generate_module_map = generate_module_map
+        self.generate_header_map = generate_header_map
         self.header_visibility = header_visibility
         self.src_root = src_root
 
@@ -237,7 +239,9 @@ def _update_repo_impl(repository_ctx):
                 "--header_visibility",
                 repository_ctx.header_visibility,
                 "--generate_module_map",
-                _cli_bool(repository_ctx.generate_module_map)
+                _cli_bool(repository_ctx.generate_module_map),
+                "--generate_header_map",
+                _cli_bool(repository_ctx.generate_header_map)
             ])
             substitutions[INIT_REPO_PLACEHOLDER] = " ".join(entry)
         else:
@@ -285,6 +289,7 @@ def new_pod_repository(name,
             trace = False,
             enable_modules = True,
             generate_module_map = True,
+            generate_header_map = False,
             owner = "", # This is a Noop
             header_visibility = "pod_support"):
     """Declare a repository for a Pod
@@ -366,6 +371,7 @@ def new_pod_repository(name,
             trace = trace,
             enable_modules = enable_modules,
             generate_module_map = generate_module_map,
+            generate_header_map = generate_header_map,
             header_visibility = header_visibility,
             src_root = SRC_ROOT)
     _update_repo_impl(repository_ctx)

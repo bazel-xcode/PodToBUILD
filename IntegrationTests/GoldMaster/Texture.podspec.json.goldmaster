@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -34,6 +35,22 @@ filegroup(
     ":MapKit_hdrs",
     ":Photos_hdrs",
     ":AssetsLibrary_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Texture_hmap",
+  namespace = "AsyncDisplayKit",
+  hdrs = [
+    ":Texture_hdrs"
+  ],
+  deps = [
+    ":AssetsLibrary",
+    ":MapKit",
+    ":PINRemoteImage",
+    ":Photos"
   ],
   visibility = [
     "//visibility:public"
@@ -120,6 +137,17 @@ filegroup(
     "Core_cxx_hdrs",
     "Texture_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Core_cxx_hmap",
+  namespace = "AsyncDisplayKit",
+  hdrs = [
+    ":Core_cxx_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -213,6 +241,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Core_hmap",
+  namespace = "AsyncDisplayKit",
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  deps = [
+    ":Core_cxx"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Core_includes",
   include = [
@@ -296,6 +337,21 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "PINRemoteImage_hmap",
+  namespace = "AsyncDisplayKit",
+  hdrs = [
+    ":PINRemoteImage_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/PINRemoteImage:PINCache",
+    "//Vendor/PINRemoteImage:iOS",
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "PINRemoteImage_includes",
   include = [
@@ -372,6 +428,20 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "IGListKit_hmap",
+  namespace = "AsyncDisplayKit",
+  hdrs = [
+    ":IGListKit_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/IGListKit:IGListKit",
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "IGListKit_includes",
   include = [
@@ -441,6 +511,20 @@ filegroup(
   srcs = [
     "Yoga_hdrs",
     "Texture_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Yoga_hmap",
+  namespace = "AsyncDisplayKit",
+  hdrs = [
+    ":Yoga_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Yoga:Yoga",
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -522,6 +606,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "MapKit_hmap",
+  namespace = "AsyncDisplayKit",
+  hdrs = [
+    ":MapKit_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "MapKit_includes",
   include = [
@@ -598,6 +695,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "Photos_hmap",
+  namespace = "AsyncDisplayKit",
+  hdrs = [
+    ":Photos_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "Photos_includes",
   include = [
@@ -669,6 +779,19 @@ filegroup(
   srcs = [
     "AssetsLibrary_hdrs",
     "Texture_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "AssetsLibrary_hmap",
+  namespace = "AsyncDisplayKit",
+  hdrs = [
+    ":AssetsLibrary_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"

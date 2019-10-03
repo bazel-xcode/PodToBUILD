@@ -6,4 +6,5 @@ objc_library(name="all", deps=[
     "//Vendor/React:RCTNetwork",
     "//Vendor/React:RCTText",
     "//Vendor/React:RCTWebSocket",
-    "//Vendor/React:RCTAnimation"])
+    "//Vendor/React:RCTAnimation",
+    "//Vendor/React:RCTLinkingIOS"])

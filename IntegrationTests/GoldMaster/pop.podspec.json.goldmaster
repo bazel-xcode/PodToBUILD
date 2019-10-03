@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -33,6 +34,17 @@ filegroup(
     "pop_cxx_hdrs",
     "pop_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "pop_cxx_hmap",
+  namespace = "pop",
+  hdrs = [
+    ":pop_cxx_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -112,6 +124,19 @@ filegroup(
     exclude_directories = 1
   ) + [
     ":pop_cxx_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "pop_hmap",
+  namespace = "pop",
+  hdrs = [
+    ":pop_hdrs"
+  ],
+  deps = [
+    ":pop_cxx"
   ],
   visibility = [
     "//visibility:public"

@@ -3,7 +3,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -43,6 +44,19 @@ filegroup(
     exclude_directories = 1
   ) + [
     ":Core_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "React_hmap",
+  namespace = "React",
+  hdrs = [
+    ":React_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -141,6 +155,17 @@ filegroup(
     "Core_hdrs",
     "React_hdrs"
   ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Core_hmap",
+  namespace = "React",
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -252,6 +277,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "ART_hmap",
+  namespace = "React",
+  hdrs = [
+    ":ART_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "ART_includes",
   include = [
@@ -321,6 +359,19 @@ filegroup(
   srcs = [
     "RCTActionSheet_hdrs",
     "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "RCTActionSheet_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTActionSheet_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -400,6 +451,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "RCTAdSupport_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTAdSupport_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "RCTAdSupport_includes",
   include = [
@@ -469,6 +533,19 @@ filegroup(
   srcs = [
     "RCTGeolocation_hdrs",
     "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "RCTGeolocation_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTGeolocation_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -548,6 +625,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "RCTImage_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTImage_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "RCTImage_includes",
   include = [
@@ -617,6 +707,19 @@ filegroup(
   srcs = [
     "RCTNetwork_hdrs",
     "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "RCTNetwork_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTNetwork_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -696,6 +799,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "RCTPushNotification_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTPushNotification_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "RCTPushNotification_includes",
   include = [
@@ -765,6 +881,19 @@ filegroup(
   srcs = [
     "RCTSettings_hdrs",
     "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "RCTSettings_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTSettings_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -844,6 +973,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "RCTText_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTText_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "RCTText_includes",
   include = [
@@ -913,6 +1055,19 @@ filegroup(
   srcs = [
     "RCTVibration_hdrs",
     "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "RCTVibration_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTVibration_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"
@@ -992,6 +1147,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "RCTWebSocket_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTWebSocket_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "RCTWebSocket_includes",
   include = [
@@ -1061,6 +1229,19 @@ filegroup(
   srcs = [
     "RCTLinkingIOS_hdrs",
     "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "RCTLinkingIOS_hmap",
+  namespace = "React",
+  hdrs = [
+    ":RCTLinkingIOS_union_hdrs"
+  ],
+  deps = [
+    ":Core"
   ],
   visibility = [
     "//visibility:public"

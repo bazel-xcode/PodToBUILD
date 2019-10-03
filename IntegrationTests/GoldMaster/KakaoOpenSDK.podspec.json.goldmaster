@@ -4,7 +4,8 @@ load(
   "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
-  "gen_includes"
+  "gen_includes",
+  "headermap"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -28,6 +29,19 @@ filegroup(
   srcs = [
     "KakaoOpenSDK_hdrs",
     "KakaoOpenSDK_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "KakaoOpenSDK_hmap",
+  namespace = "KakaoOpenSDK",
+  hdrs = [
+    ":KakaoOpenSDK_union_hdrs"
+  ],
+  deps = [
+    ":KakaoOpenSDK_VendoredFrameworks"
   ],
   visibility = [
     "//visibility:public"
@@ -93,6 +107,19 @@ filegroup(
   srcs = [
     "KakaoOpenSDK_hdrs",
     "KakaoOpenSDK_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "KakaoOpenSDK_hmap",
+  namespace = "KakaoOpenSDK",
+  hdrs = [
+    ":KakaoOpenSDK_union_hdrs"
+  ],
+  deps = [
+    ":KakaoOpenSDK_VendoredFrameworks"
   ],
   visibility = [
     "//visibility:public"
@@ -175,6 +202,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "KakaoNavi_hmap",
+  namespace = "KakaoOpenSDK",
+  hdrs = [
+    ":KakaoNavi_union_hdrs"
+  ],
+  deps = [
+    ":KakaoNavi_VendoredFrameworks"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "KakaoNavi_includes",
   include = [
@@ -251,6 +291,19 @@ filegroup(
     "//visibility:public"
   ]
 )
+headermap(
+  name = "KakaoLink_hmap",
+  namespace = "KakaoOpenSDK",
+  hdrs = [
+    ":KakaoLink_union_hdrs"
+  ],
+  deps = [
+    ":KakaoLink_VendoredFrameworks"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 gen_includes(
   name = "KakaoLink_includes",
   include = [
@@ -322,6 +375,19 @@ filegroup(
   srcs = [
     "KakaoS2_hdrs",
     "KakaoOpenSDK_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "KakaoS2_hmap",
+  namespace = "KakaoOpenSDK",
+  hdrs = [
+    ":KakaoS2_union_hdrs"
+  ],
+  deps = [
+    ":KakaoS2_VendoredFrameworks"
   ],
   visibility = [
     "//visibility:public"
