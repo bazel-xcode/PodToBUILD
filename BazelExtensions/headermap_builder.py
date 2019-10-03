@@ -7,9 +7,9 @@ import os
 import struct
 import sys
 import headermap_tool
+import tempfile
 
 # The data structure that LLVM uses is { mappings: { name: path } }
-
 
 def main():
     """ Helper program for headermap rule"""
@@ -21,7 +21,7 @@ def main():
         return
 
     # We write an intermediate JSON file, which represents the trans hmap
-    merge_file = "intermediate.json"
+    fd, merge_file = tempfile.mkstemp()
     with open(json_path, "r") as f:
         input_data = json.load(f)
         # For every additional headermap, read it in and merge
@@ -33,12 +33,7 @@ def main():
         with open(merge_file, "w") as f:
             json.dump(input_data, f, indent=2)
 
-    try:
         headermap_tool.action_write("write", [merge_file, output_path])
-    except:
-        # It's possible to hit an empty hmap.
-        # Consider having a warning
-        headermap_tool.action_write("write", [json_path, output_path])
 
 if __name__ == '__main__':
     main()
