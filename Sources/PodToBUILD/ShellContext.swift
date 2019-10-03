@@ -216,6 +216,9 @@ class ShellTask : NSObject {
         if exception != nil {
             if stream == false {
                 self.standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
+                if self.printOutput {
+                    FileHandle.standardError.write(self.standardErrorData)
+                }
             }
             return ShellTaskResult(standardErrorData: standardErrorData,
                                    standardOutputData: Data(),
@@ -225,6 +228,10 @@ class ShellTask : NSObject {
         if stream == false {
             self.standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
             self.standardOutputData = stdout.fileHandleForReading.readDataToEndOfFile()
+            if self.printOutput {
+                FileHandle.standardError.write(self.standardErrorData)
+                FileHandle.standardError.write(self.standardOutputData)
+            }
         }
         return ShellTaskResult(standardErrorData: standardErrorData,
                                standardOutputData: standardOutputData,
