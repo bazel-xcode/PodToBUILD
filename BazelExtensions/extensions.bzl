@@ -20,7 +20,7 @@ def _acknowledgement_merger_impl(ctx):
         args.append(f.path)
 
     # Write the final output. Bazel only writes the file when required
-    ctx.actions.run_shell(
+    ctx.actions.run(
         inputs=concat,
         arguments=args,
         executable=ctx.attr.merger.files.to_list()[0],
