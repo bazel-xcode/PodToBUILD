@@ -27,3 +27,7 @@ for f in $(find Examples/PodSpecs/*); do
 		exit 1
     fi
 done
+
+
+# Test that acknowledgement plist generation works
+tools/bazelwrapper build --incompatible_depset_is_not_iterable=false IntegrationTests/Acknowlegements/...

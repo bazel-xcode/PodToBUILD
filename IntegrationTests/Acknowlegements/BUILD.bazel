@@ -1,0 +1,39 @@
+load(
+  "//BazelExtensions:extensions.bzl",
+  "acknowledgments_plist",
+  "acknowledged_target",
+)
+
+acknowledgments_plist(
+  name = "Dep_acknowlegement",
+  output_name = "dep_acknowledgement",
+  deps = [
+    ":Dep1_acknowledgement",
+    ":Dep2_acknowledgement",
+  ],
+  merger = "//BazelExtensions:acknowledgement_merger",
+)
+
+filegroup(
+    name = "acknowledgments_plist1",
+    srcs = ["acknowledgement1.plist"],
+)
+
+filegroup(
+    name = "acknowledgments_plist2",
+    srcs = ["acknowledgement2.plist"],
+)
+
+acknowledged_target(
+  name = "Dep1_acknowledgement",
+  deps = [],
+  value = ":acknowledgments_plist1",
+  merger = "//BazelExtensions:acknowledgement_merger",
+)
+
+acknowledged_target(
+  name = "Dep2_acknowledgement",
+  deps = [],
+  value = ":acknowledgments_plist2",
+  merger = "//BazelExtensions:acknowledgement_merger",
+)
