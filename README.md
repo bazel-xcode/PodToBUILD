@@ -70,7 +70,7 @@ bazel run @rules_pods//:update_pods -- --src_root $PWD
 ```
 
 In addition to out of band updating, labels are formed via the convention
-`//Vendor:__POD_NAME__:__TARGET__`. Otherwise, the API of `new_pods_repository`
+`//Vendor/__POD_NAME__:__TARGET__`. Otherwise, the API of `new_pods_repository`
 is identical across `WORKSPACE` and `Pods.WORKSPACE`, the only difference is
 that the `load` statement isn't required in `Pods.WORKSPACE`.
 
