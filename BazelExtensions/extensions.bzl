@@ -112,12 +112,13 @@ def pch_with_name_hint(hint, sources):
     return None
 
 
-def _make_module_map(pod_name, module_name, deps):
+def _make_module_map(pod_name, module_name, deps, is_system):
     # Up some dirs to the compilation root
     # bazel-out/ios_x86_64-fastbuild/genfiles/external/__Pod__
     relative_path = "../../../../../../"
 
-    template = "module " + module_name + " {\n"
+    system_tag = " [system] "
+    template = "module " + module_name + (system_tag if is_system else "" ) + " {\n"
     template += "    export * \n"
     for provider in deps:
         for input_file in provider.files.to_list():
@@ -129,8 +130,7 @@ def _make_module_map(pod_name, module_name, deps):
     return template
 
 def _gen_module_map_impl(ctx):
-  # We figure out how to build
-  out = _make_module_map(ctx.attr.pod_name, ctx.attr.module_name, ctx.attr.hdrs)
+  out = _make_module_map(ctx.attr.pod_name, ctx.attr.module_name, ctx.attr.hdrs, ctx.attr.is_system)
   ctx.actions.write(
       content=out,
       output=ctx.outputs.module_map
@@ -154,6 +154,7 @@ _gen_module_map = rule(
         "module_name": attr.string(mandatory=True),
         "dir_name": attr.string(mandatory=True),
         "module_map_name": attr.string(mandatory=True),
+        "is_system": attr.bool(mandatory=True),
     },
     outputs = { "module_map": "%{dir_name}/%{module_map_name}" }
 )
@@ -164,17 +165,26 @@ def gen_module_map(pod_name,
                    dep_hdrs=[],
                    module_map_name="module.modulemap",
                    tags=["xchammer"],
+                   is_system=True,
                    visibility=["//visibility:public"]):
     """
     Generate a module map based on a list of header file groups
+
+    pod_name: the name of the pod
+    dir_name: the name of the output directory, this is generally included by the compiler
+    module_name: the name of the module
+    is_system: if the module is system module or not. This is useful for
+               PodToBUILD to ignore all pod warnings by default
     """
     # TODO:Modules change the name to dir_name -> pod_name
+    # It's also kind of weird that the rule name is changed inside of here.
     _gen_module_map(name = dir_name + "_module_map_file",
                     pod_name=pod_name,
                     dir_name=dir_name,
                     module_name=module_name,
                     hdrs=dep_hdrs,
                     module_map_name=module_map_name,
+                    is_system=is_system,
                     visibility=visibility,
                     tags=tags)
 
