@@ -301,6 +301,21 @@ This should eventually be handled by default.
 
 ## FAQ
 
+### How can I find the archive URL of a Pod?
+
+Generally, this is provided by the Vendor in question. If the URL is not
+available, do a search on [CocoaPods](https://cocoapods.org) for the pod, and
+locate the `source` from the Pod.
+
+For GitHub dependencies, it's possible to get the zip archive of the repository
+in question directly off Github.
+
+Github archive and release URLs follows the convention:
+`https://github.com/${organization,user}/${repo}/archive/${commit,branch,tag}.zip`
+
+So to get a zip archive of Pinterest's PINRemoteImage for the commit `ebe69fb9880ca6afe5e954caaf150d2ac7607c3b` use the URL:
+`https://github.com/pinterest/PINRemoteImage/archive/ebe69fb9880ca6afe5e954caaf150d2ac7607c3b.zip`
+
 ### How many pods are supported?
 
 Most ObjC/C++/C Pods should work out of the box and the goal is support all
