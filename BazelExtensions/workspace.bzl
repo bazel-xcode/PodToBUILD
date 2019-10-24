@@ -53,6 +53,10 @@ def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
 
 def _link_local_repo(repository_ctx, target_name, url):
     cd = _exec(repository_ctx, ["pwd"]).stdout.split("\n")[0]
+    if url.startswith("/"):
+      url = url
+    else:
+      url = cd + "/" + url
     from_dir = url + "/"
     to_dir = cd + "/"
     all_files = _exec(repository_ctx, ["ls", url]).stdout.split("\n")
@@ -154,10 +158,20 @@ def _impl(repository_ctx):
     # Build up the script
     script = ""
 
-    # For now, we curl the podspec url before the script runs
     if repository_ctx.attr.podspec_url:
-        script += "curl -O " + repository_ctx.attr.podspec_url
-        script += "\n"
+        # For now, we curl the podspec url before the script runs
+        if repository_ctx.attr.podspec_url.startswith("http"):
+            script += "curl -O " + repository_ctx.attr.podspec_url
+            script += "\n"
+        else:
+            # Dump a podspec into this directory
+            if repository_ctx.attr.podspec_url.startswith("/"):
+                script += "ditto " + repository_ctx.attr.podspec_url + " ."
+                script += "\n"
+            else:
+                workspace_dir = _exec(repository_ctx, ["pwd"]).stdout.split("\n")[0]
+                script += "ditto " + workspace_dir + "/" + repository_ctx.attr.podspec_url + " ."
+                script += "\n"
 
     if repository_ctx.attr.install_script_tpl:
         for sub in substitutions:
@@ -183,8 +197,8 @@ pod_repo_ = repository_rule(
         "install_script_tpl": attr.string(),
         "inhibit_warnings": attr.bool(default=False, mandatory=True),
         "trace": attr.bool(default=False, mandatory=True),
-        "enable_modules": attr.bool(default=True, mandatory=True),
-        "generate_module_map": attr.bool(default=True, mandatory=True),
+        "enable_modules": attr.bool(default=False, mandatory=True),
+        "generate_module_map": attr.bool(default=False, mandatory=True),
         "header_visibility": attr.string(),
     }
 )

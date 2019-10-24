@@ -71,7 +71,8 @@ public struct SwiftLibrary: BazelTarget {
                 .named(name: "name", value: name.toSkylark()),
                 .named(name: "srcs", value: sourceFiles.toSkylark()),
                 .named(name: "deps", value: deps.sorted(by: (<)).toSkylark()),
-                .named(name: "data", value: data.toSkylark())
+                .named(name: "data", value: data.toSkylark()),
+                .named(name: "visibility", value: .list(["//visibility:public"]))
             ])
     }
 }
