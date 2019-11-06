@@ -380,13 +380,13 @@ public enum RepoActions {
 
         let supportBUILDFile = assetRoot.appendingPathComponent("support")
             .appendingPathExtension("BUILD")
-        let supportBUILDFileFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "BUILD")
+        let supportBUILDFileFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "BUILD.bazel")
         shell.symLink(from: supportBUILDFile.relativePath, to: supportBUILDFileFilePath.path)
 
         // Write the root BUILD file
         let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
         let buildFileOut = buildFileSkylarkCompiler.run()
-        let buildFilePath = URL(fileURLWithPath: "BUILD")
+        let buildFilePath = URL(fileURLWithPath: "BUILD.bazel")
         shell.write(value: buildFileOut, toPath: buildFilePath)
     }
 
