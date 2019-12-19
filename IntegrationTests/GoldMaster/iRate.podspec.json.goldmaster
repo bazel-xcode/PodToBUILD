@@ -40,9 +40,7 @@ headermap(
   hdrs = [
     ":iRate_hdrs"
   ],
-  deps = [
-    ":iRate_Bundle_iRate"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

@@ -47,9 +47,7 @@ headermap(
   hdrs = [
     ":Stripe_hdrs"
   ],
-  deps = [
-    ":Stripe_Bundle_Stripe"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

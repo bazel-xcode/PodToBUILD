@@ -41,7 +41,6 @@ headermap(
     "//Vendor/GTMSessionFetcher:Core",
     "//Vendor/GoogleToolboxForMac:NSDictionary_URLArguments",
     "//Vendor/GoogleToolboxForMac:NSString_URLArguments",
-    ":GoogleSignIn_Bundle_GoogleSignIn",
     ":GoogleSignIn_VendoredFrameworks"
   ],
   visibility = [
