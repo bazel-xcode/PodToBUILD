@@ -82,9 +82,7 @@ headermap(
   hdrs = [
     ":youtube-ios-player-helper_cxx_union_hdrs"
   ],
-  deps = [
-    ":youtube-ios-player-helper_Bundle_Assets"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -158,7 +156,6 @@ objc_library(
     ]
   ),
   deps = [
-    ":youtube-ios-player-helper_Bundle_Assets",
     ":youtube-ios-player-helper_cxx_includes"
   ],
   copts = select(
@@ -212,9 +209,7 @@ swift_library(
       )
     }
   ),
-  deps = [
-    ":youtube-ios-player-helper_Bundle_Assets"
-  ],
+  deps = [],
   data = []
 )
 filegroup(
@@ -267,7 +262,6 @@ headermap(
     ":youtube-ios-player-helper_hdrs"
   ],
   deps = [
-    ":youtube-ios-player-helper_Bundle_Assets",
     ":youtube-ios-player-helper_cxx",
     ":youtube-ios-player-helper_swift"
   ],
@@ -344,7 +338,6 @@ objc_library(
     ]
   ),
   deps = [
-    ":youtube-ios-player-helper_Bundle_Assets",
     ":youtube-ios-player-helper_cxx",
     ":youtube-ios-player-helper_swift",
     ":youtube-ios-player-helper_includes"
