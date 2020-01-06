@@ -47,9 +47,7 @@ headermap(
   hdrs = [
     ":Stripe_hdrs"
   ],
-  deps = [
-    ":Stripe_Bundle_Stripe"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -94,7 +92,6 @@ objc_library(
     "AddressBook"
   ],
   deps = [
-    ":Stripe_Bundle_Stripe",
     ":Stripe_includes"
   ],
   copts = select(

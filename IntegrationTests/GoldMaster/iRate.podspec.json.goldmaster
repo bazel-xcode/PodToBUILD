@@ -40,9 +40,7 @@ headermap(
   hdrs = [
     ":iRate_hdrs"
   ],
-  deps = [
-    ":iRate_Bundle_iRate"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -80,7 +78,6 @@ objc_library(
     ]
   ),
   deps = [
-    ":iRate_Bundle_iRate",
     ":iRate_includes"
   ],
   copts = select(

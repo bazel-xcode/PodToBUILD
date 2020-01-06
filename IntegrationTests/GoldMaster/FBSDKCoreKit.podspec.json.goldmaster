@@ -98,9 +98,7 @@ headermap(
   hdrs = [
     ":FBSDKCoreKit_hdrs"
   ],
-  deps = [
-    ":FBSDKCoreKit_Bundle_FacebookSDKStrings"
-  ] + select(
+  deps = select(
     {
       "//conditions:default": [
         "//Vendor/Bolts:Bolts"
@@ -295,9 +293,7 @@ objc_library(
       ]
     }
   ),
-  deps = [
-    ":FBSDKCoreKit_Bundle_FacebookSDKStrings"
-  ] + select(
+  deps = select(
     {
       "//conditions:default": [
         "//Vendor/Bolts:Bolts"

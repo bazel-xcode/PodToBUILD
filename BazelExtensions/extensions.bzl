@@ -192,7 +192,7 @@ def _gen_includes_impl(ctx):
     includes = []
     includes.extend(ctx.attr.include)
     for target in ctx.attr.include_files:
-        for f in target.files:
+        for f in target.files.to_list():
             includes.append(f.path)
 
     return apple_common.new_objc_provider(
