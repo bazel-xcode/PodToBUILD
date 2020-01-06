@@ -45,5 +45,8 @@ swift_library(
       "Source/Resources/Fonts/**/*.ttf"
     ],
     exclude_directories = 1
-  )
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )

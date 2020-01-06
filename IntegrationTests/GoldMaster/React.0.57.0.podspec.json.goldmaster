@@ -1294,7 +1294,10 @@ swift_library(
     ":Core",
     ":RCTWebSocket"
   ],
-  data = []
+  data = [],
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "DevSupport_hdrs",
