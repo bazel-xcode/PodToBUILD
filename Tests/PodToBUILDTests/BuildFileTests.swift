@@ -165,7 +165,7 @@ class BuildFileTests: XCTestCase {
 
     func testLibFromPodspec() {
         let podspec = examplePodSpecNamed(name: "IGListKit")
-        let lib = ObjcLibrary(rootSpec: nil, spec: podspec)
+        let lib = ObjcLibrary(parentSpecs: [], spec: podspec)
 
         let expectedFrameworks: AttrSet<[String]> = AttrSet(multi: MultiPlatform(
             ios: ["UIKit"],
@@ -253,7 +253,7 @@ class BuildFileTests: XCTestCase {
 
     func testHeaderIncExclExtraction() {
         let podSpec = examplePodSpecNamed(name: "PINRemoteImage")
-        let library = ObjcLibrary(rootSpec: podSpec, spec: podSpec.subspecs.first{ $0.name == "Core" }!)
+        let library = ObjcLibrary(parentSpecs: [podSpec], spec: podSpec.subspecs.first{ $0.name == "Core" }!)
 
         ["Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
 		 "Source/Classes/PINCache/*.h"].forEach{ src in
@@ -267,7 +267,7 @@ class BuildFileTests: XCTestCase {
 
     func testHeaderIncAutoGlob() {
         let podSpec = examplePodSpecNamed(name: "UICollectionViewLeftAlignedLayout")
-        let library = ObjcLibrary(rootSpec: nil, spec: podSpec)
+        let library = ObjcLibrary(parentSpecs: [], spec: podSpec)
 
         XCTAssert(
             library.headers.include.basic.denormalize().contains("UICollectionViewLeftAlignedLayout/**/*.h")

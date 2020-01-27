@@ -20,14 +20,19 @@ public struct SwiftLibrary: BazelTarget {
     public let externalName: String
     public let data: GlobNode
 
-    init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = [],
+    init(parentSpecs: [PodSpec], spec: PodSpec, extraDeps: [String] = [],
             isSplitDep: Bool = false) {
-        let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].compactMap { $0 })
-        self.isTopLevelTarget = rootSpec == nil && isSplitDep == false
+        let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: parentSpecs + [spec])
+        self.isTopLevelTarget = parentSpecs.isEmpty && isSplitDep == false
 
         let podName = GetBuildOptions().podName
-		self.name = computeLibName(rootSpec: rootSpec, spec: spec, podName:
-				podName, isSplitDep: isSplitDep, sourceType: .swift)
+        self.name = computeLibName(
+                parentSpecs: parentSpecs,
+                spec: spec,
+                podName: podName,
+                isSplitDep: isSplitDep,
+                sourceType: .swift
+        )
 
         let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
         let implFiles = extractFiles(fromPattern: allSourceFiles,
@@ -43,7 +48,7 @@ public struct SwiftLibrary: BazelTarget {
         self.sourceFiles = GlobNode(
             include: implFiles,
             exclude: implExcludes)
-        self.externalName = rootSpec?.name ?? spec.name
+        self.externalName = parentSpecs.first?.name ?? spec.name
 
         let resourceFiles = ((spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
             strArr.filter({ (str: String) -> Bool in

@@ -224,11 +224,11 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     /// to split C++ and ObjC apart.
     /// TODO: Add bazel-discuss thread on this matter.
     /// isSplitDep indicates if the library is a split language dependency
-    init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = [],
+    init(parentSpecs: [PodSpec] = [], spec: PodSpec, extraDeps: [String] = [],
             isSplitDep: Bool = false,
             sourceType: BazelSourceLibType = .objc) {
-        let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].compactMap { $0 })
-        self.isTopLevelTarget = rootSpec == nil && isSplitDep == false
+        let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: parentSpecs + [spec])
+        self.isTopLevelTarget = parentSpecs.isEmpty && isSplitDep == false
         let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
 
         let includeFileTypes = sourceType == .cpp ? CppLikeFileTypes :
@@ -248,9 +248,9 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.publicHeaders = (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.publicHeaders))).map{ Set($0) }
     
         let podName = GetBuildOptions().podName
-        self.name = computeLibName(rootSpec: rootSpec, spec: spec, podName:
+        self.name = computeLibName(parentSpecs: parentSpecs, spec: spec, podName:
                 podName, isSplitDep: isSplitDep, sourceType: sourceType)
-        let externalName = rootSpec?.name ?? spec.name
+        let externalName = parentSpecs.first?.name ?? spec.name
 
         let xcconfigTransformer =
             XCConfigTransformer.defaultTransformer(externalName: externalName,
@@ -527,7 +527,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 ]
             ))
 
-        if lib.includes.count > 0 { 
+        if lib.includes.count > 0 {
             inlineSkylark.append(.functionCall(
                 name: "gen_includes",
                 arguments: [
