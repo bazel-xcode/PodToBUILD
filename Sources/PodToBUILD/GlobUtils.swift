@@ -121,12 +121,16 @@ public class Glob: Collection {
 
         var results = [String]()
         var parts = pattern.components(separatedBy: "**")
-        let firstPart = parts.removeFirst()
+        var firstPart = parts.removeFirst()
         var lastPart = parts.joined(separator: "**")
 
         let fileManager = FileManager.default
 
         var directories: [String]
+
+        if firstPart.isEmpty {
+            firstPart = "."
+        }
 
         do {
             directories = try fileManager.subpathsOfDirectory(atPath: firstPart).compactMap { subpath in

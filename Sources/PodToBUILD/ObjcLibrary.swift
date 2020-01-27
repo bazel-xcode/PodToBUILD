@@ -466,12 +466,26 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 return target is ObjcLibrary
             }.map { ($0 + "_hdrs").toSkylark() }
         }
-       
-        let podSupportHeaders = GlobNode(include: AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*"]),
-                                                         exclude: AttrSet<Set<String>>.empty).toSkylark()
+
+        let podSupportHeadersGlob = Set([PodSupportSystemPublicHeaderDir + "**/*"])
+        let podSupportHeaders = GlobNode(
+                include: AttrSet<Set<String>>(basic: podSupportHeadersGlob),
+                exclude: AttrSet<Set<String>>.empty
+        ).toSkylark()
+
+        // We need to explicitly exclude the pod support headers in case the headers include a bare `**/*` which would
+        // cause the pod support headers to be doubly included.
+        let headersWithoutPodSupport = GlobNode(
+                include: headers.include,
+                exclude: AttrSet(
+                        basic: (headers.exclude.basic ?? Set()).union(podSupportHeadersGlob),
+                        multi: headers.exclude.multi
+                )
+        )
+
         if lib.isTopLevelTarget {
             var exposedHeaders: SkylarkNode = podSupportHeaders .+.
-                headers.toSkylark() .+. depHdrs.toSkylark()
+                headersWithoutPodSupport.toSkylark() .+. depHdrs.toSkylark()
             inlineSkylark.append(.functionCall(
                 name: "filegroup",
                 arguments: [

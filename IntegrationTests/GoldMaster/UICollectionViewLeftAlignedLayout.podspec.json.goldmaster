@@ -136,6 +136,9 @@ filegroup(
       "UICollectionViewLeftAlignedLayout/**/*.hpp",
       "UICollectionViewLeftAlignedLayout/**/*.hxx"
     ],
+    exclude = [
+      "pod_support/Headers/Public/**/*"
+    ],
     exclude_directories = 1
   ) + [
     ":UICollectionViewLeftAlignedLayout_cxx_hdrs"

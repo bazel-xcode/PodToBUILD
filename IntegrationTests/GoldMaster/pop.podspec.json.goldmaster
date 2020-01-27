@@ -121,6 +121,9 @@ filegroup(
     [
       "pop/**/*.h"
     ],
+    exclude = [
+      "pod_support/Headers/Public/**/*"
+    ],
     exclude_directories = 1
   ) + [
     ":pop_cxx_hdrs"
