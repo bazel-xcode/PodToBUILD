@@ -285,22 +285,22 @@ public struct PodBuildFile: SkylarkConvertible {
     /// Construct source libs
     /// Depending on the source files and other factors, we'll return different
     /// kinds of rules for a PodSpec and corresponding SubSpecs
-    static func makeSourceLibs(rootSpec podSpec: PodSpec?, spec: PodSpec,
+    static func makeSourceLibs(parentSpecs: [PodSpec], spec: PodSpec,
             extraDeps: [BazelTarget]) -> [BazelTarget] {
         var sourceLibs: [BazelTarget] = []
         // Split libs based on the sources involved.
         let sourceTypes = getSourceTypes(fromPodspec: spec)
         if sourceTypes.count == 0 {
-            sourceLibs.append(ObjcLibrary(rootSpec: podSpec, spec: spec,
+            sourceLibs.append(ObjcLibrary(parentSpecs: parentSpecs, spec: spec,
                         extraDeps: extraDeps.map { $0.name }, sourceType:
                         .objc))
         } else if sourceTypes.count == 1 {
             if sourceTypes.first == .swift {
-                sourceLibs.append(SwiftLibrary(rootSpec: podSpec, spec: spec,
+                sourceLibs.append(SwiftLibrary(parentSpecs: parentSpecs, spec: spec,
                             extraDeps: extraDeps.map { $0.name }))
                 fputs("WARNING: swift support is currently WIP", __stderrp)
             } else {
-                sourceLibs.append(ObjcLibrary(rootSpec: podSpec, spec: spec,
+                sourceLibs.append(ObjcLibrary(parentSpecs: parentSpecs, spec: spec,
                             extraDeps: extraDeps.map { $0.name },
                             sourceType: sourceTypes.first!))
             }
@@ -311,7 +311,7 @@ public struct PodBuildFile: SkylarkConvertible {
             var splitDeps: [BazelTarget] = []
 
             if sourceTypes.contains(.cpp) {
-                let cppLib = ObjcLibrary(rootSpec: podSpec, spec: spec,
+                let cppLib = ObjcLibrary(parentSpecs: parentSpecs, spec: spec,
                         extraDeps: extraDeps.map { $0.name },
                         isSplitDep: true, sourceType: .cpp)
                 splitDeps.append(cppLib)
@@ -320,7 +320,7 @@ public struct PodBuildFile: SkylarkConvertible {
 
             if sourceTypes.contains(.swift) {
                 // Append a swift library.
-                let swiftLib = SwiftLibrary(rootSpec: podSpec, spec: spec,
+                let swiftLib = SwiftLibrary(parentSpecs: parentSpecs, spec: spec,
                         extraDeps: extraDeps.map { $0.name },
                         isSplitDep: true)
                 splitDeps.append(swiftLib)
@@ -330,38 +330,48 @@ public struct PodBuildFile: SkylarkConvertible {
             }
 
             // In this case, the root lib is Objc
-            let rootLib = ObjcLibrary(rootSpec: podSpec, spec: spec,
+            let rootLib = ObjcLibrary(parentSpecs: parentSpecs, spec: spec,
                     extraDeps: (extraDeps + splitDeps).map { $0.name })
             sourceLibs.append(rootLib)
         }
         return sourceLibs
     }
 
-    public static func makeConvertables(fromPodspec podSpec: PodSpec,
-            buildOptions: BuildOptions = EmptyBuildOptions.shared) ->
-        [SkylarkConvertible] {
-        let subspecTargets: [BazelTarget] = podSpec.subspecs.reduce([]) {
-            accum, spec in
-            let bundles: [BazelTarget] = bundleLibraries(withPodSpec: spec)
-            let libraries = vendoredLibraries(withPodspec: spec)
-            let frameworks = vendoredFrameworks(withPodspec: spec)
+    private static func makeSubspecTargets(parentSpecs: [PodSpec], spec: PodSpec) -> [BazelTarget] {
+        let bundles: [BazelTarget] = bundleLibraries(withPodSpec: spec)
+        let libraries = vendoredLibraries(withPodspec: spec)
+        let frameworks = vendoredFrameworks(withPodspec: spec)
 
-            let extraDeps: [BazelTarget] = (
-                    (libraries as [BazelTarget]) +
-                    (frameworks as [BazelTarget]))
-            let sourceLibs = makeSourceLibs(rootSpec: podSpec, spec: spec,
-                    extraDeps: extraDeps)
-            return accum + bundles + sourceLibs + libraries +
-                frameworks
+        let extraDeps: [BazelTarget] = (
+                (libraries as [BazelTarget]) +
+                        (frameworks as [BazelTarget]))
+        let sourceLibs = makeSourceLibs(parentSpecs: parentSpecs, spec: spec,
+                extraDeps: extraDeps)
+
+        let subspecTargets = spec.subspecs.flatMap {
+            makeSubspecTargets(parentSpecs: parentSpecs + [spec], spec: $0)
+        }
+
+        return bundles + sourceLibs + libraries + frameworks + subspecTargets
+    }
+
+    public static func makeConvertables(
+            fromPodspec podSpec: PodSpec,
+            buildOptions: BuildOptions = EmptyBuildOptions.shared
+    ) -> [SkylarkConvertible] {
+        let subspecTargets: [BazelTarget] = podSpec.subspecs.flatMap {
+            makeSubspecTargets(parentSpecs: [podSpec], spec: $0)
         }
 
         let defaultSubspecs = Set(podSpec.defaultSubspecs)
 
         // Note: we use `ObjcLibrary` here to get the name only.
+        // Note: We don't currently support having the default being a nested subspec. This also doesn't do anything
+        // with subspecs' default subspecs (for nested subspecs).
         // TODO: how does filtering impact dep splitting?
         let filteredSpecs = podSpec.subspecs
             .filter { defaultSubspecs.contains($0.name) }
-            .map { ObjcLibrary(rootSpec: podSpec, spec: $0, extraDeps: []).name }
+            .map { ObjcLibrary(parentSpecs: [podSpec], spec: $0, extraDeps: []).name }
             .reduce(Set()) { result, name in result.union([name]) }
 
         let defaultSubspecTargets = subspecTargets.reduce([]) { result, target in
@@ -373,7 +383,7 @@ public struct PodBuildFile: SkylarkConvertible {
 
         let allRootDeps = ((defaultSubspecTargets.isEmpty ? subspecTargets :
                     defaultSubspecTargets) + extraDeps)
-        let sourceLibs = makeSourceLibs(rootSpec: nil, spec: podSpec, extraDeps:
+        let sourceLibs = makeSourceLibs(parentSpecs: [], spec: podSpec, extraDeps:
                 allRootDeps)
 
         // We don't care about the values here

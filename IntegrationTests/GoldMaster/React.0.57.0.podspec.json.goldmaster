@@ -2228,6 +2228,1120 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_activityindicator_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/activityindicator/**/*.h",
+      "fabric/activityindicator/**/*.h",
+      "fabric/activityindicator/**/*.hpp",
+      "fabric/activityindicator/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_activityindicator_union_hdrs",
+  srcs = [
+    "fabric_activityindicator_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_activityindicator_hmap",
+  namespace = "fabric/activityindicator",
+  hdrs = [
+    ":fabric_activityindicator_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_activityindicator_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_activityindicator",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/activityindicator/**/*.cpp"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_activityindicator_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    ":fabric_activityindicator_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/activityindicator/"
+  ] + [
+    "-fmodule-name=fabric/activityindicator_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_activityindicator_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "fabric_attributedstring_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/attributedstring/**/*.h",
+      "fabric/attributedstring/**/*.h",
+      "fabric/attributedstring/**/*.hpp",
+      "fabric/attributedstring/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_attributedstring_union_hdrs",
+  srcs = [
+    "fabric_attributedstring_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_attributedstring_hmap",
+  namespace = "fabric/attributedstring",
+  hdrs = [
+    ":fabric_attributedstring_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_attributedstring_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_attributedstring",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/attributedstring/**/*.cpp"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_attributedstring_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    ":fabric_attributedstring_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/attributedstring/"
+  ] + [
+    "-fmodule-name=fabric/attributedstring_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_attributedstring_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "fabric_core_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/core/**/*.h",
+      "fabric/core/**/*.h",
+      "fabric/core/**/*.hpp",
+      "fabric/core/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_core_union_hdrs",
+  srcs = [
+    "fabric_core_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_core_hmap",
+  namespace = "fabric/core",
+  hdrs = [
+    ":fabric_core_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_core_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_core",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/core/**/*.cpp"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_core_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    ":fabric_core_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/core/"
+  ] + [
+    "-fmodule-name=fabric/core_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_core_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "fabric_debug_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/debug/**/*.h",
+      "fabric/debug/**/*.h",
+      "fabric/debug/**/*.hpp",
+      "fabric/debug/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_debug_union_hdrs",
+  srcs = [
+    "fabric_debug_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_debug_hmap",
+  namespace = "fabric/debug",
+  hdrs = [
+    ":fabric_debug_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_debug_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_debug",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/debug/**/*.cpp"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_debug_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    ":fabric_debug_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/debug/"
+  ] + [
+    "-fmodule-name=fabric/debug_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_debug_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "fabric_graphics_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/graphics/**/*.h",
+      "fabric/graphics/**/*.h",
+      "fabric/graphics/**/*.hpp",
+      "fabric/graphics/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_graphics_union_hdrs",
+  srcs = [
+    "fabric_graphics_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_graphics_hmap",
+  namespace = "fabric/graphics",
+  hdrs = [
+    ":fabric_graphics_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_graphics_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_graphics",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/graphics/**/*.cpp"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_graphics_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    ":fabric_graphics_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/graphics/"
+  ] + [
+    "-fmodule-name=fabric/graphics_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_graphics_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "fabric_scrollview_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/scrollview/**/*.h",
+      "fabric/scrollview/**/*.h",
+      "fabric/scrollview/**/*.hpp",
+      "fabric/scrollview/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_scrollview_union_hdrs",
+  srcs = [
+    "fabric_scrollview_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_scrollview_hmap",
+  namespace = "fabric/scrollview",
+  hdrs = [
+    ":fabric_scrollview_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_scrollview_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_scrollview",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/scrollview/**/*.cpp"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_scrollview_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    ":fabric_scrollview_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/scrollview/"
+  ] + [
+    "-fmodule-name=fabric/scrollview_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_scrollview_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "fabric_text_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/text/**/*.h",
+      "fabric/text/**/*.h",
+      "fabric/text/**/*.hpp",
+      "fabric/text/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_text_union_hdrs",
+  srcs = [
+    "fabric_text_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_text_hmap",
+  namespace = "fabric/text",
+  hdrs = [
+    ":fabric_text_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_text_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_text",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/text/**/*.cpp"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_text_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    ":fabric_text_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/text/"
+  ] + [
+    "-fmodule-name=fabric/text_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_text_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "fabric_textlayoutmanager_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/textlayoutmanager/**/*.h",
+      "fabric/textlayoutmanager/**/*.h",
+      "fabric/textlayoutmanager/**/*.hpp",
+      "fabric/textlayoutmanager/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_textlayoutmanager_union_hdrs",
+  srcs = [
+    "fabric_textlayoutmanager_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_textlayoutmanager_hmap",
+  namespace = "fabric/textlayoutmanager",
+  hdrs = [
+    ":fabric_textlayoutmanager_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_textlayoutmanager_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_textlayoutmanager",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/textlayoutmanager/**/*.cpp",
+      "ReactCommon/fabric/textlayoutmanager/**/*.mm"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_textlayoutmanager_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    ":fabric_textlayoutmanager_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/textlayoutmanager/"
+  ] + [
+    "-fmodule-name=fabric/textlayoutmanager_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_textlayoutmanager_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "fabric_uimanager_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/uimanager/**/*.h",
+      "fabric/uimanager/**/*.h",
+      "fabric/uimanager/**/*.hpp",
+      "fabric/uimanager/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_uimanager_union_hdrs",
+  srcs = [
+    "fabric_uimanager_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_uimanager_hmap",
+  namespace = "fabric/uimanager",
+  hdrs = [
+    ":fabric_uimanager_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_uimanager_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_uimanager",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/uimanager/**/*.cpp"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_uimanager_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    ":fabric_uimanager_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/uimanager/"
+  ] + [
+    "-fmodule-name=fabric/uimanager_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_uimanager_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "fabric_view_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/view/**/*.h",
+      "fabric/view/**/*.h",
+      "fabric/view/**/*.hpp",
+      "fabric/view/**/*.hxx"
+    ],
+    exclude = [
+      "**/tests/*.h",
+      "**/tests/*.hpp",
+      "**/tests/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_view_union_hdrs",
+  srcs = [
+    "fabric_view_hdrs",
+    "React_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "fabric_view_hmap",
+  namespace = "fabric/view",
+  hdrs = [
+    ":fabric_view_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/Folly:Folly",
+    "//Vendor/Yoga:Yoga"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "fabric_view_includes",
+  include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "fabric_view",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "ReactCommon/fabric/view/**/*.cpp"
+    ],
+    exclude = [
+      "**/tests/*.S",
+      "**/tests/*.c",
+      "**/tests/*.cc",
+      "**/tests/*.cpp",
+      "**/tests/*.cxx",
+      "**/tests/*.m",
+      "**/tests/*.mm",
+      "**/tests/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":fabric_view_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "React",
+    [
+      "ReactCommon/**/*.pch"
+    ]
+  ),
+  deps = [
+    "//Vendor/Folly:Folly",
+    "//Vendor/Yoga:Yoga",
+    ":fabric_view_includes"
+  ],
+  copts = [
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/fabric/view/"
+  ] + [
+    "-fmodule-name=fabric/view_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "fabric_view_acknowledgement",
+  deps = [
+    "//Vendor/Folly:Folly_acknowledgement",
+    "//Vendor/Yoga:Yoga_acknowledgement"
+  ],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
   name = "RCTFabricSample_hdrs",
   srcs = glob(
     [

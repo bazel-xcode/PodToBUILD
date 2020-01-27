@@ -66,16 +66,22 @@ public func getPodBaseDir() -> String {
 }
 
 /// Compute the name of a lib
-public func computeLibName(rootSpec: PodSpec? = nil, spec: PodSpec, podName: String, isSplitDep: Bool = false, sourceType: BazelSourceLibType) -> String {
+public func computeLibName(parentSpecs: [PodSpec], spec: PodSpec, podName: String, isSplitDep: Bool = false, sourceType: BazelSourceLibType) -> String {
     let splitSuffix = isSplitDep ? sourceType.getLibNameSuffix() : ""
-    let baseName = rootSpec == nil ? podName : bazelLabel(fromString: "\(spec.moduleName ?? spec.name)")
+    let baseName = parentSpecs.isEmpty
+            ? podName
+            : bazelLabel(
+                fromString: (parentSpecs + [spec])[1...]
+                    .map { $0.moduleName ?? $0.name }
+                    .joined(separator: "_")
+            )
     return baseName + splitSuffix
 }
 
 /// Get a dependency name from a name in accordance with
 /// CocoaPods dependency naming ( slashes )
 /// Versions are ignored!
-/// When a given dependency is locally speced, it should
+/// When a given dependency is locally spec'ed, it should
 /// Match the PodName i.e. PINCache/Core
 public func getDependencyName(fromPodDepName podDepName: String, podName: String) -> String  {
     let results = podDepName.components(separatedBy: "/")
@@ -85,9 +91,10 @@ public func getDependencyName(fromPodDepName podDepName: String, podName: String
         return ":\(bazelLabel(fromString: join))"
     } else {
         if results.count > 1 {
+            let join = results[1 ... results.count - 1].joined(separator: "/")
             return getRulePrefix(name: results[0],
                     preceedsTarget: true) +
-                "\(bazelLabel(fromString: results[1]))"
+                "\(bazelLabel(fromString: join))"
         } else {
             // This is a reference to another pod library
             return getRulePrefix(name:
