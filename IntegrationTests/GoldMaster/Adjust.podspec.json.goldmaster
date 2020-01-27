@@ -61,14 +61,6 @@ gen_includes(
     "Vendor/Adjust/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "Adjust",
-  "Adjust_module_map",
-  "Adjust",
-  [
-    "Adjust_hdrs"
-  ]
-)
 objc_library(
   name = "Adjust",
   enable_modules = 0,

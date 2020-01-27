@@ -50,14 +50,6 @@ gen_includes(
     "Vendor/SPUserResizableView+Pion/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "SPUserResizableView+Pion",
-  "SPUserResizableView+Pion_module_map",
-  "SPUserResizableView+Pion",
-  [
-    "SPUserResizableView+Pion_hdrs"
-  ]
-)
 objc_library(
   name = "SPUserResizableView+Pion",
   enable_modules = 0,

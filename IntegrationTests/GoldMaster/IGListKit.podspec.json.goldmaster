@@ -67,14 +67,6 @@ gen_includes(
     "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "IGListKit",
-  "IGListKit_module_map",
-  "IGListKit",
-  [
-    "IGListKit_hdrs"
-  ]
-)
 objc_library(
   name = "IGListKit",
   enable_modules = 0,

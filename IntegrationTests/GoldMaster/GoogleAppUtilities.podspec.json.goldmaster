@@ -49,14 +49,6 @@ gen_includes(
     "Vendor/GoogleAppUtilities/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "GoogleAppUtilities",
-  "GoogleAppUtilities_module_map",
-  "GoogleAppUtilities",
-  [
-    "GoogleAppUtilities_hdrs"
-  ]
-)
 objc_library(
   name = "GoogleAppUtilities",
   enable_modules = 0,

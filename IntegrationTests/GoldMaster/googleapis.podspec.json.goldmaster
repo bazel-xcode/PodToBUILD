@@ -52,14 +52,6 @@ gen_includes(
     "Vendor/googleapis/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "googleapis",
-  "googleapis_module_map",
-  "googleapis",
-  [
-    "googleapis_hdrs"
-  ]
-)
 objc_library(
   name = "googleapis",
   enable_modules = 0,

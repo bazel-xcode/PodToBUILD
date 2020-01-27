@@ -48,14 +48,6 @@ gen_includes(
     "Vendor/iOSSnapshotTestCase/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "FBSnapshotTestCase",
-  "iOSSnapshotTestCase_module_map",
-  "FBSnapshotTestCase",
-  [
-    "iOSSnapshotTestCase_hdrs"
-  ]
-)
 objc_library(
   name = "iOSSnapshotTestCase",
   enable_modules = 0,

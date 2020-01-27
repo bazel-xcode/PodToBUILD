@@ -164,14 +164,6 @@ gen_includes(
     "Vendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "UICollectionViewLeftAlignedLayout",
-  "UICollectionViewLeftAlignedLayout_module_map",
-  "UICollectionViewLeftAlignedLayout",
-  [
-    "UICollectionViewLeftAlignedLayout_hdrs"
-  ]
-)
 objc_library(
   name = "UICollectionViewLeftAlignedLayout",
   enable_modules = 0,

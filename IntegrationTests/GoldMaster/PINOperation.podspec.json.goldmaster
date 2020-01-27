@@ -144,14 +144,6 @@ gen_includes(
     "Vendor/PINOperation/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "PINOperation",
-  "PINOperation_module_map",
-  "PINOperation",
-  [
-    "PINOperation_hdrs"
-  ]
-)
 objc_library(
   name = "PINOperation",
   enable_modules = 0,

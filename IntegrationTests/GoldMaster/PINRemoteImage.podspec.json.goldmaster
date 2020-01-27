@@ -51,14 +51,6 @@ gen_includes(
     "Vendor/PINRemoteImage/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "PINRemoteImage",
-  "PINRemoteImage_module_map",
-  "PINRemoteImage",
-  [
-    "PINRemoteImage_hdrs"
-  ]
-)
 objc_library(
   name = "PINRemoteImage",
   enable_modules = 0,

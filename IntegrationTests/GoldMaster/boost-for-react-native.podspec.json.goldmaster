@@ -52,14 +52,6 @@ gen_includes(
     "Vendor/boost-for-react-native/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "boost",
-  "boost-for-react-native_module_map",
-  "boost",
-  [
-    "boost-for-react-native_hdrs"
-  ]
-)
 objc_library(
   name = "boost-for-react-native",
   enable_modules = 0,

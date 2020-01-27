@@ -50,14 +50,6 @@ gen_includes(
     "Vendor/FLAnimatedImage/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "FLAnimatedImage",
-  "FLAnimatedImage_module_map",
-  "FLAnimatedImage",
-  [
-    "FLAnimatedImage_hdrs"
-  ]
-)
 objc_library(
   name = "FLAnimatedImage",
   enable_modules = 0,

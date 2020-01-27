@@ -499,6 +499,21 @@ public func podGlob(pattern: String) -> [String] {
     return Glob(pattern: pattern, behavior: GlobBehaviorBashV4).paths
 }
 
+// Expands a set of globs with the semantics of pod `source_file` globs.
+public func podGlobSet(patternSet: AttrSet<Set<String>>) -> Set<String> {
+    return patternSet.fold(basic: { (patterns: Set<String>?) -> Set<String> in
+        return Set(patterns.map {
+            $0.flatMap(podGlob)
+        } ?? [])
+    }, multi: { (set: Set<String>, multi: MultiPlatform<Set<String>>) -> Set<String> in
+        let inner: Set<String>? = multi |>
+                MultiPlatform<Set<String>>.lens.viewAll {
+                    Set($0.flatMap(podGlob))
+                }
+        return set.union(inner.denormalize())
+    })
+}
+
 // MARK: - NSRegularExpression
 
 extension NSRegularExpression {

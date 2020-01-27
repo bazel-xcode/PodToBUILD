@@ -53,14 +53,6 @@ gen_includes(
     "Vendor/FBSDKMessengerShareKit/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "FBSDKMessengerShareKit",
-  "FBSDKMessengerShareKit_module_map",
-  "FBSDKMessengerShareKit",
-  [
-    "FBSDKMessengerShareKit_hdrs"
-  ]
-)
 objc_library(
   name = "FBSDKMessengerShareKit",
   enable_modules = 0,

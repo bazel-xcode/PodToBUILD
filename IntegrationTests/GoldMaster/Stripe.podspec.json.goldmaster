@@ -58,14 +58,6 @@ gen_includes(
     "Vendor/Stripe/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "Stripe",
-  "Stripe_module_map",
-  "Stripe",
-  [
-    "Stripe_hdrs"
-  ]
-)
 objc_library(
   name = "Stripe",
   enable_modules = 0,

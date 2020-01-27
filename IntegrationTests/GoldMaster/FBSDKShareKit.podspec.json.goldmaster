@@ -107,14 +107,6 @@ gen_includes(
     "Vendor/FBSDKShareKit/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "FBSDKShareKit",
-  "FBSDKShareKit_module_map",
-  "FBSDKShareKit",
-  [
-    "FBSDKShareKit_hdrs"
-  ]
-)
 objc_library(
   name = "FBSDKShareKit",
   enable_modules = 0,

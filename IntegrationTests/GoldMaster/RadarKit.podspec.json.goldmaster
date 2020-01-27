@@ -50,14 +50,6 @@ gen_includes(
     "Vendor/RadarKit/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "RadarKit",
-  "RadarKit_module_map",
-  "RadarKit",
-  [
-    "RadarKit_hdrs"
-  ]
-)
 objc_library(
   name = "RadarKit",
   enable_modules = 0,

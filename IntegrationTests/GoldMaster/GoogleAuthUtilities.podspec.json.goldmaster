@@ -50,14 +50,6 @@ gen_includes(
     "Vendor/GoogleAuthUtilities/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "GoogleAuthUtilities",
-  "GoogleAuthUtilities_module_map",
-  "GoogleAuthUtilities",
-  [
-    "GoogleAuthUtilities_hdrs"
-  ]
-)
 objc_library(
   name = "GoogleAuthUtilities",
   enable_modules = 0,

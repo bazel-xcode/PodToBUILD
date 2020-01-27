@@ -49,14 +49,6 @@ gen_includes(
     "Vendor/FMDB/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "FMDB",
-  "FMDB_module_map",
-  "FMDB",
-  [
-    "FMDB_hdrs"
-  ]
-)
 objc_library(
   name = "FMDB",
   enable_modules = 0,

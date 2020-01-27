@@ -62,14 +62,6 @@ gen_includes(
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "React",
-  "React_module_map",
-  "React",
-  [
-    "React_hdrs"
-  ]
-)
 objc_library(
   name = "React",
   enable_modules = 0,
