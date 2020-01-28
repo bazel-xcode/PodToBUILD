@@ -319,9 +319,11 @@ public enum RepoActions {
             .values
             .map { PodSupportSystemPublicHeaderDir + "\($0)/" }
 
-        customHeaderSearchPaths.forEach(shell.dir)
+        customHeaderSearchPaths.forEach {
+            try! FileManager.default.createDirectory(atPath: $0, withIntermediateDirectories: true)
+        }
 
-        // Create a directory structure condusive to <> imports
+        // Create a directory structure conducive to <> imports
         // - Get all of the paths matching wild card imports
         // - Put them into the public header directory
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)

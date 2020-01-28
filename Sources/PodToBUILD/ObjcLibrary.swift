@@ -564,6 +564,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                         .basic(moduleMapDirectoryName.toSkylark()),
                         .basic(clangModuleName.toSkylark()),
                         .basic(moduleMapSrcs.toSkylark()),
+                        .named(name: "is_system", value: (!publicHeaderSrcs.isEmpty).toSkylark())
                     ]
             ))
         }
