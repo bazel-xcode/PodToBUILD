@@ -113,7 +113,6 @@ class ShellTask : NSObject {
     }
 
     class RunLoopContext {
-        var cancelTerminationStatus: Int32? = nil
         var process: Process
         init (process: Process) {
             self.process = process
@@ -122,50 +121,40 @@ class ShellTask : NSObject {
 
     /// Launch a task and get the output
     func launch() -> CommandOutput {
-        let process = Process()
-
-        let runLoopContext = RunLoopContext(process: process)
-        // Setup a timer.
-        // When this timer ends, we smoke the process.
-        var runLoopCtx =  CFRunLoopTimerContext()
-        runLoopCtx.info = unsafeBitCast(runLoopContext, to: UnsafeMutableRawPointer.self)
-        let runLoopCB: CoreFoundation.CFRunLoopTimerCallBack = {
-            (c: CFRunLoopTimer?, ctx: UnsafeMutableRawPointer?)  in
-            let ctx = unsafeBitCast(ctx, to: RunLoopContext.self)
-            let _ = tryBlock {
-                ctx.process.terminate()
-            }
-            // Try to get the termination status, and assign it to 43 if it throws
-            var status: Int32 = 0
-            let _ = tryBlock {
-                status = ctx.process.terminationStatus
-            }
-            ctx.cancelTerminationStatus = status != 0 ? status : 43
-            CFRunLoopStop(RunLoop.main.getCFRunLoop())
-        }
-
-        let timer = CFRunLoopTimerCreate(kCFAllocatorDefault, CFAbsoluteTimeGetCurrent() + timeout, 0, 0, 0, runLoopCB, &runLoopCtx)
-
-        let currentLoop = RunLoop.main.getCFRunLoop()
-        CFRunLoopAddTimer(currentLoop, timer, CFRunLoopMode.defaultMode)
-        
-        var didTerminateStatus: Int32? = nil
-        let taskObserver = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: OperationQueue()) {
-            _ in
-            didTerminateStatus = process.terminationStatus
-            CFRunLoopStop(currentLoop)
-        }
-        
-        // Setup the process.
-        let stdout = Pipe()
-        let stderr  = Pipe()
-
+        // Setup outputs
         let stream: Bool
         if #available(OSX 10.14.5, *) {
             stream = true
         } else {
             stream = false
         }
+        let stdout = Pipe()
+        let stderr = Pipe()
+
+        // Setup the process.
+        let process = createProcess(stream: stream, stdout: stdout, stderr: stderr)
+
+        // Start a timer to kill the process, will no-op if it triggers after process ends
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: { process.terminate() })
+
+        // Run the process, remove the timer when done.
+        let exception = tryBlock {
+            process.launch()
+            process.waitUntilExit()
+        }
+
+        // Handle the result
+        return constructProcessResult(
+                stream: stream,
+                stdout: stdout,
+                stderr: stderr,
+                process: process,
+                exception: exception
+        )
+    }
+
+    private func createProcess(stream: Bool, stdout: Pipe, stderr: Pipe) -> Process {
+        let process = Process()
         if stream {
             stdout.fileHandleForReading.readabilityHandler = {
                 handle in
@@ -205,27 +194,29 @@ class ShellTask : NSObject {
                 process.currentDirectoryPath  = cwd
             }
         }
-        let exception = tryBlock {
-          process.launch()
-          CFRunLoopRun()
-        }
-        
-        CFRunLoopRemoveTimer(currentLoop, timer, CFRunLoopMode.defaultMode)
-        NotificationCenter.default.removeObserver(taskObserver)
+        return process
+    }
 
+    private func constructProcessResult(
+            stream: Bool,
+            stdout: Pipe,
+            stderr: Pipe,
+            process: Process,
+            exception: Any?
+    ) -> ShellTaskResult {
         if exception != nil {
-            if stream == false {
+            if !stream {
                 self.standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
                 if self.printOutput {
                     FileHandle.standardError.write(self.standardErrorData)
                 }
             }
             return ShellTaskResult(standardErrorData: standardErrorData,
-                                   standardOutputData: Data(),
-                                   terminationStatus: 42)
+                    standardOutputData: Data(),
+                    terminationStatus: 42)
         }
 
-        if stream == false {
+        if !stream {
             self.standardErrorData = stderr.fileHandleForReading.readDataToEndOfFile()
             self.standardOutputData = stdout.fileHandleForReading.readDataToEndOfFile()
             if self.printOutput {
@@ -233,10 +224,11 @@ class ShellTask : NSObject {
                 FileHandle.standardError.write(self.standardOutputData)
             }
         }
-        return ShellTaskResult(standardErrorData: standardErrorData,
-                               standardOutputData: standardOutputData,
-                               terminationStatus: didTerminateStatus
-                               ?? runLoopContext.cancelTerminationStatus ?? 44)
+        return ShellTaskResult(
+                standardErrorData: standardErrorData,
+                standardOutputData: standardOutputData,
+                terminationStatus: process.terminationStatus
+        )
     }
 }
 
