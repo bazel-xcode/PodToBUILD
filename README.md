@@ -12,7 +12,7 @@ In the root directory, add `rules_pods` to the Bazel `WORKSPACE`.
 ```
 http_archive(
     name = "rules_pods",
-    urls = ["https://github.com/pinterest/PodToBUILD/releases/download/0.25.2-fc71a0b/PodToBUILD.zip"],
+    urls = ["https://github.com/pinterest/PodToBUILD/releases/download/0.25.2-8a5efa0/PodToBUILD.zip"],
 )
 ```
 
