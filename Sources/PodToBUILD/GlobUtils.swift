@@ -121,9 +121,12 @@ public class Glob: Collection {
 
         var results = [String]()
         var parts = pattern.components(separatedBy: "**")
-        let firstPart = parts.removeFirst()
+        var firstPart = parts.removeFirst()
         var lastPart = parts.joined(separator: "**")
 
+        if firstPart == "" {
+            firstPart = "."
+        }
         let fileManager = FileManager.default
 
         var directories: [String]

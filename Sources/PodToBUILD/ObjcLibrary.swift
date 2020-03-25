@@ -674,9 +674,8 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let getPodIQuotes = {
             () -> [String] in
             if options.generateHeaderMap {
-                let podName = GetBuildOptions().podName
                 return [
-                    "-I$(GENDIR)/\(getPodBaseDir())/\(podName)/" + lib.name + "_hmap.hmap",
+                    "-I$(GENDIR)/\(getGenfileOutputBaseDir())/" + lib.name + "_hmap.hmap",
                     "-I.", 
                 ]
             }
