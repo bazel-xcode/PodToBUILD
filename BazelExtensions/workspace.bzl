@@ -155,9 +155,19 @@ def _impl(repository_ctx):
     # Build up the script
     script = ""
 
-    # For now, we curl the podspec url before the script runs
     if repository_ctx.attr.podspec_url:
+        # For now, we curl the podspec url before the script runs
+        if repository_ctx.attr.podspec_file:
+            fail("Cannot specify both podspec_url and podspec_file")
         script += "curl -O " + repository_ctx.attr.podspec_url
+        script += "\n"
+    elif repository_ctx.attr.podspec_file:
+        # Note that we can't re-use the podspec_url attribute for this since
+        # that would require being able to determine the root of the main
+        # workspace (to resolve relative paths) which isn't possible in this context.
+        if repository_ctx.attr.podspec_url:
+            fail("Cannot specify both podspec_url and podspec_file")
+        script += "ditto " + str(repository_ctx.path(repository_ctx.attr.podspec_file)) + " ."
         script += "\n"
 
     if repository_ctx.attr.install_script_tpl:
@@ -177,6 +187,7 @@ pod_repo_ = repository_rule(
         "target_name": attr.string(mandatory=True),
         "url": attr.string(mandatory=True),
         "podspec_url": attr.string(),
+        "podspec_file": attr.label(),
         "strip_prefix": attr.string(),
         "user_options": attr.string_list(),
         "repo_tools_labels": attr.label_list(),
@@ -212,10 +223,12 @@ def new_pod_repository(name,
 
          url: the url of this repo
 
-         podspec_url: the podspec url. By default, we will look in the root of
-         the repository, and read a .podspec file. This requires having
-         CocoaPods installed on build nodes. If a JSON podspec is provided here,
-         then it is not required to run CocoaPods.
+         podspec_url: an override podspec file. Can be either a URL or a Bazel
+         label.
+
+         By default, we will look in the root of the repository, and read a .podspec file.
+         This requires having CocoaPods installed on build nodes. If a JSON podspec is
+         provided here, then it is not required to run CocoaPods.
 
          owner: the owner of this dependency
 
@@ -269,6 +282,11 @@ def new_pod_repository(name,
     if generate_module_map == None:
         generate_module_map = enable_modules
 
+    podspec_file = None
+    if podspec_url and not podspec_url.startswith("http"):
+         podspec_file = podspec_url
+         podspec_url = None
+
     tool_labels = []
     for tool in repo_tools:
         tool_labels.append(tool)
@@ -277,6 +295,7 @@ def new_pod_repository(name,
         target_name=name,
         url=url,
         podspec_url=podspec_url,
+        podspec_file=podspec_file,
         user_options=user_options,
         strip_prefix=strip_prefix,
         install_script_tpl=install_script,

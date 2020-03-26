@@ -199,10 +199,13 @@ acknowledgments_plist(
 
 `url`: the url of this repo
 
-`podspec_url`: the podspec url. By default, we will look in the root of the
-repository, and read a .podspec file. This requires having CocoaPods installed
-on build nodes. If a JSON podspec is provided here, then it is not required to
-run CocoaPods.
+`podspec_url`: an override podspec file. Can be either a URL or a Bazel
+label (when used as a workspace rule) or a relative or absolute path to
+a file (when used in vendored mode).
+
+By default, we will look in the root of the repository, and read a .podspec file.
+This requires having CocoaPods installed on build nodes. If a JSON podspec is
+provided here, then it is not required to run CocoaPods.
 
 `strip_prefix`: a directory prefix to strip from the extracted files. Many
 archives contain a top-level directory that contains all of the useful files in
