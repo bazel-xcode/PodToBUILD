@@ -125,7 +125,7 @@ public struct PodBuildFile: SkylarkConvertible {
 
 
     public static func shouldAssimilate(buildOptions: BuildOptions) -> Bool {
-        let buildFilePath = URL(fileURLWithPath: "BUILD")
+        let buildFilePath = URL(fileURLWithPath: "BUILD.bazel")
         return buildOptions.path != "." &&
             FileManager.default.fileExists(atPath: buildFilePath.relativePath)
     }

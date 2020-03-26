@@ -450,7 +450,6 @@ public enum RepoActions {
         let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
         let buildFileOut = buildFileSkylarkCompiler.run()
         let buildFilePath = URL(fileURLWithPath: "BUILD.bazel")
-        shell.write(value: buildFileOut, toPath: buildFilePath)
 
         // When there is a "child" podspec adjacent to a parent, concat the
         // "child" BUILD file into the parents
