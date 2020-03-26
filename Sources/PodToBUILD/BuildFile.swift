@@ -5,6 +5,7 @@
 //  Created by Jerry Marino on 4/14/17.
 //  Copyright © 2017 Pinterest Inc. All rights reserved.
 //
+
 import Foundation
 
 private var sharedBuildOptions: BuildOptions = BasicBuildOptions.empty
@@ -125,9 +126,8 @@ public struct PodBuildFile: SkylarkConvertible {
 
 
     public static func shouldAssimilate(buildOptions: BuildOptions) -> Bool {
-        let buildFilePath = URL(fileURLWithPath: "BUILD.bazel")
         return buildOptions.path != "." &&
-            FileManager.default.fileExists(atPath: buildFilePath.relativePath)
+            FileManager.default.fileExists(atPath: BazelConstants.buildFilePath)
     }
 
     /// Return the skylark representation of the entire BUILD file

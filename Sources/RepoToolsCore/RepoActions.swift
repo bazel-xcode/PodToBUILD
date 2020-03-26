@@ -207,11 +207,15 @@ public enum RepoActions {
                 ])
             let alias = Alias(name: podspecName,
                 actual: "//" + buildOptions.path + ":" + podspecName)
+            let acknowledgmentAlias = Alias(name: podspecName + "_acknowledgement",
+                actual: "//" + buildOptions.path + ":" + podspecName + "_acknowledgement")
             let compiler = SkylarkCompiler(.lines([
                     visibility.toSkylark(),
-                    alias.toSkylark()
+                    alias.toSkylark(),
+                    acknowledgmentAlias.toSkylark()
             ]))
-            shell.write(value: compiler.run(), toPath: URL(fileURLWithPath: "BUILD"))
+            shell.write(value: compiler.run(), toPath:
+                BazelConstants.buildFileURL())
             return
         }
 
@@ -438,23 +442,20 @@ public enum RepoActions {
         shell.write(value: entry, toPath: acknowledgementFilePath)
 
         // assume _PATH_TO_SOME/bin/RepoTools
-        let assetRoot = RepoActions.assetRoot()
+        let assetRoot = RepoActions.assetRoot(buildOptions: buildOptions)
 
-        let supportBUILDFile = assetRoot.appendingPathComponent("support")
-            .appendingPathExtension("BUILD")
-        let supportBUILDFileFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "BUILD.bazel")
-        shell.symLink(from: supportBUILDFile.relativePath, to: supportBUILDFileFilePath.path)
-
+        shell.symLink(from: "\(assetRoot)/support.BUILD",
+            to: "\(PodSupportBuidableDir)/\(BazelConstants.buildFilePath)")
 
         // Write the root BUILD file
         let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
         let buildFileOut = buildFileSkylarkCompiler.run()
-        let buildFilePath = URL(fileURLWithPath: "BUILD.bazel")
 
         // When there is a "child" podspec adjacent to a parent, concat the
         // "child" BUILD file into the parents
         if PodBuildFile.shouldAssimilate(buildOptions: buildOptions) {
-            let fileUpdater = try! FileHandle(forWritingTo: buildFilePath)
+            let fileUpdater = try! FileHandle(forWritingTo:
+                BazelConstants.buildFileURL())
             fileUpdater.seekToEndOfFile()
             fileUpdater.write("\n".data(using: .utf8)!)
             if let data = buildFileOut.data(using: .utf8) {
@@ -462,13 +463,19 @@ public enum RepoActions {
             }
             fileUpdater.closeFile()
         } else {
-            shell.write(value: buildFileOut, toPath: buildFilePath)
+            shell.write(value: buildFileOut, toPath:
+                BazelConstants.buildFileURL())
         }
     }
 
     // Assume the directory structure relative to the pod root
-    private static func assetRoot() -> URL {
-      return URL(fileURLWithPath: "../../../Vendor/rules_pods/BazelExtensions")
+    private static func assetRoot(buildOptions: BuildOptions) -> String {
+        if buildOptions.path ==  "." {
+            return "../../../Vendor/rules_pods/BazelExtensions"
+        }
+        let nestingDepth = buildOptions.path.split(separator: "/").count
+        let relativePathToWorkspace = (0..<nestingDepth).map { _ in ".." }.joined(separator: "/") 
+        return "\(relativePathToWorkspace)/../../../Vendor/rules_pods/BazelExtensions"
     }
 
     /// Fetch pods from urls.
