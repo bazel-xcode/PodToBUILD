@@ -205,10 +205,6 @@ def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
         # the repo with that code.
         return
 
-    # Note: the pod is not cleaned out if the sourcecode is loaded from the
-    # current directory
-    print("Updating Pod " + repository_ctx.target_name + "...")
-
     _exec(repository_ctx, ["rm", "-rf", repository_ctx.GetPodRootDir()])
     _exec(repository_ctx, ["mkdir", "-p", repository_ctx.GetPodRootDir()])
 
@@ -227,6 +223,10 @@ def _update_repo_impl(invocation_info):
 
     if not _needs_update(repository_ctx):
         return
+
+    # Note: the pod is not cleaned out if the sourcecode is loaded from the
+    # current directory
+    print("Updating Pod " + repository_ctx.target_name + "...")
 
     # Note: the root directory that these commands execute is external/name
     # after the source code has been fetched
