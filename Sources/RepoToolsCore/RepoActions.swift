@@ -475,7 +475,7 @@ public enum RepoActions {
         }
         let nestingDepth = buildOptions.path.split(separator: "/").count
         let relativePathToWorkspace = (0..<nestingDepth).map { _ in ".." }.joined(separator: "/") 
-        return "\(relativePathToWorkspace)/../../../Vendor/rules_pods/BazelExtensions"
+        return "\(relativePathToWorkspace)/../Vendor/rules_pods/BazelExtensions"
     }
 
     /// Fetch pods from urls.

@@ -81,16 +81,24 @@ public struct AcknowledgmentNode: SkylarkConvertible {
     public func toSkylark() -> SkylarkNode {
         let nodeName = bazelLabel(fromString: name + "_acknowledgement").toSkylark()
         let options = GetBuildOptions()
+        let value: String
         let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
-        let value = (getRulePrefix(name: options.podName) +
-             podSupportBuildableDir +
-             ":acknowledgement_fragment").toSkylark()
+        if options.path == "." {
+            value = (getRulePrefix(name: options.podName) +
+                        podSupportBuildableDir + ":acknowledgement_fragment")
+        } else {
+            // TODO: This will not work with external. Consider moving this file to
+            // pod_support instead.
+            value = "//\(options.path)/\(podSupportBuildableDir):acknowledgement_fragment"
+        }
         let target = SkylarkNode.functionCall(
             name: "acknowledged_target",
             arguments: [
                 .named(name: "name", value: nodeName),
+                // Consider moving this to an aspect and adding it to the
+                // existing dep graph.
                 .named(name: "deps", value: deps.map { $0 + "_acknowledgement" }.toSkylark()),
-                .named(name: "value", value: value)
+                .named(name: "value", value: value.toSkylark())
             ]
         )
         return target
