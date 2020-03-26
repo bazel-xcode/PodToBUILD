@@ -207,6 +207,8 @@ def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
 
     # Note: the pod is not cleaned out if the sourcecode is loaded from the
     # current directory
+    print("Updating Pod " + repository_ctx.target_name + "...")
+
     _exec(repository_ctx, ["rm", "-rf", repository_ctx.GetPodRootDir()])
     _exec(repository_ctx, ["mkdir", "-p", repository_ctx.GetPodRootDir()])
 
