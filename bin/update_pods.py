@@ -330,7 +330,7 @@ def _update_repo_impl(invocation_info):
             repository_ctx.GetPodRootDir())
 
     with open(repository_ctx.GetPodRootDir() + "/.pod-version", "w") as version_file:
-        version_file.write(GetVersion(repository_ctx))
+        version_file.write(GetVersion(invocation_info))
 
 def new_pod_repository(name,
             url = None,
