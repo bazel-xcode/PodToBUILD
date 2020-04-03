@@ -1,5 +1,5 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
-load("@build_bazel_rules_apple//apple:macos.bzl", "macos_command_line_application")
+load("@build_bazel_rules_apple//apple:macos.bzl", "macos_command_line_application", "macos_unit_test")
 
 objc_library(
     name = "ObjcSupport",
@@ -12,7 +12,7 @@ objc_library(
 swift_library(
     name = "PodToBUILD",
     srcs = glob(["Sources/PodToBUILD/*.swift"]),
-    deps = [":ObjcSupport"],
+    deps = [":ObjcSupport", "@podtobuild-Yams//:Yams"],
     copts = ["-swift-version", "4"],
 )
 
@@ -50,4 +50,32 @@ swift_library(
 )
 
 alias(name = "update_pods", actual = "//bin:update_pods")
+
+# This tests RepoToolsCore and Skylark logic
+swift_library(
+    name = "PodToBUILDTestsLib",
+    srcs = glob(["Tests/PodToBUILDTests/*.swift"]),
+    deps = [":RepoToolsCore", "@podtobuild-SwiftCheck//:SwiftCheck"],
+    data = glob(["Examples/**/*.podspec.json"])
+)
+
+macos_unit_test(
+    name = "PodToBUILDTests",
+    deps = [":PodToBUILDTestsLib"],
+    minimum_os_version = "10.13",
+)
+
+swift_library(
+    name = "BuildTestsLib", 
+    srcs = glob(["Tests/BuildTests/*.swift"]),
+    deps = [":RepoToolsCore", "@podtobuild-SwiftCheck//:SwiftCheck"],
+    data = glob(["Examples/**/*.podspec.json"])
+)
+
+# This tests RepoToolsCore and Skylark logic
+macos_unit_test(
+    name = "BuildTests",
+    deps = [":BuildTestsLib"],
+    minimum_os_version = "10.13",
+)
 

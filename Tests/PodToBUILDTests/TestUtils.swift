@@ -36,14 +36,16 @@ func podSpecWithFixture(JSONPodspecFilePath: String) -> PodSpec {
 // Assume the directory structure relative to this file
 // ( PodToBUILD/Tests/PodToBUILDTests/#file )
 private func srcRoot() -> String {
-    let componets = #file .components(separatedBy: "/")
-    return componets[0 ... componets.count - 4].joined(separator: "/")
+    // This path is set by Bazel
+    guard let testSrcDir = ProcessInfo.processInfo.environment["TEST_SRCDIR"] else{
+        fatalError("Missing bazel test base")
+    }
+    let componets = testSrcDir.components(separatedBy: "/")
+    return componets[0 ... componets.count - 5].joined(separator: "/")
 }
 
 public func examplePodSpecFilePath(name: String) -> String {
-    let dir = "\(srcRoot())/Examples/PodSpecs/"
-    let path = Bundle.path(forResource: "\(name).podspec", ofType: "json", inDirectory: dir)
-    return path!
+    return "\(srcRoot())/Examples/PodSpecs/\(name).podspec.json"
 }
 
 public func examplePodSpecNamed(name: String) -> PodSpec {

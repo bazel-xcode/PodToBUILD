@@ -1,0 +1,9 @@
+require_relative './Vendor/React/scripts/autolink-ios'
+
+target 'ios-app' do
+    use_react_native!(path: "Vendor/React", turbo_modules_enabled: false)
+    pod "AFNetworking", "~> 2.0"
+
+    # pod 'React', path: './Vendor/React'
+end
+

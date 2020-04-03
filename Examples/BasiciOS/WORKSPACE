@@ -1,17 +1,10 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-# This is a fake repository - `override-repository` handles this in practice
-git_repository(
+http_archive(
     name = "rules_pods",
-    remote = "https://github.com/pinterest/PodToBUILD.git",
-    branch = "master",
+    urls = ["file:///tmp/PodToBUILD.zip"],
 )
-
-# In real usage, point rules_pods at a release.
-#http_archive(
-#    name = "rules_pods",
-#    urls = ["https://github.com/Pinterst/PodToBUILD/releases/__RELEASE__.zip"],
-#)
 
 git_repository(
     name = "build_bazel_rules_apple",
