@@ -13,7 +13,7 @@ swift_library(
     name = "PodToBUILD",
     srcs = glob(["Sources/PodToBUILD/*.swift"]),
     deps = [":ObjcSupport"],
-    copts = ["-swift-version", "4", "-static-stdlib"],
+    copts = ["-swift-version", "4"],
 )
 
 # Compiler
@@ -46,7 +46,7 @@ swift_library(
     name = "RepoToolsCore",
     srcs = glob(["Sources/RepoToolsCore/*.swift"]),
     deps = [":PodToBUILD"],
-    copts = ["-swift-version", "4", "-static-stdlib"],
+    copts = ["-swift-version", "4"],
 )
 
 alias(name = "update_pods", actual = "//bin:update_pods")

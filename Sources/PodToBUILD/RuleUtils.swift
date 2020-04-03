@@ -65,6 +65,18 @@ public func getPodBaseDir() -> String {
     return options.vendorize ? "Vendor" : "external"
 }
 
+/// We need to hardcode a copt to the $(GENDIR) for simplicity.
+/// Expansion of $(location //target) is not supported in known Xcode generators
+public func getGenfileOutputBaseDir() -> String {
+    let options = GetBuildOptions()
+    let basePath = options.vendorize ? "Vendor" : "external"
+    let podName = options.podName
+    if options.path ==  "." {
+        return "\(basePath)/\(podName)"
+    }
+    return options.path
+}
+
 /// Compute the name of a lib
 public func computeLibName(rootSpec: PodSpec? = nil, spec: PodSpec, podName: String, isSplitDep: Bool = false, sourceType: BazelSourceLibType) -> String {
     let splitSuffix = isSplitDep ? sourceType.getLibNameSuffix() : ""

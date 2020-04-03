@@ -78,6 +78,7 @@ public enum SerializedRepoToolsAction {
         // First arg is the path, we don't care about it
         // The right most option will be the winner.
         var options: [String: CLIArgumentType] = [
+            "--path": .string,
             "--user_option": .stringList,
             "--global_copt": .string,
             "--trace": .bool,
@@ -86,6 +87,7 @@ public enum SerializedRepoToolsAction {
             "--generate_header_map": .bool,
             "--vendorize": .bool,
             "--header_visibility": .string,
+            "--child_path": .stringList,
         ]
 
         var idx = 0
@@ -128,21 +130,23 @@ public enum SerializedRepoToolsAction {
                 }
                 parsed[arg] = collected
             } else {
-                print("Invalid Arg: " + arg)
+                print("Invalid Arg: \(arg)")
                 error()
             }
         }
 
         return BasicBuildOptions(podName: podName,
-                                 userOptions: parsed["--user_option"] as? [String] ?? [String](),
-                                 globalCopts: parsed["--global_copt"] as? [String] ?? [String](),
+                                 path: parsed["--path"]?.first as? String ?? ".",
+                                 userOptions: parsed["--user_option"] as? [String] ?? [],
+                                 globalCopts: parsed["--global_copt"] as? [String] ?? [],
                                  trace: parsed["--trace"]?.first as? Bool ?? false,
                                  enableModules: parsed["--enable_modules"]?.first as? Bool ?? false,
                                  generateModuleMap: parsed["--generate_module_map"]?.first as? Bool ?? false,
                                  generateHeaderMap: parsed["--generate_header_map"]?.first as? Bool ?? false,
                                  headerVisibility: parsed["--header_visibility"]?.first as? String ?? "",
                                  alwaysSplitRules: false,
-                                 vendorize: parsed["--vendorize"]?.first as? Bool ?? true
+                                 vendorize: parsed["--vendorize"]?.first as? Bool ?? true,
+                                 childPaths: parsed["--child_path"] as? [String] ?? []
         )
     }
 }
@@ -192,13 +196,73 @@ public enum RepoActions {
     /// - Get the IPC JSON PodSpec
     /// - Compile a build file based on the PodSpec
     /// - Create a symLinked header structure to support angle bracket includes
-    public static func initializeRepository(shell: ShellContext, buildOptions: BasicBuildOptions) {
+    public static func initializeRepository(shell: ShellContext, buildOptions: BuildOptions) {
+        let podspecName = CommandLine.arguments[1]
+        if buildOptions.path != "." && buildOptions.childPaths.count == 0 {
+            // Write an alias BUILD file that points to the source directory
+            let visibility = SkylarkNode.functionCall(name: "package",
+                arguments: [
+                    .named(name: "default_visibility",
+                           value: .list([.string("//visibility:public")]))
+                ])
+            let alias = Alias(name: podspecName,
+                actual: "//" + buildOptions.path + ":" + podspecName)
+            let acknowledgmentAlias = Alias(name: podspecName + "_acknowledgement",
+                actual: "//" + buildOptions.path + ":" + podspecName + "_acknowledgement")
+            let compiler = SkylarkCompiler(.lines([
+                    visibility.toSkylark(),
+                    alias.toSkylark(),
+                    acknowledgmentAlias.toSkylark()
+            ]))
+            shell.write(value: compiler.run(), toPath:
+                BazelConstants.buildFileURL())
+            return
+        }
+
+        initializePodspecDirectory(shell: shell, podspecName: podspecName,
+                buildOptions: buildOptions)
+        let currentDirectoryPath = FileManager.default.currentDirectoryPath
+        // Child podspec logic - initializes a child pod, for a given Podspec url
+        var childInfoIter = buildOptions.childPaths.makeIterator()
+        while let childInfo = childInfoIter.next() {
+            let childName = childInfo
+            guard let childPath = childInfoIter.next() else {
+                fatalError("Invalid path in update_pods.py")
+            }
+            let childBuildOptions = BasicBuildOptions(
+                podName: childName,
+                path: childPath,
+                userOptions: buildOptions.userOptions,
+                globalCopts: buildOptions.globalCopts,
+                trace: buildOptions.trace,
+                enableModules: buildOptions.enableModules,
+                generateModuleMap: buildOptions.generateModuleMap,
+                generateHeaderMap: buildOptions.generateHeaderMap,
+                headerVisibility: buildOptions.headerVisibility,
+                alwaysSplitRules: buildOptions.alwaysSplitRules,
+                vendorize: buildOptions.vendorize,
+                childPaths: buildOptions.childPaths)
+            let absPath = "\(currentDirectoryPath)/../../\(childPath)"
+            guard
+            FileManager.default.changeCurrentDirectoryPath(
+                absPath) else {
+                fatalError("Can't change path to child subspec path: " + String(describing: absPath))
+            }
+
+            initializePodspecDirectory(shell: shell, podspecName: childName,
+                buildOptions: childBuildOptions)
+            guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
+                fatalError("Can't change path back to original directory after genning subspec")
+            }
+        }
+    }
+
+    private static func initializePodspecDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
         // This uses the current environment's cocoapods installation.
         let whichPod = shell.shellOut("which pod").standardOutputAsString
         if whichPod.isEmpty {
             fatalError("RepoTools requires a cocoapod installation on host")
         }
-        let podspecName = CommandLine.arguments[1]
 
         // make json data
         let jsonData: Data
@@ -207,16 +271,18 @@ public enum RepoActions {
             return shell.command("/bin/[",
                           arguments: ["-e", file, "]"]).terminationStatus == 0
         }
-        let hasPodspec: () -> Bool = {
-            hasFile(FileManager.default.currentDirectoryPath + "/" + podspecName
-                    + ".podspec") }
-        let hasPodspecJson: () -> Bool = {
-            hasFile(FileManager.default.currentDirectoryPath + "/"
-                    + podspecName + ".podspec.json") }
 
-        if hasPodspecJson() {
+        let workspaceRootPath: String
+        if buildOptions.path != "." && buildOptions.childPaths.count == 0 {
+            workspaceRootPath = "../..\(buildOptions.path)"
+        } else {
+            workspaceRootPath =  "."
+        }
+
+        let podspecPath = "\(workspaceRootPath)/\(podspecName).podspec"
+        if hasFile("\(podspecPath).json") {
             jsonData = shell.command("/bin/cat", arguments: [podspecName + ".podspec.json"]).standardOutputData
-        } else if hasPodspec() {
+        } else if hasFile(podspecPath) {
             let podBin = whichPod.components(separatedBy: "\n")[0]
             let podResult = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"])
             guard podResult.terminationStatus == 0 else {
@@ -228,7 +294,7 @@ public enum RepoActions {
             }
             jsonData = podResult.standardOutputData
         } else {
-            fatalError("Missing podspec!")
+            fatalError("Missing podspec ( \(podspecPath) )")
         }
 
         guard let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
@@ -376,23 +442,40 @@ public enum RepoActions {
         shell.write(value: entry, toPath: acknowledgementFilePath)
 
         // assume _PATH_TO_SOME/bin/RepoTools
-        let assetRoot = RepoActions.assetRoot()
+        let assetRoot = RepoActions.assetRoot(buildOptions: buildOptions)
 
-        let supportBUILDFile = assetRoot.appendingPathComponent("support")
-            .appendingPathExtension("BUILD")
-        let supportBUILDFileFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "BUILD.bazel")
-        shell.symLink(from: supportBUILDFile.relativePath, to: supportBUILDFileFilePath.path)
+        shell.symLink(from: "\(assetRoot)/support.BUILD",
+            to: "\(PodSupportBuidableDir)/\(BazelConstants.buildFilePath)")
 
         // Write the root BUILD file
         let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
         let buildFileOut = buildFileSkylarkCompiler.run()
-        let buildFilePath = URL(fileURLWithPath: "BUILD.bazel")
-        shell.write(value: buildFileOut, toPath: buildFilePath)
+
+        // When there is a "child" podspec adjacent to a parent, concat the
+        // "child" BUILD file into the parents
+        if PodBuildFile.shouldAssimilate(buildOptions: buildOptions) {
+            let fileUpdater = try! FileHandle(forWritingTo:
+                BazelConstants.buildFileURL())
+            fileUpdater.seekToEndOfFile()
+            fileUpdater.write("\n".data(using: .utf8)!)
+            if let data = buildFileOut.data(using: .utf8) {
+                fileUpdater.write(data)
+            }
+            fileUpdater.closeFile()
+        } else {
+            shell.write(value: buildFileOut, toPath:
+                BazelConstants.buildFileURL())
+        }
     }
 
     // Assume the directory structure relative to the pod root
-    private static func assetRoot() -> URL {
-      return URL(fileURLWithPath: "../../../Vendor/rules_pods/BazelExtensions")
+    private static func assetRoot(buildOptions: BuildOptions) -> String {
+        if buildOptions.path ==  "." {
+            return "../../../Vendor/rules_pods/BazelExtensions"
+        }
+        let nestingDepth = buildOptions.path.split(separator: "/").count
+        let relativePathToWorkspace = (0..<nestingDepth).map { _ in ".." }.joined(separator: "/") 
+        return "\(relativePathToWorkspace)/../Vendor/rules_pods/BazelExtensions"
     }
 
     /// Fetch pods from urls.

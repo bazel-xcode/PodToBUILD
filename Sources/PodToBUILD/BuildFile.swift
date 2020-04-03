@@ -8,85 +8,11 @@
 
 import Foundation
 
-public protocol BuildOptions {
-    var userOptions: [String] { get }
-    var globalCopts: [String] { get }
-    var trace: Bool { get }
-    var podName: String { get }
-
-    // Frontend options
-
-    var enableModules: Bool { get }
-    var generateModuleMap: Bool { get }
-    var generateHeaderMap: Bool { get }
-
-    // pod_support, everything, none
-    var headerVisibility: String { get }
-
-    var alwaysSplitRules: Bool { get }
-    var vendorize: Bool { get }
-}
-
-// Nullability is the root of all evil
-public struct EmptyBuildOptions: BuildOptions {
-    public let userOptions = [String]()
-    public let globalCopts = [String]()
-    public let trace: Bool = false
-    public let podName: String = ""
-
-    public let enableModules: Bool = false
-    public let generateModuleMap: Bool = false
-    public let generateHeaderMap: Bool = false
-    public let headerVisibility: String = ""
-    public let alwaysSplitRules: Bool = false
-    public let vendorize: Bool = true
-
-    public static let shared = EmptyBuildOptions()
-}
-
-public struct BasicBuildOptions: BuildOptions {
-    public let podName: String
-    public let userOptions: [String]
-    public let globalCopts: [String]
-    public let trace: Bool
-
-    public let enableModules: Bool
-    public let generateModuleMap: Bool
-    public let generateHeaderMap: Bool
-    public let headerVisibility: String
-    public let alwaysSplitRules: Bool
-    public let vendorize: Bool
-
-    public init(podName: String,
-                userOptions: [String],
-                globalCopts: [String],
-                trace: Bool,
-                enableModules: Bool = false,
-                generateModuleMap: Bool = false,
-                generateHeaderMap: Bool = false,
-                headerVisibility: String = "",
-                alwaysSplitRules: Bool = true,
-                vendorize: Bool = true
-    ) {
-        self.podName = podName
-        self.userOptions = userOptions
-        self.globalCopts = globalCopts
-        self.trace = trace
-        self.enableModules = enableModules
-        self.generateModuleMap = generateModuleMap
-        self.generateHeaderMap = generateHeaderMap
-        self.headerVisibility = headerVisibility
-        self.alwaysSplitRules = alwaysSplitRules
-        self.vendorize = vendorize
-    }
-}
-
-private var sharedBuildOptions: BuildOptions = EmptyBuildOptions.shared
+private var sharedBuildOptions: BuildOptions = BasicBuildOptions.empty
 
 public func GetBuildOptions() -> BuildOptions {
     return sharedBuildOptions
 }
-
 
 /// Config Setting Nodes
 /// Write Build dependent COPTS.
@@ -111,7 +37,6 @@ public func makeConfigSettingNodes() -> SkylarkNode {
 
     return .lines([.lines(comment), releaseConfig])
 }
-
 
 public func makeLoadNodes(forConvertibles skylarkConvertibles: [SkylarkConvertible]) -> SkylarkNode {
     let hasSwift = skylarkConvertibles.first(where: { $0 is SwiftLibrary }) != nil
@@ -156,16 +81,24 @@ public struct AcknowledgmentNode: SkylarkConvertible {
     public func toSkylark() -> SkylarkNode {
         let nodeName = bazelLabel(fromString: name + "_acknowledgement").toSkylark()
         let options = GetBuildOptions()
+        let value: String
         let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
-        let value = (getRulePrefix(name: options.podName) +
-             podSupportBuildableDir +
-             ":acknowledgement_fragment").toSkylark()
+        if options.path == "." {
+            value = (getRulePrefix(name: options.podName) +
+                        podSupportBuildableDir + ":acknowledgement_fragment")
+        } else {
+            // TODO: This will not work with external. Consider moving this file to
+            // pod_support instead.
+            value = "//\(options.path)/\(podSupportBuildableDir):acknowledgement_fragment"
+        }
         let target = SkylarkNode.functionCall(
             name: "acknowledged_target",
             arguments: [
                 .named(name: "name", value: nodeName),
+                // Consider moving this to an aspect and adding it to the
+                // existing dep graph.
                 .named(name: "deps", value: deps.map { $0 + "_acknowledgement" }.toSkylark()),
-                .named(name: "value", value: value)
+                .named(name: "value", value: value.toSkylark())
             ]
         )
         return target
@@ -198,18 +131,36 @@ public struct PodBuildFile: SkylarkConvertible {
     /// @note Use toSkylark() to generate the actual BUILD file
     public let skylarkConvertibles: [SkylarkConvertible]
 
+    /// When there is a podspec adjacent to another, we need to concat
+    /// the "child" BUILD file into the parents
+    public let assimilate: Bool
+
+    public static func shouldAssimilate(buildOptions: BuildOptions) -> Bool {
+        return buildOptions.path != "." &&
+            FileManager.default.fileExists(atPath: BazelConstants.buildFilePath)
+    }
+
     /// Return the skylark representation of the entire BUILD file
     public func toSkylark() -> SkylarkNode {
         BuildFileContext.set(BuildFileContext(convertibles: skylarkConvertibles))
         let convertibleNodes: [SkylarkNode] = skylarkConvertibles.compactMap { $0.toSkylark() }
         BuildFileContext.set(nil)
-        return .lines([makeLoadNodes(forConvertibles: skylarkConvertibles)] + [makePrefixNodes()] + convertibleNodes)
+
+        // If we have to assimilate this into another build file then don't
+        // write prefix nodes. This is not 100% pefect, as some other algorithms
+        // require all contents of the build file. This is an intrim solution.
+        let prefixNodes = assimilate  ? SkylarkNode.empty : makePrefixNodes()
+        return .lines([
+            makeLoadNodes(forConvertibles: skylarkConvertibles),
+            prefixNodes]
+            + convertibleNodes)
     }
 
-    public static func with(podSpec: PodSpec, buildOptions: BuildOptions = EmptyBuildOptions.shared) -> PodBuildFile {
+    public static func with(podSpec: PodSpec, buildOptions: BuildOptions = BasicBuildOptions.empty) -> PodBuildFile {
         sharedBuildOptions = buildOptions
         let libs = PodBuildFile.makeConvertables(fromPodspec: podSpec, buildOptions: buildOptions)
-        return PodBuildFile(skylarkConvertibles: libs)
+        return PodBuildFile(skylarkConvertibles: libs, assimilate:
+            PodBuildFile.shouldAssimilate(buildOptions: buildOptions))
     }
 
     private static func bundleLibraries(withPodSpec spec: PodSpec) -> [BazelTarget] {
@@ -338,7 +289,7 @@ public struct PodBuildFile: SkylarkConvertible {
     }
 
     public static func makeConvertables(fromPodspec podSpec: PodSpec,
-            buildOptions: BuildOptions = EmptyBuildOptions.shared) ->
+            buildOptions: BuildOptions = BasicBuildOptions.empty) ->
         [SkylarkConvertible] {
         let subspecTargets: [BazelTarget] = podSpec.subspecs.reduce([]) {
             accum, spec in
