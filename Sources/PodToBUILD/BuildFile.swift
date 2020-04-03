@@ -130,8 +130,10 @@ public struct PodBuildFile: SkylarkConvertible {
     /// Skylark Convertibles excluding prefix nodes.
     /// @note Use toSkylark() to generate the actual BUILD file
     public let skylarkConvertibles: [SkylarkConvertible]
-    public let assimilate: Bool
 
+    /// When there is a podspec adjacent to another, we need to concat
+    /// the "child" BUILD file into the parents
+    public let assimilate: Bool
 
     public static func shouldAssimilate(buildOptions: BuildOptions) -> Bool {
         return buildOptions.path != "." &&

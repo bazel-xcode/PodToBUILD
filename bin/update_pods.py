@@ -127,12 +127,13 @@ def HashFile(path):
     f.close()
     return str(f_hash)
 
-def GetVersion(repository_ctx):
+def GetVersion(invocation_info):
+    repository_ctx = invocation_info.repository_ctx
     self_hash = HashFile(os.path.realpath(__file__))
     repo_tool_hash = HashFile(_getRepoToolPath())
     ctx_hash = str(hash(repository_ctx.GetIdentifier()))
-    # FIXME: this needs to include child pods
-    return self_hash + repo_tool_hash + ctx_hash
+    child_pods = str(hash(child_pods))
+    return self_hash + repo_tool_hash + ctx_hash + child_pods
 
 # Compiler Options
 
@@ -189,13 +190,14 @@ def _link_local_repo(repository_ctx, target_name, url):
         ]
         _exec(repository_ctx, link_cmd)
 
-def _needs_update(repository_ctx):
+def _needs_update(invocation_info):
+    repository_ctx = invocation_info.repository_ctx
     target_name = repository_ctx.target_name
     pod_root_dir = repository_ctx.GetPodRootDir()
     _exec(repository_ctx, ["/bin/bash", "-c", "mkdir -p " + pod_root_dir])
     _exec(repository_ctx, ["/bin/bash", "-c", "touch .pod-version"], pod_root_dir)
     cached_version = _exec(repository_ctx, ["/bin/bash", "-c", "cat .pod-version"], pod_root_dir).split("\n")[0]
-    return GetVersion(repository_ctx) != cached_version
+    return GetVersion(invocation_info) != cached_version
 
 def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
     url = repository_ctx.url
@@ -221,7 +223,7 @@ def _update_repo_impl(invocation_info):
     global POD_PATHS
     POD_PATHS.append(repository_ctx.GetPodRootDir())
 
-    if not _needs_update(repository_ctx):
+    if not _needs_update(invocation_info):
         return
 
     # Note: the pod is not cleaned out if the sourcecode is loaded from the
@@ -258,7 +260,7 @@ def _update_repo_impl(invocation_info):
             entry.append(target_name)
             entry.append("init")
 
-            ## We need to assiminate the child pod options
+            ## We need to assimilate the child pod options
             for user_option in repository_ctx.user_options:
                 entry.extend(["--user_option", "'" + user_option + "'"])
 
