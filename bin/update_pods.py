@@ -132,7 +132,7 @@ def GetVersion(invocation_info):
     self_hash = HashFile(os.path.realpath(__file__))
     repo_tool_hash = HashFile(_getRepoToolPath())
     ctx_hash = str(hash(repository_ctx.GetIdentifier()))
-    child_pods = str(hash("".join(invocation_info.child_pods))) if invocation_info.child_pods else ""
+    child_pods = str(hash("".join([c.url for c in invocation_info.child_pods]))) if invocation_info.child_pods else ""
     return self_hash + repo_tool_hash + ctx_hash + child_pods
 
 # Compiler Options
@@ -271,7 +271,7 @@ def _update_repo_impl(invocation_info):
             for global_copt in GLOBAL_COPTS:
                 entry.extend(["--global_copt", global_copt])
 
-            if repository_ctx.url.startswith("Vendor"):
+            if repository_ctx.url and repository_ctx.url.startswith("Vendor"):
                 entry.extend([
                     "--path",
                     repository_ctx.url
