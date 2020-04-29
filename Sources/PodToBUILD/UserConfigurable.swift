@@ -76,11 +76,11 @@ enum UserConfigurableTransform : SkylarkConvertibleTransform {
     public static  func executeUserOptionsTransform(onConvertibles convertibles: [SkylarkConvertible], copts: [String], userAttributes: UserConfigurableTargetAttributes) -> [SkylarkConvertible] {
         var operatorByTarget = [String: [String]]()
         for keyPath in userAttributes.keyPathOperators {
-            let components = keyPath.components(separatedBy: ".")
+            let components = keyPath.split(separator: ".", maxSplits: 1)
             if let target = components.first {
-                var oprs = (operatorByTarget[target] ?? [String]())
-                oprs.append(components[1])
-                operatorByTarget[target] = oprs
+                var oprs = (operatorByTarget[String(target)] ?? [String]())
+                oprs.append(String(components[1]))
+                operatorByTarget[String(target)] = oprs
             }
         }
 
