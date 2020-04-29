@@ -53,7 +53,7 @@ extension UserConfigurable {
                 fatalError()
             }
 
-            var components = keyPathOperator.components(separatedBy: opt.rawValue)
+            let components = keyPathOperator.components(separatedBy: opt.rawValue)
             guard components.count > 1 else { continue }
 
             let key = components[0].replacingOccurrences(of: " ", with: "")
