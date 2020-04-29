@@ -56,10 +56,10 @@ extension UserConfigurable {
             let components = keyPathOperator.components(separatedBy: opt.rawValue)
             guard components.count > 1 else { continue }
 
-            let key = components[0].replacingOccurrences(of: " ", with: "")
+            let key = components[0].trimmingCharacters(in: .whitespaces)
             let values = components[1].components(separatedBy: ",")
             for value in values {
-                let value = value.replacingOccurrences(of: " ", with: "")
+                let value = value.trimmingCharacters(in: .whitespaces)
                 copy.add(configurableKey: key, value: value)
             }
         }
