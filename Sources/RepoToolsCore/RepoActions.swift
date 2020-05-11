@@ -17,6 +17,7 @@ let PodStoreCacheDir = "\(NSHomeDirectory())/.bazel_pod_store/"
 enum RepoToolsActionValue: String {
     case fetch
     case initialize = "init"
+    case generateWorkspace = "generate_workspace"
 }
 
 /// Fetch options are command line options for a given fetch
@@ -25,6 +26,12 @@ public struct FetchOptions {
     public let url: String
     public let trace: Bool
     public let subDir: String?
+}
+
+
+public struct WorkspaceOptions {
+    public let vendorize: Bool = true
+    public let trace: Bool
 }
 
 /// Parse in Command Line arguments
@@ -39,14 +46,22 @@ enum CLIArgumentType {
 public enum SerializedRepoToolsAction {
     case fetch(FetchOptions)
     case initialize(BasicBuildOptions)
+    case generateWorkspace(WorkspaceOptions)
 
     public static func parse(args: [String]) -> SerializedRepoToolsAction {
-        guard args.count >= 2 else {
-            print("Usage: PodName <init|fetch> ")
+        guard args.count >= 1 else {
+            print("Usage: PodName <init|fetch|generate_workspace> ")
             exit(0)
         }
+
+        // Program, Action
+        // or
         // Program, PodName, Action
-        let action = RepoToolsActionValue(rawValue: args[2])!
+        let actionStr = args.count == 2 ? args[1] : args[2]
+        guard let action = RepoToolsActionValue(rawValue: actionStr) else {
+            print("Usage: PodName <init|fetch|generate_workspace> ")
+            fatalError()
+        }
         switch action {
         case .fetch:
             let fetchOpts = SerializedRepoToolsAction.tryParseFetch(args: args)
@@ -54,6 +69,9 @@ public enum SerializedRepoToolsAction {
         case .initialize:
             let initOpts = SerializedRepoToolsAction.tryParseInit(args: args)
             return .initialize(initOpts)
+        case .generateWorkspace:
+            let trace = UserDefaults.standard.bool(forKey: "-trace")
+            return .generateWorkspace(WorkspaceOptions(trace: trace))
         }
     }
 
@@ -476,6 +494,19 @@ public enum RepoActions {
         let nestingDepth = buildOptions.path.split(separator: "/").count
         let relativePathToWorkspace = (0..<nestingDepth).map { _ in ".." }.joined(separator: "/") 
         return "\(relativePathToWorkspace)/../Vendor/rules_pods/BazelExtensions"
+    }
+
+    /// Generates a workspace from a Podfile.lock
+    public static func generateWorkspace(shell: ShellContext, workspaceOptions: WorkspaceOptions) {
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: "Podfile.lock"))
+            let lockfile = try Lockfile(data: data)
+            let workspace = try PodsWorkspace(lockfile: lockfile, shell: shell)
+            let compiler = SkylarkCompiler(workspace.toSkylark())
+            print("Dict", compiler.run())
+        } catch {
+            print("Error", error)
+        }
     }
 
     /// Fetch pods from urls.

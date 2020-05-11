@@ -26,21 +26,89 @@ enum WorkspaceError: Error {
     case unsupportedSource
 }
 
-struct PodRepositoryWorkspaceEntry: SkylarkConvertible {
+public struct PodRepositoryWorkspaceEntry: SkylarkConvertible {
     var name: String
-    var url: URL
-    var stripPrefix: String
+    var url: String?
+    var podspecURL: String?
 
-    func toSkylark() -> SkylarkNode {
-        let repoSkylark = SkylarkNode.functionCall(name: "new_pod_repository", arguments: [
-            .named(name: "name", value: .string(name)),
-            .named(name: "url", value: .string(url.absoluteString)),
-            .named(name: "strip_prefix", value: .string(stripPrefix)),
-        ])
+    public func toSkylark() -> SkylarkNode {
+        var args = [SkylarkFunctionArgument.named(name: "name", value: .string(name))]
+        if let aUrl = url {
+            args.append(.named(name: "url", value: .string(aUrl)))
+        }
+        if let aPodspecURL = podspecURL {
+            args.append(.named(name: "podspec_url", value: .string(aPodspecURL)))
+        }
+        let repoSkylark = SkylarkNode.functionCall(name: "new_pod_repository",
+                                                   arguments: args)
         return repoSkylark
     }
+}
 
-    static func with(podSpec: PodSpec) throws -> PodRepositoryWorkspaceEntry {
+public struct PodsWorkspace: SkylarkConvertible {
+    var pods: [PodRepositoryWorkspaceEntry] = []
+
+    public init(lockfile: Lockfile, shell: ShellContext) throws {
+        pods = try lockfile.dependencies.compactMap {
+            depStr in
+            let depName = String(depStr.split(separator: " ")[0])
+            var sourceURL: String?
+            var podspecURL: String?
+            if let externalDepInfo = lockfile.externalSources[depName] {
+                if let pathStr = externalDepInfo[":path"] {
+                    sourceURL = pathStr
+                }
+                if let externalPodspecURL = externalDepInfo[":podspec"] {
+                    podspecURL = externalPodspecURL
+                }
+            } else {
+                let whichPod = shell.shellOut("which pod").standardOutputAsString
+                if whichPod.isEmpty {
+                    fatalError("RepoTools requires a cocoapod installation on host")
+                }
+                // This command loads a JSON podspec from the cocoapods
+                // repository.
+                // We only do this to get the source if it isn't provided, in
+                // order to export a github URL
+                let podBin = whichPod.components(separatedBy: "\n")[0]
+                let localSpec = shell.command(podBin, arguments: ["spec", "which", depName])
+                guard localSpec.terminationStatus == 0 else {
+                    fatalError("""
+                            PodSpec decoding failed \(localSpec.terminationStatus)
+                            stdout: \(localSpec.standardOutputAsString)
+                            stderr: \(localSpec.standardErrorAsString)
+                    """)
+                }
+                let path = String(localSpec.standardOutputAsString.components(separatedBy:
+                    "\n")[0])
+                let podSpec = try PodsWorkspace.getPodspec(path: path)
+                sourceURL = try? PodsWorkspace.getURL(podSpec: podSpec) ?? "unsupported"
+            }
+
+            return PodRepositoryWorkspaceEntry(
+                name: depName,
+                url: sourceURL,
+                podspecURL: podspecURL
+            )
+        }
+    }
+
+    public func toSkylark() -> SkylarkNode {
+        return .lines(pods.map { $0.toSkylark() })
+    }
+
+    static func getPodspec(path: String) throws -> PodSpec {
+        let jsonData = try Data(contentsOf: URL(fileURLWithPath: path))
+        guard let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
+            JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
+            let JSONPodspec = JSONFile as? JSONDict
+        else {
+            fatalError("Invalid JSON Podspec: (look inside \(path))")
+        }
+        return try PodSpec(JSONPodspec: JSONPodspec)
+    }
+
+    static func getURL(podSpec: PodSpec) throws -> String {
         guard let source = podSpec.source else {
             throw WorkspaceError.unsupportedSource
         }
@@ -50,18 +118,11 @@ struct PodRepositoryWorkspaceEntry: SkylarkConvertible {
             guard gitURL.absoluteString.contains("github") else {
                 throw WorkspaceError.unsupportedSource
             }
-            guard let url = URL(string: "\(gitURL.deletingPathExtension().absoluteString)/archive/\(tag).zip") else {
-                throw WorkspaceError.unsupportedSource
-            }
-            
-            let guessedStripPrefix = "\(podSpec.name)-\(tag)"
-            return PodRepositoryWorkspaceEntry(name: podSpec.name, url: url, stripPrefix: guessedStripPrefix)
-        case .git(url: _, tag: .none, commit: .some(_)):
-            // TODO: Support commit hashes
-            throw WorkspaceError.unsupportedSource
+            return "\(gitURL.deletingPathExtension().absoluteString)/archive/\(tag ?? "").zip"
+        case let .git(url: gitURL, tag: .none, commit: tag):
+            return "\(gitURL.deletingPathExtension().absoluteString)/archive/\(tag ?? "").zip"
         case let .http(url: url):
-            let guessedStripPrefix = url.deletingPathExtension().lastPathComponent
-            return PodRepositoryWorkspaceEntry(name: podSpec.name, url: url, stripPrefix: guessedStripPrefix)
+            return url.absoluteString
         default:
             throw WorkspaceError.unsupportedSource
         }

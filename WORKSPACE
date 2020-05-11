@@ -11,6 +11,12 @@ load(
     "apple_rules_dependencies",
 )
 
+git_repository(
+    name = "build_bazel_rules_swift",
+    remote = "https://github.com/bazelbuild/rules_swift.git",
+    commit = "0192f16b82b2998d846c45187545e38548a6671a",
+)
+
 apple_rules_dependencies()
 
 load(
@@ -33,3 +39,8 @@ load(
 )
 
 protobuf_deps()
+
+load("//third_party:repositories.bzl", "podtobuild_dependencies")
+
+podtobuild_dependencies()
+

@@ -13,15 +13,22 @@ import Foundation
 class BuildTest: XCTestCase {
     let shell = SystemShellContext(trace: true)
 
+    func srcRoot() -> String {
+        // This path is set by Bazel
+        guard let testSrcDir = ProcessInfo.processInfo.environment["TEST_SRCDIR"] else{
+            fatalError("Missing bazel test base")
+        }
+        let componets = testSrcDir.components(separatedBy: "/")
+        return componets[0 ... componets.count - 5].joined(separator: "/")
+    }
+
     func run(_ example: String) {
         // Travis will throw errors if the process doesn't output after 10 mins.
         let timer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { timer in
             print("[INFO] Build tests still running...")
         }
 
-        let components = #file .split(separator: "/")
-        let rootDir = "/" + components [0 ... components.count - 4].joined(separator: "/")
-
+        let rootDir = srcRoot()
         // Give 3 attempts to do the fetch. This is a workaround for flaky
         // networking
         let firstFetchResult = (0...3).lazy.compactMap {
