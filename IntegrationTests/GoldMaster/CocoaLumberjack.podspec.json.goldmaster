@@ -1,3 +1,4 @@
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "pch_with_name_hint",
@@ -35,73 +36,62 @@ config_setting(
   }
 )
 filegroup(
-  name = "Adjust_hdrs",
+  name = "CocoaLumberjack_hdrs",
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
   ) + [
-    ":Core_hdrs"
+    ":Default_hdrs",
+    ":Extensions_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
 )
 headermap(
-  name = "Adjust_hmap",
-  namespace = "Adjust",
+  name = "CocoaLumberjack_hmap",
+  namespace = "CocoaLumberjack",
   hdrs = [
-    ":Adjust_hdrs"
+    ":CocoaLumberjack_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Default",
+    ":Extensions"
   ],
   visibility = [
     "//visibility:public"
   ]
 )
 gen_includes(
-  name = "Adjust_includes",
+  name = "CocoaLumberjack_includes",
   include = [
-    "Vendor/Adjust/pod_support/Headers/Public/"
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
   ]
 )
 gen_module_map(
-  "Adjust",
-  "Adjust_module_map",
-  "Adjust",
+  "CocoaLumberjack",
+  "CocoaLumberjack_module_map",
+  "CocoaLumberjack",
   [
-    "Adjust_hdrs"
+    "CocoaLumberjack_hdrs"
   ]
 )
 objc_library(
-  name = "Adjust",
+  name = "CocoaLumberjack",
   enable_modules = 0,
   hdrs = [
-    ":Adjust_hdrs"
+    ":CocoaLumberjack_hdrs"
   ],
   pch = pch_with_name_hint(
-    "Adjust",
+    "CocoaLumberjack",
     []
   ),
-  sdk_frameworks = [
-    "SystemConfiguration"
-  ],
-  weak_sdk_frameworks = select(
-    {
-      "//conditions:default": [
-        "AdSupport",
-        "iAd"
-      ],
-      ":tvosCase": [
-        "AdSupport"
-      ]
-    }
-  ),
   deps = [
-    ":Core",
-    ":Adjust_includes"
+    ":Default",
+    ":Extensions",
+    ":CocoaLumberjack_includes"
   ],
   copts = select(
     {
@@ -114,25 +104,118 @@ objc_library(
       ]
     }
   ) + [
-    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
   ] + [
-    "-fmodule-name=Adjust_pod_module"
+    "-fmodule-name=CocoaLumberjack_pod_module"
   ],
   visibility = [
     "//visibility:public"
   ]
 )
 acknowledged_target(
-  name = "Adjust_acknowledgement",
+  name = "CocoaLumberjack_acknowledgement",
   deps = [],
-  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Default_hdrs",
+  srcs = glob(
+    [
+      "Classes/CocoaLumberjack.h",
+      "Classes/DD*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Default_union_hdrs",
+  srcs = [
+    "Default_hdrs",
+    "CocoaLumberjack_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Default_hmap",
+  namespace = "CocoaLumberjack",
+  hdrs = [
+    ":Default_union_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "Default_includes",
+  include = [
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "Default",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "Classes/DD*.m"
+    ],
+    exclude = glob(
+      [
+        "Classes/Extensions/*.m"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":Default_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "CocoaLumberjack",
+    glob(
+      [
+        "Classes/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
+  ),
+  deps = [
+    ":Default_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
+  ] + [
+    "-fmodule-name=CocoaLumberjack_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "Default_acknowledgement",
+  deps = [],
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
     [
-      "Adjust/*.h",
-      "Adjust/ADJAdditions/*.h"
+      "Classes/DD*.h"
     ],
     exclude_directories = 1
   ),
@@ -144,7 +227,7 @@ filegroup(
   name = "Core_union_hdrs",
   srcs = [
     "Core_hdrs",
-    "Adjust_hdrs"
+    "CocoaLumberjack_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -152,7 +235,7 @@ filegroup(
 )
 headermap(
   name = "Core_hmap",
-  namespace = "Adjust",
+  namespace = "CocoaLumberjack",
   hdrs = [
     ":Core_union_hdrs"
   ],
@@ -164,7 +247,7 @@ headermap(
 gen_includes(
   name = "Core_includes",
   include = [
-    "Vendor/Adjust/pod_support/Headers/Public/"
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
   ]
 )
 objc_library(
@@ -172,52 +255,21 @@ objc_library(
   enable_modules = 0,
   srcs = glob(
     [
-      "Adjust/*.m",
-      "Adjust/ADJAdditions/*.m"
+      "Classes/DD*.m"
     ],
-    exclude = glob(
-      [
-        "plugin/Sociomantic/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Criteo/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Trademob/*.m"
-      ],
-      exclude_directories = 1
-    ),
     exclude_directories = 1
   ),
   hdrs = [
     ":Core_union_hdrs"
   ],
   pch = pch_with_name_hint(
-    "Adjust",
+    "CocoaLumberjack",
     glob(
       [
-        "Adjust/**/*.pch"
+        "Classes/**/*.pch"
       ],
       exclude_directories = 1
     )
-  ),
-  sdk_frameworks = [
-    "SystemConfiguration"
-  ],
-  weak_sdk_frameworks = select(
-    {
-      "//conditions:default": [
-        "AdSupport",
-        "iAd"
-      ],
-      ":tvosCase": [
-        "AdSupport"
-      ]
-    }
   ),
   deps = [
     ":Core_includes"
@@ -233,9 +285,9 @@ objc_library(
       ]
     }
   ) + [
-    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
   ] + [
-    "-fmodule-name=Adjust_pod_module"
+    "-fmodule-name=CocoaLumberjack_pod_module"
   ],
   visibility = [
     "//visibility:public"
@@ -244,13 +296,13 @@ objc_library(
 acknowledged_target(
   name = "Core_acknowledgement",
   deps = [],
-  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
-  name = "Sociomantic_hdrs",
+  name = "Extensions_hdrs",
   srcs = glob(
     [
-      "plugin/Sociomantic/*.h"
+      "Classes/Extensions/*.h"
     ],
     exclude_directories = 1
   ),
@@ -259,72 +311,58 @@ filegroup(
   ]
 )
 filegroup(
-  name = "Sociomantic_union_hdrs",
+  name = "Extensions_union_hdrs",
   srcs = [
-    "Sociomantic_hdrs",
-    "Adjust_hdrs"
+    "Extensions_hdrs",
+    "CocoaLumberjack_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
 )
 headermap(
-  name = "Sociomantic_hmap",
-  namespace = "Adjust",
+  name = "Extensions_hmap",
+  namespace = "CocoaLumberjack",
   hdrs = [
-    ":Sociomantic_union_hdrs"
+    ":Extensions_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Default"
   ],
   visibility = [
     "//visibility:public"
   ]
 )
 gen_includes(
-  name = "Sociomantic_includes",
+  name = "Extensions_includes",
   include = [
-    "Vendor/Adjust/pod_support/Headers/Public/"
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
   ]
 )
 objc_library(
-  name = "Sociomantic",
+  name = "Extensions",
   enable_modules = 0,
   srcs = glob(
     [
-      "plugin/Sociomantic/*.m"
+      "Classes/Extensions/*.m"
     ],
     exclude_directories = 1
   ),
   hdrs = [
-    ":Sociomantic_union_hdrs"
+    ":Extensions_union_hdrs"
   ],
   pch = pch_with_name_hint(
-    "Adjust",
+    "CocoaLumberjack",
     glob(
       [
-        "plugin/**/*.pch"
+        "Classes/**/*.pch"
       ],
       exclude_directories = 1
     )
   ),
-  sdk_frameworks = [
-    "SystemConfiguration"
-  ],
-  weak_sdk_frameworks = select(
-    {
-      "//conditions:default": [
-        "AdSupport",
-        "iAd"
-      ],
-      ":tvosCase": [
-        "AdSupport"
-      ]
-    }
-  ),
   deps = [
-    ":Core",
-    ":Sociomantic_includes"
+    ":Default",
+    ":Extensions_includes"
   ],
   copts = select(
     {
@@ -337,98 +375,121 @@ objc_library(
       ]
     }
   ) + [
-    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
   ] + [
-    "-fmodule-name=Adjust_pod_module"
+    "-fmodule-name=CocoaLumberjack_pod_module"
   ],
   visibility = [
     "//visibility:public"
   ]
 )
 acknowledged_target(
-  name = "Sociomantic_acknowledgement",
+  name = "Extensions_acknowledgement",
   deps = [],
-  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
-  name = "Criteo_hdrs",
-  srcs = glob(
-    [
-      "plugin/Criteo/*.h"
-    ],
-    exclude_directories = 1
+  name = "CLI_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": [],
+      ":osxCase": glob(
+        [
+          "Classes/CLI/*.h"
+        ],
+        exclude_directories = 1
+      )
+    }
   ),
   visibility = [
     "//visibility:public"
   ]
 )
 filegroup(
-  name = "Criteo_union_hdrs",
+  name = "CLI_union_hdrs",
   srcs = [
-    "Criteo_hdrs",
-    "Adjust_hdrs"
+    "CLI_hdrs",
+    "CocoaLumberjack_hdrs"
   ],
   visibility = [
     "//visibility:public"
   ]
 )
 headermap(
-  name = "Criteo_hmap",
-  namespace = "Adjust",
+  name = "CLI_hmap",
+  namespace = "CocoaLumberjack",
   hdrs = [
-    ":Criteo_union_hdrs"
+    ":CLI_union_hdrs"
   ],
-  deps = [
-    ":Core"
-  ],
+  deps = select(
+    {
+      "//conditions:default": [],
+      ":osxCase": [
+        ":Default"
+      ]
+    }
+  ),
   visibility = [
     "//visibility:public"
   ]
 )
 gen_includes(
-  name = "Criteo_includes",
+  name = "CLI_includes",
   include = [
-    "Vendor/Adjust/pod_support/Headers/Public/"
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
   ]
 )
 objc_library(
-  name = "Criteo",
+  name = "CLI",
   enable_modules = 0,
-  srcs = glob(
-    [
-      "plugin/Criteo/*.m"
-    ],
-    exclude_directories = 1
-  ),
-  hdrs = [
-    ":Criteo_union_hdrs"
-  ],
-  pch = pch_with_name_hint(
-    "Adjust",
-    glob(
-      [
-        "plugin/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
-  sdk_frameworks = [
-    "SystemConfiguration"
-  ],
-  weak_sdk_frameworks = select(
+  srcs = select(
     {
-      "//conditions:default": [
-        "AdSupport",
-        "iAd"
-      ],
-      ":tvosCase": [
-        "AdSupport"
-      ]
+      "//conditions:default": [],
+      ":osxCase": glob(
+        [
+          "Classes/CLI/*.m"
+        ],
+        exclude_directories = 1
+      )
     }
   ),
-  deps = [
-    ":Core",
-    ":Criteo_includes"
+  hdrs = [
+    ":CLI_union_hdrs"
+  ],
+  pch = select(
+    {
+      "//conditions:default": pch_with_name_hint(
+        "CocoaLumberjack",
+        []
+      ),
+      ":osxCase": pch_with_name_hint(
+        "CocoaLumberjack",
+        glob(
+          [
+            "Classes/**/*.pch"
+          ],
+          exclude_directories = 1
+        )
+      ),
+      ":tvosCase": pch_with_name_hint(
+        "CocoaLumberjack",
+        []
+      ),
+      ":watchosCase": pch_with_name_hint(
+        "CocoaLumberjack",
+        []
+      )
+    }
+  ),
+  deps = select(
+    {
+      "//conditions:default": [],
+      ":osxCase": [
+        ":Default"
+      ]
+    }
+  ) + [
+    ":CLI_includes"
   ],
   copts = select(
     {
@@ -441,120 +502,29 @@ objc_library(
       ]
     }
   ) + [
-    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
   ] + [
-    "-fmodule-name=Adjust_pod_module"
+    "-fmodule-name=CocoaLumberjack_pod_module"
   ],
   visibility = [
     "//visibility:public"
   ]
 )
 acknowledged_target(
-  name = "Criteo_acknowledgement",
+  name = "CLI_acknowledgement",
   deps = [],
-  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )
-filegroup(
-  name = "Trademob_hdrs",
+swift_library(
+  name = "Swift",
   srcs = glob(
     [
-      "plugin/Trademob/*.h"
+      "Classes/CocoaLumberjack.swift"
     ],
     exclude_directories = 1
   ),
-  visibility = [
-    "//visibility:public"
-  ]
-)
-filegroup(
-  name = "Trademob_union_hdrs",
-  srcs = [
-    "Trademob_hdrs",
-    "Adjust_hdrs"
-  ],
-  visibility = [
-    "//visibility:public"
-  ]
-)
-headermap(
-  name = "Trademob_hmap",
-  namespace = "Adjust",
-  hdrs = [
-    ":Trademob_union_hdrs"
-  ],
   deps = [
-    ":Core"
+    ":Default"
   ],
-  visibility = [
-    "//visibility:public"
-  ]
-)
-gen_includes(
-  name = "Trademob_includes",
-  include = [
-    "Vendor/Adjust/pod_support/Headers/Public/"
-  ]
-)
-objc_library(
-  name = "Trademob",
-  enable_modules = 0,
-  srcs = glob(
-    [
-      "plugin/Trademob/*.m"
-    ],
-    exclude_directories = 1
-  ),
-  hdrs = [
-    ":Trademob_union_hdrs"
-  ],
-  pch = pch_with_name_hint(
-    "Adjust",
-    glob(
-      [
-        "plugin/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
-  sdk_frameworks = [
-    "SystemConfiguration"
-  ],
-  weak_sdk_frameworks = select(
-    {
-      "//conditions:default": [
-        "AdSupport",
-        "iAd"
-      ],
-      ":tvosCase": [
-        "AdSupport"
-      ]
-    }
-  ),
-  deps = [
-    ":Core",
-    ":Trademob_includes"
-  ],
-  copts = select(
-    {
-      "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
-      ],
-      ":release": [
-        "-DPOD_CONFIGURATION_RELEASE=1",
-        "-DNS_BLOCK_ASSERTIONS=1"
-      ]
-    }
-  ) + [
-    "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust_pod_module"
-  ],
-  visibility = [
-    "//visibility:public"
-  ]
-)
-acknowledged_target(
-  name = "Trademob_acknowledgement",
-  deps = [],
-  value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
+  data = []
 )

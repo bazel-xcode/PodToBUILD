@@ -18,9 +18,21 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
+  name = "osxCase",
   values = {
-    "cpu": "powerpc1"
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
   }
 )
 filegroup(
@@ -80,9 +92,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Stripe",
-    [
-      "Stripe/**/*.pch"
-    ]
+    glob(
+      [
+        "Stripe/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "Foundation",
@@ -127,14 +142,15 @@ acknowledged_target(
 )
 apple_resource_bundle(
   name = "Stripe_Bundle_Stripe",
-  resources = select(
-    {
-      "//conditions:default": glob(
-        [
-          "Stripe/Resources/**/*"
-        ],
-        exclude_directories = 1
-      )
-    }
+  resources = glob(
+    [
+      "Stripe/Resources/**/*"
+    ],
+    exclude_directories = 1
   )
+)
+acknowledged_target(
+  name = "Stripe_Bundle_Stripe_acknowledgement",
+  deps = [],
+  value = "//Vendor/Stripe/pod_support_buildable:acknowledgement_fragment"
 )

@@ -17,6 +17,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "iRate_hdrs",
   srcs = glob(
@@ -73,9 +91,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "iRate",
-    [
-      "iRate/**/*.pch"
-    ]
+    glob(
+      [
+        "iRate/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":iRate_includes"
@@ -115,4 +136,9 @@ apple_bundle_import(
     ],
     exclude_directories = 1
   )
+)
+acknowledged_target(
+  name = "iRate_Bundle_iRate_acknowledgement",
+  deps = [],
+  value = "//Vendor/iRate/pod_support_buildable:acknowledgement_fragment"
 )

@@ -18,15 +18,21 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
+  name = "osxCase",
   values = {
-    "cpu": "powerpc1"
+    "apple_platform_type": "macos"
   }
 )
 config_setting(
   name = "tvosCase",
   values = {
-    "cpu": "powerpc3"
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
   }
 )
 filegroup(
@@ -146,6 +152,37 @@ filegroup(
         ],
         exclude_directories = 1
       ),
+      ":osxCase": glob(
+        [
+          "React/**/*.h",
+          "React/**/*.hpp",
+          "React/**/*.hxx"
+        ],
+        exclude = [
+          "**/__tests__/*.h",
+          "**/__tests__/*.hpp",
+          "**/__tests__/*.hxx",
+          "IntegrationTests/*.h",
+          "IntegrationTests/*.hpp",
+          "IntegrationTests/*.hxx",
+          "React/Cxx*/*.h",
+          "React/Cxx*/*.hpp",
+          "React/Cxx*/*.hxx",
+          "React/DevSupport/*.h",
+          "React/DevSupport/*.hpp",
+          "React/DevSupport/*.hxx",
+          "React/Fabric/**/*.h",
+          "React/Fabric/**/*.hpp",
+          "React/Fabric/**/*.hxx",
+          "React/Inspector/*.h",
+          "React/Inspector/*.hpp",
+          "React/Inspector/*.hxx",
+          "ReactCommon/yoga/*.h",
+          "ReactCommon/yoga/*.hpp",
+          "ReactCommon/yoga/*.hxx"
+        ],
+        exclude_directories = 1
+      ),
       ":tvosCase": glob(
         [
           "React/**/*.h",
@@ -197,6 +234,37 @@ filegroup(
           "ReactCommon/yoga/*.hxx"
         ],
         exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "React/**/*.h",
+          "React/**/*.hpp",
+          "React/**/*.hxx"
+        ],
+        exclude = [
+          "**/__tests__/*.h",
+          "**/__tests__/*.hpp",
+          "**/__tests__/*.hxx",
+          "IntegrationTests/*.h",
+          "IntegrationTests/*.hpp",
+          "IntegrationTests/*.hxx",
+          "React/Cxx*/*.h",
+          "React/Cxx*/*.hpp",
+          "React/Cxx*/*.hxx",
+          "React/DevSupport/*.h",
+          "React/DevSupport/*.hpp",
+          "React/DevSupport/*.hxx",
+          "React/Fabric/**/*.h",
+          "React/Fabric/**/*.hpp",
+          "React/Fabric/**/*.hxx",
+          "React/Inspector/*.h",
+          "React/Inspector/*.hpp",
+          "React/Inspector/*.hxx",
+          "ReactCommon/yoga/*.h",
+          "ReactCommon/yoga/*.hpp",
+          "ReactCommon/yoga/*.hxx"
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -230,7 +298,6 @@ headermap(
 gen_includes(
   name = "Core_cxx_includes",
   include = [
-    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -253,14 +320,6 @@ objc_library(
           "**/__tests__/*.m",
           "**/__tests__/*.mm",
           "**/__tests__/*.s",
-          "**/tests/*.S",
-          "**/tests/*.c",
-          "**/tests/*.cc",
-          "**/tests/*.cpp",
-          "**/tests/*.cxx",
-          "**/tests/*.m",
-          "**/tests/*.mm",
-          "**/tests/*.s",
           "IntegrationTests/*.S",
           "IntegrationTests/*.c",
           "IntegrationTests/*.cc",
@@ -269,28 +328,6 @@ objc_library(
           "IntegrationTests/*.m",
           "IntegrationTests/*.mm",
           "IntegrationTests/*.s",
-          "Libraries/ART/**/*.m",
-          "Libraries/ActionSheetIOS/*.m",
-          "Libraries/Blob/*.m",
-          "Libraries/Blob/*.mm",
-          "Libraries/CameraRoll/*.m",
-          "Libraries/Geolocation/*.m",
-          "Libraries/Image/*.m",
-          "Libraries/LinkingIOS/*.m",
-          "Libraries/NativeAnimation/*.m",
-          "Libraries/NativeAnimation/Drivers/*.m",
-          "Libraries/NativeAnimation/Nodes/*.m",
-          "Libraries/Network/*.m",
-          "Libraries/Network/*.mm",
-          "Libraries/PushNotificationIOS/*.m",
-          "Libraries/RCTTest/**/*.m",
-          "Libraries/Settings/*.m",
-          "Libraries/Text/**/*.m",
-          "Libraries/Vibration/*.m",
-          "Libraries/WebSocket/*.m",
-          "React/**/*.S",
-          "React/**/*.c",
-          "React/**/*.m",
           "React/**/RCTTV*.S",
           "React/**/RCTTV*.c",
           "React/**/RCTTV*.cc",
@@ -339,7 +376,210 @@ objc_library(
           "ReactCommon/yoga/*.m",
           "ReactCommon/yoga/*.mm",
           "ReactCommon/yoga/*.s"
+        ] + glob(
+          [
+            "React/**/*.S",
+            "React/**/*.c",
+            "React/**/*.m"
+          ],
+          exclude = [
+            "**/__tests__/*.S",
+            "**/__tests__/*.c",
+            "**/__tests__/*.cc",
+            "**/__tests__/*.cpp",
+            "**/__tests__/*.cxx",
+            "**/__tests__/*.m",
+            "**/__tests__/*.mm",
+            "**/__tests__/*.s",
+            "IntegrationTests/*.S",
+            "IntegrationTests/*.c",
+            "IntegrationTests/*.cc",
+            "IntegrationTests/*.cpp",
+            "IntegrationTests/*.cxx",
+            "IntegrationTests/*.m",
+            "IntegrationTests/*.mm",
+            "IntegrationTests/*.s",
+            "React/**/RCTTV*.S",
+            "React/**/RCTTV*.c",
+            "React/**/RCTTV*.cc",
+            "React/**/RCTTV*.cpp",
+            "React/**/RCTTV*.cxx",
+            "React/**/RCTTV*.m",
+            "React/**/RCTTV*.mm",
+            "React/**/RCTTV*.s",
+            "React/Cxx*/*.S",
+            "React/Cxx*/*.c",
+            "React/Cxx*/*.cc",
+            "React/Cxx*/*.cpp",
+            "React/Cxx*/*.cxx",
+            "React/Cxx*/*.m",
+            "React/Cxx*/*.mm",
+            "React/Cxx*/*.s",
+            "React/DevSupport/*.S",
+            "React/DevSupport/*.c",
+            "React/DevSupport/*.cc",
+            "React/DevSupport/*.cpp",
+            "React/DevSupport/*.cxx",
+            "React/DevSupport/*.m",
+            "React/DevSupport/*.mm",
+            "React/DevSupport/*.s",
+            "React/Fabric/**/*.S",
+            "React/Fabric/**/*.c",
+            "React/Fabric/**/*.cc",
+            "React/Fabric/**/*.cpp",
+            "React/Fabric/**/*.cxx",
+            "React/Fabric/**/*.m",
+            "React/Fabric/**/*.mm",
+            "React/Fabric/**/*.s",
+            "React/Inspector/*.S",
+            "React/Inspector/*.c",
+            "React/Inspector/*.cc",
+            "React/Inspector/*.cpp",
+            "React/Inspector/*.cxx",
+            "React/Inspector/*.m",
+            "React/Inspector/*.mm",
+            "React/Inspector/*.s",
+            "ReactCommon/yoga/*.S",
+            "ReactCommon/yoga/*.c",
+            "ReactCommon/yoga/*.cc",
+            "ReactCommon/yoga/*.cpp",
+            "ReactCommon/yoga/*.cxx",
+            "ReactCommon/yoga/*.m",
+            "ReactCommon/yoga/*.mm",
+            "ReactCommon/yoga/*.s"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        [
+          "React/**/*.cpp",
+          "React/**/*.mm"
         ],
+        exclude = [
+          "**/__tests__/*.S",
+          "**/__tests__/*.c",
+          "**/__tests__/*.cc",
+          "**/__tests__/*.cpp",
+          "**/__tests__/*.cxx",
+          "**/__tests__/*.m",
+          "**/__tests__/*.mm",
+          "**/__tests__/*.s",
+          "IntegrationTests/*.S",
+          "IntegrationTests/*.c",
+          "IntegrationTests/*.cc",
+          "IntegrationTests/*.cpp",
+          "IntegrationTests/*.cxx",
+          "IntegrationTests/*.m",
+          "IntegrationTests/*.mm",
+          "IntegrationTests/*.s",
+          "React/Cxx*/*.S",
+          "React/Cxx*/*.c",
+          "React/Cxx*/*.cc",
+          "React/Cxx*/*.cpp",
+          "React/Cxx*/*.cxx",
+          "React/Cxx*/*.m",
+          "React/Cxx*/*.mm",
+          "React/Cxx*/*.s",
+          "React/DevSupport/*.S",
+          "React/DevSupport/*.c",
+          "React/DevSupport/*.cc",
+          "React/DevSupport/*.cpp",
+          "React/DevSupport/*.cxx",
+          "React/DevSupport/*.m",
+          "React/DevSupport/*.mm",
+          "React/DevSupport/*.s",
+          "React/Fabric/**/*.S",
+          "React/Fabric/**/*.c",
+          "React/Fabric/**/*.cc",
+          "React/Fabric/**/*.cpp",
+          "React/Fabric/**/*.cxx",
+          "React/Fabric/**/*.m",
+          "React/Fabric/**/*.mm",
+          "React/Fabric/**/*.s",
+          "React/Inspector/*.S",
+          "React/Inspector/*.c",
+          "React/Inspector/*.cc",
+          "React/Inspector/*.cpp",
+          "React/Inspector/*.cxx",
+          "React/Inspector/*.m",
+          "React/Inspector/*.mm",
+          "React/Inspector/*.s",
+          "ReactCommon/yoga/*.S",
+          "ReactCommon/yoga/*.c",
+          "ReactCommon/yoga/*.cc",
+          "ReactCommon/yoga/*.cpp",
+          "ReactCommon/yoga/*.cxx",
+          "ReactCommon/yoga/*.m",
+          "ReactCommon/yoga/*.mm",
+          "ReactCommon/yoga/*.s"
+        ] + glob(
+          [
+            "React/**/*.S",
+            "React/**/*.c",
+            "React/**/*.m"
+          ],
+          exclude = [
+            "**/__tests__/*.S",
+            "**/__tests__/*.c",
+            "**/__tests__/*.cc",
+            "**/__tests__/*.cpp",
+            "**/__tests__/*.cxx",
+            "**/__tests__/*.m",
+            "**/__tests__/*.mm",
+            "**/__tests__/*.s",
+            "IntegrationTests/*.S",
+            "IntegrationTests/*.c",
+            "IntegrationTests/*.cc",
+            "IntegrationTests/*.cpp",
+            "IntegrationTests/*.cxx",
+            "IntegrationTests/*.m",
+            "IntegrationTests/*.mm",
+            "IntegrationTests/*.s",
+            "React/Cxx*/*.S",
+            "React/Cxx*/*.c",
+            "React/Cxx*/*.cc",
+            "React/Cxx*/*.cpp",
+            "React/Cxx*/*.cxx",
+            "React/Cxx*/*.m",
+            "React/Cxx*/*.mm",
+            "React/Cxx*/*.s",
+            "React/DevSupport/*.S",
+            "React/DevSupport/*.c",
+            "React/DevSupport/*.cc",
+            "React/DevSupport/*.cpp",
+            "React/DevSupport/*.cxx",
+            "React/DevSupport/*.m",
+            "React/DevSupport/*.mm",
+            "React/DevSupport/*.s",
+            "React/Fabric/**/*.S",
+            "React/Fabric/**/*.c",
+            "React/Fabric/**/*.cc",
+            "React/Fabric/**/*.cpp",
+            "React/Fabric/**/*.cxx",
+            "React/Fabric/**/*.m",
+            "React/Fabric/**/*.mm",
+            "React/Fabric/**/*.s",
+            "React/Inspector/*.S",
+            "React/Inspector/*.c",
+            "React/Inspector/*.cc",
+            "React/Inspector/*.cpp",
+            "React/Inspector/*.cxx",
+            "React/Inspector/*.m",
+            "React/Inspector/*.mm",
+            "React/Inspector/*.s",
+            "ReactCommon/yoga/*.S",
+            "ReactCommon/yoga/*.c",
+            "ReactCommon/yoga/*.cc",
+            "ReactCommon/yoga/*.cpp",
+            "ReactCommon/yoga/*.cxx",
+            "ReactCommon/yoga/*.m",
+            "ReactCommon/yoga/*.mm",
+            "ReactCommon/yoga/*.s"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":tvosCase": glob(
@@ -356,14 +596,6 @@ objc_library(
           "**/__tests__/*.m",
           "**/__tests__/*.mm",
           "**/__tests__/*.s",
-          "**/tests/*.S",
-          "**/tests/*.c",
-          "**/tests/*.cc",
-          "**/tests/*.cpp",
-          "**/tests/*.cxx",
-          "**/tests/*.m",
-          "**/tests/*.mm",
-          "**/tests/*.s",
           "IntegrationTests/*.S",
           "IntegrationTests/*.c",
           "IntegrationTests/*.cc",
@@ -372,29 +604,6 @@ objc_library(
           "IntegrationTests/*.m",
           "IntegrationTests/*.mm",
           "IntegrationTests/*.s",
-          "Libraries/ART/**/*.m",
-          "Libraries/ActionSheetIOS/*.m",
-          "Libraries/Blob/*.m",
-          "Libraries/Blob/*.mm",
-          "Libraries/CameraRoll/*.m",
-          "Libraries/Geolocation/*.m",
-          "Libraries/Image/*.m",
-          "Libraries/LinkingIOS/*.m",
-          "Libraries/NativeAnimation/*.m",
-          "Libraries/NativeAnimation/Drivers/*.m",
-          "Libraries/NativeAnimation/Nodes/*.m",
-          "Libraries/Network/*.m",
-          "Libraries/Network/*.mm",
-          "Libraries/PushNotificationIOS/*.m",
-          "Libraries/RCTTest/**/*.m",
-          "Libraries/Settings/*.m",
-          "Libraries/Text/**/*.m",
-          "Libraries/Vibration/*.m",
-          "Libraries/WebSocket/*.m",
-          "React/**/*.S",
-          "React/**/*.c",
-          "React/**/*.m",
-          "React/**/RCTTV*.m",
           "React/Cxx*/*.S",
           "React/Cxx*/*.c",
           "React/Cxx*/*.cc",
@@ -491,7 +700,258 @@ objc_library(
           "ReactCommon/yoga/*.m",
           "ReactCommon/yoga/*.mm",
           "ReactCommon/yoga/*.s"
+        ] + glob(
+          [
+            "React/**/*.S",
+            "React/**/*.c",
+            "React/**/*.m"
+          ],
+          exclude = [
+            "**/__tests__/*.S",
+            "**/__tests__/*.c",
+            "**/__tests__/*.cc",
+            "**/__tests__/*.cpp",
+            "**/__tests__/*.cxx",
+            "**/__tests__/*.m",
+            "**/__tests__/*.mm",
+            "**/__tests__/*.s",
+            "IntegrationTests/*.S",
+            "IntegrationTests/*.c",
+            "IntegrationTests/*.cc",
+            "IntegrationTests/*.cpp",
+            "IntegrationTests/*.cxx",
+            "IntegrationTests/*.m",
+            "IntegrationTests/*.mm",
+            "IntegrationTests/*.s",
+            "React/Cxx*/*.S",
+            "React/Cxx*/*.c",
+            "React/Cxx*/*.cc",
+            "React/Cxx*/*.cpp",
+            "React/Cxx*/*.cxx",
+            "React/Cxx*/*.m",
+            "React/Cxx*/*.mm",
+            "React/Cxx*/*.s",
+            "React/DevSupport/*.S",
+            "React/DevSupport/*.c",
+            "React/DevSupport/*.cc",
+            "React/DevSupport/*.cpp",
+            "React/DevSupport/*.cxx",
+            "React/DevSupport/*.m",
+            "React/DevSupport/*.mm",
+            "React/DevSupport/*.s",
+            "React/Fabric/**/*.S",
+            "React/Fabric/**/*.c",
+            "React/Fabric/**/*.cc",
+            "React/Fabric/**/*.cpp",
+            "React/Fabric/**/*.cxx",
+            "React/Fabric/**/*.m",
+            "React/Fabric/**/*.mm",
+            "React/Fabric/**/*.s",
+            "React/Inspector/*.S",
+            "React/Inspector/*.c",
+            "React/Inspector/*.cc",
+            "React/Inspector/*.cpp",
+            "React/Inspector/*.cxx",
+            "React/Inspector/*.m",
+            "React/Inspector/*.mm",
+            "React/Inspector/*.s",
+            "React/Modules/RCTClipboard*.S",
+            "React/Modules/RCTClipboard*.c",
+            "React/Modules/RCTClipboard*.cc",
+            "React/Modules/RCTClipboard*.cpp",
+            "React/Modules/RCTClipboard*.cxx",
+            "React/Modules/RCTClipboard*.m",
+            "React/Modules/RCTClipboard*.mm",
+            "React/Modules/RCTClipboard*.s",
+            "React/Views/RCTDatePicker*.S",
+            "React/Views/RCTDatePicker*.c",
+            "React/Views/RCTDatePicker*.cc",
+            "React/Views/RCTDatePicker*.cpp",
+            "React/Views/RCTDatePicker*.cxx",
+            "React/Views/RCTDatePicker*.m",
+            "React/Views/RCTDatePicker*.mm",
+            "React/Views/RCTDatePicker*.s",
+            "React/Views/RCTPicker*.S",
+            "React/Views/RCTPicker*.c",
+            "React/Views/RCTPicker*.cc",
+            "React/Views/RCTPicker*.cpp",
+            "React/Views/RCTPicker*.cxx",
+            "React/Views/RCTPicker*.m",
+            "React/Views/RCTPicker*.mm",
+            "React/Views/RCTPicker*.s",
+            "React/Views/RCTRefreshControl*.S",
+            "React/Views/RCTRefreshControl*.c",
+            "React/Views/RCTRefreshControl*.cc",
+            "React/Views/RCTRefreshControl*.cpp",
+            "React/Views/RCTRefreshControl*.cxx",
+            "React/Views/RCTRefreshControl*.m",
+            "React/Views/RCTRefreshControl*.mm",
+            "React/Views/RCTRefreshControl*.s",
+            "React/Views/RCTSlider*.S",
+            "React/Views/RCTSlider*.c",
+            "React/Views/RCTSlider*.cc",
+            "React/Views/RCTSlider*.cpp",
+            "React/Views/RCTSlider*.cxx",
+            "React/Views/RCTSlider*.m",
+            "React/Views/RCTSlider*.mm",
+            "React/Views/RCTSlider*.s",
+            "React/Views/RCTSwitch*.S",
+            "React/Views/RCTSwitch*.c",
+            "React/Views/RCTSwitch*.cc",
+            "React/Views/RCTSwitch*.cpp",
+            "React/Views/RCTSwitch*.cxx",
+            "React/Views/RCTSwitch*.m",
+            "React/Views/RCTSwitch*.mm",
+            "React/Views/RCTSwitch*.s",
+            "React/Views/RCTWebView*.S",
+            "React/Views/RCTWebView*.c",
+            "React/Views/RCTWebView*.cc",
+            "React/Views/RCTWebView*.cpp",
+            "React/Views/RCTWebView*.cxx",
+            "React/Views/RCTWebView*.m",
+            "React/Views/RCTWebView*.mm",
+            "React/Views/RCTWebView*.s",
+            "ReactCommon/yoga/*.S",
+            "ReactCommon/yoga/*.c",
+            "ReactCommon/yoga/*.cc",
+            "ReactCommon/yoga/*.cpp",
+            "ReactCommon/yoga/*.cxx",
+            "ReactCommon/yoga/*.m",
+            "ReactCommon/yoga/*.mm",
+            "ReactCommon/yoga/*.s"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "React/**/*.cpp",
+          "React/**/*.mm"
         ],
+        exclude = [
+          "**/__tests__/*.S",
+          "**/__tests__/*.c",
+          "**/__tests__/*.cc",
+          "**/__tests__/*.cpp",
+          "**/__tests__/*.cxx",
+          "**/__tests__/*.m",
+          "**/__tests__/*.mm",
+          "**/__tests__/*.s",
+          "IntegrationTests/*.S",
+          "IntegrationTests/*.c",
+          "IntegrationTests/*.cc",
+          "IntegrationTests/*.cpp",
+          "IntegrationTests/*.cxx",
+          "IntegrationTests/*.m",
+          "IntegrationTests/*.mm",
+          "IntegrationTests/*.s",
+          "React/Cxx*/*.S",
+          "React/Cxx*/*.c",
+          "React/Cxx*/*.cc",
+          "React/Cxx*/*.cpp",
+          "React/Cxx*/*.cxx",
+          "React/Cxx*/*.m",
+          "React/Cxx*/*.mm",
+          "React/Cxx*/*.s",
+          "React/DevSupport/*.S",
+          "React/DevSupport/*.c",
+          "React/DevSupport/*.cc",
+          "React/DevSupport/*.cpp",
+          "React/DevSupport/*.cxx",
+          "React/DevSupport/*.m",
+          "React/DevSupport/*.mm",
+          "React/DevSupport/*.s",
+          "React/Fabric/**/*.S",
+          "React/Fabric/**/*.c",
+          "React/Fabric/**/*.cc",
+          "React/Fabric/**/*.cpp",
+          "React/Fabric/**/*.cxx",
+          "React/Fabric/**/*.m",
+          "React/Fabric/**/*.mm",
+          "React/Fabric/**/*.s",
+          "React/Inspector/*.S",
+          "React/Inspector/*.c",
+          "React/Inspector/*.cc",
+          "React/Inspector/*.cpp",
+          "React/Inspector/*.cxx",
+          "React/Inspector/*.m",
+          "React/Inspector/*.mm",
+          "React/Inspector/*.s",
+          "ReactCommon/yoga/*.S",
+          "ReactCommon/yoga/*.c",
+          "ReactCommon/yoga/*.cc",
+          "ReactCommon/yoga/*.cpp",
+          "ReactCommon/yoga/*.cxx",
+          "ReactCommon/yoga/*.m",
+          "ReactCommon/yoga/*.mm",
+          "ReactCommon/yoga/*.s"
+        ] + glob(
+          [
+            "React/**/*.S",
+            "React/**/*.c",
+            "React/**/*.m"
+          ],
+          exclude = [
+            "**/__tests__/*.S",
+            "**/__tests__/*.c",
+            "**/__tests__/*.cc",
+            "**/__tests__/*.cpp",
+            "**/__tests__/*.cxx",
+            "**/__tests__/*.m",
+            "**/__tests__/*.mm",
+            "**/__tests__/*.s",
+            "IntegrationTests/*.S",
+            "IntegrationTests/*.c",
+            "IntegrationTests/*.cc",
+            "IntegrationTests/*.cpp",
+            "IntegrationTests/*.cxx",
+            "IntegrationTests/*.m",
+            "IntegrationTests/*.mm",
+            "IntegrationTests/*.s",
+            "React/Cxx*/*.S",
+            "React/Cxx*/*.c",
+            "React/Cxx*/*.cc",
+            "React/Cxx*/*.cpp",
+            "React/Cxx*/*.cxx",
+            "React/Cxx*/*.m",
+            "React/Cxx*/*.mm",
+            "React/Cxx*/*.s",
+            "React/DevSupport/*.S",
+            "React/DevSupport/*.c",
+            "React/DevSupport/*.cc",
+            "React/DevSupport/*.cpp",
+            "React/DevSupport/*.cxx",
+            "React/DevSupport/*.m",
+            "React/DevSupport/*.mm",
+            "React/DevSupport/*.s",
+            "React/Fabric/**/*.S",
+            "React/Fabric/**/*.c",
+            "React/Fabric/**/*.cc",
+            "React/Fabric/**/*.cpp",
+            "React/Fabric/**/*.cxx",
+            "React/Fabric/**/*.m",
+            "React/Fabric/**/*.mm",
+            "React/Fabric/**/*.s",
+            "React/Inspector/*.S",
+            "React/Inspector/*.c",
+            "React/Inspector/*.cc",
+            "React/Inspector/*.cpp",
+            "React/Inspector/*.cxx",
+            "React/Inspector/*.m",
+            "React/Inspector/*.mm",
+            "React/Inspector/*.s",
+            "ReactCommon/yoga/*.S",
+            "ReactCommon/yoga/*.c",
+            "ReactCommon/yoga/*.cc",
+            "ReactCommon/yoga/*.cpp",
+            "ReactCommon/yoga/*.cxx",
+            "ReactCommon/yoga/*.m",
+            "ReactCommon/yoga/*.mm",
+            "ReactCommon/yoga/*.s"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       )
     }
@@ -501,9 +961,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "JavaScriptCore"
@@ -515,7 +978,9 @@ objc_library(
     "//Vendor/Yoga:Yoga",
     ":Core_cxx_includes"
   ],
-  copts = select(
+  copts = [
+    "-std=c++14"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -579,6 +1044,37 @@ filegroup(
         ],
         exclude_directories = 1
       ),
+      ":osxCase": glob(
+        [
+          "React/**/*.h",
+          "React/**/*.hpp",
+          "React/**/*.hxx"
+        ],
+        exclude = [
+          "**/__tests__/*.h",
+          "**/__tests__/*.hpp",
+          "**/__tests__/*.hxx",
+          "IntegrationTests/*.h",
+          "IntegrationTests/*.hpp",
+          "IntegrationTests/*.hxx",
+          "React/Cxx*/*.h",
+          "React/Cxx*/*.hpp",
+          "React/Cxx*/*.hxx",
+          "React/DevSupport/*.h",
+          "React/DevSupport/*.hpp",
+          "React/DevSupport/*.hxx",
+          "React/Fabric/**/*.h",
+          "React/Fabric/**/*.hpp",
+          "React/Fabric/**/*.hxx",
+          "React/Inspector/*.h",
+          "React/Inspector/*.hpp",
+          "React/Inspector/*.hxx",
+          "ReactCommon/yoga/*.h",
+          "ReactCommon/yoga/*.hpp",
+          "ReactCommon/yoga/*.hxx"
+        ],
+        exclude_directories = 1
+      ),
       ":tvosCase": glob(
         [
           "React/**/*.h",
@@ -630,6 +1126,37 @@ filegroup(
           "ReactCommon/yoga/*.hxx"
         ],
         exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "React/**/*.h",
+          "React/**/*.hpp",
+          "React/**/*.hxx"
+        ],
+        exclude = [
+          "**/__tests__/*.h",
+          "**/__tests__/*.hpp",
+          "**/__tests__/*.hxx",
+          "IntegrationTests/*.h",
+          "IntegrationTests/*.hpp",
+          "IntegrationTests/*.hxx",
+          "React/Cxx*/*.h",
+          "React/Cxx*/*.hpp",
+          "React/Cxx*/*.hxx",
+          "React/DevSupport/*.h",
+          "React/DevSupport/*.hpp",
+          "React/DevSupport/*.hxx",
+          "React/Fabric/**/*.h",
+          "React/Fabric/**/*.hpp",
+          "React/Fabric/**/*.hxx",
+          "React/Inspector/*.h",
+          "React/Inspector/*.hpp",
+          "React/Inspector/*.hxx",
+          "ReactCommon/yoga/*.h",
+          "ReactCommon/yoga/*.hpp",
+          "ReactCommon/yoga/*.hxx"
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -664,7 +1191,6 @@ headermap(
 gen_includes(
   name = "Core_includes",
   include = [
-    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -688,14 +1214,6 @@ objc_library(
           "**/__tests__/*.m",
           "**/__tests__/*.mm",
           "**/__tests__/*.s",
-          "**/tests/*.S",
-          "**/tests/*.c",
-          "**/tests/*.cc",
-          "**/tests/*.cpp",
-          "**/tests/*.cxx",
-          "**/tests/*.m",
-          "**/tests/*.mm",
-          "**/tests/*.s",
           "IntegrationTests/*.S",
           "IntegrationTests/*.c",
           "IntegrationTests/*.cc",
@@ -704,25 +1222,6 @@ objc_library(
           "IntegrationTests/*.m",
           "IntegrationTests/*.mm",
           "IntegrationTests/*.s",
-          "Libraries/ART/**/*.m",
-          "Libraries/ActionSheetIOS/*.m",
-          "Libraries/Blob/*.m",
-          "Libraries/Blob/*.mm",
-          "Libraries/CameraRoll/*.m",
-          "Libraries/Geolocation/*.m",
-          "Libraries/Image/*.m",
-          "Libraries/LinkingIOS/*.m",
-          "Libraries/NativeAnimation/*.m",
-          "Libraries/NativeAnimation/Drivers/*.m",
-          "Libraries/NativeAnimation/Nodes/*.m",
-          "Libraries/Network/*.m",
-          "Libraries/Network/*.mm",
-          "Libraries/PushNotificationIOS/*.m",
-          "Libraries/RCTTest/**/*.m",
-          "Libraries/Settings/*.m",
-          "Libraries/Text/**/*.m",
-          "Libraries/Vibration/*.m",
-          "Libraries/WebSocket/*.m",
           "React/**/RCTTV*.S",
           "React/**/RCTTV*.c",
           "React/**/RCTTV*.cc",
@@ -771,7 +1270,391 @@ objc_library(
           "ReactCommon/yoga/*.m",
           "ReactCommon/yoga/*.mm",
           "ReactCommon/yoga/*.s"
+        ] + glob(
+          [
+            "React/Cxx*/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Cxx*/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/DevSupport/*.cc",
+            "React/DevSupport/*.cpp",
+            "React/DevSupport/*.cxx",
+            "React/DevSupport/*.mm",
+            "React/Inspector/*.cc",
+            "React/Inspector/*.cpp",
+            "React/Inspector/*.cxx",
+            "React/Inspector/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/DevSupport/*.S",
+            "React/DevSupport/*.c",
+            "React/DevSupport/*.m",
+            "React/DevSupport/*.s",
+            "React/Inspector/*.S",
+            "React/Inspector/*.c",
+            "React/Inspector/*.m",
+            "React/Inspector/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Fabric/**/*.cpp",
+            "React/Fabric/**/*.mm"
+          ],
+          exclude = [
+            "**/tests/*.S",
+            "**/tests/*.c",
+            "**/tests/*.cc",
+            "**/tests/*.cpp",
+            "**/tests/*.cxx",
+            "**/tests/*.m",
+            "**/tests/*.mm",
+            "**/tests/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Fabric/**/*.S",
+            "React/Fabric/**/*.c",
+            "React/Fabric/**/*.m"
+          ],
+          exclude = [
+            "**/tests/*.S",
+            "**/tests/*.c",
+            "**/tests/*.cc",
+            "**/tests/*.cpp",
+            "**/tests/*.cxx",
+            "**/tests/*.m",
+            "**/tests/*.mm",
+            "**/tests/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/RCTTV*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/ART/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/ActionSheetIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/NativeAnimation/*.m",
+            "Libraries/NativeAnimation/Drivers/*.m",
+            "Libraries/NativeAnimation/Nodes/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Blob/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Blob/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/CameraRoll/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Geolocation/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Image/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Network/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Network/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/PushNotificationIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Settings/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Text/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Vibration/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/WebSocket/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/LinkingIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/RCTTest/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        [
+          "React/**/*.S",
+          "React/**/*.c",
+          "React/**/*.m"
         ],
+        exclude = [
+          "**/__tests__/*.S",
+          "**/__tests__/*.c",
+          "**/__tests__/*.cc",
+          "**/__tests__/*.cpp",
+          "**/__tests__/*.cxx",
+          "**/__tests__/*.m",
+          "**/__tests__/*.mm",
+          "**/__tests__/*.s",
+          "IntegrationTests/*.S",
+          "IntegrationTests/*.c",
+          "IntegrationTests/*.cc",
+          "IntegrationTests/*.cpp",
+          "IntegrationTests/*.cxx",
+          "IntegrationTests/*.m",
+          "IntegrationTests/*.mm",
+          "IntegrationTests/*.s",
+          "React/Cxx*/*.S",
+          "React/Cxx*/*.c",
+          "React/Cxx*/*.cc",
+          "React/Cxx*/*.cpp",
+          "React/Cxx*/*.cxx",
+          "React/Cxx*/*.m",
+          "React/Cxx*/*.mm",
+          "React/Cxx*/*.s",
+          "React/DevSupport/*.S",
+          "React/DevSupport/*.c",
+          "React/DevSupport/*.cc",
+          "React/DevSupport/*.cpp",
+          "React/DevSupport/*.cxx",
+          "React/DevSupport/*.m",
+          "React/DevSupport/*.mm",
+          "React/DevSupport/*.s",
+          "React/Fabric/**/*.S",
+          "React/Fabric/**/*.c",
+          "React/Fabric/**/*.cc",
+          "React/Fabric/**/*.cpp",
+          "React/Fabric/**/*.cxx",
+          "React/Fabric/**/*.m",
+          "React/Fabric/**/*.mm",
+          "React/Fabric/**/*.s",
+          "React/Inspector/*.S",
+          "React/Inspector/*.c",
+          "React/Inspector/*.cc",
+          "React/Inspector/*.cpp",
+          "React/Inspector/*.cxx",
+          "React/Inspector/*.m",
+          "React/Inspector/*.mm",
+          "React/Inspector/*.s",
+          "ReactCommon/yoga/*.S",
+          "ReactCommon/yoga/*.c",
+          "ReactCommon/yoga/*.cc",
+          "ReactCommon/yoga/*.cpp",
+          "ReactCommon/yoga/*.cxx",
+          "ReactCommon/yoga/*.m",
+          "ReactCommon/yoga/*.mm",
+          "ReactCommon/yoga/*.s"
+        ] + glob(
+          [
+            "React/Cxx*/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Cxx*/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/DevSupport/*.cc",
+            "React/DevSupport/*.cpp",
+            "React/DevSupport/*.cxx",
+            "React/DevSupport/*.mm",
+            "React/Inspector/*.cc",
+            "React/Inspector/*.cpp",
+            "React/Inspector/*.cxx",
+            "React/Inspector/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/DevSupport/*.S",
+            "React/DevSupport/*.c",
+            "React/DevSupport/*.m",
+            "React/DevSupport/*.s",
+            "React/Inspector/*.S",
+            "React/Inspector/*.c",
+            "React/Inspector/*.m",
+            "React/Inspector/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Fabric/**/*.cpp",
+            "React/Fabric/**/*.mm"
+          ],
+          exclude = [
+            "**/tests/*.S",
+            "**/tests/*.c",
+            "**/tests/*.cc",
+            "**/tests/*.cpp",
+            "**/tests/*.cxx",
+            "**/tests/*.m",
+            "**/tests/*.mm",
+            "**/tests/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Fabric/**/*.S",
+            "React/Fabric/**/*.c",
+            "React/Fabric/**/*.m"
+          ],
+          exclude = [
+            "**/tests/*.S",
+            "**/tests/*.c",
+            "**/tests/*.cc",
+            "**/tests/*.cpp",
+            "**/tests/*.cxx",
+            "**/tests/*.m",
+            "**/tests/*.mm",
+            "**/tests/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/RCTTV*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/ART/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/ActionSheetIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/NativeAnimation/*.m",
+            "Libraries/NativeAnimation/Drivers/*.m",
+            "Libraries/NativeAnimation/Nodes/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Blob/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Blob/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/CameraRoll/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Geolocation/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Image/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Network/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Network/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/PushNotificationIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Settings/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Text/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Vibration/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/WebSocket/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/LinkingIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/RCTTest/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":tvosCase": glob(
@@ -789,14 +1672,6 @@ objc_library(
           "**/__tests__/*.m",
           "**/__tests__/*.mm",
           "**/__tests__/*.s",
-          "**/tests/*.S",
-          "**/tests/*.c",
-          "**/tests/*.cc",
-          "**/tests/*.cpp",
-          "**/tests/*.cxx",
-          "**/tests/*.m",
-          "**/tests/*.mm",
-          "**/tests/*.s",
           "IntegrationTests/*.S",
           "IntegrationTests/*.c",
           "IntegrationTests/*.cc",
@@ -805,26 +1680,6 @@ objc_library(
           "IntegrationTests/*.m",
           "IntegrationTests/*.mm",
           "IntegrationTests/*.s",
-          "Libraries/ART/**/*.m",
-          "Libraries/ActionSheetIOS/*.m",
-          "Libraries/Blob/*.m",
-          "Libraries/Blob/*.mm",
-          "Libraries/CameraRoll/*.m",
-          "Libraries/Geolocation/*.m",
-          "Libraries/Image/*.m",
-          "Libraries/LinkingIOS/*.m",
-          "Libraries/NativeAnimation/*.m",
-          "Libraries/NativeAnimation/Drivers/*.m",
-          "Libraries/NativeAnimation/Nodes/*.m",
-          "Libraries/Network/*.m",
-          "Libraries/Network/*.mm",
-          "Libraries/PushNotificationIOS/*.m",
-          "Libraries/RCTTest/**/*.m",
-          "Libraries/Settings/*.m",
-          "Libraries/Text/**/*.m",
-          "Libraries/Vibration/*.m",
-          "Libraries/WebSocket/*.m",
-          "React/**/RCTTV*.m",
           "React/Cxx*/*.S",
           "React/Cxx*/*.c",
           "React/Cxx*/*.cc",
@@ -921,7 +1776,391 @@ objc_library(
           "ReactCommon/yoga/*.m",
           "ReactCommon/yoga/*.mm",
           "ReactCommon/yoga/*.s"
+        ] + glob(
+          [
+            "React/Cxx*/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Cxx*/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/DevSupport/*.cc",
+            "React/DevSupport/*.cpp",
+            "React/DevSupport/*.cxx",
+            "React/DevSupport/*.mm",
+            "React/Inspector/*.cc",
+            "React/Inspector/*.cpp",
+            "React/Inspector/*.cxx",
+            "React/Inspector/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/DevSupport/*.S",
+            "React/DevSupport/*.c",
+            "React/DevSupport/*.m",
+            "React/DevSupport/*.s",
+            "React/Inspector/*.S",
+            "React/Inspector/*.c",
+            "React/Inspector/*.m",
+            "React/Inspector/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Fabric/**/*.cpp",
+            "React/Fabric/**/*.mm"
+          ],
+          exclude = [
+            "**/tests/*.S",
+            "**/tests/*.c",
+            "**/tests/*.cc",
+            "**/tests/*.cpp",
+            "**/tests/*.cxx",
+            "**/tests/*.m",
+            "**/tests/*.mm",
+            "**/tests/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Fabric/**/*.S",
+            "React/Fabric/**/*.c",
+            "React/Fabric/**/*.m"
+          ],
+          exclude = [
+            "**/tests/*.S",
+            "**/tests/*.c",
+            "**/tests/*.cc",
+            "**/tests/*.cpp",
+            "**/tests/*.cxx",
+            "**/tests/*.m",
+            "**/tests/*.mm",
+            "**/tests/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/RCTTV*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/ART/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/ActionSheetIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/NativeAnimation/*.m",
+            "Libraries/NativeAnimation/Drivers/*.m",
+            "Libraries/NativeAnimation/Nodes/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Blob/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Blob/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/CameraRoll/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Geolocation/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Image/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Network/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Network/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/PushNotificationIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Settings/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Text/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Vibration/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/WebSocket/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/LinkingIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/RCTTest/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "React/**/*.S",
+          "React/**/*.c",
+          "React/**/*.m"
         ],
+        exclude = [
+          "**/__tests__/*.S",
+          "**/__tests__/*.c",
+          "**/__tests__/*.cc",
+          "**/__tests__/*.cpp",
+          "**/__tests__/*.cxx",
+          "**/__tests__/*.m",
+          "**/__tests__/*.mm",
+          "**/__tests__/*.s",
+          "IntegrationTests/*.S",
+          "IntegrationTests/*.c",
+          "IntegrationTests/*.cc",
+          "IntegrationTests/*.cpp",
+          "IntegrationTests/*.cxx",
+          "IntegrationTests/*.m",
+          "IntegrationTests/*.mm",
+          "IntegrationTests/*.s",
+          "React/Cxx*/*.S",
+          "React/Cxx*/*.c",
+          "React/Cxx*/*.cc",
+          "React/Cxx*/*.cpp",
+          "React/Cxx*/*.cxx",
+          "React/Cxx*/*.m",
+          "React/Cxx*/*.mm",
+          "React/Cxx*/*.s",
+          "React/DevSupport/*.S",
+          "React/DevSupport/*.c",
+          "React/DevSupport/*.cc",
+          "React/DevSupport/*.cpp",
+          "React/DevSupport/*.cxx",
+          "React/DevSupport/*.m",
+          "React/DevSupport/*.mm",
+          "React/DevSupport/*.s",
+          "React/Fabric/**/*.S",
+          "React/Fabric/**/*.c",
+          "React/Fabric/**/*.cc",
+          "React/Fabric/**/*.cpp",
+          "React/Fabric/**/*.cxx",
+          "React/Fabric/**/*.m",
+          "React/Fabric/**/*.mm",
+          "React/Fabric/**/*.s",
+          "React/Inspector/*.S",
+          "React/Inspector/*.c",
+          "React/Inspector/*.cc",
+          "React/Inspector/*.cpp",
+          "React/Inspector/*.cxx",
+          "React/Inspector/*.m",
+          "React/Inspector/*.mm",
+          "React/Inspector/*.s",
+          "ReactCommon/yoga/*.S",
+          "ReactCommon/yoga/*.c",
+          "ReactCommon/yoga/*.cc",
+          "ReactCommon/yoga/*.cpp",
+          "ReactCommon/yoga/*.cxx",
+          "ReactCommon/yoga/*.m",
+          "ReactCommon/yoga/*.mm",
+          "ReactCommon/yoga/*.s"
+        ] + glob(
+          [
+            "React/Cxx*/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Cxx*/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/DevSupport/*.cc",
+            "React/DevSupport/*.cpp",
+            "React/DevSupport/*.cxx",
+            "React/DevSupport/*.mm",
+            "React/Inspector/*.cc",
+            "React/Inspector/*.cpp",
+            "React/Inspector/*.cxx",
+            "React/Inspector/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/DevSupport/*.S",
+            "React/DevSupport/*.c",
+            "React/DevSupport/*.m",
+            "React/DevSupport/*.s",
+            "React/Inspector/*.S",
+            "React/Inspector/*.c",
+            "React/Inspector/*.m",
+            "React/Inspector/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Fabric/**/*.cpp",
+            "React/Fabric/**/*.mm"
+          ],
+          exclude = [
+            "**/tests/*.S",
+            "**/tests/*.c",
+            "**/tests/*.cc",
+            "**/tests/*.cpp",
+            "**/tests/*.cxx",
+            "**/tests/*.m",
+            "**/tests/*.mm",
+            "**/tests/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/Fabric/**/*.S",
+            "React/Fabric/**/*.c",
+            "React/Fabric/**/*.m"
+          ],
+          exclude = [
+            "**/tests/*.S",
+            "**/tests/*.c",
+            "**/tests/*.cc",
+            "**/tests/*.cpp",
+            "**/tests/*.cxx",
+            "**/tests/*.m",
+            "**/tests/*.mm",
+            "**/tests/*.s"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/RCTTV*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/ART/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/ActionSheetIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/NativeAnimation/*.m",
+            "Libraries/NativeAnimation/Drivers/*.m",
+            "Libraries/NativeAnimation/Nodes/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Blob/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Blob/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/CameraRoll/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Geolocation/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Image/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Network/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Network/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/PushNotificationIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Settings/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Text/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/Vibration/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/WebSocket/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/LinkingIOS/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Libraries/RCTTest/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       )
     }
@@ -931,9 +2170,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "JavaScriptCore"
@@ -1022,9 +2264,12 @@ objc_library(
     [
       "React/Cxx*/*.mm"
     ],
-    exclude = [
-      "React/Cxx*/*.m"
-    ],
+    exclude = glob(
+      [
+        "React/Cxx*/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -1032,9 +2277,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
@@ -1129,9 +2377,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
@@ -1229,16 +2480,19 @@ objc_library(
       "React/Inspector/*.cxx",
       "React/Inspector/*.mm"
     ],
-    exclude = [
-      "React/DevSupport/*.S",
-      "React/DevSupport/*.c",
-      "React/DevSupport/*.m",
-      "React/DevSupport/*.s",
-      "React/Inspector/*.S",
-      "React/Inspector/*.c",
-      "React/Inspector/*.m",
-      "React/Inspector/*.s"
-    ],
+    exclude = glob(
+      [
+        "React/DevSupport/*.S",
+        "React/DevSupport/*.c",
+        "React/DevSupport/*.m",
+        "React/DevSupport/*.s",
+        "React/Inspector/*.S",
+        "React/Inspector/*.c",
+        "React/Inspector/*.m",
+        "React/Inspector/*.s"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -1246,9 +2500,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -1366,9 +2623,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -1449,7 +2709,6 @@ headermap(
 gen_includes(
   name = "RCTFabric_cxx_includes",
   include = [
-    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -1469,11 +2728,25 @@ objc_library(
       "**/tests/*.cxx",
       "**/tests/*.m",
       "**/tests/*.mm",
-      "**/tests/*.s",
-      "React/Fabric/**/*.S",
-      "React/Fabric/**/*.c",
-      "React/Fabric/**/*.m"
-    ],
+      "**/tests/*.s"
+    ] + glob(
+      [
+        "React/Fabric/**/*.S",
+        "React/Fabric/**/*.c",
+        "React/Fabric/**/*.m"
+      ],
+      exclude = [
+        "**/tests/*.S",
+        "**/tests/*.c",
+        "**/tests/*.cc",
+        "**/tests/*.cpp",
+        "**/tests/*.cxx",
+        "**/tests/*.m",
+        "**/tests/*.mm",
+        "**/tests/*.s"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -1481,9 +2754,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "JavaScriptCore"
@@ -1495,6 +2771,7 @@ objc_library(
     ":RCTFabric_cxx_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -1571,7 +2848,6 @@ headermap(
 gen_includes(
   name = "RCTFabric_includes",
   include = [
-    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -1601,9 +2877,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "JavaScriptCore"
@@ -1698,9 +2977,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -1769,7 +3051,6 @@ headermap(
 gen_includes(
   name = "jschelpers_includes",
   include = [
-    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -1780,19 +3061,22 @@ objc_library(
     [
       "ReactCommon/jschelpers/*.cpp"
     ],
-    exclude = [
-      "React/Cxx*/*.m",
-      "React/Cxx*/*.mm",
-      "ReactCommon/cxxreact/*.cpp",
-      "ReactCommon/cxxreact/SampleCxxModule.S",
-      "ReactCommon/cxxreact/SampleCxxModule.c",
-      "ReactCommon/cxxreact/SampleCxxModule.cc",
-      "ReactCommon/cxxreact/SampleCxxModule.cpp",
-      "ReactCommon/cxxreact/SampleCxxModule.cxx",
-      "ReactCommon/cxxreact/SampleCxxModule.m",
-      "ReactCommon/cxxreact/SampleCxxModule.mm",
-      "ReactCommon/cxxreact/SampleCxxModule.s"
-    ],
+    exclude = glob(
+      [
+        "ReactCommon/cxxreact/*.cpp"
+      ],
+      exclude = [
+        "ReactCommon/cxxreact/SampleCxxModule.S",
+        "ReactCommon/cxxreact/SampleCxxModule.c",
+        "ReactCommon/cxxreact/SampleCxxModule.cc",
+        "ReactCommon/cxxreact/SampleCxxModule.cpp",
+        "ReactCommon/cxxreact/SampleCxxModule.cxx",
+        "ReactCommon/cxxreact/SampleCxxModule.m",
+        "ReactCommon/cxxreact/SampleCxxModule.mm",
+        "ReactCommon/cxxreact/SampleCxxModule.s"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -1800,9 +3084,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "JavaScriptCore"
@@ -1813,6 +3100,7 @@ objc_library(
     ":jschelpers_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -1876,7 +3164,6 @@ headermap(
 gen_includes(
   name = "jsinspector_includes",
   include = [
-    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -1887,19 +3174,22 @@ objc_library(
     [
       "ReactCommon/jsinspector/*.cpp"
     ],
-    exclude = [
-      "React/Cxx*/*.m",
-      "React/Cxx*/*.mm",
-      "ReactCommon/cxxreact/*.cpp",
-      "ReactCommon/cxxreact/SampleCxxModule.S",
-      "ReactCommon/cxxreact/SampleCxxModule.c",
-      "ReactCommon/cxxreact/SampleCxxModule.cc",
-      "ReactCommon/cxxreact/SampleCxxModule.cpp",
-      "ReactCommon/cxxreact/SampleCxxModule.cxx",
-      "ReactCommon/cxxreact/SampleCxxModule.m",
-      "ReactCommon/cxxreact/SampleCxxModule.mm",
-      "ReactCommon/cxxreact/SampleCxxModule.s"
-    ],
+    exclude = glob(
+      [
+        "ReactCommon/cxxreact/*.cpp"
+      ],
+      exclude = [
+        "ReactCommon/cxxreact/SampleCxxModule.S",
+        "ReactCommon/cxxreact/SampleCxxModule.c",
+        "ReactCommon/cxxreact/SampleCxxModule.cc",
+        "ReactCommon/cxxreact/SampleCxxModule.cpp",
+        "ReactCommon/cxxreact/SampleCxxModule.cxx",
+        "ReactCommon/cxxreact/SampleCxxModule.m",
+        "ReactCommon/cxxreact/SampleCxxModule.mm",
+        "ReactCommon/cxxreact/SampleCxxModule.s"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -1907,14 +3197,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":jsinspector_includes"
   ],
-  copts = select(
+  copts = [
+    "-std=c++14"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -1974,7 +3269,6 @@ headermap(
 gen_includes(
   name = "PrivateDatabase_includes",
   include = [
-    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -1985,20 +3279,12 @@ objc_library(
     [
       "ReactCommon/privatedata/*.cpp"
     ],
-    exclude = [
-      "React/Cxx*/*.m",
-      "React/Cxx*/*.mm",
-      "ReactCommon/cxxreact/*.cpp",
-      "ReactCommon/cxxreact/SampleCxxModule.S",
-      "ReactCommon/cxxreact/SampleCxxModule.c",
-      "ReactCommon/cxxreact/SampleCxxModule.cc",
-      "ReactCommon/cxxreact/SampleCxxModule.cpp",
-      "ReactCommon/cxxreact/SampleCxxModule.cxx",
-      "ReactCommon/cxxreact/SampleCxxModule.m",
-      "ReactCommon/cxxreact/SampleCxxModule.mm",
-      "ReactCommon/cxxreact/SampleCxxModule.s",
-      "ReactCommon/jschelpers/*.cpp"
-    ],
+    exclude = glob(
+      [
+        "ReactCommon/jschelpers/*.cpp"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -2006,14 +3292,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":PrivateDatabase_includes"
   ],
-  copts = select(
+  copts = [
+    "-std=c++14"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -2083,10 +3374,6 @@ headermap(
 gen_includes(
   name = "cxxreact_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/boost-for-react-native",
-    "Vendor/DoubleConversion",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -2098,8 +3385,6 @@ objc_library(
       "ReactCommon/cxxreact/*.cpp"
     ],
     exclude = [
-      "React/Cxx*/*.m",
-      "React/Cxx*/*.mm",
       "ReactCommon/cxxreact/SampleCxxModule.S",
       "ReactCommon/cxxreact/SampleCxxModule.c",
       "ReactCommon/cxxreact/SampleCxxModule.cc",
@@ -2108,7 +3393,17 @@ objc_library(
       "ReactCommon/cxxreact/SampleCxxModule.m",
       "ReactCommon/cxxreact/SampleCxxModule.mm",
       "ReactCommon/cxxreact/SampleCxxModule.s"
-    ],
+    ] + glob(
+      [
+        "React/Cxx*/*.mm"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "React/Cxx*/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -2116,9 +3411,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
@@ -2128,6 +3426,7 @@ objc_library(
     ":cxxreact_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -2273,8 +3572,6 @@ headermap(
 gen_includes(
   name = "fabric_activityindicator_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -2302,15 +3599,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_activityindicator_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -2384,8 +3685,6 @@ headermap(
 gen_includes(
   name = "fabric_attributedstring_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -2413,15 +3712,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_attributedstring_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -2495,8 +3798,6 @@ headermap(
 gen_includes(
   name = "fabric_core_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -2524,15 +3825,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_core_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -2606,8 +3911,6 @@ headermap(
 gen_includes(
   name = "fabric_debug_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -2635,15 +3938,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_debug_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -2717,8 +4024,6 @@ headermap(
 gen_includes(
   name = "fabric_graphics_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -2746,15 +4051,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_graphics_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -2828,8 +4137,6 @@ headermap(
 gen_includes(
   name = "fabric_scrollview_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -2857,15 +4164,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_scrollview_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -2939,8 +4250,6 @@ headermap(
 gen_includes(
   name = "fabric_text_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -2968,15 +4277,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_text_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -3050,8 +4363,6 @@ headermap(
 gen_includes(
   name = "fabric_textlayoutmanager_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -3080,15 +4391,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_textlayoutmanager_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -3162,8 +4477,6 @@ headermap(
 gen_includes(
   name = "fabric_uimanager_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -3191,15 +4504,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_uimanager_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -3274,8 +4591,6 @@ headermap(
 gen_includes(
   name = "fabric_view_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -3303,9 +4618,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
@@ -3313,6 +4631,7 @@ objc_library(
     ":fabric_view_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -3387,8 +4706,6 @@ headermap(
 gen_includes(
   name = "RCTFabricSample_includes",
   include = [
-    "Vendor/React/ReactCommon",
-    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -3416,15 +4733,19 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "ReactCommon/**/*.pch"
-    ]
+    glob(
+      [
+        "ReactCommon/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/Folly:Folly",
     ":RCTFabricSample_includes"
   ],
   copts = [
+    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -3507,9 +4828,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -3594,9 +4918,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -3688,9 +5015,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -3768,26 +5098,12 @@ objc_library(
     [
       "Libraries/Blob/*.mm"
     ],
-    exclude = [
-      "Libraries/Blob/*.m",
-      "Libraries/WebSocket/*.m",
-      "React/DevSupport/*.S",
-      "React/DevSupport/*.c",
-      "React/DevSupport/*.cc",
-      "React/DevSupport/*.cpp",
-      "React/DevSupport/*.cxx",
-      "React/DevSupport/*.m",
-      "React/DevSupport/*.mm",
-      "React/DevSupport/*.s",
-      "React/Inspector/*.S",
-      "React/Inspector/*.c",
-      "React/Inspector/*.cc",
-      "React/Inspector/*.cpp",
-      "React/Inspector/*.cxx",
-      "React/Inspector/*.m",
-      "React/Inspector/*.mm",
-      "React/Inspector/*.s"
-    ],
+    exclude = glob(
+      [
+        "Libraries/Blob/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -3795,9 +5111,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -3878,25 +5197,12 @@ objc_library(
     [
       "Libraries/Blob/*.m"
     ],
-    exclude = [
-      "Libraries/WebSocket/*.m",
-      "React/DevSupport/*.S",
-      "React/DevSupport/*.c",
-      "React/DevSupport/*.cc",
-      "React/DevSupport/*.cpp",
-      "React/DevSupport/*.cxx",
-      "React/DevSupport/*.m",
-      "React/DevSupport/*.mm",
-      "React/DevSupport/*.s",
-      "React/Inspector/*.S",
-      "React/Inspector/*.c",
-      "React/Inspector/*.cc",
-      "React/Inspector/*.cpp",
-      "React/Inspector/*.cxx",
-      "React/Inspector/*.m",
-      "React/Inspector/*.mm",
-      "React/Inspector/*.s"
-    ],
+    exclude = glob(
+      [
+        "Libraries/WebSocket/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -3904,9 +5210,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -3993,9 +5302,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4081,9 +5393,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4162,9 +5477,12 @@ objc_library(
     [
       "Libraries/Image/*.m"
     ],
-    exclude = [
-      "Libraries/CameraRoll/*.m"
-    ],
+    exclude = glob(
+      [
+        "Libraries/CameraRoll/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -4172,9 +5490,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4253,11 +5574,12 @@ objc_library(
     [
       "Libraries/Network/*.mm"
     ],
-    exclude = [
-      "Libraries/CameraRoll/*.m",
-      "Libraries/Image/*.m",
-      "Libraries/Network/*.m"
-    ],
+    exclude = glob(
+      [
+        "Libraries/Network/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -4265,9 +5587,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4348,10 +5673,12 @@ objc_library(
     [
       "Libraries/Network/*.m"
     ],
-    exclude = [
-      "Libraries/CameraRoll/*.m",
-      "Libraries/Image/*.m"
-    ],
+    exclude = glob(
+      [
+        "Libraries/Image/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -4359,9 +5686,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4447,9 +5777,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4534,9 +5867,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4621,9 +5957,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4708,9 +6047,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4790,24 +6132,31 @@ objc_library(
     [
       "Libraries/WebSocket/*.m"
     ],
-    exclude = [
-      "React/DevSupport/*.S",
-      "React/DevSupport/*.c",
-      "React/DevSupport/*.cc",
-      "React/DevSupport/*.cpp",
-      "React/DevSupport/*.cxx",
-      "React/DevSupport/*.m",
-      "React/DevSupport/*.mm",
-      "React/DevSupport/*.s",
-      "React/Inspector/*.S",
-      "React/Inspector/*.c",
-      "React/Inspector/*.cc",
-      "React/Inspector/*.cpp",
-      "React/Inspector/*.cxx",
-      "React/Inspector/*.m",
-      "React/Inspector/*.mm",
-      "React/Inspector/*.s"
-    ],
+    exclude = glob(
+      [
+        "React/DevSupport/*.cc",
+        "React/DevSupport/*.cpp",
+        "React/DevSupport/*.cxx",
+        "React/DevSupport/*.mm",
+        "React/Inspector/*.cc",
+        "React/Inspector/*.cpp",
+        "React/Inspector/*.cxx",
+        "React/Inspector/*.mm"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "React/DevSupport/*.S",
+        "React/DevSupport/*.c",
+        "React/DevSupport/*.m",
+        "React/DevSupport/*.s",
+        "React/Inspector/*.S",
+        "React/Inspector/*.c",
+        "React/Inspector/*.m",
+        "React/Inspector/*.s"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -4815,9 +6164,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -4898,25 +6250,12 @@ objc_library(
     [
       "Libraries/fishhook/*.c"
     ],
-    exclude = [
-      "Libraries/WebSocket/*.m",
-      "React/DevSupport/*.S",
-      "React/DevSupport/*.c",
-      "React/DevSupport/*.cc",
-      "React/DevSupport/*.cpp",
-      "React/DevSupport/*.cxx",
-      "React/DevSupport/*.m",
-      "React/DevSupport/*.mm",
-      "React/DevSupport/*.s",
-      "React/Inspector/*.S",
-      "React/Inspector/*.c",
-      "React/Inspector/*.cc",
-      "React/Inspector/*.cpp",
-      "React/Inspector/*.cxx",
-      "React/Inspector/*.m",
-      "React/Inspector/*.mm",
-      "React/Inspector/*.s"
-    ],
+    exclude = glob(
+      [
+        "Libraries/WebSocket/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -4924,9 +6263,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":fishhook_includes"
@@ -5010,9 +6352,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -5097,9 +6442,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "XCTest"

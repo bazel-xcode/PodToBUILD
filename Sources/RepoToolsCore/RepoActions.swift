@@ -330,126 +330,47 @@ public enum RepoActions {
         shell.dir(PodSupportDir + "Headers/Private/")
         shell.dir(PodSupportBuidableDir)
 
-        // This closure looks up all of the headers from the project.
-        // We don't really need to touch the file system during generation time
-        // given:
-        // - Bazel can lookup all of the headers
-        // - All namespaces are accounted for by the headermap
-        //
-        // - We may need to have file groups for headers that
-        //   associate a given directory with a group of headers.
-        //
-        // - Consider how XCConfig namespaces will be propagated
-
-        let searchPaths = { (spec: ComposedSpec) -> Set<String> in
-            let fallbackSpec = spec
-            let moduleName = AttrSet<String>(
-                value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
-            )
-            let headerDirectoryName: AttrSet<String?> = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.headerDirectory))
-            guard let externalName = (moduleName.isEmpty ? nil : moduleName) ??
-                (headerDirectoryName.isEmpty ? nil : headerDirectoryName.denormalize()) else {
-                return Set<String>()
-            }
-
-            let headerDirs = externalName.map { $0 }
-            let customHeaderSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].compactMap { $0 }) },
-                                                                       multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
-                                                                        result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
-            })
-            return customHeaderSearchPaths
-        }
-
-        // Get the xcconfigHeaderSearchPaths
-        let podSpecs: [PodSpec] = podSpec.subspecs + [podSpec]
-        let xcconfigHeaderSearchPaths: Set<String> = Set(podSpecs
-            // Grab the search paths from xcconfig
-            .compactMap{ (spec: PodSpec) -> Set<String> in
-                Set([spec.xcconfig, spec.podTargetXcconfig, spec.userTargetXcconfig].flatMap{ (xcconfigDict: [String: String]?) -> [String] in
-                    let searchPathValue: String? = xcconfigDict?[HeaderSearchPathTransformer.xcconfigKey]
-                    return (searchPathValue.map{ [$0] }) ?? []
-                })
-            }
-            .reduce(Set<String>(), { $0.union(Set($1)) })
-            // Add the subdirectories in the search paths (as xcode does
-            .flatMap{ (searchPath: String) -> [String] in
-                // we're already cd-ed to this directory
-                // so we can just rip out the variable
-                let cleansedPath = searchPath.replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)/", with: "").replacingOccurrences(of: "\"", with: "")
-                let cmd = shell.command("/bin/ls", arguments: [cleansedPath])
-                return cmd.standardOutputAsString.components(separatedBy: "\n").map{ String($0) }
-            })
-
-        // Get the rest of the header searchpaths
-        let customHeaderSearchPaths = Set([podSpec.name])
-            .union(searchPaths(ComposedSpec.composed(child: podSpec, parent: nil)))
-            .union(podSpec.subspecs.reduce(Set<String>(), { result, subspec in
-                result.union(searchPaths(ComposedSpec.composed(child: subspec, parent: ComposedSpec.composed(child: podSpec, parent: nil))))
-            }))
-            // and add the xcconfig header searchpaths here
-            .union(xcconfigHeaderSearchPaths)
-            // do case-insensitive de-duplication in a deterministic manner. Sort the entries, then create a mapping
-            // from lowercase entry to actual entry, only keeping the first of each lowercase entry we see. Then just
-            // use the values of the mapping.
-            .sorted()
-            .reduce([:]) { mapping, path in
-                var updatedMapping = mapping;
-                let canonicalPath = path.lowercased()
-                if !updatedMapping.keys.contains(canonicalPath) {
-                    updatedMapping[canonicalPath] = path
-                }
-                return updatedMapping
-            }
-            .values
-            .map { PodSupportSystemPublicHeaderDir + "\($0)/" }
-
-        customHeaderSearchPaths.forEach(shell.dir)
-
         // Create a directory structure condusive to <> imports
         // - Get all of the paths matching wild card imports
         // - Put them into the public header directory
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)
-        let globResultsArr = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
-            .flatMap {
-                objcLibrary -> Set<String> in
-                let headers: GlobNode = objcLibrary.headers
-                return headers.include.fold(basic: { (patterns: Set<String>?) -> Set<String> in
-                    let s: Set<String> = Set(patterns.map { $0.flatMap(podGlob) } ?? [])
-                    return s
-                }, multi: { (set: Set<String>, multi: MultiPlatform<Set<String>>) -> Set<String> in
-                    let inner: Set<String>? = multi |>
-                        MultiPlatform<Set<String>>.lens.viewAll { Set($0.flatMap(podGlob)) }
-                    return set.union(inner.denormalize())
-                })
-        }
 
         // Batch create several symlinks for Pod style includes
-        // creating thousands of processes in few milliseconds will
-        // blow up otherwise.
         let currentDirectoryPath = FileManager.default.currentDirectoryPath
-        // Get a de-duplicated, sorted (for determinism) list of all headers
-        let globResults = Array(Set(globResultsArr)).sorted()
         if buildOptions.generateHeaderMap == false {
-            // Warning: the input monoids are wild and will naively create dead
-            // links. Remove symlinks when headermaps are done.
-            customHeaderSearchPaths.forEach { searchPath in
-                let linkPath = currentDirectoryPath + "/" + searchPath
-                guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
-                    print("WARNING: Can't change path while creating symlink")
-                    return
-                }
-                globResults.forEach { globResult in
-                    // i.e. pod_support/Headers/Public/__POD_NAME__
-                    let from = "../../../../\(globResult)"
-                    let to = String(globResult.split(separator: "/").last!)
-                    print("Symlink: \(from) \(to)")
-                    shell.symLink(from: from, to: to)
+            let objcLibraries: [ObjcLibrary] = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
+            objcLibraries.forEach { lib -> Void in
+                _ = lib.headers.zip(lib.headerName).map {
+                    attrTuple -> Set<String>? in
+                    defer {
+                        guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
+                            fatalError("Can't change path back to original directory")
+                        }
+                    }
+                    guard let headers = attrTuple.first else {
+                        return nil
+                    }
+                    // Note: this is going to evaluate the glob, this needs to
+                    // happen _inside_ of the root directory.
+                    let globResults = headers.sourcesOnDisk()
+
+                    let searchPath = attrTuple.second ?? lib.externalName
+                    let linkPath = PodSupportSystemPublicHeaderDir + searchPath
+                    shell.dir(linkPath)
+                    guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
+                        print("WARNING: Can't change path while creating symlink: " + linkPath)
+                        return nil
+                    }
+                    globResults.forEach { globResult in
+                        // i.e. pod_support/Headers/Public/__POD_NAME__
+                        let from = "../../../../\(globResult)"
+                        let to = String(globResult.split(separator: "/").last!)
+                        print("Symlink: \(from) \(to)")
+                        shell.symLink(from: from, to: to)
+                    }
+                    return globResults
                 }
             }
-        }
-
-        guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
-            fatalError("Can't change path back to original directory after creating symlinks")
         }
 
         // Write out contents of PodSupportBuildableDir

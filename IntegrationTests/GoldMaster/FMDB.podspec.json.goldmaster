@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "FMDB_hdrs",
   srcs = glob(
@@ -142,9 +160,13 @@ objc_library(
       "src/fmdb/FM*.m"
     ],
     exclude = [
-      "src/extra/fts3/*.m",
       "src/fmdb.m"
-    ],
+    ] + glob(
+      [
+        "src/extra/fts3/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -152,9 +174,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FMDB",
-    [
-      "src/**/*.pch"
-    ]
+    glob(
+      [
+        "src/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_dylibs = [
     "sqlite3"
@@ -241,9 +266,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FMDB",
-    [
-      "src/**/*.pch"
-    ]
+    glob(
+      [
+        "src/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":standard",
@@ -404,9 +432,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FMDB",
-    [
-      "src/**/*.pch"
-    ]
+    glob(
+      [
+        "src/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/sqlite3:sqlite3",
@@ -500,9 +531,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FMDB",
-    [
-      "src/**/*.pch"
-    ]
+    glob(
+      [
+        "src/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/sqlite3:fts",
@@ -594,9 +628,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FMDB",
-    [
-      "src/**/*.pch"
-    ]
+    glob(
+      [
+        "src/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/SQLCipher:SQLCipher",

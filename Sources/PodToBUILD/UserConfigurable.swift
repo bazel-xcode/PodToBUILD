@@ -28,7 +28,7 @@ enum UserConfigurableOpt : String {
    case PlusEqual = "+="
 }
 
-protocol UserConfigurable {
+protocol UserConfigurable: BazelTarget {
     var name : String { get }
 
     /// Add a given value to a key
@@ -68,12 +68,17 @@ extension UserConfigurable {
 }
 
 enum UserConfigurableTransform : SkylarkConvertibleTransform {
-    public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions, podSpec: PodSpec) -> [SkylarkConvertible] {
+    public static func transform(convertibles: [BazelTarget], options:
+                                 BuildOptions, podSpec: PodSpec) -> [BazelTarget] {
         let attributes = UserConfigurableTargetAttributes(buildOptions: options)
         return UserConfigurableTransform.executeUserOptionsTransform(onConvertibles: convertibles, copts: options.globalCopts, userAttributes: attributes)
     }
 
-    public static  func executeUserOptionsTransform(onConvertibles convertibles: [SkylarkConvertible], copts: [String], userAttributes: UserConfigurableTargetAttributes) -> [SkylarkConvertible] {
+    public static  func executeUserOptionsTransform(onConvertibles convertibles:
+                                                    [BazelTarget], copts:
+                                                    [String], userAttributes:
+                                                    UserConfigurableTargetAttributes)
+    -> [BazelTarget] {
         var operatorByTarget = [String: [String]]()
         for keyPath in userAttributes.keyPathOperators {
             let components = keyPath.split(separator: ".", maxSplits: 1)
@@ -84,16 +89,17 @@ enum UserConfigurableTransform : SkylarkConvertibleTransform {
             }
         }
 
-        let output: [SkylarkConvertible] = convertibles.map {
-            (inputConvertible: SkylarkConvertible) in
+        let output: [BazelTarget] = convertibles.map {
+            (inputConvertible: BazelTarget) in
             guard let configurable = inputConvertible as? UserConfigurable else {
                 return inputConvertible
             }
 
             if let operators = operatorByTarget[configurable.name] {
-                return configurable.apply(keyPathOperators: operators, copts: copts) as! SkylarkConvertible
+                return configurable.apply(keyPathOperators: operators, copts:
+                                          copts)
             } else {
-                return configurable.apply(keyPathOperators: [], copts: copts) as! SkylarkConvertible
+                return configurable.apply(keyPathOperators: [], copts: copts)
             }
         }
         return output

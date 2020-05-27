@@ -24,18 +24,20 @@ public func makeConfigSettingNodes() -> SkylarkNode {
         "# see the bazel user manual for more information",
         "# https://docs.bazel.build/versions/master/be/general.html#config_setting",
     ].map { SkylarkNode.skylark($0) }
-    let releaseConfig = SkylarkNode.functionCall(name: "config_setting",
-                                                 arguments: [
-                                                     .named(name: "name", value: .string("release")),
-                                                     .named(name: "values",
-                                                            value:
-                                                            [
-                                                            "compilation_mode": "opt"
-                                                            ].toSkylark()
-                                                     ),
+    return .lines([.lines(comment),
+        ConfigSetting(
+            name: "release",
+            values: ["compilation_mode": "opt"]).toSkylark(),
+        ConfigSetting(
+            name: "osxCase",
+            values: ["apple_platform_type": "macos"]).toSkylark(),
+        ConfigSetting(
+            name: "tvosCase",
+            values: ["apple_platform_type": "tvos"]).toSkylark(),
+        ConfigSetting(
+            name: "watchosCase",
+            values: ["apple_platform_type": "watchos"]).toSkylark()
     ])
-
-    return .lines([.lines(comment), releaseConfig])
 }
 
 public func makeLoadNodes(forConvertibles skylarkConvertibles: [SkylarkConvertible]) -> SkylarkNode {
@@ -73,13 +75,13 @@ public func makePrefixNodes() -> SkylarkNode {
 
 /// Acknowledgment node exposes an acknowledgment fragment including all of
 /// the `deps` acknowledgment fragments.
-public struct AcknowledgmentNode: SkylarkConvertible {
-    let name: String
+public struct AcknowledgmentNode: BazelTarget {
+    public let name: String
     let license: PodSpecLicense
     let deps: [String]
 
     public func toSkylark() -> SkylarkNode {
-        let nodeName = bazelLabel(fromString: name + "_acknowledgement").toSkylark()
+        let nodeName = bazelLabel(fromString: name).toSkylark()
         let options = GetBuildOptions()
         let value: String
         let podSupportBuildableDir = String(PodSupportBuidableDir.utf8.dropLast())!
@@ -104,28 +106,6 @@ public struct AcknowledgmentNode: SkylarkConvertible {
         return target
     }
 }
-
-/// Insert Acknowledgment Nodes for all of the `acknowledgeable` Bazel Targets.
-struct InsertAcknowledgementsTransform: SkylarkConvertibleTransform {
-    static func transform(convertibles: [SkylarkConvertible], options _: BuildOptions, podSpec: PodSpec) -> [SkylarkConvertible] {
-        return convertibles.map { convertible in
-            (convertible as? BazelTarget).map { target in
-                guard target.acknowledged else {
-                    return [target]
-                }
-
-                let deps = target.acknowledgedDeps?.sorted(by: (<))
-                    ?? [String]()
-                let externalDeps = deps.filter { $0.hasPrefix("//") }
-                let acknowledgement = AcknowledgmentNode(name: target.name,
-                                                         license: podSpec.license,
-                                                         deps: externalDeps)
-                return [target, acknowledgement]
-            } ?? [convertible]
-        }.flatMap { $0 }
-    }
-}
-
 public struct PodBuildFile: SkylarkConvertible {
     /// Skylark Convertibles excluding prefix nodes.
     /// @note Use toSkylark() to generate the actual BUILD file
@@ -164,47 +144,46 @@ public struct PodBuildFile: SkylarkConvertible {
     }
 
     private static func bundleLibraries(withPodSpec spec: PodSpec) -> [BazelTarget] {
-        let resourceBundleAttrSet: AttrSet<[String: [String]]> = spec ^* liftToAttr(PodSpec.lens.resourceBundles)
-
         // See if the Podspec specifies a prebuilt .bundle file
-        let bundleResources = (spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
+        let bundleResources = (spec.attr(\.resources)).map { (strArr: [String]) -> [BazelTarget] in
             strArr.filter({ (str: String) -> Bool in
                 str.hasSuffix(".bundle")
-            })
-        }
-
-        let bundleTargets = bundleResources.map { (strArr: [String]) -> [BazelTarget] in
-            strArr.map { (bundlePath: String) -> BazelTarget in
+            }).map { (bundlePath: String) -> BazelTarget in
                 let bundleName = AppleBundleImport.extractBundleName(fromPath: bundlePath)
                 let name = "\(spec.moduleName ?? spec.name)_Bundle_\(bundleName)"
                 let bundleImports = AttrSet<[String]>(basic: ["\(bundlePath)/**"])
                 return AppleBundleImport(name: name, bundleImports: bundleImports)
-            }
+	     }
         }
 
-        let resourceBundles = (AttrSet<[String: [String]]>
-            .sequence(attrSet: resourceBundleAttrSet)
-            .map { k, v -> BazelTarget in
-                let name = "\(spec.moduleName ?? spec.name)_Bundle_\(k)"
-                return AppleResourceBundle(name: name, resources: v)
-            })
+        // Converts an attrset to resource bundles
+        let resourceBundles = spec.attr(\.resourceBundles).map {
+            return $0.map {
+            (x: (String, [String])) -> BazelTarget  in
+            let k = x.0
+            let resources = x.1
+            let name = "\(spec.moduleName ?? spec.name)_Bundle_\(k)"
+            return AppleResourceBundle(name: name, resources: AttrSet<[String]>(basic: resources))
+        }
+        }
 
-        return (resourceBundles + (bundleTargets.basic ?? [])).sorted { $0.name < $1.name }
+        return ((resourceBundles.basic ?? []) + (resourceBundles.multi.ios ??
+        []) + (bundleResources.basic ?? []) + (bundleResources.multi.ios ?? [])).sorted { $0.name < $1.name }
     }
 
     private static func vendoredFrameworks(withPodspec spec: PodSpec) -> [BazelTarget] {
-        let frameworks = spec ^* liftToAttr(PodSpec.lens.vendoredFrameworks)
+        let frameworks = spec.attr(\.vendoredFrameworks)
         return frameworks.isEmpty ? [] : [AppleStaticFrameworkImport(name: "\(spec.moduleName ?? spec.name)_VendoredFrameworks", frameworkImports: frameworks)]
     }
 
     private static func vendoredLibraries(withPodspec spec: PodSpec) -> [BazelTarget] {
-        let libraries = spec ^* liftToAttr(PodSpec.lens.vendoredLibraries)
+        let libraries = spec.attr(\.vendoredLibraries)
         return libraries.isEmpty ? [] : [ObjcImport(name: "\(spec.moduleName ?? spec.name)_VendoredLibraries", archives: libraries)]
     }
 
     static func getSourceTypes(fromPodspec spec: PodSpec) ->
         Set<BazelSourceLibType> {
-        let sources = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
+        let sources = spec.attr(\.sourceFiles)
 
         let objcLike = extractFiles(fromPattern: sources, includingFileTypes:
                 ObjcLikeFileTypes)
@@ -337,33 +316,7 @@ public struct PodBuildFile: SkylarkConvertible {
         let sourceLibs = makeSourceLibs(parentSpecs: [], spec: podSpec, extraDeps:
                 allRootDeps)
 
-        // We don't care about the values here
-        // So we just lens to an arbitrary monoid that we can <+>
-        // Trivial has no information, we just care about whether or not it's nil
-        let trivialized: Lens<PodSpecRepresentable, Trivial?> = ReadonlyLens(const(.some(Trivial())))
-
-        // Just assume ios for now, we can figure out the proper commands later
-        // We should remove this altogether, it doesn't do anything.
-        let configs: [BazelTarget] = (
-            (podSpec ^*
-                PodSpec.lens.liftOntoSubspecs(PodSpec.lens.ios >•> trivialized))
-                .map(const([ConfigSetting(name: SelectCase.ios.rawValue,
-                                          values: ["cpu": "powerpc1"])])) <+>
-                (podSpec ^*
-                    PodSpec.lens.liftOntoSubspecs(PodSpec.lens.osx >•> trivialized))
-                .map(const([ConfigSetting(name: SelectCase.osx.rawValue,
-                                          values: ["cpu": "powerpc2"])])) <+>
-                (podSpec ^*
-                    PodSpec.lens.liftOntoSubspecs(PodSpec.lens.tvos >•> trivialized))
-                .map(const([ConfigSetting(name: SelectCase.tvos.rawValue,
-                                          values: ["cpu": "powerpc3"])])) <+>
-                (podSpec ^*
-                    PodSpec.lens.liftOntoSubspecs(PodSpec.lens.watchos >•> trivialized))
-                .map(const([ConfigSetting(name: SelectCase.watchos.rawValue,
-                                          values: ["cpu": "powerpc4"])]))
-        ) ?? []
-
-        var output: [SkylarkConvertible] = configs + sourceLibs + subspecTargets +
+        var output: [BazelTarget] = sourceLibs + subspecTargets +
             bundleLibraries(withPodSpec: podSpec) + extraDeps
 
         // Execute transforms manually

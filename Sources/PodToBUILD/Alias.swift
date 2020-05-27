@@ -8,7 +8,7 @@
 /// This represents an alias in Bazel
 /// https://docs.bazel.build/versions/master/be/general.html#alias
 public struct Alias : BazelTarget {
-    let name: String
+    public let name: String
     let actual: String
 
     public init(name: String, actual: String) {
@@ -16,7 +16,7 @@ public struct Alias : BazelTarget {
         self.actual = actual
     }
 
-    var acknowledged: Bool {
+    public var acknowledged: Bool {
         return false
     }
 

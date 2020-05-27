@@ -1,0 +1,33 @@
+{
+  "name": "FBSDKCoreKit",
+  "platforms": {
+    "ios": "8.0",
+    "tvos": "10.0"
+  },
+  "requires_arc": [
+    "POD_REQUIRES_ARC/*.m"
+  ],
+  "subspecs": [
+    {
+      "name": "Core",
+      "xno_dependencies": {
+        "FBSDKCoreKit/XNBasics": [
+        ]
+      },
+      "exclude_files": [
+        "CORE_EXCLUDE/**/*.{h,m}"
+      ],
+      "source_files": "**/*.{h,m}",
+      "ios": {
+        "exclude_files": [
+          "CORE_EXCLUDE_IOS/**/*.{h,m}"
+        ]
+      },
+      "tvos": {
+        "exclude_files": [
+          "CORE_EXCLUDE_TV/**/*.{h,m}"
+        ]
+      }
+    }
+  ]
+}

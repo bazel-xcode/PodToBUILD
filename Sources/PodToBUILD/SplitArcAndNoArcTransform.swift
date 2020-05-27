@@ -14,72 +14,30 @@ enum ValidArcFileExtension: String {
 }
 
 /// Cocoapods tells us if we have files that require arc
-/// Bazel needs us to partition the files so we don't get duplicate symbols
+/// Bazel needs us to gpartition the files so we don't get duplicate symbols
+
+/// This looks crazy but it's works???
+/// On thelatest FBSDK
+/// # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
+ //  s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
+ ///                     'FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*',
+ //                     'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
+ //                                 'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*',
+ //                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
+ //
+
+// $ find Vendor/FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit -type d -depth 1
+// Vendor/FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit/Basics
+// Vendor/FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit/Internal
+// Vendor/FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC
+// Vendor/FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit/AppEvents
+// Vendor/FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit/AppLink
+/// $ ls Vendor/FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/
+/// FBSDKDynamicFrameworkLoader.m
+
+
 struct SplitArcAndNoArcTransform : SkylarkConvertibleTransform {
-    private static func fixIncomplete(pattern: String) -> [String] {
-        // a little hacky, but this logic works for FBSDKCoreKit, the one pod we depend on that needs array requires
-        if pattern.hasSuffix("**") {
-            return ["/*.m", "/*.mm"].map{ pattern + $0 }
-        } else if pattern.hasSuffix("*") {
-            return [".m", ".mm"].map{ pattern + $0 }
-        } else {
-            return [pattern]
-        }
-    }
-    
-    private static func arcifySourceFiles(lib: ObjcLibrary) -> (/*srcs: */GlobNode) -> GlobNode {
-        return { srcs in
-            let needArcPatterns: AttrSet<Set<String>> = lib.requiresArc.fold(
-                left: { $0 ? srcs.include : AttrSet.empty },
-                right: { AttrSet(basic: Set($0.flatMap(fixIncomplete))) }
-            )
-	        return GlobNode(
-	            include: needArcPatterns,
-	            exclude: srcs.exclude)
-        }
-    }
-    
-    private static func noArcifyNonArcSrcs(oldLib: ObjcLibrary) -> (/*nonArcSrcs: */GlobNode, /*newLib: */ObjcLibrary) -> GlobNode {
-        return { _, newLib in
-            let noNeedArcPatterns: AttrSet<Set<String>> = oldLib.requiresArc.fold(
-                left: { $0 ? AttrSet.empty : oldLib.sourceFiles.include },
-                right: { _ in oldLib.sourceFiles.include }
-            )
-	        return GlobNode(
-	            include: noNeedArcPatterns, // if we didnt required arc, then take all the old files
-                // exclude the files included earlier in addition to the other excludes so that we have a partition
-	            exclude: newLib.sourceFiles.include <> oldLib.sourceFiles.exclude)
-
-        }
-    }
-
-
-    private static func appendNoArcCFiles(srcs: GlobNode, lib: ObjcLibrary) -> GlobNode {
-        let (_, invalid) = lib.nonArcSrcs.partition {
-            ValidArcFileExtension(rawValue: URL(fileURLWithPath: $0).pathExtension) != nil
-        }
-
-        return GlobNode(include: invalid.include, exclude: AttrSet.empty) <> srcs
-    }
-
-
-    private static func deleteNoArcCFiles(srcs: GlobNode, lib: ObjcLibrary) -> GlobNode {
-        let (valid, _) = lib.nonArcSrcs.partition {
-            ValidArcFileExtension(rawValue: URL(fileURLWithPath: $0).pathExtension) != nil
-        }
-
-        return valid
-    }
-
-    static func transform(convertibles: [SkylarkConvertible], options: BuildOptions, podSpec: PodSpec) -> [SkylarkConvertible] {
-        return convertibles.map{ convertible in
-            (convertible as? ObjcLibrary).map{ objcLibrary in
-                objcLibrary |>
-                    (ObjcLibrary.lens.sourceFiles %~ arcifySourceFiles(lib: objcLibrary)) |>
-	                (ObjcLibrary.lens.nonArcSrcs %~~ noArcifyNonArcSrcs(oldLib: objcLibrary)) |>
-                    (ObjcLibrary.lens.sourceFiles %~~ appendNoArcCFiles) |>
-                    (ObjcLibrary.lens.nonArcSrcs %~~ deleteNoArcCFiles)
-            } ?? convertible
-       }
+    static func transform(convertibles: [BazelTarget], options: BuildOptions, podSpec: PodSpec) -> [BazelTarget] {
+        return convertibles
     }
 }

@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "Texture_hdrs",
   srcs = glob(
@@ -165,10 +183,13 @@ objc_library(
     [
       "Source/**/*.mm"
     ],
-    exclude = [
-      "Base/*.m",
-      "Source/**/*.m"
-    ],
+    exclude = glob(
+      [
+        "Base/*.m",
+        "Source/**/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -176,9 +197,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Texture",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_dylibs = [
     "c++"
@@ -275,10 +299,13 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Texture",
-    [
-      "Base/**/*.pch",
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Base/**/*.pch",
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_dylibs = [
     "c++"

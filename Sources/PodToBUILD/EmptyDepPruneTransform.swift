@@ -25,29 +25,12 @@ extension Dictionary where Key == String, Value == BazelTarget {
     }
 }
 
-func hasSourcesOnDisk(globNode: GlobNode) -> Bool {
-    // TODO: map over all components of the attrsets here.
-    let includes = globNode.include.basic ?? Set()
-    let excludes = globNode.exclude.basic ?? Set()
-
-    let includedFiles = includes.reduce(into: Set<String>()) {
-        accum, pattern in
-        Glob(pattern: pattern).paths.forEach { accum.insert($0) }
-    }
-
-    let excludedFiles = excludes.reduce(into: Set<String>()) {
-        accum, pattern in
-        Glob(pattern: pattern).paths.forEach { accum.insert($0) }
-    }
-
-    let computedFiles = includedFiles.subtracting(excludedFiles)
-    return computedFiles.count > 0
-}
-            
 // EmptyDepPruneTransform hits the file system to strip out deps without source
 // Currently, empty swift_library's cause linker issues.
 struct EmptyDepPruneTransform : SkylarkConvertibleTransform {
-    public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions, podSpec: PodSpec) ->  [SkylarkConvertible] {
+    public static func transform(convertibles: [BazelTarget], options:
+                                 BuildOptions, podSpec: PodSpec) ->
+    [BazelTarget] {
         guard !options.alwaysSplitRules else {
             return convertibles
         }
@@ -72,7 +55,7 @@ struct EmptyDepPruneTransform : SkylarkConvertibleTransform {
                         return dep
                     }
                     // All swift libs require sources on disk
-                    guard hasSourcesOnDisk(globNode: swiftLib.sourceFiles) else {
+                    guard swiftLib.sourceFiles.basic?.hasSourcesOnDisk() ?? false else {
                         return nil
                     }
                     return dep
@@ -80,13 +63,25 @@ struct EmptyDepPruneTransform : SkylarkConvertibleTransform {
             }
             return prunedDeps
         }
+
         return convertibles.compactMap {
             convertible in
+            // This returns a new objc library
             if let lib = convertible as? ObjcLibrary {
-                return lib |> (ObjcLibrary.lens.deps %~~ prune)
+                let prunedDeps = prune(deps: lib.deps, lib: lib)
+                return ObjcLibrary(name: lib.name, externalName: lib.externalName,
+                                sourceFiles: lib.sourceFiles, headers: lib.headers,
+                                headerName: lib.headerName, includes: lib.includes,
+                                sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
+                                lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
+                                prunedDeps, copts: lib.copts, bundles: lib.bundles, resources:
+                                lib.resources, publicHeaders: lib.publicHeaders,
+                                nonArcSrcs: lib.nonArcSrcs, requiresArc:
+                                lib.requiresArc, isTopLevelTarget: lib.isTopLevelTarget)
+
             }
             if let lib = convertible as? SwiftLibrary {
-                guard hasSourcesOnDisk(globNode: lib.sourceFiles) else {
+               guard lib.sourceFiles.basic?.hasSourcesOnDisk() ?? false else {
                     return nil
                 }
                 return lib

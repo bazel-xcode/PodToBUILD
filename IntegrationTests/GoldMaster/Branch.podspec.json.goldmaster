@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "Branch_hdrs",
   srcs = glob(
@@ -154,9 +172,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Branch",
-    [
-      "Branch-SDK/**/*.pch"
-    ]
+    glob(
+      [
+        "Branch-SDK/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "AdSupport",
@@ -246,9 +267,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Branch",
-    [
-      "Branch-SDK/**/*.pch"
-    ]
+    glob(
+      [
+        "Branch-SDK/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "CoreTelephony",

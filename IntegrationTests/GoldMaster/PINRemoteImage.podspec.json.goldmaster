@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "PINRemoteImage_hdrs",
   srcs = glob(
@@ -153,7 +171,17 @@ objc_library(
     exclude = [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m",
       "Source/Classes/PINCache/*.m"
-    ],
+    ] + glob(
+      [
+        "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Classes/PINCache/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -161,9 +189,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "ImageIO",
@@ -484,9 +515,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/FLAnimatedImage:FLAnimatedImage",
@@ -655,9 +689,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/PINCache:PINCache",

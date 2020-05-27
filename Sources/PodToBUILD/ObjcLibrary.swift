@@ -27,10 +27,10 @@ public let PodSupportSystemPublicHeaderDir = "pod_support/Headers/Public/"
 
 // https://github.com/bazelbuild/rules_apple/blob/master/doc/rules-resources.md#apple_bundle_import
 public struct AppleBundleImport: BazelTarget {
-    let name: String
+    public let name: String
     let bundleImports: AttrSet<[String]>
 
-    var acknowledged: Bool {
+    public var acknowledged: Bool {
         return true
     }
 
@@ -40,8 +40,7 @@ public struct AppleBundleImport: BazelTarget {
             arguments: [
                 .named(name: "name", value: bazelLabel(fromString: name).toSkylark()),
                 .named(name: "bundle_imports",
-                       value: GlobNode(include: bundleImports.map{ Set($0) },
-                                       exclude: AttrSet.empty).toSkylark()),
+                       value: bundleImports.map { GlobNode(include: Set($0)) }.toSkylark() )
                 ])
     }
 
@@ -56,10 +55,10 @@ public struct AppleBundleImport: BazelTarget {
 
 // https://github.com/bazelbuild/rules_apple/blob/0.13.0/doc/rules-resources.md#apple_resource_bundle
 public struct AppleResourceBundle: BazelTarget {
-    let name: String
+    public let name: String
     let resources: AttrSet<[String]>
 
-    var acknowledged: Bool {
+    public var acknowledged: Bool {
         return true
     }
 
@@ -69,15 +68,14 @@ public struct AppleResourceBundle: BazelTarget {
             arguments: [
                 .named(name: "name", value: bazelLabel(fromString: name).toSkylark()),
                 .named(name: "resources",
-                       value: GlobNode(include: resources.map{ Set($0) },
-                                       exclude: AttrSet.empty).toSkylark()),
+                       value: resources.map { GlobNode(include: Set($0)) }.toSkylark() )
         ])
     }
 }
 
 // https://bazel.build/versions/master/docs/be/general.html#config_setting
 public struct ConfigSetting: BazelTarget {
-    let name: String
+    public let name: String
     let values: [String: String]
 
     public func toSkylark() -> SkylarkNode {
@@ -92,10 +90,10 @@ public struct ConfigSetting: BazelTarget {
 
 // https://github.com/bazelbuild/rules_apple/blob/818e795208ae3ca1cf1501205549d46e6bc88d73/doc/rules-general.md#apple_static_framework_import
 public struct AppleStaticFrameworkImport: BazelTarget {
-    let name: String // A unique name for this rule.
+    public let name: String // A unique name for this rule.
     let frameworkImports: AttrSet<[String]> // The list of files under a .framework directory which are provided to Objective-C targets that depend on this target.
 
-    var acknowledged: Bool {
+    public var acknowledged: Bool {
         return true
     }
 
@@ -113,27 +111,24 @@ public struct AppleStaticFrameworkImport: BazelTarget {
     public func toSkylark() -> SkylarkNode {
         return SkylarkNode.functionCall(
                 name: "apple_static_framework_import",
-                arguments: [
+                arguments: [SkylarkFunctionArgument]([
                     .named(name: "name", value: .string(name)),
                     .named(name: "framework_imports",
-                           value: GlobNode(
-                                include: frameworkImports.map {
-                                    Set($0.map { $0 + "/**" })
-                                },
-                                exclude: AttrSet.empty
-                            ).toSkylark()),
+                           value: frameworkImports.map {
+                                  GlobNode(include: Set($0.map { $0 + "/**" }))
+                            }.toSkylark()),
                     .named(name: "visibility", value: .list(["//visibility:public"]))
-                ]
+                ])
         )
     }
 }
 
 // https://bazel.build/versions/master/docs/be/objective-c.html#objc_import
 public struct ObjcImport: BazelTarget {
-    let name: String // A unique name for this rule.
+    public let name: String // A unique name for this rule.
     let archives: AttrSet<[String]> // The list of .a files provided to Objective-C targets that depend on this target.
 
-    var acknowledged: Bool {
+    public var acknowledged: Bool {
         return true
     }
 
@@ -156,21 +151,22 @@ public enum ObjcLibraryConfigurableKeys : String {
 }
 
 // ObjcLibrary is an intermediate rep of an objc library
+
 public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     public let name: String
-    public let sourceFiles: GlobNode
-    public let headers: GlobNode
+    public let sourceFiles: AttrSet<GlobNode>
+    public let headers: AttrSet<GlobNode>
     public let includes: [String]
     public let headerName: AttrSet<String>
     public let weakSdkFrameworks: AttrSet<[String]>
     public let sdkDylibs: AttrSet<[String]>
     public let bundles: AttrSet<[String]>
-    public let resources: GlobNode
+    public let resources: AttrSet<GlobNode>
     public let publicHeaders: AttrSet<Set<String>>
-    public let nonArcSrcs: GlobNode
+    public let nonArcSrcs: AttrSet<GlobNode>
 
     // only used later in transforms
-    public let requiresArc: Either<Bool, [String]>
+    public let requiresArc: AttrSet<Either<Bool, [String]>?>
 
     // "var" properties are user configurable so we need mutation here
     public var sdkFrameworks: AttrSet<[String]>
@@ -182,8 +178,8 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
     init(name: String,
         externalName: String,
-        sourceFiles: GlobNode,
-        headers: GlobNode,
+        sourceFiles: AttrSet<GlobNode>,
+        headers: AttrSet<GlobNode>,
         headerName: AttrSet<String>,
         includes: [String],
         sdkFrameworks: AttrSet<[String]>,
@@ -192,10 +188,10 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         deps: AttrSet<[String]>,
         copts: AttrSet<[String]>,
         bundles: AttrSet<[String]>,
-        resources: GlobNode,
+        resources: AttrSet<GlobNode>,
         publicHeaders: AttrSet<Set<String>>,
-        nonArcSrcs: GlobNode,
-        requiresArc: Either<Bool, [String]>,
+        nonArcSrcs: AttrSet<GlobNode>,
+        requiresArc: AttrSet<Either<Bool, [String]>?>,
         isTopLevelTarget: Bool
     ) {
         self.name = name
@@ -217,62 +213,72 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.isTopLevelTarget = isTopLevelTarget
     }
 
-
     /// Helper to allocate with a podspec
     /// objc_library is used for either C++ compilation or ObjC/C compilation.
     /// There is no way to have rule specific `cpp` opts in Bazel, so we need
     /// to split C++ and ObjC apart.
-    /// TODO: Add bazel-discuss thread on this matter.
+    // TODO: Add bazel-discuss thread on this matter.
     /// isSplitDep indicates if the library is a split language dependency
     init(parentSpecs: [PodSpec] = [], spec: PodSpec, extraDeps: [String] = [],
-            isSplitDep: Bool = false,
-            sourceType: BazelSourceLibType = .objc) {
-        let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: parentSpecs + [spec])
-        self.isTopLevelTarget = parentSpecs.isEmpty && isSplitDep == false
-        let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
+         isSplitDep: Bool = false,
+         sourceType: BazelSourceLibType = .objc) {
+        let fallbackSpec = FallbackSpec(specs: parentSpecs + [spec])
+
+        isTopLevelTarget = parentSpecs.isEmpty && isSplitDep == false
+        let allSourceFiles = spec.attr(\PodSpecRepresentable.sourceFiles).unpackToMulti()
 
         let includeFileTypes = sourceType == .cpp ? CppLikeFileTypes :
-                ObjcLikeFileTypes
+            ObjcLikeFileTypes
         let implFiles = extractFiles(fromPattern: allSourceFiles,
-                includingFileTypes: includeFileTypes)
+            includingFileTypes: includeFileTypes)
             .map { Set($0) }
 
-        let allExcludes = spec ^* liftToAttr(PodSpec.lens.excludeFiles)
+        let allExcludes = fallbackSpec.attr(\.excludeFiles).unpackToMulti()
         let implExcludes = extractFiles(fromPattern: allExcludes,
-                includingFileTypes: CppLikeFileTypes <> ObjcLikeFileTypes)
+            includingFileTypes: CppLikeFileTypes <> ObjcLikeFileTypes)
             .map { Set($0) }
 
-        // TODO: Invoke intersectPatterns (i.e. don't use the bool)
-        // TODO: Handle multiplatform overrides of requiresArc
-        self.requiresArc = (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.requiresArc))) ?? .left(true)
-        self.publicHeaders = (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.publicHeaders))).map{ Set($0) }
-    
+        requiresArc = fallbackSpec.attr(\.requiresArc)
+            .unpackToMulti().map {
+                value in
+                switch value {
+                case let .left(value):
+                    return .left(value)
+                case let .right(value):
+                    return .right(extractFiles(fromPattern: value,
+                                               includingFileTypes: CppLikeFileTypes <> ObjcLikeFileTypes))
+                default:
+                    fatalError("X?")
+                }
+            }
+        publicHeaders = fallbackSpec.attr(\PodSpecAttr.publicHeaders).map { Set($0) }
+
         let podName = GetBuildOptions().podName
-        self.name = computeLibName(parentSpecs: parentSpecs, spec: spec, podName:
-                podName, isSplitDep: isSplitDep, sourceType: sourceType)
+        name = computeLibName(parentSpecs: parentSpecs, spec: spec, podName:
+            podName, isSplitDep: isSplitDep, sourceType: sourceType)
         let externalName = parentSpecs.first?.name ?? spec.name
 
         let xcconfigTransformer =
             XCConfigTransformer.defaultTransformer(externalName: externalName,
-                    sourceType: sourceType)
+                                                   sourceType: sourceType)
 
+        /// TODO: This operation should operate on the AttrSet
         let xcconfigFlags =
-            xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.podTargetXcconfig)))) +
-                xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.userTargetXcconfig)))) +
-                xcconfigTransformer.compilerFlags(forXCConfig: (fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.xcconfig))))
+            xcconfigTransformer.compilerFlags(forXCConfig: fallbackSpec.attr(\.podTargetXcconfig).basic ?? [:]) +
+            xcconfigTransformer.compilerFlags(forXCConfig: fallbackSpec.attr(\.userTargetXcconfig).basic ?? [:]) +
+            xcconfigTransformer.compilerFlags(forXCConfig: fallbackSpec.attr(\.xcconfig).basic ?? [:])
 
         let xcconfigCopts = xcconfigFlags.filter { !$0.hasPrefix("-I") }
 
-        let moduleName = AttrSet<String>(
-            value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
-        )
-
-        let headerDirectoryName: AttrSet<String?> = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.headerDirectory))
+        let moduleName: AttrSet<String> = fallbackSpec.attr(\.moduleName).map {
+            $0 ?? ""
+        }
+        let headerDirectoryName: AttrSet<String?> = fallbackSpec.attr(\.headerDirectory)
 
         let headerName = (moduleName.isEmpty ? nil : moduleName) ??
-        (headerDirectoryName.basic == nil ? nil :
-         headerDirectoryName.denormalize()) ??  AttrSet<String>(value:
-         externalName)
+            (headerDirectoryName.basic == nil ? nil :
+                headerDirectoryName.denormalize()) ?? AttrSet<String>(value:
+                externalName)
 
         let includePodHeaderDirs: (() -> [String]) = {
             let options = GetBuildOptions()
@@ -281,93 +287,110 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             }
             let value = spec.podTargetXcconfig?["USE_HEADERMAP"]
             let include = value == nil || (value?.lowercased() != "no" &&
-                    value?.lowercased() != "false")
+                value?.lowercased() != "false")
             guard include else { return [String]() }
 
-            return [ getPodBaseDir() + "/" +  podName + "/" + PodSupportSystemPublicHeaderDir]
+            return [getPodBaseDir() + "/" + podName + "/" + PodSupportSystemPublicHeaderDir]
         }
 
-        self.includes = xcconfigFlags.filter { $0.hasPrefix("-I") }.map {
+        includes = xcconfigFlags.filter { $0.hasPrefix("-I") }.map {
             String($0.dropFirst(2))
         } + includePodHeaderDirs()
         self.headerName = headerName
         self.externalName = externalName
 
-        self.sourceFiles = GlobNode(
-            include: implFiles,
-            exclude: implExcludes)
+        sourceFiles = implFiles.zip(implExcludes).map {
+            t -> GlobNode in
+            GlobNode(include: .left(t.first ?? Set()), exclude: .left(t.second ?? Set()))
+        }
 
         // Build out header files
         let getHeaderDirHeaders = {
-            () -> AttrSet<Set<String>> in 
+            () -> AttrSet<[String]> in
             guard !headerDirectoryName.isEmpty else {
-                return AttrSet<Set<String>>.empty
+                return AttrSet<[String]>.empty
             }
             let pattern = headerDirectoryName.map {
                 (name: String?) -> [String] in
-                    guard let name = name else {
-                        return []
-                    }
-                    return [(name + "/**")]
+                guard let name = name else {
+                    return []
+                }
+                return [name + "/**"]
             }
             return extractFiles(fromPattern: pattern,
-                includingFileTypes: HeaderFileTypes).map{ Set($0) }
+                                includingFileTypes: HeaderFileTypes)
         }
-        let privateHeaders = (fallbackSpec ^*
-                ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.privateHeaders)))
+        let privateHeaders = fallbackSpec.attr(\.privateHeaders).unpackToMulti()
         // It's possible to use preserve_paths for header includes
         // also, preserve path may be used for a file, so we'd need to touch
         // the FS here to actually find out.
-        let preservePaths = (fallbackSpec ^*
-                ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.preservePaths))).map { $0.filter { !$0.contains("LICENSE") }}
-        let allSpecHeaders =  getHeaderDirHeaders() <>
+        let preservePaths = fallbackSpec.attr(\.preservePaths).unpackToMulti().map { $0.filter { !$0.contains("LICENSE") } }
+
+        // This is emitting a problematic header ( duplicate includes )
+        let headerDirs: AttrSet<[String]> = getHeaderDirHeaders().unpackToMulti()
+        let allSpecHeadersList: AttrSet<[String]> = headerDirs <>
             extractFiles(fromPattern: allSourceFiles, includingFileTypes:
-                HeaderFileTypes).map{ Set($0) } <>
+                HeaderFileTypes) <>
             extractFiles(fromPattern: privateHeaders, includingFileTypes:
-                HeaderFileTypes).map{ Set($0) } <>
+                HeaderFileTypes) <>
             extractFiles(fromPattern: preservePaths, includingFileTypes:
-                HeaderFileTypes).map{ Set($0) }
-        self.headers = GlobNode(
-            include: allSpecHeaders,
-            exclude: extractFiles(fromPattern: allExcludes,
-                includingFileTypes: HeaderFileTypes).map{ Set($0) })
+                HeaderFileTypes)
 
-        self.nonArcSrcs = GlobNode.empty
-        self.sdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.frameworks))
+        let allSpecHeaders = allSpecHeadersList.map { Set($0) }
+        let headerExcludes = extractFiles(fromPattern: allExcludes,
+                                          includingFileTypes: HeaderFileTypes).map { Set($0) }
 
-        self.weakSdkFrameworks = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.weakFrameworks))
+        headers = allSpecHeaders.zip(headerExcludes).map {
+            t -> GlobNode in
+            GlobNode(include: Set(t.first ?? []), exclude: Set(t.second
+                    ?? []))
+        }
+        nonArcSrcs = AttrSet.empty
+        sdkFrameworks = fallbackSpec.attr(\.frameworks)
 
-        self.sdkDylibs = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.libraries))
+        weakSdkFrameworks = fallbackSpec.attr(\.weakFrameworks)
+
+        sdkDylibs = fallbackSpec.attr(\.libraries)
 
         // Lift the deps to multiplatform, then get the names of these deps.
-        let mpDeps = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.dependencies))
+        let mpDeps = fallbackSpec.attr(\.dependencies)
         let mpPodSpecDeps = mpDeps.map { $0.map {
             getDependencyName(fromPodDepName: $0, podName:
-                    podName) } }
+                podName)
+        } }
 
         let extraDepNames = extraDeps.map { bazelLabel(fromString: ":\($0)") }
 
-        self.deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
+        deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
 
-        self.copts = AttrSet(basic: xcconfigCopts.sorted(by: (<))) <> (fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.compilerFlags)))
+        copts = AttrSet(basic: xcconfigCopts.sorted(by: <)) <> fallbackSpec.attr(\.compilerFlags)
 
         // Select resources that are not prebuilt bundles
-        let resourceFiles = ((spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
-            strArr.filter({ (str: String) -> Bool in
+        let resourceFiles = (spec.attr(\.resources).map { (strArr: [String]) -> [String] in
+            strArr.filter { (str: String) -> Bool in
                 !str.hasSuffix(".bundle")
-            })
+            }
+
         }).map(extractResources)
-        self.resources = GlobNode(
-            include: resourceFiles.map{ Set($0) },
-            exclude: AttrSet.empty)
+        resources = resourceFiles.map { GlobNode(include: Set($0)) }
 
-        let prebuiltBundles = spec ^* liftToAttr(PodSpec.lens.resources .. ReadonlyLens {
-            $0.filter { s in s.hasSuffix(".bundle") }
-              .map(AppleBundleImport.extractBundleName)
-              .map { k in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }
-              .map(bazelLabel)})
+        let prebuiltBundles = spec.attr(\.resources).map { (strArr: [String]) -> [String] in
+            strArr.filter { (str: String) -> Bool in
+                str.hasSuffix(".bundle")
+            }
+            .map(AppleBundleImport.extractBundleName)
+            .map { k in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }
+            .map(bazelLabel)
+        }
 
-        self.bundles = prebuiltBundles <> (spec ^* liftToAttr(PodSpec.lens.resourceBundles .. ReadonlyLens { $0.map { k, _ in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }.map(bazelLabel) }))
+        let resourceBundles = spec.attr(\.resourceBundles)
+            .map { dict in
+                Array(dict.keys)
+                    .map { k in ":\(spec.moduleName ?? spec.name)_Bundle_\(k)" }
+                    .map(bazelLabel)
+            }
+
+        bundles = prebuiltBundles <> resourceBundles
     }
 
     mutating func add(configurableKey: String, value: Any) {
@@ -390,32 +413,164 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         }
     }
 
+    /// Source file logic
+    /// lib/cocoapods/sandbox/file_accessor.rb
+    ///      def source_files
+    ///          paths_for_attribute(:source_files)
+    ///      end
+    ///
+    ///      def non_arc_source_files
+    ///        source_files - arc_source_files
+    ///      end
+    ///
+    ///      def arc_source_files
+    ///        case spec_consumer.requires_arc
+    ///        when TrueClass
+    ///          source_files
+    ///        when FalseClass
+    ///          []
+    ///        else
+    ///          paths_for_attribute(:requires_arc) & source_files
+    ///        end
+    ///      end
+    ///
+    /// paths_for_attrs has an exclude on it..
+    /// non_arc_source_files may not have it in some cases?
+    ///
+    /// consumer is in a different repo
+    //// github.com/CocoaPods/Core/blob/master/lib/cocoapods-core/specification/consumer.rb
+    /// 
+    /// requires_arc ends up getting the excludes applied _before the union with
+    /// source fies.
+    /// 
+    ///
+    /// The & operator is a union in ruby means:
+    /// [1,2] & [1] = [1]
+    /// [1,2] & [] = []
+    ///
+    /// This simply means that you need to have source files.
+    ///
+    /// In other words
+    /// We can take
+    /// Total = Left + Right
+    /// 
+    /// Glob(include, exclude)
+    /// a = 1, 2, 3
+    /// b = 2, 4, 6
+    /// we'd want 2
+    /// 
+    /// We can implement this operator in Bazel as
+    /// a - ( a - b )
+    /// Or Glob(include: a, exclude(Glob(include: a, exclude: Glob(b) ) ))
+
     // MARK: Source Excludable
 
-    var excludableSourceFiles: AttrSet<Set<String>> {
-        return self ^* (ObjcLibrary.lens.sourceFiles .. GlobNode.lens.include)
-    }
+    func addExcluded(targets: [BazelTarget]) -> BazelTarget {
+        let sourcesToExclude: [AttrSet<GlobNode>] = targets.compactMap {
+            target -> AttrSet<GlobNode>? in
+            guard let excludableTarget = target as? ObjcLibrary else {
+                return nil
+            }
+            if excludableTarget.name == self.name {
+                return nil
+            }
+            return excludableTarget.sourceFiles
+        }
+        // Need to sequence this..
+        // This operation pushes up excludes from the depedee's sourceFiles.include
+        // Sequence all of the source files
+        let allExcludes: AttrSet<[GlobNode]>
+        allExcludes = sourcesToExclude.reduce(AttrSet<[GlobNode]>.empty) {
+            accum, next -> AttrSet<[GlobNode]> in
+            let nextV: AttrSet<GlobNode> = next
+            return accum.zip(nextV).map { zip in
+                let first = zip.first ?? []
+                guard let second = zip.second else {
+                    return first
+                }
+                return first + [second]
+            }
+        }
 
-    var alreadyExcluded: AttrSet<Set<String>> {
-        return self ^* ObjcLibrary.lens.excludeFiles
-    }
+        let sourcesWithExcludes: AttrSet<GlobNode>
+        sourcesWithExcludes = sourceFiles.zip(allExcludes).map {
+            attrTuple -> GlobNode in
+            // We need a non trivial representation of propgating globs.
+            // This might require glob to be some abstract container
+            guard let accumSource = attrTuple.first else {
+                return GlobNode()
+            }
+            guard let excludedTargetSources: [GlobNode] = attrTuple.second else {
+                return accumSource
+            }
+            let append: [Either<Set<String>, GlobNode>] = excludedTargetSources.map {
+                .right($0)
+            }
+            return GlobNode(include: accumSource.include, exclude:
+                accumSource.exclude + append)
+        }
+        let requiresArcValue: AttrSet<Either<Bool, [String]>?> = requiresArc
+        let arcSources: AttrSet<GlobNode>
+        arcSources = sourcesWithExcludes.zip(requiresArcValue).map {
+            attrTuple -> GlobNode in
+            let arcSources = attrTuple.first ?? GlobNode()
+            guard let requiresArcSources = attrTuple.second else {
+                return arcSources
+            }
+            switch requiresArcSources {
+            case let .left(boolValue):
+                return boolValue ? arcSources : GlobNode()
+            case let .right(patternsValue):
+                // In cocoapods this is:
+                // As we don't have the union in skylark, this implements the
+                // union operator with glob ( see above comment )
+                // ruby: paths_for_attribute(:requires_arc) & source_files
+                return GlobNode(include: .left(Set(patternsValue)),
+                    exclude:.right(GlobNode(include: .left(Set(patternsValue)),
+                         exclude:.right(arcSources))))
+            default:
+                fatalError("null logic error")
+            }
+        }
+        let nonArcSources: AttrSet<GlobNode>
+        nonArcSources = sourcesWithExcludes.zip(arcSources).map {
+            attrTuple -> GlobNode in
+            guard let all = attrTuple.first else {
+                if let arcSourcesVal = attrTuple.second {
+                    return arcSourcesVal
+                }
+                fatalError("null logic error")
+            }
 
-    mutating func addExcluded(sourceFiles: AttrSet<Set<String>>) {
-        self = self |> ObjcLibrary.lens.excludeFiles <>~ sourceFiles
+            guard let arcSources = attrTuple.second else {
+                return attrTuple.first ?? GlobNode()
+            }
+            return GlobNode(include: .right(all), exclude: .right(arcSources))
+        }
+        let lib = self
+        return ObjcLibrary(name: lib.name, externalName: lib.externalName,
+                           sourceFiles: arcSources, headers: lib.headers,
+                           headerName: lib.headerName, includes: lib.includes,
+                           sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
+                           lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
+                           deps, copts: lib.copts, bundles: lib.bundles, resources:
+                           lib.resources, publicHeaders: lib.publicHeaders,
+                           nonArcSrcs: nonArcSources, requiresArc:
+                           lib.requiresArc, isTopLevelTarget: lib.isTopLevelTarget)
     }
 
     // MARK: BazelTarget
 
-    var acknowledgedDeps: [String]? {
+    public var acknowledgedDeps: [String]? {
         let basic = deps.basic ?? [String]()
         let multiios = deps.multi.ios ?? [String]()
         let multiosx = deps.multi.osx ?? [String]()
         let multitvos = deps.multi.tvos ?? [String]()
-        
+
         return Array(Set(basic + multiios + multiosx + multitvos))
     }
 
-    var acknowledged: Bool {
+    public var acknowledged: Bool {
         return true
     }
 
@@ -467,8 +622,9 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             }.map { ($0 + "_hdrs").toSkylark() }
         }
        
-        let podSupportHeaders = GlobNode(include: AttrSet<Set<String>>(basic: [PodSupportSystemPublicHeaderDir + "**/*"]),
-                                                         exclude: AttrSet<Set<String>>.empty).toSkylark()
+        let podSupportHeaders: SkylarkNode
+        podSupportHeaders = GlobNode(include: [PodSupportSystemPublicHeaderDir + "**/*"])
+        .toSkylark()
         if lib.isTopLevelTarget {
             var exposedHeaders: SkylarkNode = podSupportHeaders .+.
                 headers.toSkylark() .+. depHdrs.toSkylark()
@@ -501,13 +657,13 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 arguments: [
                     .named(name: "name", value: (name + "_union_hdrs").toSkylark()),
                     .named(name: "srcs", value: [
-                        (name + "_hdrs"),
-                        (externalName + "_hdrs")
-                        ].toSkylark()),
+                        name + "_hdrs",
+                        externalName + "_hdrs",
+                    ].toSkylark()),
                     .named(name: "visibility", value:
                         ["//visibility:public"].toSkylark()),
-                    ]
-                ))
+                ]
+            ))
         }
 
         let baseHeaders: [String] = isTopLevelTarget ?
@@ -522,21 +678,20 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 // TODO: in some cases, we may need to break this invariant, as
                 // it may not hold true for all cocoapods ( e.g. give it all
                 // possibilities here )
-                .named(name: "deps", value: deps.sorted(by: (<)).toSkylark()),
+                .named(name: "deps", value: deps.sorted(by: <).toSkylark()),
                 .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
-                ]
-            ))
+            ]
+        ))
 
         if lib.includes.count > 0 {
             inlineSkylark.append(.functionCall(
                 name: "gen_includes",
                 arguments: [
                     .named(name: "name", value: (name + "_includes").toSkylark()),
-                    .named(name: "include", value: includes.toSkylark())
-                ]))
+                    .named(name: "include", value: includes.toSkylark()),
+                ]
+            ))
         }
-
-        let headerGlobNode = headers
 
         let moduleMapDirectoryName = externalName + "_module_map"
         let clangModuleName = headerName.basic?.replacingOccurrences(of: "-", with: "_")
@@ -556,68 +711,93 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
              }
         }
         
-        if !lib.sourceFiles.include.isEmpty {
+        if !lib.sourceFiles.isEmpty {
             libArguments.append(.named(
                 name: "srcs",
                 value: lib.sourceFiles.toSkylark()
                 ))
         }
-        if !lib.nonArcSrcs.include.isEmpty {
+        if !lib.nonArcSrcs.isEmpty {
             libArguments.append(.named(
                 name: "non_arc_srcs",
                 value: lib.nonArcSrcs.toSkylark()
             ))
         }
 
-        func buildPCHList(sources: [String]) -> [String] {
-            let nestedComponents = sources
-                .map { URL(fileURLWithPath: $0) }
-                .map { $0.deletingPathExtension() }
-                .map { $0.appendingPathExtension("pch") }
-                .map { $0.relativePath }
-                .map { $0.components(separatedBy: "/") }
-                .compactMap { $0.count > 1 ? $0.first : nil }
-                .map { [$0, "**", "*.pch"].joined(separator: "/") }
-
-            return nestedComponents
+        func buildPCHList(sources: GlobNode) -> GlobNode {
+            // Note: this PCH search looks in source file paths adjacent to
+            // source files.
+            let nestedComponents: [Either<Set<String>, GlobNode>] = sources.include.map {
+                incValue -> Either<Set<String>, GlobNode> in
+                incValue.map {
+                    pattern -> String in
+                    let components = URL(fileURLWithPath: pattern)
+                        .deletingPathExtension()
+                        .appendingPathExtension("pch")
+                        .relativePath
+                        .components(separatedBy: "/")
+                    return [components.first ?? "", "**", "*.pch"].joined(separator: "/")
+                }
+            }
+            return GlobNode(include: nestedComponents, exclude: [])
         }
 
-        let pchSourcePaths = (lib.sourceFiles.include <> lib.nonArcSrcs.include).fold(basic: {
-            if let basic = $0 {
-                return buildPCHList(sources: Array(basic))
-            }
-            return []
-        }, multi: { (arr: [String], multi: MultiPlatform<Set<String>>) -> [String] in
-            return arr + buildPCHList(sources: [multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 }.flatMap { Array($0) })
-        })
-
-
-        let moduleHeaders: [String] = generateModuleMap ?
-            [":" + moduleMapDirectoryName + "_module_map_file"] : []
-        libArguments.append(.named(
-                name: "hdrs",
-                value: (baseHeaders + moduleHeaders + (options.generateHeaderMap ? [":" + name + "_hmap"] : [])).toSkylark()
-                ))
-
-        libArguments.append(.named(
-            name: "pch",
-            value:.functionCall(
+        func getPCHSkylark(sourcePaths: GlobNode?) -> SkylarkNode {
+            return .functionCall(
                 // Call internal function to find a PCH.
                 // @see workspace.bzl
                 name: "pch_with_name_hint",
                 arguments: [
                     .basic(.string(lib.externalName)),
-                    .basic(Array(Set(pchSourcePaths)).sorted(by: (<)).toSkylark())
+                    .basic((sourcePaths ?? GlobNode()).toSkylark()),
                 ]
             )
+        }
+
+        // let pchSourcePaths = (lib.sourceFiles <> lib.nonArcSrcs).map {
+        let pchSourcePaths = lib.sourceFiles.map {
+            buildPCHList(sources: $0)
+        }.flattenToBasicIfPossible()
+
+        let pchSkylark: SkylarkNode
+        if pchSourcePaths.isEmpty {
+            pchSkylark = getPCHSkylark(sourcePaths: nil)
+        } else {
+            // The empty value for rendering a glob is []
+            // We need to render a non for //conditions:default
+            if pchSourcePaths.multi.isEmpty {
+                pchSkylark = getPCHSkylark(sourcePaths: pchSourcePaths.basic)
+            } else {
+                let multi = pchSourcePaths.multi
+                let arg = [
+                    ":\(SelectCase.osx.rawValue)": getPCHSkylark(sourcePaths: multi.osx),
+                    ":\(SelectCase.tvos.rawValue)": getPCHSkylark(sourcePaths: multi.tvos),
+                    ":\(SelectCase.watchos.rawValue)": getPCHSkylark(sourcePaths: multi.watchos),
+                    "\(SelectCase.fallback.rawValue)": getPCHSkylark(sourcePaths: multi.ios),
+                ]
+                pchSkylark = SkylarkNode.functionCall(name: "select", arguments: [
+                    .basic(arg.toSkylark()),
+                ])
+            }
+        }
+
+        let moduleHeaders: [String] = generateModuleMap ?
+            [":" + moduleMapDirectoryName + "_module_map_file"] : []
+        libArguments.append(.named(
+            name: "hdrs",
+            value: (baseHeaders + moduleHeaders + (options.generateHeaderMap ? [":" + name + "_hmap"] : [])).toSkylark()
         ))
 
+        libArguments.append(.named(
+            name: "pch",
+            value: pchSkylark
+        ))
         if generateModuleMap {
             // Include the public headers which are symlinked in
             // All includes are bubbled up automatically
             libArguments.append(.named(
                 name: "includes",
-                value: [ moduleMapDirectoryName ].toSkylark()
+                value: [moduleMapDirectoryName].toSkylark()
             ))
         }
 
@@ -662,70 +842,71 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         let buildConfigDependenctCOpts =
             SkylarkNode.functionCall(name: "select",
-                arguments: [
-                    .basic([
-                         ":release":
-                            ["-DPOD_CONFIGURATION_RELEASE=1", "-DNS_BLOCK_ASSERTIONS=1"],
-                         "//conditions:default":
-                            ["-DPOD_CONFIGURATION_RELEASE=0"]
-                     ].toSkylark()
-                     )]
-            )
+                                     arguments: [
+                                         .basic([
+                                             ":release":
+                                                 ["-DPOD_CONFIGURATION_RELEASE=1", "-DNS_BLOCK_ASSERTIONS=1"],
+                                             "//conditions:default":
+                                                 ["-DPOD_CONFIGURATION_RELEASE=0"],
+                                         ].toSkylark()
+                                         ),
+                                     ])
         let getPodIQuotes = {
             () -> [String] in
             if options.generateHeaderMap {
                 return [
                     "-I$(GENDIR)/\(getGenfileOutputBaseDir())/" + lib.name + "_hmap.hmap",
-                    "-I.", 
+                    "-I.",
                 ]
             }
             let podInclude = lib.includes.first(where: {
-                    $0.contains(PodSupportSystemPublicHeaderDir) })
+                $0.contains(PodSupportSystemPublicHeaderDir)
+            })
             guard podInclude != nil else { return [] }
 
             let headerDirs = self.headerName.map { PodSupportSystemPublicHeaderDir + "\($0)/" }
             let headerSearchPaths: Set<String> = Set(headerDirs.fold(
-                        basic: { str in Set<String>([str].compactMap { $0 }) },
-                        multi: {
-                        (result: Set<String>, multi: MultiPlatform<String>)
-                            -> Set<String> in
-                            return result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
-                        }))
+                basic: { str in Set<String>([str].compactMap { $0 }) },
+                multi: {
+                    (result: Set<String>, multi: MultiPlatform<String>)
+                        -> Set<String> in
+                    result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
+                }
+            ))
             return headerSearchPaths
-                .sorted(by: (<))
+                .sorted(by: <)
                 .reduce([String]()) {
-                accum, searchPath in
-                // Assume that the podspec matches the name of the directory.
-                // it is a convention that these are 1 in the same.
-                let podName = GetBuildOptions().podName
-                return accum + ["-I\(getPodBaseDir())/\(podName)/\(searchPath)"]
-            }
-
+                    accum, searchPath in
+                    // Assume that the podspec matches the name of the directory.
+                    // it is a convention that these are 1 in the same.
+                    let podName = GetBuildOptions().podName
+                    return accum + ["-I\(getPodBaseDir())/\(podName)/\(searchPath)"]
+                }
         }
 
         libArguments.append(.named(
             name: "copts",
             value: (lib.copts.toSkylark() .+. buildConfigDependenctCOpts .+. getPodIQuotes().toSkylark()
-                ) <> ["-fmodule-name=" + moduleName + "_pod_module"].toSkylark()))
-
+            ) <> ["-fmodule-name=" + moduleName + "_pod_module"].toSkylark()
+        ))
 
         if !lib.bundles.isEmpty || !lib.resources.isEmpty {
             let dataVal: SkylarkNode = [
                 lib.bundles.isEmpty ? nil : lib.bundles.sorted(by: { (s1, s2) -> Bool in
-                    return s1 < s2
+                    s1 < s2
                 }).toSkylark(),
-                lib.resources.isEmpty ? nil : lib.resources.toSkylark()
-                ]
-                .compactMap { $0 }
-                .reduce([].toSkylark()) { (res, node) -> SkylarkNode in
-                    if res.isEmpty {
-                        return node
-                    }
-                    if node.isEmpty {
-                        return res
-                    }
-                    return res .+. node
+                lib.resources.isEmpty ? nil : lib.resources.toSkylark(),
+            ]
+            .compactMap { $0 }
+            .reduce([].toSkylark()) { (res, node) -> SkylarkNode in
+                if res.isEmpty {
+                    return node
                 }
+                if node.isEmpty {
+                    return res
+                }
+                return res .+. node
+            }
             libArguments.append(.named(name: "data",
                                        value: dataVal.toSkylark()))
         }
@@ -738,77 +919,9 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     }
 }
 
-extension ObjcLibrary {
-    public enum lens {
-        public static let sourceFiles: Lens<ObjcLibrary, GlobNode> = {
-            return Lens<ObjcLibrary, GlobNode>(view: { $0.sourceFiles }, set: { sourceFiles, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName,
-                        sourceFiles: sourceFiles, headers: lib.headers,
-                        headerName: lib.headerName, includes: lib.includes,
-                        sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
-                        lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
-                        lib.deps, copts: lib.copts, bundles: lib.bundles,
-                        resources: lib.resources, publicHeaders:
-                        lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs,
-                        requiresArc: lib.requiresArc, isTopLevelTarget:
-                        lib.isTopLevelTarget)
-                })
-        }()
-
-        public static let nonArcSrcs: Lens<ObjcLibrary, GlobNode> = {
-            return Lens(view: { $0.nonArcSrcs }, set: { nonArcSrcs, lib  in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName,
-                        sourceFiles: lib.sourceFiles, headers: lib.headers,
-                        headerName: lib.headerName, includes: lib.includes,
-                        sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
-                        lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
-                        lib.deps, copts: lib.copts, bundles: lib.bundles,
-                        resources: lib.resources, publicHeaders:
-                        lib.publicHeaders, nonArcSrcs: nonArcSrcs, requiresArc:
-                        lib.requiresArc, isTopLevelTarget: lib.isTopLevelTarget)
-                })
-        }()
-
-        public static let deps: Lens<ObjcLibrary, AttrSet<[String]>> = {
-            return Lens(view: { $0.deps }, set: { deps, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName,
-                        sourceFiles: lib.sourceFiles, headers: lib.headers,
-                        headerName: lib.headerName, includes: lib.includes,
-                        sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
-                        lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
-                        deps, copts: lib.copts, bundles: lib.bundles, resources:
-                        lib.resources, publicHeaders: lib.publicHeaders,
-                        nonArcSrcs: lib.nonArcSrcs, requiresArc:
-                        lib.requiresArc, isTopLevelTarget: lib.isTopLevelTarget)
-                })
-        }()
-
-        public static let requiresArc: Lens<ObjcLibrary, Either<Bool, [String]>> = {
-            return Lens(view: { $0.requiresArc }, set: { requiresArc, lib in
-                ObjcLibrary(name: lib.name, externalName: lib.externalName,
-                        sourceFiles: lib.sourceFiles, headers: lib.headers,
-                        headerName: lib.headerName, includes: lib.includes,
-                        sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
-                        lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
-                        lib.deps, copts: lib.copts, bundles: lib.bundles,
-                        resources: lib.resources, publicHeaders:
-                        lib.publicHeaders, nonArcSrcs: lib.nonArcSrcs,
-                        requiresArc: requiresArc, isTopLevelTarget:
-                        lib.isTopLevelTarget)
-            })
-        }()
-
-        /// Not a real property -- digs into the glob node
-        public static let excludeFiles: Lens<ObjcLibrary, AttrSet<Set<String>>> = {
-           return ObjcLibrary.lens.sourceFiles .. GlobNode.lens.exclude
-        }()
-    }
-}
-
 // FIXME: Clean these up and move to RuleUtils
 private func extractResources(patterns: [String]) -> [String] {
     return patterns.flatMap { (p: String) -> [String] in
         pattern(fromPattern: p, includingFileTypes: [])
     }
 }
-

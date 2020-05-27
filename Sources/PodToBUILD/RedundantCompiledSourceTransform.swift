@@ -11,25 +11,23 @@ import Foundation
 
 // A target that has files that we are concerned with refining
 protocol SourceExcludable : BazelTarget {
-    var excludableSourceFiles: AttrSet<Set<String>> { get }
-    var alreadyExcluded: AttrSet<Set<String>> { get }
-
-    mutating func addExcluded(sourceFiles: AttrSet<Set<String>>)
+    func addExcluded(targets: [BazelTarget]) -> BazelTarget
 
     var deps: AttrSet<[String]> { get }
 }
 
 
-extension Dictionary where Key == String, Value == SourceExcludable {
+extension Dictionary where Key == String {
     // Do not rewrite names for @
     // the below logic only works for internal deps.
-    func get(bazelName: String) -> SourceExcludable? {
+    func get (bazelName: String) -> Value? {
         if bazelName.contains("//Vendor") || bazelName.contains("@") {
             return self[bazelName]
         }
         return bazelName.components(separatedBy: ":").last.flatMap { self[$0] }
-	}
-    mutating func set(bazelName: String, newValue: SourceExcludable) {
+    }
+
+    mutating func set(bazelName: String, newValue: Value) {
         if bazelName.contains("//Vendor") || bazelName.contains("@") {
             self[bazelName] = newValue
         }
@@ -68,45 +66,41 @@ struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
     //     ":Core"
     //   ],
     
-    // DFS traversal across a set of SourceExcludables
-    // At each step we propagate along includes and excludes from some dependency to it's parent
-    private static func fixUnspecifiedSourceExcludesInGraphFrom(
-        root: SourceExcludable,
-        excludableByName: inout [String: SourceExcludable]
-    ) {
-		root.deps.basic.flatMap { $0 }?.forEach { depName in
-            guard var updatedDep: SourceExcludable = excludableByName.get(bazelName: depName) else { return }
-            
-            updatedDep.addExcluded(sourceFiles: root.excludableSourceFiles <> root.alreadyExcluded)
-            excludableByName[updatedDep.name] = updatedDep
-            
-            fixUnspecifiedSourceExcludesInGraphFrom(
-                root: excludableByName[updatedDep.name] ?? updatedDep,
-                excludableByName: &excludableByName
-            )
-        }       
-    }
-
-    public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions, podSpec: PodSpec) ->  [SkylarkConvertible] {
+    public static func transform(convertibles: [BazelTarget], options: BuildOptions, podSpec: PodSpec) ->  [BazelTarget] {
         // Needed
-        func toSourceExcludable(_ input: SkylarkConvertible) -> SourceExcludable? {
+        func toSourceExcludable(_ input: BazelTarget) -> SourceExcludable? {
             return input as? SourceExcludable
         }
 
-        // Initialize the dictionary
-        var excludableByName = [String: SourceExcludable]()
-        convertibles.compactMap(toSourceExcludable).forEach { excludableByName[$0.name] = $0 }
+        // Caveats:
+        // - doesn't currently propagate transitive Rdeps.
+        // TODO: for react native, it seems like it might be required
+        var targetByName = [String: BazelTarget]()
+        convertibles.forEach { targetByName[$0.name] = $0 }
 
-        // DFS through the depedency graph.
-        convertibles.compactMap(toSourceExcludable).forEach { excludable in
-            fixUnspecifiedSourceExcludesInGraphFrom(
-                root: excludable,
-                excludableByName: &excludableByName
-            )
+        var reverseDeps = [String: [BazelTarget]]()
+        convertibles.forEach {
+            convertible in
+            (convertible as? SourceExcludable)?.deps.basic?.forEach {
+                dep in
+                let name = dep
+                let rDepName = convertible.name
+                var arr: [BazelTarget] = reverseDeps.get(bazelName: name) ?? []
+                if let t = targetByName.get(bazelName: rDepName) {
+                    arr.append(t)
+                }
+                reverseDeps.set(bazelName: name,  newValue: arr)
+            }
         }
-        
+        let outputConvertibles = convertibles.compactMap {
+            convertible -> BazelTarget? in
+            let targetReverseDeps = reverseDeps.get(bazelName: convertible.name) ?? []
+            let output = toSourceExcludable(convertible)
+            return output?.addExcluded(targets: targetReverseDeps) ??  convertible
+        }
+
         // Rewrite the input with the fixed-excludables
-        return convertibles.map{ toSourceExcludable($0).flatMap{ excludableByName[$0.name] } ?? $0 }
+        return outputConvertibles
     }
 
     static func find(needle: String, haystacks: [String]) -> Bool {

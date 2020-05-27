@@ -104,7 +104,9 @@ extension Optional: Monoid {
     public static func <>(lhs: Optional, rhs: Optional) -> Optional {
         switch (lhs, rhs) {
         case (.none, _): return rhs
-        case (_, _): return lhs
+        case (.some, .some): return lhs <> rhs
+        case (.some, _): return lhs
+        case (_, .some): return rhs
         }
     }
     public static var empty: Optional { return nil }
@@ -116,7 +118,10 @@ extension Set: Monoid {
     /// Override with the stuff on the right
     /// [Fred1] <> [Fred2] => [Fred2] (assuming Fred1 == Fred2)
     public static func<>(lhs: Set, rhs: Set) -> Set {
-        return rhs.union(lhs)
+        var base = Set<Element>()
+        rhs.forEach { base.insert($0) }
+        lhs.forEach { base.insert($0) }
+        return base
     }
 }
 
@@ -150,16 +155,34 @@ extension Optional where Wrapped: Monoid & EmptyAwareness {
 }
 
 extension String: EmptyAwareness {}
+
 extension Array: EmptyAwareness {}
 extension Dictionary: EmptyAwareness {}
+extension Optional {
+    public var isEmptyAwareEmpty: Bool {
+        return false
+    }
+}
+
+extension Optional where Wrapped: EmptyAwareness {
+    public var isEmptyAwareEmpty: Bool {
+        switch self {
+        case .none: return true
+        case .some(let val): return val.isEmpty 
+        }
+    }
+}
+
+
 extension Optional: EmptyAwareness {
     public var isEmpty: Bool {
         switch self {
         case .none: return true
-        case _: return false
+        case .some: return self.isEmptyAwareEmpty
         }
     }
 }
+
 extension Set: EmptyAwareness {}
 
 /// Lift a value into a public function that ignores it's input
@@ -183,7 +206,7 @@ public func |><T,U>(x: T, f: (T) -> U) -> U {
     return f(x)
 }
 
-public enum Either<T,U> {
+public indirect enum Either<T,U> {
     case left(T)
     case right(U)
     

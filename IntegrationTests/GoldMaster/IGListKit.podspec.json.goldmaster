@@ -17,21 +17,21 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
-  values = {
-    "cpu": "powerpc1"
-  }
-)
-config_setting(
   name = "osxCase",
   values = {
-    "cpu": "powerpc2"
+    "apple_platform_type": "macos"
   }
 )
 config_setting(
   name = "tvosCase",
   values = {
-    "cpu": "powerpc3"
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
   }
 )
 filegroup(
@@ -172,40 +172,29 @@ gen_includes(
 objc_library(
   name = "Diffing_cxx",
   enable_modules = 0,
-  srcs = select(
-    {
-      "//conditions:default": glob(
-        [
-          "Source/Common/**/*.mm"
-        ],
-        exclude = [
-          "Source/**/*.m",
-          "Source/**/*.mm",
-          "Source/Common/**/*.m"
-        ],
-        exclude_directories = 1
-      ),
-      ":tvosCase": glob(
-        [
-          "Source/Common/**/*.mm"
-        ],
-        exclude = [
-          "Source/**/*.m",
-          "Source/**/*.mm",
-          "Source/Common/**/*.m"
-        ],
-        exclude_directories = 1
-      )
-    }
+  srcs = glob(
+    [
+      "Source/Common/**/*.mm"
+    ],
+    exclude = glob(
+      [
+        "Source/Common/**/*.m"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   hdrs = [
     ":Diffing_cxx_union_hdrs"
   ],
   pch = pch_with_name_hint(
     "IGListKit",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = select(
     {
@@ -304,9 +293,22 @@ objc_library(
         [
           "Source/Common/**/*.m"
         ],
-        exclude = [
-          "Source/**/*.m",
-          "Source/**/*.mm"
+        exclude = glob(
+          [
+            "Source/**/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        [
+          "Source/Common/**/*.m"
         ],
         exclude_directories = 1
       ),
@@ -314,9 +316,22 @@ objc_library(
         [
           "Source/Common/**/*.m"
         ],
-        exclude = [
-          "Source/**/*.m",
-          "Source/**/*.mm"
+        exclude = glob(
+          [
+            "Source/**/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "Source/Common/**/*.m"
         ],
         exclude_directories = 1
       )
@@ -327,9 +342,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "IGListKit",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = select(
     {
@@ -439,18 +457,24 @@ objc_library(
         [
           "Source/**/*.mm"
         ],
-        exclude = [
-          "Source/**/*.m"
-        ],
+        exclude = glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
           "Source/**/*.mm"
         ],
-        exclude = [
-          "Source/**/*.m"
-        ],
+        exclude = glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       )
     }
@@ -458,11 +482,35 @@ objc_library(
   hdrs = [
     ":Default_cxx_union_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "IGListKit",
-    [
-      "Source/**/*.pch"
-    ]
+  pch = select(
+    {
+      "//conditions:default": pch_with_name_hint(
+        "IGListKit",
+        glob(
+          [
+            "Source/**/*.pch"
+          ],
+          exclude_directories = 1
+        )
+      ),
+      ":osxCase": pch_with_name_hint(
+        "IGListKit",
+        []
+      ),
+      ":tvosCase": pch_with_name_hint(
+        "IGListKit",
+        glob(
+          [
+            "Source/**/*.pch"
+          ],
+          exclude_directories = 1
+        )
+      ),
+      ":watchosCase": pch_with_name_hint(
+        "IGListKit",
+        []
+      )
+    }
   ),
   sdk_frameworks = select(
     {
@@ -589,11 +637,35 @@ objc_library(
   hdrs = [
     ":Default_union_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "IGListKit",
-    [
-      "Source/**/*.pch"
-    ]
+  pch = select(
+    {
+      "//conditions:default": pch_with_name_hint(
+        "IGListKit",
+        glob(
+          [
+            "Source/**/*.pch"
+          ],
+          exclude_directories = 1
+        )
+      ),
+      ":osxCase": pch_with_name_hint(
+        "IGListKit",
+        []
+      ),
+      ":tvosCase": pch_with_name_hint(
+        "IGListKit",
+        glob(
+          [
+            "Source/**/*.pch"
+          ],
+          exclude_directories = 1
+        )
+      ),
+      ":watchosCase": pch_with_name_hint(
+        "IGListKit",
+        []
+      )
+    }
   ),
   sdk_frameworks = select(
     {

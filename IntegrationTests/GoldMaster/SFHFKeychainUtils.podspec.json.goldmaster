@@ -17,6 +17,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "SFHFKeychainUtils_cxx_hdrs",
   srcs = glob(
@@ -61,27 +79,22 @@ gen_includes(
 objc_library(
   name = "SFHFKeychainUtils_cxx",
   enable_modules = 0,
-  srcs = glob(
+  non_arc_srcs = glob(
     [
       "security/**/*.cc",
       "security/**/*.cpp",
-      "security/**/*.cxx"
-    ],
-    exclude = [
-      "security/**/*.S",
-      "security/**/*.c",
-      "security/**/*.m",
-      "security/**/*.s"
-    ],
-    exclude_directories = 1
-  ),
-  non_arc_srcs = glob(
-    [
+      "security/**/*.cxx",
       "security/**/*.mm"
     ],
-    exclude = [
-      "security/**/*.m"
-    ],
+    exclude = glob(
+      [
+        "security/**/*.S",
+        "security/**/*.c",
+        "security/**/*.m",
+        "security/**/*.s"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -89,9 +102,7 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "SFHFKeychainUtils",
-    [
-      "security/**/*.pch"
-    ]
+    []
   ),
   sdk_frameworks = [
     "Security"
@@ -186,17 +197,12 @@ gen_module_map(
 objc_library(
   name = "SFHFKeychainUtils",
   enable_modules = 0,
-  srcs = glob(
+  non_arc_srcs = glob(
     [
       "security/**/*.S",
       "security/**/*.c",
+      "security/**/*.m",
       "security/**/*.s"
-    ],
-    exclude_directories = 1
-  ),
-  non_arc_srcs = glob(
-    [
-      "security/**/*.m"
     ],
     exclude_directories = 1
   ),
@@ -205,9 +211,7 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "SFHFKeychainUtils",
-    [
-      "security/**/*.pch"
-    ]
+    []
   ),
   sdk_frameworks = [
     "Security"

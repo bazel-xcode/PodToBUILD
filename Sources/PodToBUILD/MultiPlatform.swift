@@ -102,64 +102,6 @@ public struct MultiPlatform<T: AttrSetConstraint>: Monoid, SkylarkConvertible, E
     }
 }
 
-extension MultiPlatform {
-    public enum lens {
-        public static func ios() -> Lens<MultiPlatform<T>, T?> {
-	        return Lens(view: { $0.ios }, set: { ios, multi in
-		        MultiPlatform(
-                    ios: ios,
-                    osx: multi.osx,
-                    watchos: multi.watchos,
-                    tvos: multi.tvos
-                )
-            })
-        }
-        
-        public static func osx() -> Lens<MultiPlatform<T>, T?> {
-	        return Lens(view: { $0.osx }, set: { osx, multi in
-		        MultiPlatform(
-                    ios: multi.ios,
-                    osx: osx,
-                    watchos: multi.watchos,
-                    tvos: multi.tvos
-                )
-            })
-        }
-        
-        public static func watchos() -> Lens<MultiPlatform<T>, T?> {
-	        return Lens(view: { $0.watchos }, set: { watchos, multi in
-		        MultiPlatform(
-                    ios: multi.ios,
-                    osx: multi.osx,
-                    watchos: watchos,
-                    tvos: multi.tvos
-                )
-            })
-        }
-        
-        public static func tvos() -> Lens<MultiPlatform<T>, T?> {
-	        return Lens(view: { $0.tvos }, set: { tvos, multi in
-		        MultiPlatform(
-                    ios: multi.ios,
-                    osx: multi.osx,
-                    watchos: multi.watchos,
-                    tvos: tvos
-                )
-            })
-        }
-        
-        public static func viewAll<U: Semigroup>(f: @escaping (T) -> U) -> ((MultiPlatform<T>) -> U?) {
-	        return { whole in
-                (whole ^* MultiPlatform<T>.lens.ios()).map(f) <>
-                (whole ^* MultiPlatform<T>.lens.osx()).map(f) <>
-                (whole ^* MultiPlatform<T>.lens.watchos()).map(f) <>
-                (whole ^* MultiPlatform<T>.lens.tvos()).map(f)
-            }
-        }
-    }
-}
-
-
 public struct AttrTuple<A: AttrSetConstraint, B: AttrSetConstraint>: AttrSetConstraint {
     public let first: A?
     public let second: B?
@@ -279,66 +221,52 @@ extension AttrSet where T == Optional<String> {
 }
 
 extension AttrSet {
-    public enum lens {
-        public static func basic() -> Lens<AttrSet<T>, T?> {
-            return Lens<AttrSet<T>, T?>(view: { $0.basic }, set: { (basic: T?, attrSet: AttrSet<T>) -> AttrSet<T> in
-                AttrSet<T>(basic: basic, multi: attrSet.multi)
-            })
+    /// This makes all the code operate on a multi platform
+    public func unpackToMulti() -> AttrSet {
+        // This converts to multi platform as an LCD
+	// Note in later FBSDKCoreKits, this should inherit.
+        if let basic = self.basic {
+            return AttrSet(multi: MultiPlatform(
+                    ios: basic <+> self.multi.ios,
+                    osx: basic <+> self.multi.osx,
+                    watchos: basic <+> self.multi.watchos,
+                    tvos: basic <+> self.multi.tvos
+                ))
         }
-        
-        public static func multi() -> Lens<AttrSet<T>, MultiPlatform<T>> {
-            return Lens<AttrSet<T>, MultiPlatform<T>>(view: { $0.multi }, set: { multi, attrSet in
-                AttrSet<T>(basic: attrSet.basic, multi: multi)
-            })
-        }
+        return self
     }
 }
 
+extension AttrSet where T: AttrSetConstraint, T: Equatable {
+    public func flattenToBasicIfPossible() -> AttrSet {
+        if self.isEmpty {
+            return self
+        }
+        if self.basic == nil && self.multi.ios == self.multi.osx &&
+         self.multi.osx == self.multi.watchos &&
+         self.multi.watchos == self.multi.tvos {
+             return AttrSet(basic: self.multi.ios)
+        }
+        return self
+    }
+
+    /// For simplicity of the BUILD file, we'll condense if all is the same
+    public func toSkylark() -> SkylarkNode {
+        let renderable = self.flattenToBasicIfPossible()
+        switch renderable.basic {
+        case .none where renderable.multi.isEmpty: return T.empty.toSkylark()
+        case let .some(b) where renderable.multi.isEmpty: return b.toSkylark()
+        case .none: return renderable.multi.toSkylark()
+        case let .some(b): return b.toSkylark() .+. renderable.multi.toSkylark()
+        }
+    }
+}
 
 extension Dictionary {
     public init<S: Sequence>(tuples: S) where S.Iterator.Element == (Key, Value) {
         self = tuples.reduce([:]) { d, t in d <> [t.0:t.1] }
     }
 }
-
-extension AttrSet {
-    public static func sequence<K, V: AttrSetConstraint>(attrSet attrOfDict: AttrSet<[K:V]>) -> [K: AttrSet<V>] {
-        return attrOfDict.fold(
-            basic: { dictOpt in
-                let dict: [K: V] = (dictOpt ?? [K:V]())
-                return Dictionary<K,AttrSet<V>>(tuples: dict.map{ k, v in
-                    (k, AttrSet<V>(basic: v))
-                })
-        }, multi: { (acc: [K: AttrSet<V>], multi: MultiPlatform<[K:V]>) in
-            let inner: [K: AttrSet<V>]? = multi |>
-                MultiPlatform<[K:V]>.lens.viewAll{ (dict: [K:V]) -> [K: AttrSet<V>] in
-                    Dictionary<K, AttrSet<V>>(tuples: dict.map{ k, v in
-                    (k, AttrSet<V>(multi: MultiPlatform(ios: v)))
-                }) }
-            
-            return acc <> inner.denormalize()
-        })
-    }
-    
-    /// A sequence operation takes something of the form `F<G<?>>` and turns it into a `G<F<?>>` for some F and G
-    /// In this case, `F = AttrSet`, `G = some Sequence S` (and since Swift is limited in it's expressiveness, we'll return an array)
-    /// So we're turning an `AttrSet<S<?>>` into an `[AttrSet<?>]` where the `[]` are morally the `S`
-    public static func sequenceSeq<S: Sequence, T: AttrSetConstraint>(attrSet attrOfArr: AttrSet<S>) -> [AttrSet<T>]
-	    where S.Iterator.Element == T {
-        return attrOfArr.fold(basic: { (arr: S?) -> [AttrSet<T>] in
-            let arr: [T] = Array(arr ?? S.empty)
-            return arr.map{ (t: T) -> AttrSet<T> in AttrSet<T>(basic: t) }
-        }, multi: { (arrOfAttr: [AttrSet<T>], multiOfArr: MultiPlatform<S>) -> [AttrSet<T>] in
-            let ios: [AttrSet<T>] = multiOfArr.ios.denormalize().map{ (t: T) -> AttrSet<T> in AttrSet<T>(multi: MultiPlatform<T>(ios: t)) }
-            let osx: [AttrSet<T>] = multiOfArr.osx.denormalize().map{ (t: T) -> AttrSet<T> in AttrSet<T>(multi: MultiPlatform<T>(osx: t)) }
-            let tvos: [AttrSet<T>] = multiOfArr.tvos.denormalize().map{ (t: T) -> AttrSet<T> in AttrSet<T>(multi: MultiPlatform<T>(tvos: t)) }
-            let watchos: [AttrSet<T>] = multiOfArr.watchos.denormalize().map{ (t: T) -> AttrSet<T> in AttrSet<T>(multi: MultiPlatform<T>(watchos: t)) }
-            
-            return arrOfAttr <> ios <> osx <> watchos <> tvos
-        })
-    }
-}
-
 
 // Because we don't have conditional conformance we have to specialize these
 extension Optional where Wrapped == Array<String> {
@@ -392,17 +320,22 @@ extension AttrSet where T == Set<String> {
         return lhs.basic == rhs.basic && lhs.multi == rhs.multi
     }   
 }
+extension PodSpec {
+    public func attr<T>(_ keyPath: KeyPath<PodSpecRepresentable, T>) -> AttrSet<T> {
+        return getAttrSet(spec: self, keyPath: keyPath)
+    }
+}
 
 // for extracting attr sets
-public func liftToAttr<Part>(_ lens: Lens<PodSpecRepresentable, Part>) -> Lens<PodSpec, AttrSet<Part>>
-    where Part: Monoid & SkylarkConvertible & EmptyAwareness {
-        let optLens = lens.opt
-        return ReadonlyLens { (spec: PodSpec) -> AttrSet<Part> in
-            AttrSet(basic: spec ^* lens) <> AttrSet(multi: MultiPlatform(
-                ios: spec ^* (PodSpec.lens.ios >•> optLens),
-                osx: spec ^* (PodSpec.lens.osx >•> optLens),
-                watchos: spec ^* (PodSpec.lens.watchos >•> optLens),
-                tvos: spec ^* (PodSpec.lens.tvos >•> optLens)
-            ))
-        }
+// The key reason that we have this code is to:
+// - merge the spec.ios.attr spec.attr
+public func getAttrSet<T>(spec: PodSpec, keyPath: KeyPath<PodSpecRepresentable, T>) -> AttrSet<T> {
+    let value = spec[keyPath: keyPath]
+    return AttrSet(basic: value) <> AttrSet(multi: MultiPlatform(
+        ios: spec.ios?[keyPath: keyPath],
+        osx: spec.osx?[keyPath: keyPath],
+        watchos: spec.watchos?[keyPath: keyPath],
+        tvos: spec.tvos?[keyPath: keyPath])
+    )
 }
+

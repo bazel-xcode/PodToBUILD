@@ -7,19 +7,20 @@
 //
 
 /// Law: Names must be valid bazel names; see the spec
-protocol BazelTarget: SkylarkConvertible {
+public protocol BazelTarget: SkylarkConvertible {
     var name: String { get }
     var acknowledgedDeps: [String]? { get }
     var acknowledged: Bool { get }
 }
 
 extension BazelTarget {
-    var acknowledgedDeps: [String]? {
+    public var acknowledgedDeps: [String]? {
         return nil
     }
 
-    var acknowledged: Bool {
+    public var acknowledged: Bool {
         return false
     }
 }
+
 

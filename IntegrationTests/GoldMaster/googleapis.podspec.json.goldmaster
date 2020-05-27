@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "googleapis_hdrs",
   srcs = glob(
@@ -133,7 +151,7 @@ headermap(
     ":Messages_union_hdrs"
   ],
   deps = [
-    "//Vendor/Protobuf:Protobuf"
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin"
   ],
   visibility = [
     "//visibility:public"
@@ -152,9 +170,6 @@ objc_library(
     [
       "google/**/*.pbobjc.m"
     ],
-    exclude = [
-      "google/**/*.pbrpc.m"
-    ],
     exclude_directories = 1
   ),
   hdrs = [
@@ -162,12 +177,10 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "googleapis",
-    [
-      "google/**/*.pch"
-    ]
+    []
   ),
   deps = [
-    "//Vendor/Protobuf:Protobuf",
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin",
     ":Messages_includes"
   ],
   copts = [
@@ -194,7 +207,7 @@ objc_library(
 acknowledged_target(
   name = "Messages_acknowledgement",
   deps = [
-    "//Vendor/Protobuf:Protobuf_acknowledgement"
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin_acknowledgement"
   ],
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
 )
@@ -227,8 +240,7 @@ headermap(
     ":Services_union_hdrs"
   ],
   deps = [
-    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
-    ":Messages"
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin"
   ],
   visibility = [
     "//visibility:public"
@@ -254,13 +266,15 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "googleapis",
-    [
-      "google/**/*.pch"
-    ]
+    glob(
+      [
+        "google/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
-    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
-    ":Messages",
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin",
     ":Services_includes"
   ],
   copts = [
@@ -287,7 +301,7 @@ objc_library(
 acknowledged_target(
   name = "Services_acknowledgement",
   deps = [
-    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC_acknowledgement"
+    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin_acknowledgement"
   ],
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
 )

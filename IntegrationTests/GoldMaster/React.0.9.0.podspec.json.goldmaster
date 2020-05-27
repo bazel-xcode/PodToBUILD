@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "React_hdrs",
   srcs = glob(
@@ -200,20 +218,68 @@ objc_library(
       "IntegrationTests/*.cxx",
       "IntegrationTests/*.m",
       "IntegrationTests/*.mm",
-      "IntegrationTests/*.s",
-      "Libraries/ART/**/*.m",
-      "Libraries/ActionSheetIOS/*.m",
-      "Libraries/AdSupport/*.m",
-      "Libraries/Geolocation/*.m",
-      "Libraries/Image/*.m",
-      "Libraries/LinkingIOS/*.m",
-      "Libraries/Network/*.m",
-      "Libraries/PushNotificationIOS/*.m",
-      "Libraries/Settings/*.m",
-      "Libraries/Text/*.m",
-      "Libraries/Vibration/*.m",
-      "Libraries/WebSocket/*.m"
-    ],
+      "IntegrationTests/*.s"
+    ] + glob(
+      [
+        "Libraries/ART/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/ActionSheetIOS/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/AdSupport/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Geolocation/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Image/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Network/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/PushNotificationIOS/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Settings/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Text/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Vibration/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/WebSocket/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/LinkingIOS/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -221,9 +287,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "React/**/*.pch"
-    ]
+    glob(
+      [
+        "React/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "JavaScriptCore"
@@ -259,7 +328,22 @@ filegroup(
   name = "ART_hdrs",
   srcs = glob(
     [
-      "Libraries/ART/**/*.h"
+      "Libraries/ART/**/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -310,9 +394,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -346,7 +433,22 @@ filegroup(
   name = "RCTActionSheet_hdrs",
   srcs = glob(
     [
-      "Libraries/ActionSheetIOS/*.h"
+      "Libraries/ActionSheetIOS/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -397,9 +499,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -433,7 +538,22 @@ filegroup(
   name = "RCTAdSupport_hdrs",
   srcs = glob(
     [
-      "Libraries/AdSupport/*.h"
+      "Libraries/AdSupport/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -484,9 +604,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -520,7 +643,22 @@ filegroup(
   name = "RCTGeolocation_hdrs",
   srcs = glob(
     [
-      "Libraries/Geolocation/*.h"
+      "Libraries/Geolocation/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -571,9 +709,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -607,7 +748,22 @@ filegroup(
   name = "RCTImage_hdrs",
   srcs = glob(
     [
-      "Libraries/Image/*.h"
+      "Libraries/Image/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -658,9 +814,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -694,7 +853,22 @@ filegroup(
   name = "RCTNetwork_hdrs",
   srcs = glob(
     [
-      "Libraries/Network/*.h"
+      "Libraries/Network/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -745,9 +919,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -781,7 +958,22 @@ filegroup(
   name = "RCTPushNotification_hdrs",
   srcs = glob(
     [
-      "Libraries/PushNotificationIOS/*.h"
+      "Libraries/PushNotificationIOS/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -832,9 +1024,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -868,7 +1063,22 @@ filegroup(
   name = "RCTSettings_hdrs",
   srcs = glob(
     [
-      "Libraries/Settings/*.h"
+      "Libraries/Settings/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -919,9 +1129,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -955,7 +1168,22 @@ filegroup(
   name = "RCTText_hdrs",
   srcs = glob(
     [
-      "Libraries/Text/*.h"
+      "Libraries/Text/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -1006,9 +1234,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -1042,7 +1273,22 @@ filegroup(
   name = "RCTVibration_hdrs",
   srcs = glob(
     [
-      "Libraries/Vibration/*.h"
+      "Libraries/Vibration/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -1093,9 +1339,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -1129,7 +1378,22 @@ filegroup(
   name = "RCTWebSocket_hdrs",
   srcs = glob(
     [
-      "Libraries/WebSocket/*.h"
+      "Libraries/WebSocket/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -1180,9 +1444,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -1216,7 +1483,22 @@ filegroup(
   name = "RCTLinkingIOS_hdrs",
   srcs = glob(
     [
-      "Libraries/LinkingIOS/*.h"
+      "Libraries/LinkingIOS/*.h",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
     ],
     exclude_directories = 1
   ),
@@ -1267,9 +1549,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "React",
-    [
-      "Libraries/**/*.pch"
-    ]
+    glob(
+      [
+        "Libraries/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",

@@ -152,6 +152,8 @@ public protocol PodSpecRepresentable {
     var defaultSubspecs: [String] { get }
 }
 
+public typealias PodSpecAttr = PodSpecRepresentable
+
 public struct PodSpec: PodSpecRepresentable {
     public let name: String
     public let sourceFiles: [String]
@@ -272,172 +274,17 @@ public struct PodSpec: PodSpecRepresentable {
     }
 }
 
-
-public indirect enum ComposedSpec {
-  case composed(child: PodSpec, parent: ComposedSpec?)
-
-    var child: PodSpec {
-        switch self {
-        case .composed(let child, _): return child
-        }
-    }
-
-    var parent: ComposedSpec? {
-        switch self {
-        case .composed(_, let parent): return parent
-        }
-    }
-
-    static func create(fromSpecs specs: [PodSpec]) -> ComposedSpec {
-        guard let parentSpec = specs.first else {
-            fatalError("ComposedSpec.create requires at least one element")
-        }
-
-        return specs.dropFirst().compactMap { $0 }
-            .reduce(.composed(child: parentSpec, parent: nil)) { (parent, child) in
-                    .composed(child: child, parent: parent)
-        }
-    }
-}
-
-extension ComposedSpec {
-    public enum lens {
-        public static let child: Lens<ComposedSpec, PodSpec> = {
-            return ReadonlyLens{ $0.child }
-        }()
-
-        public static let parent: Lens<ComposedSpec, ComposedSpec?> = {
-            return ReadonlyLens{ $0.parent }
-        }()
-
-        public static func fallback<E: EmptyAwareness & Monoid>(_ lens: Lens<PodSpec, E>) -> Lens<ComposedSpec, E> {
-            return ReadonlyLens{ mostChildSpec in
-                func loop(_ currentParent: Lens<ComposedSpec, ComposedSpec?>) -> E {
-                    let childValue: E? = mostChildSpec ^* (currentParent >•> ComposedSpec.lens.child.opt >•> lens.opt)
-                    if let childValue = childValue {
-                        return childValue.isEmpty ? loop(currentParent >•> ComposedSpec.lens.parent) : childValue
-                    } else {
-                        return childValue.denormalize()
-                    }
-                }
-                return loop(identityLens().opt)
+public struct FallbackSpec {
+    let specs: [PodSpec]
+    // Takes the first non empty value
+    public func attr<T>(_ keyPath: KeyPath<PodSpecRepresentable, T>) -> AttrSet<T> {
+        for spec in specs {
+            let value = spec.attr(keyPath)
+            if !value.isEmpty {
+                return value
             }
         }
-    }
-}
-
-
-// TODO(bkase): Lenses that are readonly are not lenses!!
-//          Fix this and add setters to everything!
-extension PodSpec {
-    public enum lens {
-        public static let name: Lens<PodSpecRepresentable, String> = {
-            ReadonlyLens { $0.name }
-        }()
-
-        public static let sourceFiles: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.sourceFiles }
-        }()
-        public static let excludeFiles: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.excludeFiles }
-        }()
-        public static let frameworks: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.frameworks }
-        }()
-        public static let weakFrameworks: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.weakFrameworks }
-        }()
-        public static let subspecs: Lens<PodSpecRepresentable, [PodSpec]> = {
-            ReadonlyLens { $0.subspecs }
-        }()
-
-        public static let defaultSubspecs: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.defaultSubspecs }
-        }()
-
-        public static let dependencies: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.dependencies }
-        }()
-        public static let compilerFlags: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.compilerFlags }
-        }()
-        public static let source: Lens<PodSpecRepresentable, PodSpecSource?> = {
-            ReadonlyLens { $0.source }
-        }()
-        public static let libraries: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.libraries }
-        }()
-        public static let resourceBundles: Lens<PodSpecRepresentable, [String: [String]]> = {
-            ReadonlyLens { $0.resourceBundles }
-        }()
-        public static let publicHeaders: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.publicHeaders }
-        }()
-        public static let privateHeaders: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.privateHeaders }
-        }()
-        public static let preservePaths: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.preservePaths }
-        }()
-        public static let requiresArc: Lens<PodSpecRepresentable, Either<Bool, [String]>?> = {
-            ReadonlyLens { $0.requiresArc }
-        }()
-
-        public static let resources: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.resources }
-        }()
-        public static let ios: Lens<PodSpec, PodSpecRepresentable?> = {
-            ReadonlyLens { $0.ios }
-        }()
-        public static let osx: Lens<PodSpec, PodSpecRepresentable?> = {
-            ReadonlyLens { $0.osx }
-        }()
-        public static let tvos: Lens<PodSpec, PodSpecRepresentable?> = {
-            ReadonlyLens { $0.tvos }
-        }()
-        public static let watchos: Lens<PodSpec, PodSpecRepresentable?> = {
-            ReadonlyLens { $0.watchos }
-        }()
-
-        public static let vendoredLibraries: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.vendoredLibraries }
-        }()
-
-        public static let vendoredFrameworks: Lens<PodSpecRepresentable, [String]> = {
-            ReadonlyLens { $0.vendoredFrameworks }
-        }()
-
-        public static let headerDirectory: Lens<PodSpecRepresentable, String?> = {
-            ReadonlyLens { $0.headerDirectory }
-        }()
-
-        public static let moduleName: Lens<PodSpecRepresentable, String?> = {
-            ReadonlyLens { $0.moduleName }
-        }()
-
-        public static let podTargetXcconfig: Lens<PodSpecRepresentable, [String: String]?> = {
-             ReadonlyLens { $0.podTargetXcconfig }
-        }()
-
-        public static let userTargetXcconfig: Lens<PodSpecRepresentable, [String: String]?>  = {
-             ReadonlyLens { $0.userTargetXcconfig }
-        }()
-
-        public static let xcconfig: Lens<PodSpecRepresentable, [String: String]?>  = {
-             ReadonlyLens { $0.xcconfig }
-        }()
-
-        public static func liftOntoPodSpec<Part>(_ lens: Lens<PodSpecRepresentable, Part>) -> Lens<PodSpec, Part> {
-            return ReadonlyLens { (repr: PodSpec) -> Part in
-                (repr as PodSpecRepresentable) ^* lens
-            }
-        }
-
-        public static func liftOntoSubspecs<Part: Semigroup>(_ lens: Lens<PodSpec, Part?>) -> Lens<PodSpec, Part?> {
-            return ReadonlyLens { whole in
-                (whole ^* lens) <+> sfold(whole.subspecs.map{ $0 ^* lens })
-            }
-        }
+        return AttrSet.empty
     }
 }
 
