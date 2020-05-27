@@ -152,8 +152,6 @@ public protocol PodSpecRepresentable {
     var defaultSubspecs: [String] { get }
 }
 
-public typealias PodSpecAttr = PodSpecRepresentable
-
 public struct PodSpec: PodSpecRepresentable {
     public let name: String
     public let sourceFiles: [String]

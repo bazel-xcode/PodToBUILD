@@ -248,10 +248,10 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                     return .right(extractFiles(fromPattern: value,
                                                includingFileTypes: CppLikeFileTypes <> ObjcLikeFileTypes))
                 default:
-                    fatalError("X?")
+                    fatalError("null logic error")
                 }
             }
-        publicHeaders = fallbackSpec.attr(\PodSpecAttr.publicHeaders).map { Set($0) }
+        publicHeaders = fallbackSpec.attr(\.publicHeaders).map { Set($0) }
 
         let podName = GetBuildOptions().podName
         name = computeLibName(parentSpecs: parentSpecs, spec: spec, podName:
