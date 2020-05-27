@@ -224,7 +224,7 @@ extension AttrSet {
     /// This makes all the code operate on a multi platform
     public func unpackToMulti() -> AttrSet {
         // This converts to multi platform as an LCD
-	// Note in later FBSDKCoreKits, this should inherit.
+        // Note in later FBSDKCoreKits, this should inherit.
         if let basic = self.basic {
             return AttrSet(multi: MultiPlatform(
                     ios: basic <+> self.multi.ios,

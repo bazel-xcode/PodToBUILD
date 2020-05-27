@@ -20,7 +20,7 @@ protocol SourceExcludable : BazelTarget {
 extension Dictionary where Key == String {
     // Do not rewrite names for @
     // the below logic only works for internal deps.
-    func get (bazelName: String) -> Value? {
+    func get(bazelName: String) -> Value? {
         if bazelName.contains("//Vendor") || bazelName.contains("@") {
             return self[bazelName]
         }
@@ -71,10 +71,6 @@ struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
         func toSourceExcludable(_ input: BazelTarget) -> SourceExcludable? {
             return input as? SourceExcludable
         }
-
-        // Caveats:
-        // - doesn't currently propagate transitive Rdeps.
-        // TODO: for react native, it seems like it might be required
         var targetByName = [String: BazelTarget]()
         convertibles.forEach { targetByName[$0.name] = $0 }
 
