@@ -131,6 +131,10 @@ public class Glob: Collection {
 
         var directories: [String]
 
+        if firstPart.isEmpty {
+            firstPart = "."
+        }
+
         do {
             directories = try fileManager.subpathsOfDirectory(atPath: firstPart).compactMap { subpath in
                 let fullPath = NSString(string: firstPart).appendingPathComponent(subpath)

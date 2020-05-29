@@ -117,6 +117,9 @@ filegroup(
     [
       "Source/**/*.h"
     ],
+    exclude = [
+      "pod_support/Headers/Public/**/*"
+    ],
     exclude_directories = 1
   ) + [
     ":PINOperation_cxx_hdrs"

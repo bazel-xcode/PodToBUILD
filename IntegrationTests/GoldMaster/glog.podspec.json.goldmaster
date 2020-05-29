@@ -33,6 +33,7 @@ filegroup(
       "src/glog/*.h"
     ],
     exclude = [
+      "pod_support/Headers/Public/**/*",
       "src/windows/**/*.h",
       "src/windows/**/*.hpp",
       "src/windows/**/*.hxx"

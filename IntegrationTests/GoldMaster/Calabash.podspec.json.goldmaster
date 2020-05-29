@@ -161,6 +161,9 @@ filegroup(
       "calabash.framework/Versions/A/Headers/*.hpp",
       "calabash.framework/Versions/A/Headers/*.hxx"
     ],
+    exclude = [
+      "pod_support/Headers/Public/**/*"
+    ],
     exclude_directories = 1
   ) + [
     ":Calabash_cxx_hdrs"

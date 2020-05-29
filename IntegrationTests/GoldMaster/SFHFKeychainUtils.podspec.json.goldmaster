@@ -147,6 +147,9 @@ filegroup(
       "security/**/*.hpp",
       "security/**/*.hxx"
     ],
+    exclude = [
+      "pod_support/Headers/Public/**/*"
+    ],
     exclude_directories = 1
   ) + [
     ":SFHFKeychainUtils_cxx_hdrs"

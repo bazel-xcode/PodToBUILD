@@ -41,6 +41,9 @@ filegroup(
       "react-native-cli/**/*.hpp",
       "react-native-cli/**/*.hxx"
     ],
+    exclude = [
+      "pod_support/Headers/Public/**/*"
+    ],
     exclude_directories = 1
   ) + [
     ":Core_hdrs"

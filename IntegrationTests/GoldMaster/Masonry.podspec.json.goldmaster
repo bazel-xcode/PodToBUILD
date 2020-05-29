@@ -45,6 +45,9 @@ filegroup(
     [
       "Masonry/*.h"
     ],
+    exclude = [
+      "pod_support/Headers/Public/**/*"
+    ],
     exclude_directories = 1
   ),
   visibility = [

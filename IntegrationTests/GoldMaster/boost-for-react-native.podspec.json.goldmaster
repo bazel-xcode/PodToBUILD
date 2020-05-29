@@ -29,6 +29,9 @@ filegroup(
       "boost/**/*.hpp",
       "boost/**/*.hxx"
     ],
+    exclude = [
+      "pod_support/Headers/Public/**/*"
+    ],
     exclude_directories = 1
   ),
   visibility = [
