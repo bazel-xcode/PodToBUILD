@@ -403,25 +403,17 @@ public enum RepoActions {
             .values
             .map { PodSupportSystemPublicHeaderDir + "\($0)/" }
 
-        customHeaderSearchPaths.forEach(shell.dir)
+        customHeaderSearchPaths.forEach {
+            try! FileManager.default.createDirectory(atPath: $0, withIntermediateDirectories: true)
+        }
 
-        // Create a directory structure condusive to <> imports
+        // Create a directory structure conducive to <> imports
         // - Get all of the paths matching wild card imports
         // - Put them into the public header directory
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)
-        let globResultsArr = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
-            .flatMap {
-                objcLibrary -> Set<String> in
-                let headers: GlobNode = objcLibrary.headers
-                return headers.include.fold(basic: { (patterns: Set<String>?) -> Set<String> in
-                    let s: Set<String> = Set(patterns.map { $0.flatMap(podGlob) } ?? [])
-                    return s
-                }, multi: { (set: Set<String>, multi: MultiPlatform<Set<String>>) -> Set<String> in
-                    let inner: Set<String>? = multi |>
-                        MultiPlatform<Set<String>>.lens.viewAll { Set($0.flatMap(podGlob)) }
-                    return set.union(inner.denormalize())
-                })
-        }
+        let globResultsArr = buildFile.skylarkConvertibles
+                .compactMap { $0 as? ObjcLibrary }
+                .flatMap { podGlobSet(patternSet: $0.headers.include) }
 
         // Batch create several symlinks for Pod style includes
         // creating thousands of processes in few milliseconds will

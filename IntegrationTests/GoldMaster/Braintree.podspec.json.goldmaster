@@ -56,14 +56,6 @@ gen_includes(
     "Vendor/Braintree/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "Braintree",
-  "Braintree_module_map",
-  "Braintree",
-  [
-    "Braintree_hdrs"
-  ]
-)
 objc_library(
   name = "Braintree",
   enable_modules = 0,

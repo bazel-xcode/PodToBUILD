@@ -189,14 +189,6 @@ gen_includes(
     "Vendor/Calabash/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "Calabash",
-  "Calabash_module_map",
-  "Calabash",
-  [
-    "Calabash_hdrs"
-  ]
-)
 objc_library(
   name = "Calabash",
   enable_modules = 0,

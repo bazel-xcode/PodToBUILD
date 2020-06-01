@@ -51,14 +51,6 @@ gen_includes(
     "Vendor/Branch/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "Branch",
-  "Branch_module_map",
-  "Branch",
-  [
-    "Branch_hdrs"
-  ]
-)
 objc_library(
   name = "Branch",
   enable_modules = 0,

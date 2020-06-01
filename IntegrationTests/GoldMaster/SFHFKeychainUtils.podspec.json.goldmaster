@@ -175,14 +175,6 @@ gen_includes(
     "Vendor/SFHFKeychainUtils/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "SFHFKeychainUtils",
-  "SFHFKeychainUtils_module_map",
-  "SFHFKeychainUtils",
-  [
-    "SFHFKeychainUtils_hdrs"
-  ]
-)
 objc_library(
   name = "SFHFKeychainUtils",
   enable_modules = 0,

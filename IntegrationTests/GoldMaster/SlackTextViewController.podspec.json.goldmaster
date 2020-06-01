@@ -50,14 +50,6 @@ gen_includes(
     "Vendor/SlackTextViewController/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "SlackTextViewController",
-  "SlackTextViewController_module_map",
-  "SlackTextViewController",
-  [
-    "SlackTextViewController_hdrs"
-  ]
-)
 objc_library(
   name = "SlackTextViewController",
   enable_modules = 0,

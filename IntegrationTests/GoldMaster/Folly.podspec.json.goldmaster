@@ -58,14 +58,6 @@ gen_includes(
     "Vendor/DoubleConversion"
   ]
 )
-gen_module_map(
-  "folly",
-  "Folly_module_map",
-  "folly",
-  [
-    "Folly_hdrs"
-  ]
-)
 objc_library(
   name = "Folly",
   enable_modules = 0,

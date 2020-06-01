@@ -63,14 +63,6 @@ gen_includes(
     "Vendor/PINCache/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "PINCache",
-  "PINCache_module_map",
-  "PINCache",
-  [
-    "PINCache_hdrs"
-  ]
-)
 objc_library(
   name = "PINCache",
   enable_modules = 0,

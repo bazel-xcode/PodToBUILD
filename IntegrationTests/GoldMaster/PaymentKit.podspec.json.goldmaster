@@ -50,14 +50,6 @@ gen_includes(
     "Vendor/PaymentKit/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "PaymentKit",
-  "PaymentKit_module_map",
-  "PaymentKit",
-  [
-    "PaymentKit_hdrs"
-  ]
-)
 objc_library(
   name = "PaymentKit",
   enable_modules = 0,

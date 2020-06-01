@@ -275,14 +275,6 @@ gen_includes(
     "Vendor/youtube-ios-player-helper/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "youtube-ios-player-helper",
-  "youtube-ios-player-helper_module_map",
-  "youtube_ios_player_helper",
-  [
-    "youtube-ios-player-helper_hdrs"
-  ]
-)
 objc_library(
   name = "youtube-ios-player-helper",
   enable_modules = 0,

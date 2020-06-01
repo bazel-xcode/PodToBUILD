@@ -83,3 +83,9 @@ extension Set: SkylarkConvertible {
         return self.map{ $0 as! String }.sorted().toSkylark()
     }
 }
+
+extension Bool: SkylarkConvertible {
+    public func toSkylark() -> SkylarkNode {
+        (self ? 1 : 0).toSkylark()
+    }
+}

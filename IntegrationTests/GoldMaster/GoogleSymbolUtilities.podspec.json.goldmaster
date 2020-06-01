@@ -48,14 +48,6 @@ gen_includes(
     "Vendor/GoogleSymbolUtilities/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "GoogleSymbolUtilities",
-  "GoogleSymbolUtilities_module_map",
-  "GoogleSymbolUtilities",
-  [
-    "GoogleSymbolUtilities_hdrs"
-  ]
-)
 objc_library(
   name = "GoogleSymbolUtilities",
   enable_modules = 0,

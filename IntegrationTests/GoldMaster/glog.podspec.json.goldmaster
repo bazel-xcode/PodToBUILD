@@ -60,14 +60,6 @@ gen_includes(
     "Vendor/glog/src"
   ]
 )
-gen_module_map(
-  "glog",
-  "glog_module_map",
-  "glog",
-  [
-    "glog_hdrs"
-  ]
-)
 objc_library(
   name = "glog",
   enable_modules = 0,

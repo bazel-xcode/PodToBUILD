@@ -49,14 +49,6 @@ gen_includes(
     "Vendor/GoogleNetworkingUtilities/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "GoogleNetworkingUtilities",
-  "GoogleNetworkingUtilities_module_map",
-  "GoogleNetworkingUtilities",
-  [
-    "GoogleNetworkingUtilities_hdrs"
-  ]
-)
 objc_library(
   name = "GoogleNetworkingUtilities",
   enable_modules = 0,

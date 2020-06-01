@@ -52,14 +52,6 @@ gen_includes(
     "Vendor/Weixin/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "Weixin",
-  "Weixin_module_map",
-  "Weixin",
-  [
-    "Weixin_hdrs"
-  ]
-)
 objc_library(
   name = "Weixin",
   enable_modules = 0,

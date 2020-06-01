@@ -55,14 +55,6 @@ gen_includes(
     "Vendor/ZipArchive/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "ZipArchive",
-  "ZipArchive_module_map",
-  "ZipArchive",
-  [
-    "ZipArchive_hdrs"
-  ]
-)
 objc_library(
   name = "ZipArchive",
   enable_modules = 0,

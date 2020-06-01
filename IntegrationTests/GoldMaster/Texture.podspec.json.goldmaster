@@ -62,14 +62,6 @@ gen_includes(
     "Vendor/Texture/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "AsyncDisplayKit",
-  "Texture_module_map",
-  "AsyncDisplayKit",
-  [
-    "Texture_hdrs"
-  ]
-)
 objc_library(
   name = "Texture",
   enable_modules = 0,
