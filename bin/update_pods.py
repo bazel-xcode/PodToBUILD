@@ -207,10 +207,12 @@ def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
         # the repo with that code.
         return
 
-    _exec(repository_ctx, ["rm", "-rf", repository_ctx.GetPodRootDir()])
+
+    if _is_http_url(url) or url.startswith("/"):
+        _exec(repository_ctx, ["rm", "-rf", repository_ctx.GetPodRootDir()])
     _exec(repository_ctx, ["mkdir", "-p", repository_ctx.GetPodRootDir()])
 
-    if url.startswith("http"):
+    if _is_http_url(url):
         _fetch_remote_repo(repository_ctx, repo_tool_bin_path, target_name, url)
     elif url.startswith("/"):
         _link_local_repo(repository_ctx, target_name, url)
@@ -305,7 +307,7 @@ def _update_repo_impl(invocation_info):
 
     if repository_ctx.podspec_url:
         # For now, we curl the podspec url before the script runs
-        if repository_ctx.podspec_url.startswith("http"):
+        if _is_http_url(repository_ctx.podspec_url):
             script += "curl -O " + repository_ctx.podspec_url
             script += "\n"
         else:
@@ -442,6 +444,9 @@ def _cleanup_pods():
         if not os.path.isfile(full_path + "/.pod-version"):
             continue
         shutil.rmtree(full_path)
+
+def _is_http_url(url):
+    return url.startswith("http://") or url.startswith("https://")
 
 # Build a release of `RepoTools` if needed. Under a release package,
 # the makefile is a noop.

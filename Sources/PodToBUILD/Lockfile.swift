@@ -35,9 +35,9 @@ public struct Lockfile {
             fatalError("Missing deps")
         }
         externalSources = externalDepsYams
-        guard let depsYams = loadedDictionary["DEPENDENCIES"] as? [String] else {
-            fatalError("Missing deps")
+        guard let depsYams = loadedDictionary["PODS"] as? [Any] else {
+            fatalError("Missing deps" + String(describing: loadedDictionary["PODS"]))
         }
-        dependencies = depsYams
+        pods = depsYams
     }
 }
