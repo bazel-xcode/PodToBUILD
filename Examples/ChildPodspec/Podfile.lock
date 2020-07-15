@@ -1,0 +1,29 @@
+PODS:
+  - Child (0.0.1):
+    - Child/Default (= 0.0.1)
+    - Parent/ChildHeaders
+  - Child/Default (0.0.1):
+    - Parent/ChildHeaders
+  - Parent (0.0.1):
+    - Parent/ChildHeaders (= 0.0.1)
+    - Parent/Default (= 0.0.1)
+  - Parent/ChildHeaders (0.0.1)
+  - Parent/Default (0.0.1)
+
+DEPENDENCIES:
+  - Child (from `Vendor/Parent/Child`)
+  - Parent (from `Vendor/Parent`)
+
+EXTERNAL SOURCES:
+  Child:
+    :path: Vendor/Parent/Child
+  Parent:
+    :path: Vendor/Parent
+
+SPEC CHECKSUMS:
+  Child: 71c93b2390bb97f29d76fae1ad8a85fddea32624
+  Parent: 4bb9d9644c4cf4736e9257344d625a931926da16
+
+PODFILE CHECKSUM: 6b60b1cb4df080dd7fc5f0aec2d0a7b0fd6b3d02
+
+COCOAPODS: 1.8.0.beta.2
