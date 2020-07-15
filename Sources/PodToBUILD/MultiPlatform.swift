@@ -102,6 +102,15 @@ public struct MultiPlatform<T: AttrSetConstraint>: Monoid, SkylarkConvertible, E
     }
 }
 
+extension MultiPlatform: Equatable where T: AttrSetConstraint, T: Equatable {
+    public static func == (lhs: MultiPlatform, rhs: MultiPlatform) -> Bool {
+        return lhs.ios == rhs.ios &&
+             lhs.watchos == rhs.watchos &&
+             lhs.tvos == rhs.tvos &&
+             lhs.osx == rhs.osx
+    }
+}
+
 public struct AttrTuple<A: AttrSetConstraint, B: AttrSetConstraint>: AttrSetConstraint {
     public let first: A?
     public let second: B?
@@ -223,8 +232,6 @@ extension AttrSet where T == Optional<String> {
 extension AttrSet {
     /// This makes all the code operate on a multi platform
     public func unpackToMulti() -> AttrSet {
-        // This converts to multi platform as an LCD
-        // Note in later FBSDKCoreKits, this should inherit.
         if let basic = self.basic {
             return AttrSet(multi: MultiPlatform(
                     ios: basic <+> self.multi.ios,
@@ -234,6 +241,14 @@ extension AttrSet {
                 ))
         }
         return self
+    }
+}
+
+
+extension AttrSet: Equatable where T: AttrSetConstraint, T: Equatable {
+    public static func == (lhs: AttrSet, rhs: AttrSet) -> Bool {
+        return lhs.basic == rhs.basic &&
+             lhs.multi == rhs.multi
     }
 }
 

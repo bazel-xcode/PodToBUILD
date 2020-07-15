@@ -337,36 +337,56 @@ public enum RepoActions {
 
         // Batch create several symlinks for Pod style includes
         let currentDirectoryPath = FileManager.default.currentDirectoryPath
+        // ideally this check should introspec the podspecs value.
         if buildOptions.generateHeaderMap == false {
             let objcLibraries: [ObjcLibrary] = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
             objcLibraries.forEach { lib -> Void in
-                _ = lib.headers.zip(lib.headerName).map {
+               let searchPaths = lib.headerName.unpackToMulti().map {
+                   headerName -> [String] in
+                   var paths = [headerName]
+                   if headerName != lib.name {
+                       paths.append(lib.name)
+                   }
+                   if headerName != lib.externalName {
+                       paths.append(lib.externalName)
+                   }
+                   return paths
+               }
+
+                _ = lib.headers.unpackToMulti().zip(searchPaths).map {
                     attrTuple -> Set<String>? in
                     defer {
                         guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
                             fatalError("Can't change path back to original directory")
                         }
                     }
-                    guard let headers = attrTuple.first else {
-                        return nil
-                    }
                     // Note: this is going to evaluate the glob, this needs to
                     // happen _inside_ of the root directory.
-                    let globResults = headers.sourcesOnDisk()
-
-                    let searchPath = attrTuple.second ?? lib.externalName
-                    let linkPath = PodSupportSystemPublicHeaderDir + searchPath
-                    shell.dir(linkPath)
-                    guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
-                        print("WARNING: Can't change path while creating symlink: " + linkPath)
+                    guard let headers = attrTuple.first,
+                         let searchPaths = attrTuple.second else {
                         return nil
                     }
-                    globResults.forEach { globResult in
-                        // i.e. pod_support/Headers/Public/__POD_NAME__
-                        let from = "../../../../\(globResult)"
-                        let to = String(globResult.split(separator: "/").last!)
-                        print("Symlink: \(from) \(to)")
-                        shell.symLink(from: from, to: to)
+                    let globResults = headers.sourcesOnDisk()
+                    searchPaths.forEach {
+                        searchPath in
+                         defer {
+                            guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
+                                fatalError("Can't change path back to original directory")
+                            }
+                         }
+
+                        let linkPath =   PodSupportSystemPublicHeaderDir + searchPath
+                        shell.dir(linkPath)
+                        guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
+                            print("WARNING: Can't change path while creating symlink: " + linkPath)
+                            return
+                        }
+                        globResults.forEach { globResult in
+                            // i.e. pod_support/Headers/Public/__POD_NAME__
+                            let from = "../../../../\(globResult)"
+                            let to = String(globResult.split(separator: "/").last!)
+                            shell.symLink(from: from, to: to)
+                        }
                     }
                     return globResults
                 }
@@ -424,7 +444,7 @@ public enum RepoActions {
             let lockfile = try Lockfile(data: data)
             let workspace = try PodsWorkspace(lockfile: lockfile, shell: shell)
             let compiler = SkylarkCompiler(workspace.toSkylark())
-            print("Dict", compiler.run())
+            print(compiler.run())
         } catch {
             print("Error", error)
         }

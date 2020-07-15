@@ -16,17 +16,17 @@ public struct GlobNode: SkylarkConvertible {
     static let emptyArg: Either<Set<String>, GlobNode>
         = Either.left(Set([String]()))
 
-    init(include: Set<String> = Set(), exclude: Set<String> = Set()) {
-        self.include = [.left(include)]
-        self.exclude = [.left(exclude)]
+    public init(include: Set<String> = Set(), exclude: Set<String> = Set()) {
+        self.include = include.count == 0 ? [] : [.left(include)]
+        self.exclude = exclude.count == 0 ? [] : [.left(exclude)]
     }
 
-    init(include: Either<Set<String>, GlobNode>, exclude: Either<Set<String>, GlobNode>) {
+    public init(include: Either<Set<String>, GlobNode>, exclude: Either<Set<String>, GlobNode>) {
         self.include = [include]
         self.exclude = [exclude]
     }
 
-    init(include: [Either<Set<String>, GlobNode>], exclude: [Either<Set<String>, GlobNode>]) {
+    public init(include: [Either<Set<String>, GlobNode>] = [], exclude: [Either<Set<String>, GlobNode>] = []) {
         self.include = include
         self.exclude = exclude
     }
@@ -176,7 +176,7 @@ extension GlobNode {
             accum, next in
             switch next {
             case .left(let setVal):
-                 setVal.forEach { Glob(pattern: $0).paths.forEach { accum.insert($0) } }
+                 setVal.forEach { podGlob(pattern: $0).forEach { accum.insert($0) } }
             case .right(let globVal):
                  globVal.sourcesOnDisk().forEach { accum.insert($0) }
             }
@@ -186,7 +186,7 @@ extension GlobNode {
             accum, next in
             switch next {
             case .left(let setVal):
-                 setVal.forEach { Glob(pattern: $0).paths.forEach { accum.insert($0) } }
+                 setVal.forEach { podGlob(pattern: $0).forEach { accum.insert($0) } }
             case .right(let globVal):
                  globVal.sourcesOnDisk().forEach { accum.insert($0) }
             }

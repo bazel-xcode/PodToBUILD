@@ -25,6 +25,22 @@ extension Dictionary where Key == String, Value == BazelTarget {
     }
 }
 
+extension AttrSet where T == GlobNode {
+    // This tests an AttrSet in any capacity for sources on disk
+    func hasSourcesOnDisk() -> Bool {
+        return self.fold(basic: { x -> Bool in
+            x?.hasSourcesOnDisk() ?? false 
+        },  multi: {
+            (result: Bool, multi: MultiPlatform<GlobNode>) -> Bool in
+            result || 
+               multi.ios?.hasSourcesOnDisk() ?? false ||
+               multi.tvos?.hasSourcesOnDisk() ?? false ||
+               multi.osx?.hasSourcesOnDisk() ?? false ||
+               multi.watchos?.hasSourcesOnDisk() ?? false
+        })
+    }
+}
+
 // EmptyDepPruneTransform hits the file system to strip out deps without source
 // Currently, empty swift_library's cause linker issues.
 struct EmptyDepPruneTransform : SkylarkConvertibleTransform {
@@ -55,7 +71,7 @@ struct EmptyDepPruneTransform : SkylarkConvertibleTransform {
                         return dep
                     }
                     // All swift libs require sources on disk
-                    guard swiftLib.sourceFiles.basic?.hasSourcesOnDisk() ?? false else {
+                    guard swiftLib.sourceFiles.hasSourcesOnDisk() else {
                         return nil
                     }
                     return dep
@@ -71,7 +87,8 @@ struct EmptyDepPruneTransform : SkylarkConvertibleTransform {
                 let prunedDeps = prune(deps: lib.deps, lib: lib)
                 return ObjcLibrary(name: lib.name, externalName: lib.externalName,
                                 sourceFiles: lib.sourceFiles, headers: lib.headers,
-                                headerName: lib.headerName, includes: lib.includes,
+                                headerName: lib.headerName, moduleMap: lib.moduleMap, prefixHeader:
+                                lib.prefixHeader, includes: lib.includes,
                                 sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
                                 lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
                                 prunedDeps, copts: lib.copts, bundles: lib.bundles, resources:
@@ -81,7 +98,8 @@ struct EmptyDepPruneTransform : SkylarkConvertibleTransform {
 
             }
             if let lib = convertible as? SwiftLibrary {
-               guard lib.sourceFiles.basic?.hasSourcesOnDisk() ?? false else {
+               // All swift libs require sources on disk
+               guard lib.sourceFiles.hasSourcesOnDisk() else {
                     return nil
                 }
                 return lib

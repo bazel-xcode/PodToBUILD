@@ -65,7 +65,33 @@ struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
     //   deps = [
     //     ":Core"
     //   ],
-    
+
+
+    private static func collect(for convertible: BazelTarget, reverseDeps: [String: [BazelTarget]]) -> [BazelTarget] {
+        var queue:  [BazelTarget] = [convertible]
+        var output = [BazelTarget]()
+        var visited = [String]()
+        repeat {
+            guard let convertible = queue.first else {
+                fatalError("Wrong")
+            }
+            queue.removeLast()
+            if visited.contains(convertible.name) {
+                continue
+            }
+            let targetReverseDeps = reverseDeps.get(bazelName: convertible.name) ?? []
+            for dep in targetReverseDeps {
+                if visited.contains(dep.name) {
+                    continue
+                }
+                queue.append(dep)
+            }
+            output.append(contentsOf: targetReverseDeps)
+            visited.append(convertible.name)
+        } while queue.count > 0
+        return output
+    }
+
     public static func transform(convertibles: [BazelTarget], options: BuildOptions, podSpec: PodSpec) ->  [BazelTarget] {
         // Needed
         func toSourceExcludable(_ input: BazelTarget) -> SourceExcludable? {
@@ -90,7 +116,8 @@ struct RedundantCompiledSourceTransform : SkylarkConvertibleTransform {
         }
         let outputConvertibles = convertibles.compactMap {
             convertible -> BazelTarget? in
-            let targetReverseDeps = reverseDeps.get(bazelName: convertible.name) ?? []
+            let targetReverseDeps = collect(for: convertible, reverseDeps:
+                                            reverseDeps)
             let output = toSourceExcludable(convertible)
             return output?.addExcluded(targets: targetReverseDeps) ??  convertible
         }

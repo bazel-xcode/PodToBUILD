@@ -153,7 +153,7 @@ public struct PodBuildFile: SkylarkConvertible {
                 let name = "\(spec.moduleName ?? spec.name)_Bundle_\(bundleName)"
                 let bundleImports = AttrSet<[String]>(basic: ["\(bundlePath)/**"])
                 return AppleBundleImport(name: name, bundleImports: bundleImports)
-	     }
+            }
         }
 
         // Converts an attrset to resource bundles
@@ -319,25 +319,31 @@ public struct PodBuildFile: SkylarkConvertible {
         var output: [BazelTarget] = sourceLibs + subspecTargets +
             bundleLibraries(withPodSpec: podSpec) + extraDeps
 
+        // Note: we don't currently render these inline. This is a stand in
+        // until the ModuleMap is allocated here.
+        output = output.reduce(into: [BazelTarget]()) {
+            accum, next in
+            if let objcLib = next as? ObjcLibrary,
+                let moduleMap = objcLib.moduleMap {
+                accum.append(moduleMap)
+            }
+            accum.append(next)
+        }
+
         // Execute transforms manually
         // Don't use unneeded abstractions to make a few function calls
-        // (bkase) but this is isomorphic to `BuildOptions -> Endo<SkylarkConvertible>` which means we *could* make a monoid out of it http://swift.sandbox.bluemix.net/#/repl/59090e9f9def327b2a45b255
         output = UserConfigurableTransform.transform(convertibles: output,
                                                      options: buildOptions,
                                                      podSpec: podSpec)
         output = RedundantCompiledSourceTransform.transform(convertibles: output,
                                                             options: buildOptions,
                                                             podSpec: podSpec)
-        output = SplitArcAndNoArcTransform.transform(convertibles: output,
-                                                     options: buildOptions,
-                                                     podSpec: podSpec)
         output = InsertAcknowledgementsTransform.transform(convertibles: output,
                                                            options: buildOptions,
                                                            podSpec: podSpec)
         output = EmptyDepPruneTransform.transform(convertibles: output,
                                                            options: buildOptions,
                                                            podSpec: podSpec)
-
         return output
     }
 }
