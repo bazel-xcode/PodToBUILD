@@ -13,7 +13,7 @@ swift_library(
     name = "PodToBUILD",
     srcs = glob(["Sources/PodToBUILD/*.swift"]),
     deps = [":ObjcSupport", "@podtobuild-Yams//:Yams"],
-    copts = ["-swift-version", "4"],
+    copts = ["-swift-version", "5"],
 )
 
 # Compiler
@@ -27,6 +27,7 @@ swift_library(
     name = "CompilerLib",
     srcs = glob(["Sources/Compiler/*.swift"]),
     deps = [":PodToBUILD"],
+    copts = ["-swift-version", "5"],
 )
 
 # RepoTools
@@ -40,6 +41,7 @@ swift_library(
     name = "RepoToolsLib",
     srcs = glob(["Sources/RepoTools/*.swift"]),
     deps = [":RepoToolsCore"],
+    copts = ["-swift-version", "5"],
 )
 
 swift_library(
