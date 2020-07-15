@@ -25,12 +25,13 @@ public enum BazelSourceLibType {
 
 /// Extract files from a source file pattern.
 public func extractFiles(fromPattern patternSet: AttrSet<[String]>,
-        includingFileTypes: Set<String>) ->
+        includingFileTypes: Set<String>, usePrefix: Bool = true) ->
 AttrSet<[String]> {
+    let sourcePrefix = usePrefix ? getSourcePatternPrefix() : ""
     return patternSet.map {
         (patterns: [String]) -> [String] in
         let result = patterns.flatMap { (p: String) -> [String] in
-            pattern(fromPattern: p, includingFileTypes:
+            pattern(fromPattern: sourcePrefix + p, includingFileTypes:
                     includingFileTypes)
         }
         return result
@@ -38,9 +39,10 @@ AttrSet<[String]> {
 }
 
 public func extractFiles(fromPattern patternSet: [String],
-        includingFileTypes: Set<String>) -> [String] {
+        includingFileTypes: Set<String>, usePrefix: Bool = true) -> [String] {
+    let sourcePrefix = usePrefix ? getSourcePatternPrefix() : ""
     return patternSet.flatMap { (p: String) -> [String] in
-            pattern(fromPattern: p, includingFileTypes:
+            pattern(fromPattern: sourcePrefix + p, includingFileTypes:
                     includingFileTypes)
         }
 }
@@ -80,10 +82,33 @@ public func getGenfileOutputBaseDir() -> String {
     let options = GetBuildOptions()
     let basePath = options.vendorize ? "Vendor" : "external"
     let podName = options.podName
-    if options.path ==  "." {
+    let parts = options.path.split(separator: "/")
+    if options.path ==  "." || parts.count < 2 {
         return "\(basePath)/\(podName)"
     }
-    return options.path
+
+    return String(parts[0..<2].joined(separator: "/"))
+}
+
+public func getNamePrefix() -> String {
+    let options = GetBuildOptions()
+    if options.path.split(separator: "/").count > 2 {
+        return options.podName + "_"
+    }
+    return ""
+}
+
+public func getSourcePatternPrefix() -> String {
+    let options = GetBuildOptions()
+    let parts = options.path.split(separator: "/")
+    if options.path ==  "." || parts.count < 2 {
+        return ""
+    }
+    let sourcePrefix = String(parts[2..<parts.count].joined(separator: "/"))
+    if sourcePrefix != "" {
+        return sourcePrefix + "/"
+    }
+    return ""
 }
 
 /// Compute the name of a lib
@@ -96,7 +121,7 @@ public func computeLibName(parentSpecs: [PodSpec], spec: PodSpec, podName: Strin
                     .map { $0.moduleName ?? $0.name }
                     .joined(separator: "_")
             )
-    return baseName + splitSuffix
+    return getNamePrefix() + baseName + splitSuffix
 }
 
 /// Get a dependency name from a name in accordance with

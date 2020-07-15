@@ -68,7 +68,7 @@ public func makePrefixNodes() -> SkylarkNode {
             .basic(.string("gen_module_map")),
             .basic(.string("gen_includes")),
             .basic(.string("headermap"))]),
-        makeConfigSettingNodes(),
+        makeConfigSettingNodes()
     ]
     return .lines(lineNodes)
 }
@@ -115,6 +115,8 @@ public struct PodBuildFile: SkylarkConvertible {
     /// the "child" BUILD file into the parents
     public let assimilate: Bool
 
+    private let options: BuildOptions
+
     public static func shouldAssimilate(buildOptions: BuildOptions) -> Bool {
         return buildOptions.path != "." &&
             FileManager.default.fileExists(atPath: BazelConstants.buildFilePath)
@@ -122,25 +124,50 @@ public struct PodBuildFile: SkylarkConvertible {
 
     /// Return the skylark representation of the entire BUILD file
     public func toSkylark() -> SkylarkNode {
+        let prevOptions = sharedBuildOptions
+        // This is very brittle but the options are implicit passed into
+        // toSkylark() and constructors instead of passing them to every
+        // function. For child build files we need to update them.
+        sharedBuildOptions = options
         BuildFileContext.set(BuildFileContext(convertibles: skylarkConvertibles))
         let convertibleNodes: [SkylarkNode] = skylarkConvertibles.compactMap { $0.toSkylark() }
         BuildFileContext.set(nil)
 
+        let prefixNodes: [SkylarkNode]
         // If we have to assimilate this into another build file then don't
         // write prefix nodes. This is not 100% pefect, as some other algorithms
         // require all contents of the build file. This is an intrim solution.
-        let prefixNodes = assimilate  ? SkylarkNode.empty : makePrefixNodes()
-        return .lines([
-            makeLoadNodes(forConvertibles: skylarkConvertibles),
-            prefixNodes]
+        let allHeaders = skylarkConvertibles.reduce(into: [String]()) {
+            accum, next in
+            if let objcLib = next as? ObjcLibrary {
+                accum.append(objcLib.name + "_direct_hdrs")
+            }
+        }
+
+        let pkgHeaders = SkylarkNode.functionCall(
+            name: "filegroup",
+            arguments: [
+                .named(name: "name", value: (getNamePrefix() +
+                                             options.podName + "_package_hdrs").toSkylark()),
+                .named(name: "srcs", value: allHeaders.toSkylark()),
+                .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
+                ]
+            )
+    
+        sharedBuildOptions = prevOptions
+        let top: [SkylarkNode] = assimilate ? [] : [makePrefixNodes()]
+        prefixNodes = top + [pkgHeaders]
+        return .lines([ makeLoadNodes(forConvertibles: skylarkConvertibles) ] +
+            prefixNodes
             + convertibleNodes)
     }
 
-    public static func with(podSpec: PodSpec, buildOptions: BuildOptions = BasicBuildOptions.empty) -> PodBuildFile {
+    public static func with(podSpec: PodSpec, buildOptions: BuildOptions =
+                            BasicBuildOptions.empty, assimilate: Bool = false) -> PodBuildFile {
         sharedBuildOptions = buildOptions
         let libs = PodBuildFile.makeConvertables(fromPodspec: podSpec, buildOptions: buildOptions)
-        return PodBuildFile(skylarkConvertibles: libs, assimilate:
-            PodBuildFile.shouldAssimilate(buildOptions: buildOptions))
+        return PodBuildFile(skylarkConvertibles: libs, assimilate: assimilate,
+                            options: buildOptions)
     }
 
     private static func bundleLibraries(withPodSpec spec: PodSpec) -> [BazelTarget] {
