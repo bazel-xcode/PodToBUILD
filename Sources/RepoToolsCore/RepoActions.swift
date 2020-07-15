@@ -264,24 +264,6 @@ public enum RepoActions {
         return JSONPodspec
     }
 
-    private static func updatePodspec(podspec: JSONDict, relPath: String) -> JSONDict {
-        guard relPath.count > 0 else {
-            return podspec
-        }
-
-        // TODO: we need to apply this to a few more fields. Consider
-        // factoring this out to podspec instead of hacking the JSON
-        var mPodspec = podspec
-        mPodspec["source_files"] = strings(fromJSON:
-            mPodspec["source_files"]).map { relPath + "/" + $0 }       
-        var subspecs2: [JSONDict] = mPodspec["subspecs"] as? [JSONDict] ?? []
-        mPodspec["subspecs"] = subspecs2.map {
-            arg -> JSONDict in
-            return updatePodspec(podspec: arg, relPath: relPath)
-        }
-        return mPodspec
-    }
-
     private static func initializeAliasDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
         let visibility = SkylarkNode.functionCall(name: "package",
             arguments: [
