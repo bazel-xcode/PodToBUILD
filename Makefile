@@ -46,7 +46,6 @@ pod_test:
 # - run Bazel for all the examples
 .PHONY: build-test
 build-test: pod_test build archive init-sandbox 
-	cp PodToBUILD.zip /tmp/
 	cd Examples/BasiciOS && make all
 	cd Examples/PINRemoteImage && make all
 	cd Examples/Texture && make all
