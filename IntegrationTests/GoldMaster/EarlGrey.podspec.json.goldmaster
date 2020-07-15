@@ -18,9 +18,21 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
+  name = "osxCase",
   values = {
-    "cpu": "powerpc1"
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
   }
 )
 filegroup(
@@ -127,4 +139,9 @@ apple_static_framework_import(
   visibility = [
     "//visibility:public"
   ]
+)
+acknowledged_target(
+  name = "EarlGrey_VendoredFrameworks_acknowledgement",
+  deps = [],
+  value = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_fragment"
 )

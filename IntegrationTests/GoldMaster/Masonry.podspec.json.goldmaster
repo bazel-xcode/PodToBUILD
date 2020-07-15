@@ -17,21 +17,21 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
-  values = {
-    "cpu": "powerpc1"
-  }
-)
-config_setting(
   name = "osxCase",
   values = {
-    "cpu": "powerpc2"
+    "apple_platform_type": "macos"
   }
 )
 config_setting(
   name = "tvosCase",
   values = {
-    "cpu": "powerpc3"
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
   }
 )
 filegroup(
@@ -90,9 +90,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Masonry",
-    [
-      "Masonry/**/*.pch"
-    ]
+    glob(
+      [
+        "Masonry/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = select(
     {

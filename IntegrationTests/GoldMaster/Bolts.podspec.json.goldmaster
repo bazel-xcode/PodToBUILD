@@ -17,27 +17,21 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
-  values = {
-    "cpu": "powerpc1"
-  }
-)
-config_setting(
   name = "osxCase",
   values = {
-    "cpu": "powerpc2"
+    "apple_platform_type": "macos"
   }
 )
 config_setting(
   name = "tvosCase",
   values = {
-    "cpu": "powerpc3"
+    "apple_platform_type": "tvos"
   }
 )
 config_setting(
   name = "watchosCase",
   values = {
-    "cpu": "powerpc4"
+    "apple_platform_type": "watchos"
   }
 )
 filegroup(
@@ -124,33 +118,11 @@ acknowledged_target(
 )
 filegroup(
   name = "Tasks_hdrs",
-  srcs = select(
-    {
-      "//conditions:default": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-      ),
-      ":osxCase": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-      ),
-      ":tvosCase": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-      ),
-      ":watchosCase": glob(
-        [
-          "Bolts/Common/*.h"
-        ],
-        exclude_directories = 1
-      )
-    }
+  srcs = glob(
+    [
+      "Bolts/Common/*.h"
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -192,9 +164,12 @@ objc_library(
         [
           "Bolts/Common/*.m"
         ],
-        exclude = [
-          "Bolts/iOS/**/*.m"
-        ],
+        exclude = glob(
+          [
+            "Bolts/iOS/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":osxCase": glob(
@@ -222,9 +197,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Bolts",
-    [
-      "Bolts/**/*.pch"
-    ]
+    glob(
+      [
+        "Bolts/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Tasks_includes"
@@ -314,11 +292,30 @@ objc_library(
   hdrs = [
     ":AppLinks_union_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Bolts",
-    [
-      "Bolts/**/*.pch"
-    ]
+  pch = select(
+    {
+      "//conditions:default": pch_with_name_hint(
+        "Bolts",
+        glob(
+          [
+            "Bolts/**/*.pch"
+          ],
+          exclude_directories = 1
+        )
+      ),
+      ":osxCase": pch_with_name_hint(
+        "Bolts",
+        []
+      ),
+      ":tvosCase": pch_with_name_hint(
+        "Bolts",
+        []
+      ),
+      ":watchosCase": pch_with_name_hint(
+        "Bolts",
+        []
+      )
+    }
   ),
   deps = [
     ":Tasks",

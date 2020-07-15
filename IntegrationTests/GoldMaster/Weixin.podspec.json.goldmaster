@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "Weixin_hdrs",
   srcs = glob(
@@ -112,4 +130,9 @@ objc_import(
   archives = [
     "SDK1.6.2/libWeChatSDK.a"
   ]
+)
+acknowledged_target(
+  name = "Weixin_VendoredLibraries_acknowledgement",
+  deps = [],
+  value = "//Vendor/Weixin/pod_support_buildable:acknowledgement_fragment"
 )

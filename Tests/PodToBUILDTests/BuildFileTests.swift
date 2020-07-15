@@ -10,137 +10,110 @@ import XCTest
 @testable import PodToBUILD
 
 class BuildFileTests: XCTestCase {
-    // MARK: - Transform Tests
-
-    func lib(name: String, externalName: String) -> ObjcLibrary {
-	    return ObjcLibrary(name: name,
-                    externalName: externalName,
-                    sourceFiles: GlobNode.empty,
-                    headers: GlobNode.empty,
-                    headerName: AttrSet(basic: externalName),
-                    includes: [],
-                    sdkFrameworks: AttrSet.empty,
-                    weakSdkFrameworks: AttrSet.empty,
-                    sdkDylibs: AttrSet.empty,
-                    deps: AttrSet.empty,
-                    copts: AttrSet.empty,
-                    bundles: AttrSet.empty,
-                    resources: GlobNode.empty,
-                    publicHeaders: AttrSet.empty,
-			        nonArcSrcs: GlobNode.empty,
-			        requiresArc: .left(true),
-                    isTopLevelTarget: false
-        )
+    func basicGlob(include: Set<String>) -> AttrSet<GlobNode> {
+        return AttrSet(basic: GlobNode(include: include))
     }
 
-    let zoomToInclude: Lens<ObjcLibrary, AttrSet<Set<String>>> =
-        ObjcLibrary.lens.sourceFiles ..
-                GlobNode.lens.include
-    let zoomToExclude: Lens<ObjcLibrary, AttrSet<Set<String>>> =
-        ObjcLibrary.lens.sourceFiles ..
-                GlobNode.lens.exclude
-
+    // MARK: - Transform Tests
     func testWildCardSourceDependentSourceExclusion() {
         let include: Set<String> = ["Source/*.m"]
-        let exclude: Set<String> = ["Source/SomeSource.m"]
 
-        let parentLib: ObjcLibrary = lib(name: "Core", externalName: "Core") |>
-            zoomToInclude .. AttrSet<Set<String>>.lens.basic() .~ .some(include)
+        let parentLib = ObjcLibrary(name: "Core", externalName: "Core",
+            sourceFiles: basicGlob(include: include))
 
-        let depLib = lib(name: "ChildLib", externalName: "Core") |>
-            zoomToInclude .. AttrSet<Set<String>>.lens.basic() .~ .some(exclude) |>
-            ObjcLibrary.lens.deps .. AttrSet<[String]>.lens.basic() .~ .some([":Core"])
+        let depLib = ObjcLibrary(name: "ChildLib", externalName: "Core",
+            sourceFiles: basicGlob(include: include),
+            deps: AttrSet(basic: [":Core"]))
 
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
-        XCTAssert(libByName["Core"]!.sourceFiles == GlobNode(
-            include: AttrSet(basic: include),
-            exclude: AttrSet(basic: exclude)
-        ))
+        XCTAssertEqual(
+           libByName["Core"]!.sourceFiles,
+           AttrSet(basic: GlobNode(
+               include: [.left(Set(["Source/*.m"]))],
+               exclude: [.right(GlobNode(include: [.left(Set(["Source/*.m"]))]
+                   ))])
+       ))
     }
 
     func testWildCardDirectoryDependentSourceExclusion() {
         let include: Set<String> = ["Source/**/*.m"]
-        let exclude: Set<String> = ["Source/Some/Source.m"]
 
-        let parentLib: ObjcLibrary = lib(name: "Core", externalName: "Core") |>
-            zoomToInclude .. AttrSet<Set<String>>.lens.basic() .~ .some(include)
-
-        let depLib = lib(name: "ChildLib", externalName: "Core") |>
-            zoomToInclude .. AttrSet<Set<String>>.lens.basic() .~ .some(exclude) |>
-            ObjcLibrary.lens.deps .. AttrSet<[String]>.lens.basic() .~ .some([":Core"])
+        let parentLib = ObjcLibrary(name: "Core", externalName: "Core",
+            sourceFiles: basicGlob(include: include))
+        let depLib = ObjcLibrary(name: "ChildLib", externalName: "Core",
+            sourceFiles: basicGlob(include: include),
+            deps: AttrSet(basic: [":Core"]))
 
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
-        XCTAssert(libByName["Core"]!.sourceFiles == GlobNode(
-            include: AttrSet(basic: include),
-            exclude: AttrSet(basic: exclude)
+        XCTAssertEqual(
+            libByName["Core"]!.sourceFiles, 
+            AttrSet(basic: GlobNode(
+                include: [.left(Set(["Source/**/*.m"]))],
+                exclude: [.right(GlobNode(include: [.left(Set(["Source/**/*.m"]))]
+                    ))])
         ))
     }
 
     func testWildCardSourceDependentSourceExclusionWithExistingExclusing() {
-        let parentLib: ObjcLibrary = lib(name: "Core", externalName: "Core") |>
-            zoomToInclude .. AttrSet<Set<String>>.lens.basic() .~ .some(Set(["Source/*.m"])) |>
-            zoomToExclude .. AttrSet<Set<String>>.lens.basic() .~ .some(Set(["Srce/SomeSource.m"]))
-
-        let childSourceFiles = GlobNode(
-                                    include: AttrSet(basic: Set(["Source/SomeSource.m"])),
-                                    exclude: AttrSet.empty
-						         )
-
-        let depLib: ObjcLibrary = lib(name: "ChildLib", externalName: "Core") |>
-            ObjcLibrary.lens.sourceFiles .~ childSourceFiles |>
-            ObjcLibrary.lens.deps .. AttrSet<[String]>.lens.basic() .~ .some([":Core"])
-
+        let parentLib = ObjcLibrary(name: "Core", externalName: "Core",
+            sourceFiles: AttrSet(basic: GlobNode(include:Set(["Source/*.m"]),
+                                                 exclude:
+                                                 Set(["Srce/SomeSource.m"]))))
+        let childSourceFiles = basicGlob(include: Set(["Source/SomeSource.m"]))
+        let depLib = ObjcLibrary(name: "ChildLib", externalName: "Core",
+            sourceFiles: childSourceFiles,
+            deps: AttrSet(basic: [":Core"]))
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
-        XCTAssertEqual(libByName["ChildLib"]!.sourceFiles.include.basic, childSourceFiles.include.basic)
-        XCTAssert(libByName["Core"]!.sourceFiles == GlobNode(
-            include: AttrSet(basic: Set(["Source/*.m"])),
-            exclude: AttrSet(basic: Set(["Srce/SomeSource.m", "Source/SomeSource.m"]))
+        XCTAssertEqual(
+            libByName["ChildLib"]!.sourceFiles, 
+            AttrSet(basic: GlobNode(
+                include: [.left(Set(["Source/SomeSource.m"]))])
         ))
-    }
 
-    func testWildCardSourceDependentIosExclusion() {
-        let parentLib: ObjcLibrary = lib(name: "Core", externalName: "Core") |>
-            zoomToInclude ..
-            AttrSet<Set<String>>.lens.multi() ..
-            MultiPlatform<Set<String>>.lens.ios() .~ .some(["Source/*.m"]) |>
-            zoomToExclude .. AttrSet<Set<String>>.lens.basic() .~ .some(["Source/SomeSource.m"])
-
-        let depLib: ObjcLibrary = lib(name: "ChildLib", externalName: "Core") |>
-            zoomToInclude ..
-            AttrSet<Set<String>>.lens.multi() ..
-            MultiPlatform<Set<String>>.lens.ios() .~ .some(["Source/Foo.m"]) |>
-            ObjcLibrary.lens.deps .. AttrSet<[String]>.lens.basic() .~ .some([":Core"])
-
-        let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib])
-        XCTAssert(libByName["Core"]!.sourceFiles == GlobNode(
-            include: AttrSet(multi: MultiPlatform(
-                ios: ["Source/*.m"]
-            )),
-            exclude: AttrSet(basic: ["Source/SomeSource.m"],
-                             multi: MultiPlatform(ios: ["Source/Foo.m"]))
-        ))
+        XCTAssertEqual(
+            libByName["Core"]!.sourceFiles,
+            AttrSet(basic: GlobNode(
+                include: [.left(Set(["Source/*.m"]))],
+                exclude: [.left(Set(["Srce/SomeSource.m"])), .right(GlobNode(include: [.left(Set(["Source/SomeSource.m"]))]
+                    ))])
+            ))
     }
 
     func testNestedDependentExclusion() {
-        let parentLib: ObjcLibrary = lib(name: "Core", externalName: "Core") |>
-            zoomToInclude .. AttrSet<Set<String>>.lens.basic() .~ .some(["Source/*.m"])
+        let parentLib = ObjcLibrary(name: "Core", externalName: "Core",
+            sourceFiles: basicGlob(include: Set(["Source/*.m"])))
 
-        let depLib: ObjcLibrary = lib(name: "ChildLib", externalName: "Core") |>
-            zoomToInclude .. AttrSet<Set<String>>.lens.basic() .~ .some(["Source/Foo/*.m"]) |>
-            ObjcLibrary.lens.deps .. AttrSet<[String]>.lens.basic() .~ .some([":Core"])
+        let depLib = ObjcLibrary(name: "ChildLib", externalName: "Core",
+            sourceFiles: AttrSet(basic: GlobNode(include: Set(["Source/Foo/*.m"]))),
+            deps: AttrSet(basic: [":Core"]))
 
-        let depDepLib: ObjcLibrary = lib(name: "GrandchildLib", externalName: "Core") |>
-            zoomToInclude .. AttrSet<Set<String>>.lens.basic() .~ .some(["Source/Foo/Bar/*.m", "Source/Bar/*.m"]) |>
-            ObjcLibrary.lens.deps .. AttrSet<[String]>.lens.basic() .~ .some([":ChildLib"])
+        let depDepLib = ObjcLibrary(name: "GrandChildLib", externalName: "Core",
+            sourceFiles: AttrSet(basic: GlobNode(include: Set(["Source/Foo/Bar/*.m"]))),
+            deps: AttrSet(basic: [":ChildLib"]))
 
         let libByName = executePruneRedundantCompilationTransform(libs: [parentLib, depLib, depDepLib])
-        XCTAssert(libByName["Core"]!.sourceFiles == GlobNode(
-            include: AttrSet(basic: ["Source/*.m"]),
-            exclude: AttrSet(basic: ["Source/Bar/*.m", "Source/Foo/*.m", "Source/Foo/Bar/*.m"])
-        ))
-        XCTAssert(libByName["ChildLib"]!.sourceFiles == GlobNode(
-            include: AttrSet(basic: ["Source/Foo/*.m"]),
-            exclude: AttrSet(basic: ["Source/Bar/*.m", "Source/Foo/Bar/*.m"])
+
+        let transformed = libByName.values.map { $0.toSkylark() }
+        print(SkylarkCompiler(.lines(transformed)).run())
+
+        let childSources = libByName["ChildLib"]?.sourceFiles
+        XCTAssertEqual(
+            childSources, 
+            AttrSet(basic: GlobNode(
+                include: [.left(Set(["Source/Foo/*.m"]))],
+                exclude: [.right(GlobNode(include: [.left(Set(["Source/Foo/Bar/*.m"]))]
+                    ))]))
+
+        )
+
+        XCTAssertEqual(
+            libByName["Core"]?.sourceFiles,
+            AttrSet(basic: GlobNode(
+                include: [.left(Set(["Source/*.m"]))],
+                exclude: [
+                .right(GlobNode(
+                    include: [.left(Set(["Source/Foo/*.m"]))],
+                    exclude: [])), .right(GlobNode(include: [.left(Set(["Source/Foo/Bar/*.m"]))], exclude: []))])
         ))
     }
 
@@ -195,37 +168,14 @@ class BuildFileTests: XCTestCase {
         )
     }
 
-    func testProperlyOutputConfig() {
-        let podspec = try! PodSpec(JSONPodspec: [
-                "name": "Foo",
-                "osx": ["source_files": ["foo"]]
-            ])
-        let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
-        XCTAssert(
-            convs.compactMap{ $0 as? ConfigSetting }.map{ $0.name }.first { $0.contains("osx") } != nil
-        )
-    }
-
-    func testProperlyOutputConfigSubspecs() {
-        let podspec = try! PodSpec(JSONPodspec: [
-            "name": "Foo",
-            "subspecs": [["name": "Foo_1",
-                          "osx": ["source_files": ["foo"]]]]
-        ])
-        let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
-        XCTAssert(
-            convs.compactMap{ $0 as? ConfigSetting }.map{ $0.name }.first { $0.contains("osx") } != nil
-        )
-    }
-
     // MARK: - Source File Extraction Tests
 
     func testExtractionCurly() {
         let podPattern = "Source/Classes/**/*.{h,m}"
         let extractedHeaders = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
-                includingFileTypes: HeaderFileTypes).basic!
+                includingFileTypes: HeaderFileTypes).basic
         let extractedSources = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
-                includingFileTypes: ObjcLikeFileTypes).basic!
+                includingFileTypes: ObjcLikeFileTypes).basic
         XCTAssertEqual(extractedHeaders, ["Source/Classes/**/*.h"])
         XCTAssertEqual(extractedSources, ["Source/Classes/**/*.m"])
     }
@@ -233,16 +183,16 @@ class BuildFileTests: XCTestCase {
     func testExtractionWithBarPattern() {
         let podPattern = "Source/Classes/**/*.[h,m]"
         let extractedHeaders = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
-                includingFileTypes: HeaderFileTypes).basic!
+                includingFileTypes: HeaderFileTypes).basic
         let extractedSources = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
-                includingFileTypes: ObjcLikeFileTypes).basic!
+                includingFileTypes: ObjcLikeFileTypes).basic
 
         XCTAssertEqual(extractedHeaders, ["Source/Classes/**/*.h"])
         XCTAssertEqual(extractedSources, ["Source/Classes/**/*.m"])
     }
 
     func testExtractionMultiplatform() {
-	    let podPattern = "Source/Classes/**/*.[h,m]"
+        let podPattern = "Source/Classes/**/*.[h,m]"
         let extractedHeaders = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
                 includingFileTypes: HeaderFileTypes)
         let extractedSources = extractFiles(fromPattern: AttrSet(basic: [podPattern]),
@@ -251,27 +201,21 @@ class BuildFileTests: XCTestCase {
         XCTAssert(extractedSources == AttrSet(basic: ["Source/Classes/**/*.m"]))
     }
 
-    func testHeaderIncExclExtraction() {
-        let podSpec = examplePodSpecNamed(name: "PINRemoteImage")
-        let library = ObjcLibrary(parentSpecs: [podSpec], spec: podSpec.subspecs.first{ $0.name == "Core" }!)
-
-        ["Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
-		 "Source/Classes/PINCache/*.h"].forEach{ src in
-	        XCTAssert(library.headers.exclude.basic!.contains(src))
-        }
-		["Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m",
-		 "Source/Classes/PINCache/*.m"].forEach{ src in
-	        XCTAssert(library.sourceFiles.exclude.basic!.contains(src))
-        }
-    }
-
     func testHeaderIncAutoGlob() {
         let podSpec = examplePodSpecNamed(name: "UICollectionViewLeftAlignedLayout")
         let library = ObjcLibrary(parentSpecs: [], spec: podSpec)
-
-        XCTAssert(
-            library.headers.include.basic.denormalize().contains("UICollectionViewLeftAlignedLayout/**/*.h")
+        guard let ios = library.headers.multi.ios else {
+            XCTFail("Missing iOS headers for lib \(library)")
+            return
+        }
+        XCTAssertEqual(
+            ios, GlobNode(include: Set([
+                    "UICollectionViewLeftAlignedLayout/**/*.h",
+                    "UICollectionViewLeftAlignedLayout/**/*.hpp",
+                    "UICollectionViewLeftAlignedLayout/**/*.hxx"
+                ]))
         )
+
     }
 
     // MARK: - JSON Examples

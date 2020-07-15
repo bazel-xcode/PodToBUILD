@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "ZipArchive_hdrs",
   srcs = glob(
@@ -66,8 +84,9 @@ gen_module_map(
 objc_library(
   name = "ZipArchive",
   enable_modules = 0,
-  srcs = glob(
+  non_arc_srcs = glob(
     [
+      "*.m",
       "minizip/crypt.c",
       "minizip/ioapi.c",
       "minizip/mztools.c",
@@ -76,20 +95,12 @@ objc_library(
     ],
     exclude_directories = 1
   ),
-  non_arc_srcs = glob(
-    [
-      "*.m"
-    ],
-    exclude_directories = 1
-  ),
   hdrs = [
     ":ZipArchive_hdrs"
   ],
   pch = pch_with_name_hint(
     "ZipArchive",
-    [
-      "minizip/**/*.pch"
-    ]
+    []
   ),
   sdk_dylibs = [
     "z"

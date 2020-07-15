@@ -37,6 +37,15 @@ AttrSet<[String]> {
     }
 }
 
+public func extractFiles(fromPattern patternSet: [String],
+        includingFileTypes: Set<String>) -> [String] {
+    return patternSet.flatMap { (p: String) -> [String] in
+            pattern(fromPattern: p, includingFileTypes:
+                    includingFileTypes)
+        }
+}
+
+
 let ObjcLikeFileTypes = Set([".m", ".c", ".s", ".S"])
 let CppLikeFileTypes  = Set([".mm", ".cpp", ".cxx", ".cc"])
 let SwiftLikeFileTypes  = Set([".swift"])

@@ -18,6 +18,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "GoogleAppIndexing_hdrs",
   srcs = glob(
@@ -118,6 +136,11 @@ apple_bundle_import(
     exclude_directories = 1
   )
 )
+acknowledged_target(
+  name = "GoogleAppIndexing_Bundle_GoogleAppIndexingResources_acknowledgement",
+  deps = [],
+  value = "//Vendor/GoogleAppIndexing/pod_support_buildable:acknowledgement_fragment"
+)
 apple_static_framework_import(
   name = "GoogleAppIndexing_VendoredFrameworks",
   framework_imports = glob(
@@ -129,4 +152,9 @@ apple_static_framework_import(
   visibility = [
     "//visibility:public"
   ]
+)
+acknowledged_target(
+  name = "GoogleAppIndexing_VendoredFrameworks_acknowledgement",
+  deps = [],
+  value = "//Vendor/GoogleAppIndexing/pod_support_buildable:acknowledgement_fragment"
 )

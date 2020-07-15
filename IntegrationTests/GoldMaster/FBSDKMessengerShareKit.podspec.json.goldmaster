@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "FBSDKMessengerShareKit_hdrs",
   srcs = glob(
@@ -75,9 +93,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FBSDKMessengerShareKit",
-    [
-      "FBSDKMessengerShareKit/**/*.pch"
-    ]
+    glob(
+      [
+        "FBSDKMessengerShareKit/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":FBSDKMessengerShareKit_includes"

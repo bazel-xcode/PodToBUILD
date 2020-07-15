@@ -17,15 +17,21 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
+  name = "osxCase",
   values = {
-    "cpu": "powerpc1"
+    "apple_platform_type": "macos"
   }
 )
 config_setting(
-  name = "osxCase",
+  name = "tvosCase",
   values = {
-    "cpu": "powerpc2"
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
   }
 )
 filegroup(
@@ -171,9 +177,12 @@ objc_library(
     [
       "Source/*.m"
     ],
-    exclude = [
-      "Source/PINDiskCache.m"
-    ],
+    exclude = glob(
+      [
+        "Source/PINDiskCache.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -181,9 +190,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "PINCache",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "Foundation"
@@ -278,9 +290,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "PINCache",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "Foundation"

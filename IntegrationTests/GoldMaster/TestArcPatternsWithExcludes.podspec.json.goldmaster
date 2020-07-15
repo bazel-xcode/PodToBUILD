@@ -1,0 +1,498 @@
+load(
+  "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
+  "pch_with_name_hint",
+  "acknowledged_target",
+  "gen_module_map",
+  "gen_includes",
+  "headermap"
+)
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://docs.bazel.build/versions/master/be/general.html#config_setting
+config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+)
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "FBSDKCoreKit_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "TestArcPatternsWithExcludes_hmap",
+  namespace = "FBSDKCoreKit",
+  hdrs = [
+    ":FBSDKCoreKit_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "TestArcPatternsWithExcludes_includes",
+  include = [
+    "Vendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/"
+  ]
+)
+gen_module_map(
+  "FBSDKCoreKit",
+  "FBSDKCoreKit_module_map",
+  "FBSDKCoreKit",
+  [
+    "FBSDKCoreKit_hdrs"
+  ]
+)
+alias(
+  name = "FBSDKCoreKit",
+  actual = "TestArcPatternsWithExcludes",
+  visibility = [
+    "//visibility:public"
+  ]
+)
+objc_library(
+  name = "TestArcPatternsWithExcludes",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "POD_REQUIRES_ARC/*.m"
+    ],
+    exclude = glob(
+      [
+        "POD_REQUIRES_ARC/*.m"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  non_arc_srcs = glob(
+    [
+      "POD_REQUIRES_ARC/*.m"
+    ],
+    exclude = glob(
+      [
+        "POD_REQUIRES_ARC/*.m"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":FBSDKCoreKit_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "FBSDKCoreKit",
+    glob(
+      [
+        "POD_REQUIRES_ARC/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
+  ),
+  deps = [
+    ":Core",
+    ":TestArcPatternsWithExcludes_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/FBSDKCoreKit/"
+  ] + [
+    "-fmodule-name=FBSDKCoreKit_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "TestArcPatternsWithExcludes_acknowledgement",
+  deps = [],
+  value = "//Vendor/TestArcPatternsWithExcludes/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Core_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "**/*.h"
+        ],
+        exclude = [
+          "CORE_EXCLUDE/**/*.h",
+          "CORE_EXCLUDE_IOS/**/*.h"
+        ],
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        [
+          "**/*.h"
+        ],
+        exclude = [
+          "CORE_EXCLUDE/**/*.h"
+        ],
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        [
+          "**/*.h"
+        ],
+        exclude = [
+          "CORE_EXCLUDE/**/*.h",
+          "CORE_EXCLUDE_TV/**/*.h"
+        ],
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "**/*.h"
+        ],
+        exclude = [
+          "CORE_EXCLUDE/**/*.h"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_union_hdrs",
+  srcs = [
+    "Core_hdrs",
+    "FBSDKCoreKit_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Core_hmap",
+  namespace = "FBSDKCoreKit",
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "Core_includes",
+  include = [
+    "Vendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "Core",
+  enable_modules = 0,
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "POD_REQUIRES_ARC/*.m"
+        ],
+        exclude = glob(
+          [
+            "POD_REQUIRES_ARC/*.m"
+          ],
+          exclude = glob(
+            [
+              "**/*.m"
+            ],
+            exclude = [
+              "CORE_EXCLUDE/**/*.m",
+              "CORE_EXCLUDE_IOS/**/*.m"
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        [
+          "POD_REQUIRES_ARC/*.m"
+        ],
+        exclude = glob(
+          [
+            "POD_REQUIRES_ARC/*.m"
+          ],
+          exclude = glob(
+            [
+              "**/*.m"
+            ],
+            exclude = [
+              "CORE_EXCLUDE/**/*.m"
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        [
+          "POD_REQUIRES_ARC/*.m"
+        ],
+        exclude = glob(
+          [
+            "POD_REQUIRES_ARC/*.m"
+          ],
+          exclude = glob(
+            [
+              "**/*.m"
+            ],
+            exclude = [
+              "CORE_EXCLUDE/**/*.m",
+              "CORE_EXCLUDE_TV/**/*.m"
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "POD_REQUIRES_ARC/*.m"
+        ],
+        exclude = glob(
+          [
+            "POD_REQUIRES_ARC/*.m"
+          ],
+          exclude = glob(
+            [
+              "**/*.m"
+            ],
+            exclude = [
+              "CORE_EXCLUDE/**/*.m"
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      )
+    }
+  ),
+  non_arc_srcs = select(
+    {
+      "//conditions:default": glob(
+        glob(
+          [
+            "**/*.m"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.m",
+            "CORE_EXCLUDE_IOS/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude = glob(
+          [
+            "POD_REQUIRES_ARC/*.m"
+          ],
+          exclude = glob(
+            [
+              "POD_REQUIRES_ARC/*.m"
+            ],
+            exclude = glob(
+              [
+                "**/*.m"
+              ],
+              exclude = [
+                "CORE_EXCLUDE/**/*.m",
+                "CORE_EXCLUDE_IOS/**/*.m"
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        glob(
+          [
+            "**/*.m"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude = glob(
+          [
+            "POD_REQUIRES_ARC/*.m"
+          ],
+          exclude = glob(
+            [
+              "POD_REQUIRES_ARC/*.m"
+            ],
+            exclude = glob(
+              [
+                "**/*.m"
+              ],
+              exclude = [
+                "CORE_EXCLUDE/**/*.m"
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        glob(
+          [
+            "**/*.m"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.m",
+            "CORE_EXCLUDE_TV/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude = glob(
+          [
+            "POD_REQUIRES_ARC/*.m"
+          ],
+          exclude = glob(
+            [
+              "POD_REQUIRES_ARC/*.m"
+            ],
+            exclude = glob(
+              [
+                "**/*.m"
+              ],
+              exclude = [
+                "CORE_EXCLUDE/**/*.m",
+                "CORE_EXCLUDE_TV/**/*.m"
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        glob(
+          [
+            "**/*.m"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude = glob(
+          [
+            "POD_REQUIRES_ARC/*.m"
+          ],
+          exclude = glob(
+            [
+              "POD_REQUIRES_ARC/*.m"
+            ],
+            exclude = glob(
+              [
+                "**/*.m"
+              ],
+              exclude = [
+                "CORE_EXCLUDE/**/*.m"
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      )
+    }
+  ),
+  hdrs = [
+    ":Core_union_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "FBSDKCoreKit",
+    glob(
+      [
+        "POD_REQUIRES_ARC/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
+  ),
+  deps = [
+    ":Core_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/FBSDKCoreKit/"
+  ] + [
+    "-fmodule-name=FBSDKCoreKit_pod_module"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "Core_acknowledgement",
+  deps = [],
+  value = "//Vendor/TestArcPatternsWithExcludes/pod_support_buildable:acknowledgement_fragment"
+)

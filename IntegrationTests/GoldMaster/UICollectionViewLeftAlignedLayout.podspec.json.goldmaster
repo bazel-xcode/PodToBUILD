@@ -17,6 +17,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "UICollectionViewLeftAlignedLayout_cxx_hdrs",
   srcs = glob(
@@ -68,12 +86,15 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.cxx",
       "UICollectionViewLeftAlignedLayout/**/*.mm"
     ],
-    exclude = [
-      "UICollectionViewLeftAlignedLayout/**/*.S",
-      "UICollectionViewLeftAlignedLayout/**/*.c",
-      "UICollectionViewLeftAlignedLayout/**/*.m",
-      "UICollectionViewLeftAlignedLayout/**/*.s"
-    ],
+    exclude = glob(
+      [
+        "UICollectionViewLeftAlignedLayout/**/*.S",
+        "UICollectionViewLeftAlignedLayout/**/*.c",
+        "UICollectionViewLeftAlignedLayout/**/*.m",
+        "UICollectionViewLeftAlignedLayout/**/*.s"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -81,9 +102,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "UICollectionViewLeftAlignedLayout",
-    [
-      "UICollectionViewLeftAlignedLayout/**/*.pch"
-    ]
+    glob(
+      [
+        "UICollectionViewLeftAlignedLayout/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":UICollectionViewLeftAlignedLayout_cxx_includes"
@@ -189,9 +213,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "UICollectionViewLeftAlignedLayout",
-    [
-      "UICollectionViewLeftAlignedLayout/**/*.pch"
-    ]
+    glob(
+      [
+        "UICollectionViewLeftAlignedLayout/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":UICollectionViewLeftAlignedLayout_cxx",

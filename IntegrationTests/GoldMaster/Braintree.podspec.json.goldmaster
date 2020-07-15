@@ -17,6 +17,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "Braintree_hdrs",
   srcs = glob(
@@ -153,18 +171,57 @@ objc_library(
     [
       "BraintreeCore/**/*.m"
     ],
-    exclude = [
-      "Braintree3DSecure/**/*.m",
-      "BraintreeApplePay/**/*.m",
-      "BraintreeCard/**/*.m",
-      "BraintreeDataCollector/**/*.m",
-      "BraintreePayPal/*.m",
-      "BraintreePayPal/PayPalDataCollector/**/*.m",
-      "BraintreePayPal/PayPalOneTouch/**/*.m",
-      "BraintreeUI/**/*.m",
-      "BraintreeUnionPay/**/*.m",
-      "BraintreeVenmo/**/*.m"
-    ],
+    exclude = glob(
+      [
+        "BraintreeApplePay/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeCard/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeDataCollector/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeVenmo/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeUI/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeUnionPay/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Braintree3DSecure/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/PayPalOneTouch/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/PayPalDataCollector/**/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -172,9 +229,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreeCore/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreeCore/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "AddressBook"
@@ -266,9 +326,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreeApplePay/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreeApplePay/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "PassKit"
@@ -351,11 +414,22 @@ objc_library(
     [
       "BraintreeCard/**/*.m"
     ],
-    exclude = [
-      "Braintree3DSecure/**/*.m",
-      "BraintreeUI/**/*.m",
-      "BraintreeUnionPay/**/*.m"
-    ],
+    exclude = glob(
+      [
+        "BraintreeUI/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeUnionPay/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Braintree3DSecure/**/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -363,9 +437,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreeCard/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreeCard/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -453,9 +530,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreeDataCollector/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreeDataCollector/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -493,6 +573,11 @@ objc_import(
   archives = [
     "BraintreeDataCollector/Kount/libDeviceCollectorLibrary.a"
   ]
+)
+acknowledged_target(
+  name = "DataCollector_VendoredLibraries_acknowledgement",
+  deps = [],
+  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
   name = "PayPal_hdrs",
@@ -551,9 +636,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreePayPal/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreePayPal/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -642,9 +730,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreeVenmo/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreeVenmo/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":Core",
@@ -686,6 +777,11 @@ apple_resource_bundle(
     exclude_directories = 1
   )
 )
+acknowledged_target(
+  name = "UI_Bundle_Braintree-Drop-In-Localization_acknowledgement",
+  deps = [],
+  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
+)
 apple_resource_bundle(
   name = "UI_Bundle_Braintree-UI-Localization",
   resources = glob(
@@ -694,6 +790,11 @@ apple_resource_bundle(
     ],
     exclude_directories = 1
   )
+)
+acknowledged_target(
+  name = "UI_Bundle_Braintree-UI-Localization_acknowledgement",
+  deps = [],
+  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
   name = "UI_hdrs",
@@ -751,9 +852,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreeUI/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreeUI/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "UIKit"
@@ -849,9 +953,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreeUnionPay/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreeUnionPay/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "UIKit"
@@ -895,6 +1002,11 @@ apple_resource_bundle(
     ],
     exclude_directories = 1
   )
+)
+acknowledged_target(
+  name = "3D-Secure_Bundle_Braintree-3D-Secure-Localization_acknowledgement",
+  deps = [],
+  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
   name = "3D-Secure_hdrs",
@@ -952,9 +1064,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "Braintree3DSecure/**/*.pch"
-    ]
+    glob(
+      [
+        "Braintree3DSecure/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "UIKit"
@@ -1043,9 +1158,12 @@ objc_library(
     [
       "BraintreePayPal/PayPalOneTouch/**/*.m"
     ],
-    exclude = [
-      "BraintreePayPal/*.m"
-    ],
+    exclude = glob(
+      [
+        "BraintreePayPal/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -1053,9 +1171,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreePayPal/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreePayPal/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "UIKit"
@@ -1147,11 +1268,17 @@ objc_library(
     [
       "BraintreePayPal/PayPalDataCollector/**/*.m"
     ],
-    exclude = [
-      "BraintreePayPal/*.m",
-      "BraintreePayPal/PayPalOneTouch/**/*.m",
-      "BraintreeVenmo/**/*.m"
-    ],
+    exclude = glob(
+      [
+        "BraintreeVenmo/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/PayPalOneTouch/**/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -1159,9 +1286,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreePayPal/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreePayPal/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "MessageUI",
@@ -1206,6 +1336,11 @@ objc_import(
   archives = [
     "BraintreePayPal/PayPalDataCollector/Risk/libPPRiskComponent.a"
   ]
+)
+acknowledged_target(
+  name = "PayPalDataCollector_VendoredLibraries_acknowledgement",
+  deps = [],
+  value = "//Vendor/Braintree/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
   name = "PayPalUtils_hdrs",
@@ -1253,12 +1388,17 @@ objc_library(
     [
       "BraintreePayPal/PayPalUtils/**/*.m"
     ],
-    exclude = [
-      "BraintreePayPal/*.m",
-      "BraintreePayPal/PayPalDataCollector/**/*.m",
-      "BraintreePayPal/PayPalOneTouch/**/*.m",
-      "BraintreeVenmo/**/*.m"
-    ],
+    exclude = glob(
+      [
+        "BraintreePayPal/PayPalOneTouch/**/*.m"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/PayPalDataCollector/**/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -1266,9 +1406,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Braintree",
-    [
-      "BraintreePayPal/**/*.pch"
-    ]
+    glob(
+      [
+        "BraintreePayPal/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "MessageUI",

@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "CardIO_hdrs",
   srcs = glob(
@@ -120,4 +138,9 @@ objc_import(
     "CardIO/libopencv_core.a",
     "CardIO/libopencv_imgproc.a"
   ]
+)
+acknowledged_target(
+  name = "CardIO_VendoredLibraries_acknowledgement",
+  deps = [],
+  value = "//Vendor/CardIO/pod_support_buildable:acknowledgement_fragment"
 )

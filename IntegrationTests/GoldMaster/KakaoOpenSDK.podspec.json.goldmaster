@@ -17,18 +17,36 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
-filegroup(
-  name = "KakaoOpenSDK_hdrs",
-  srcs = [],
-  visibility = [
-    "//visibility:public"
-  ]
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
 )
 filegroup(
-  name = "KakaoOpenSDK_union_hdrs",
-  srcs = [
-    "KakaoOpenSDK_hdrs",
-    "KakaoOpenSDK_hdrs"
+  name = "KakaoOpenSDK_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":KakaoOpenSDK_hdrs",
+    ":KakaoNavi_hdrs",
+    ":KakaoLink_hdrs",
+    ":KakaoS2_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -38,10 +56,17 @@ headermap(
   name = "KakaoOpenSDK_hmap",
   namespace = "KakaoOpenSDK",
   hdrs = [
-    ":KakaoOpenSDK_union_hdrs"
+    ":KakaoOpenSDK_hdrs"
   ],
   deps = [
-    ":KakaoOpenSDK_VendoredFrameworks"
+    ":KakaoLink",
+    ":KakaoLink_VendoredFrameworks",
+    ":KakaoNavi",
+    ":KakaoNavi_VendoredFrameworks",
+    ":KakaoOpenSDK",
+    ":KakaoOpenSDK_VendoredFrameworks",
+    ":KakaoS2",
+    ":KakaoS2_VendoredFrameworks"
   ],
   visibility = [
     "//visibility:public"
@@ -53,22 +78,33 @@ gen_includes(
     "Vendor/KakaoOpenSDK/pod_support/Headers/Public/"
   ]
 )
+gen_module_map(
+  "KakaoOpenSDK",
+  "KakaoOpenSDK_module_map",
+  "KakaoOpenSDK",
+  [
+    "KakaoOpenSDK_hdrs"
+  ]
+)
 objc_library(
   name = "KakaoOpenSDK",
   enable_modules = 0,
   hdrs = [
-    ":KakaoOpenSDK_union_hdrs"
+    ":KakaoOpenSDK_hdrs"
   ],
   pch = pch_with_name_hint(
     "KakaoOpenSDK",
     []
   ),
-  sdk_frameworks = [
-    "UIKit",
-    "WebKit"
-  ],
   deps = [
+    ":KakaoLink",
+    ":KakaoLink_VendoredFrameworks",
+    ":KakaoNavi",
+    ":KakaoNavi_VendoredFrameworks",
+    ":KakaoOpenSDK",
     ":KakaoOpenSDK_VendoredFrameworks",
+    ":KakaoS2",
+    ":KakaoS2_VendoredFrameworks",
     ":KakaoOpenSDK_includes"
   ],
   copts = select(
@@ -185,6 +221,11 @@ apple_static_framework_import(
     "//visibility:public"
   ]
 )
+acknowledged_target(
+  name = "KakaoOpenSDK_VendoredFrameworks_acknowledgement",
+  deps = [],
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
+)
 filegroup(
   name = "KakaoNavi_hdrs",
   srcs = [],
@@ -273,6 +314,11 @@ apple_static_framework_import(
   visibility = [
     "//visibility:public"
   ]
+)
+acknowledged_target(
+  name = "KakaoNavi_VendoredFrameworks_acknowledgement",
+  deps = [],
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
   name = "KakaoLink_hdrs",
@@ -363,6 +409,11 @@ apple_static_framework_import(
     "//visibility:public"
   ]
 )
+acknowledged_target(
+  name = "KakaoLink_VendoredFrameworks_acknowledgement",
+  deps = [],
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
+)
 filegroup(
   name = "KakaoS2_hdrs",
   srcs = [],
@@ -451,4 +502,9 @@ apple_static_framework_import(
   visibility = [
     "//visibility:public"
   ]
+)
+acknowledged_target(
+  name = "KakaoS2_VendoredFrameworks_acknowledgement",
+  deps = [],
+  value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )

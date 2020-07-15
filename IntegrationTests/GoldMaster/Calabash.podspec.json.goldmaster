@@ -18,9 +18,21 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
+  name = "osxCase",
   values = {
-    "cpu": "powerpc1"
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
   }
 )
 filegroup(
@@ -67,27 +79,22 @@ gen_includes(
 objc_library(
   name = "Calabash_cxx",
   enable_modules = 0,
-  srcs = glob(
+  non_arc_srcs = glob(
     [
       "calabash.framework/Versions/A/Headers/*.cc",
       "calabash.framework/Versions/A/Headers/*.cpp",
-      "calabash.framework/Versions/A/Headers/*.cxx"
-    ],
-    exclude = [
-      "calabash.framework/Versions/A/Headers/*.S",
-      "calabash.framework/Versions/A/Headers/*.c",
-      "calabash.framework/Versions/A/Headers/*.m",
-      "calabash.framework/Versions/A/Headers/*.s"
-    ],
-    exclude_directories = 1
-  ),
-  non_arc_srcs = glob(
-    [
+      "calabash.framework/Versions/A/Headers/*.cxx",
       "calabash.framework/Versions/A/Headers/*.mm"
     ],
-    exclude = [
-      "calabash.framework/Versions/A/Headers/*.m"
-    ],
+    exclude = glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.S",
+        "calabash.framework/Versions/A/Headers/*.c",
+        "calabash.framework/Versions/A/Headers/*.m",
+        "calabash.framework/Versions/A/Headers/*.s"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -95,9 +102,7 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Calabash",
-    [
-      "calabash.framework/**/*.pch"
-    ]
+    []
   ),
   sdk_frameworks = select(
     {
@@ -200,17 +205,12 @@ gen_module_map(
 objc_library(
   name = "Calabash",
   enable_modules = 0,
-  srcs = glob(
+  non_arc_srcs = glob(
     [
       "calabash.framework/Versions/A/Headers/*.S",
       "calabash.framework/Versions/A/Headers/*.c",
+      "calabash.framework/Versions/A/Headers/*.m",
       "calabash.framework/Versions/A/Headers/*.s"
-    ],
-    exclude_directories = 1
-  ),
-  non_arc_srcs = glob(
-    [
-      "calabash.framework/Versions/A/Headers/*.m"
     ],
     exclude_directories = 1
   ),
@@ -219,9 +219,7 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Calabash",
-    [
-      "calabash.framework/**/*.pch"
-    ]
+    []
   ),
   sdk_frameworks = select(
     {

@@ -16,6 +16,24 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
 filegroup(
   name = "PINOperation_cxx_hdrs",
   srcs = glob(
@@ -62,9 +80,12 @@ objc_library(
     [
       "Source/**/*.mm"
     ],
-    exclude = [
-      "Source/**/*.m"
-    ],
+    exclude = glob(
+      [
+        "Source/**/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -72,9 +93,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "PINOperation",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "Foundation"
@@ -166,9 +190,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "PINOperation",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "Foundation"
