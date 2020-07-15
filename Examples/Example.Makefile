@@ -47,5 +47,6 @@ info:
 
 # This command generates a workspace from a Podfile
 gen_workspace:
+	make -C ../../ build
 	[[ ! -f Podfile ]]  ||../../bin/RepoTools generate_workspace > Pods.WORKSPACE
 
