@@ -36,6 +36,117 @@ config_setting(
   }
 )
 filegroup(
+  name = "FBSDKCoreKit_package_hdrs",
+  srcs = [
+    "FBSDKCoreKit_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKCoreKit_direct_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+          ],
+          exclude = [
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+          ],
+          exclude = [
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.hxx",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.hxx",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.hxx",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FBSDKCoreKit_hdrs",
   srcs = select(
     {
@@ -141,6 +252,7 @@ headermap(
   name = "FBSDKCoreKit_hmap",
   namespace = "FBSDKCoreKit",
   hdrs = [
+    "FBSDKCoreKit_package_hdrs",
     ":FBSDKCoreKit_hdrs"
   ],
   deps = select(

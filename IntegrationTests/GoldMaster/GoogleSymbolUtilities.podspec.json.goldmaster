@@ -36,6 +36,27 @@ config_setting(
   }
 )
 filegroup(
+  name = "GoogleSymbolUtilities_package_hdrs",
+  srcs = [
+    "GoogleSymbolUtilities_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "GoogleSymbolUtilities_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "GoogleSymbolUtilities_hdrs",
   srcs = glob(
     [
@@ -51,6 +72,7 @@ headermap(
   name = "GoogleSymbolUtilities_hmap",
   namespace = "GoogleSymbolUtilities",
   hdrs = [
+    "GoogleSymbolUtilities_package_hdrs",
     ":GoogleSymbolUtilities_hdrs"
   ],
   deps = [

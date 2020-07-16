@@ -35,6 +35,31 @@ config_setting(
   }
 )
 filegroup(
+  name = "IGListKit_package_hdrs",
+  srcs = [
+    "IGListKit_direct_hdrs",
+    "Diffing_cxx_direct_hdrs",
+    "Diffing_direct_hdrs",
+    "Default_cxx_direct_hdrs",
+    "Default_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "IGListKit_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "IGListKit_hdrs",
   srcs = glob(
     [
@@ -52,6 +77,7 @@ headermap(
   name = "IGListKit_hmap",
   namespace = "IGListKit",
   hdrs = [
+    "IGListKit_package_hdrs",
     ":IGListKit_hdrs"
   ],
   deps = [
@@ -122,6 +148,27 @@ acknowledged_target(
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Diffing_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Common/**/*.h",
+        "Source/Common/Internal/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Diffing_cxx_hdrs",
   srcs = glob(
     glob(
@@ -156,6 +203,7 @@ headermap(
   name = "Diffing_cxx_hmap",
   namespace = "IGListKit",
   hdrs = [
+    "IGListKit_package_hdrs",
     ":Diffing_cxx_union_hdrs"
   ],
   deps = [],
@@ -314,6 +362,27 @@ acknowledged_target(
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Diffing_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Common/**/*.h",
+        "Source/Common/Internal/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Diffing_hdrs",
   srcs = glob(
     glob(
@@ -349,6 +418,7 @@ headermap(
   name = "Diffing_hmap",
   namespace = "IGListKit",
   hdrs = [
+    "IGListKit_package_hdrs",
     ":Diffing_union_hdrs"
   ],
   deps = [
@@ -484,6 +554,60 @@ acknowledged_target(
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Default_cxx_direct_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Default_cxx_hdrs",
   srcs = select(
     {
@@ -552,6 +676,7 @@ headermap(
   name = "Default_cxx_hmap",
   namespace = "IGListKit",
   hdrs = [
+    "IGListKit_package_hdrs",
     ":Default_cxx_union_hdrs"
   ],
   deps = [
@@ -680,6 +805,60 @@ acknowledged_target(
   value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Default_direct_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Default_hdrs",
   srcs = select(
     {
@@ -749,6 +928,7 @@ headermap(
   name = "Default_hmap",
   namespace = "IGListKit",
   hdrs = [
+    "IGListKit_package_hdrs",
     ":Default_union_hdrs"
   ],
   deps = [

@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "RadarKit_package_hdrs",
+  srcs = [
+    "RadarKit_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "RadarKit_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "RadarKit/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RadarKit_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "RadarKit_hmap",
   namespace = "RadarKit",
   hdrs = [
+    "RadarKit_package_hdrs",
     ":RadarKit_hdrs"
   ],
   deps = [],

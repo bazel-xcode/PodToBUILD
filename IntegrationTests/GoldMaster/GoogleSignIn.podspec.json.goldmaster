@@ -37,6 +37,27 @@ config_setting(
   }
 )
 filegroup(
+  name = "GoogleSignIn_package_hdrs",
+  srcs = [
+    "GoogleSignIn_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "GoogleSignIn_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "GoogleSignIn_hdrs",
   srcs = glob(
     [
@@ -52,6 +73,7 @@ headermap(
   name = "GoogleSignIn_hmap",
   namespace = "GoogleSignIn",
   hdrs = [
+    "GoogleSignIn_package_hdrs",
     ":GoogleSignIn_hdrs"
   ],
   deps = [

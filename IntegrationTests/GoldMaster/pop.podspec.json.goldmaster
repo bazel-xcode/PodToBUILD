@@ -35,6 +35,36 @@ config_setting(
   }
 )
 filegroup(
+  name = "pop_package_hdrs",
+  srcs = [
+    "pop_cxx_direct_hdrs",
+    "pop_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "pop_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "pop/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "pop_cxx_hdrs",
   srcs = glob(
     glob(
@@ -68,6 +98,7 @@ headermap(
   name = "pop_cxx_hmap",
   namespace = "pop",
   hdrs = [
+    "pop_package_hdrs",
     ":pop_cxx_union_hdrs"
   ],
   deps = [],
@@ -144,6 +175,26 @@ acknowledged_target(
   value = "//Vendor/pop/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "pop_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "pop/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "pop_hdrs",
   srcs = glob(
     glob(
@@ -169,6 +220,7 @@ headermap(
   name = "pop_hmap",
   namespace = "pop",
   hdrs = [
+    "pop_package_hdrs",
     ":pop_hdrs"
   ],
   deps = [

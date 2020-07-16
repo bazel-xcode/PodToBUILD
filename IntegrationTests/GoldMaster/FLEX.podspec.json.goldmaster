@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "FLEX_package_hdrs",
+  srcs = [
+    "FLEX_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FLEX_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FLEX_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "FLEX_hmap",
   namespace = "FLEX",
   hdrs = [
+    "FLEX_package_hdrs",
     ":FLEX_hdrs"
   ],
   deps = [],

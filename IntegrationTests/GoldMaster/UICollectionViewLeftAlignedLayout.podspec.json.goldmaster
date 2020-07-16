@@ -36,6 +36,38 @@ config_setting(
   }
 )
 filegroup(
+  name = "UICollectionViewLeftAlignedLayout_package_hdrs",
+  srcs = [
+    "UICollectionViewLeftAlignedLayout_cxx_direct_hdrs",
+    "UICollectionViewLeftAlignedLayout_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "UICollectionViewLeftAlignedLayout_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "UICollectionViewLeftAlignedLayout/**/*.h",
+        "UICollectionViewLeftAlignedLayout/**/*.hpp",
+        "UICollectionViewLeftAlignedLayout/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "UICollectionViewLeftAlignedLayout_cxx_hdrs",
   srcs = glob(
     glob(
@@ -71,6 +103,7 @@ headermap(
   name = "UICollectionViewLeftAlignedLayout_cxx_hmap",
   namespace = "UICollectionViewLeftAlignedLayout",
   hdrs = [
+    "UICollectionViewLeftAlignedLayout_package_hdrs",
     ":UICollectionViewLeftAlignedLayout_cxx_union_hdrs"
   ],
   deps = [],
@@ -158,6 +191,28 @@ swift_library(
   data = []
 )
 filegroup(
+  name = "UICollectionViewLeftAlignedLayout_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "UICollectionViewLeftAlignedLayout/**/*.h",
+        "UICollectionViewLeftAlignedLayout/**/*.hpp",
+        "UICollectionViewLeftAlignedLayout/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "UICollectionViewLeftAlignedLayout_hdrs",
   srcs = glob(
     glob(
@@ -185,6 +240,7 @@ headermap(
   name = "UICollectionViewLeftAlignedLayout_hmap",
   namespace = "UICollectionViewLeftAlignedLayout",
   hdrs = [
+    "UICollectionViewLeftAlignedLayout_package_hdrs",
     ":UICollectionViewLeftAlignedLayout_hdrs"
   ],
   deps = [

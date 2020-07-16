@@ -35,6 +35,37 @@ config_setting(
   }
 )
 filegroup(
+  name = "boost-for-react-native_package_hdrs",
+  srcs = [
+    "boost-for-react-native_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "boost-for-react-native_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "boost/**/*.h",
+        "boost/**/*.hpp",
+        "boost/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "boost-for-react-native_hdrs",
   srcs = glob(
     glob(
@@ -60,6 +91,7 @@ headermap(
   name = "boost-for-react-native_hmap",
   namespace = "boost",
   hdrs = [
+    "boost-for-react-native_package_hdrs",
     ":boost-for-react-native_hdrs"
   ],
   deps = [],

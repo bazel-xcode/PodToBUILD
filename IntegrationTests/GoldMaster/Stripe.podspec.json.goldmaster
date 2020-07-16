@@ -36,6 +36,36 @@ config_setting(
   }
 )
 filegroup(
+  name = "Stripe_package_hdrs",
+  srcs = [
+    "Stripe_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Stripe_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Stripe/*.h",
+        "Stripe/PublicHeaders/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Stripe_hdrs",
   srcs = glob(
     glob(
@@ -60,6 +90,7 @@ headermap(
   name = "Stripe_hmap",
   namespace = "Stripe",
   hdrs = [
+    "Stripe_package_hdrs",
     ":Stripe_hdrs"
   ],
   deps = [],

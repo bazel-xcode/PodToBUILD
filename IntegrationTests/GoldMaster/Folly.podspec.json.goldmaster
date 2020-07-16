@@ -35,6 +35,37 @@ config_setting(
   }
 )
 filegroup(
+  name = "Folly_package_hdrs",
+  srcs = [
+    "Folly_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Folly_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "folly/*.h",
+        "folly/detail/*.h",
+        "folly/portability/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Folly_hdrs",
   srcs = glob(
     glob(
@@ -60,6 +91,7 @@ headermap(
   name = "Folly_hmap",
   namespace = "folly",
   hdrs = [
+    "Folly_package_hdrs",
     ":Folly_hdrs"
   ],
   deps = [

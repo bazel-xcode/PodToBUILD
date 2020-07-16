@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "Weixin_package_hdrs",
+  srcs = [
+    "Weixin_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Weixin_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "SDK1.6.2/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Weixin_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "Weixin_hmap",
   namespace = "Weixin",
   hdrs = [
+    "Weixin_package_hdrs",
     ":Weixin_hdrs"
   ],
   deps = [

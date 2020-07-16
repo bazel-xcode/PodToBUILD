@@ -36,6 +36,38 @@ config_setting(
   }
 )
 filegroup(
+  name = "Calabash_package_hdrs",
+  srcs = [
+    "Calabash_cxx_direct_hdrs",
+    "Calabash_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Calabash_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.h",
+        "calabash.framework/Versions/A/Headers/*.hpp",
+        "calabash.framework/Versions/A/Headers/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Calabash_cxx_hdrs",
   srcs = glob(
     glob(
@@ -71,6 +103,7 @@ headermap(
   name = "Calabash_cxx_hmap",
   namespace = "Calabash",
   hdrs = [
+    "Calabash_package_hdrs",
     ":Calabash_cxx_union_hdrs"
   ],
   deps = [],
@@ -168,6 +201,28 @@ swift_library(
   data = []
 )
 filegroup(
+  name = "Calabash_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.h",
+        "calabash.framework/Versions/A/Headers/*.hpp",
+        "calabash.framework/Versions/A/Headers/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Calabash_hdrs",
   srcs = glob(
     glob(
@@ -195,6 +250,7 @@ headermap(
   name = "Calabash_hmap",
   namespace = "Calabash",
   hdrs = [
+    "Calabash_package_hdrs",
     ":Calabash_hdrs"
   ],
   deps = [

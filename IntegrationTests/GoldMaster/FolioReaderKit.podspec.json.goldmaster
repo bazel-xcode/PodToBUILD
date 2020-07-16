@@ -35,6 +35,13 @@ config_setting(
     "apple_platform_type": "watchos"
   }
 )
+filegroup(
+  name = "FolioReaderKit_package_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 swift_library(
   name = "FolioReaderKit",
   srcs = glob(

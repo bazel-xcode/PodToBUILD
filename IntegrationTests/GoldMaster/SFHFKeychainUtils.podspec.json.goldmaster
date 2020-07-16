@@ -36,6 +36,38 @@ config_setting(
   }
 )
 filegroup(
+  name = "SFHFKeychainUtils_package_hdrs",
+  srcs = [
+    "SFHFKeychainUtils_cxx_direct_hdrs",
+    "SFHFKeychainUtils_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "SFHFKeychainUtils_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "security/**/*.h",
+        "security/**/*.hpp",
+        "security/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "SFHFKeychainUtils_cxx_hdrs",
   srcs = glob(
     glob(
@@ -71,6 +103,7 @@ headermap(
   name = "SFHFKeychainUtils_cxx_hmap",
   namespace = "SFHFKeychainUtils",
   hdrs = [
+    "SFHFKeychainUtils_package_hdrs",
     ":SFHFKeychainUtils_cxx_union_hdrs"
   ],
   deps = [],
@@ -161,6 +194,28 @@ swift_library(
   data = []
 )
 filegroup(
+  name = "SFHFKeychainUtils_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "security/**/*.h",
+        "security/**/*.hpp",
+        "security/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "SFHFKeychainUtils_hdrs",
   srcs = glob(
     glob(
@@ -188,6 +243,7 @@ headermap(
   name = "SFHFKeychainUtils_hmap",
   namespace = "SFHFKeychainUtils",
   hdrs = [
+    "SFHFKeychainUtils_package_hdrs",
     ":SFHFKeychainUtils_hdrs"
   ],
   deps = [
