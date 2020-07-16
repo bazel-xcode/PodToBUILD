@@ -134,7 +134,7 @@ public func getDependencyName(fromPodDepName podDepName: String, podName: String
     if results.count > 1 && results[0] == podName {
         // This is a local subspec reference
         let join = results[1 ... results.count - 1].joined(separator: "/")
-        return ":\(bazelLabel(fromString: join))"
+        return ":\(getNamePrefix() + bazelLabel(fromString: join))"
     } else {
         if results.count > 1 {
             let join = results[1 ... results.count - 1].joined(separator: "/")
