@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "SPUserResizableView+Pion_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "SPUserResizableView/SPUserResizableView.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "SPUserResizableView/SPUserResizableView.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -66,14 +69,6 @@ gen_includes(
   name = "SPUserResizableView+Pion_includes",
   include = [
     "Vendor/SPUserResizableView+Pion/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "SPUserResizableView+Pion",
-  "SPUserResizableView+Pion_module_map",
-  "SPUserResizableView+Pion",
-  [
-    "SPUserResizableView+Pion_hdrs"
   ]
 )
 objc_library(
@@ -113,7 +108,7 @@ objc_library(
   ) + [
     "-IVendor/SPUserResizableView+Pion/pod_support/Headers/Public/SPUserResizableView+Pion/"
   ] + [
-    "-fmodule-name=SPUserResizableView+Pion_pod_module"
+    "-fmodule-name=SPUserResizableView+Pion"
   ],
   visibility = [
     "//visibility:public"

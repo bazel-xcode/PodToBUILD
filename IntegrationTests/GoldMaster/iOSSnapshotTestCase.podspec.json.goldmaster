@@ -66,14 +66,6 @@ gen_includes(
     "Vendor/iOSSnapshotTestCase/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "FBSnapshotTestCase",
-  "iOSSnapshotTestCase_module_map",
-  "FBSnapshotTestCase",
-  [
-    "iOSSnapshotTestCase_hdrs"
-  ]
-)
 objc_library(
   name = "iOSSnapshotTestCase",
   enable_modules = 0,
@@ -107,7 +99,7 @@ objc_library(
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
   ] + [
-    "-fmodule-name=FBSnapshotTestCase_pod_module"
+    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"
@@ -121,13 +113,21 @@ acknowledged_target(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    [
-      "FBSnapshotTestCase/**/*.h",
-      "FBSnapshotTestCase/*.h",
-      "FBSnapshotTestCase/Categories/UIImage+Compare.h",
-      "FBSnapshotTestCase/Categories/UIImage+Diff.h",
-      "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSnapshotTestCase/**/*.h",
+        "FBSnapshotTestCase/*.h",
+        "FBSnapshotTestCase/Categories/UIImage+Compare.h",
+        "FBSnapshotTestCase/Categories/UIImage+Diff.h",
+        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -172,7 +172,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "iOSSnapshotTestCase",
@@ -205,7 +205,7 @@ objc_library(
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
   ] + [
-    "-fmodule-name=FBSnapshotTestCase_pod_module"
+    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"

@@ -41,45 +41,77 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "Classes/**/*.h",
-          "Classes/**/*.hpp",
-          "Classes/**/*.hxx"
-        ],
-        exclude = [
-          "Classes/osx/**/*.h",
-          "Classes/osx/**/*.hpp",
-          "Classes/osx/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/**/*.h",
+            "Classes/**/*.hpp",
+            "Classes/**/*.hxx"
+          ],
+          exclude = [
+            "Classes/osx/**/*.h",
+            "Classes/osx/**/*.hpp",
+            "Classes/osx/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":osxCase": glob(
-        [
-          "Classes/**/*.h",
-          "Classes/**/*.hpp",
-          "Classes/**/*.hxx"
-        ],
-        exclude = [
-          "Classes/ios/**/*.h",
-          "Classes/ios/**/*.hpp",
-          "Classes/ios/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/**/*.h",
+            "Classes/**/*.hpp",
+            "Classes/**/*.hxx"
+          ],
+          exclude = [
+            "Classes/ios/**/*.h",
+            "Classes/ios/**/*.hpp",
+            "Classes/ios/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "Classes/**/*.h",
-          "Classes/**/*.hpp",
-          "Classes/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/**/*.h",
+            "Classes/**/*.hpp",
+            "Classes/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":watchosCase": glob(
-        [
-          "Classes/**/*.h",
-          "Classes/**/*.hpp",
-          "Classes/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/**/*.h",
+            "Classes/**/*.hpp",
+            "Classes/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       )
     }
@@ -233,7 +265,7 @@ objc_library(
     }
   ),
   hdrs = [
-    ":youtube-ios-player-helper_cxx_union_hdrs"
+    ":youtube-ios-player-helper_cxx_hdrs"
   ],
   pch = pch_with_name_hint(
     "youtube-ios-player-helper",
@@ -247,7 +279,9 @@ objc_library(
   deps = [
     ":youtube-ios-player-helper_cxx_includes"
   ],
-  copts = select(
+  copts = [
+    "-std=c++14"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -260,7 +294,7 @@ objc_library(
   ) + [
     "-IVendor/youtube-ios-player-helper/pod_support/Headers/Public/youtube-ios-player-helper/"
   ] + [
-    "-fmodule-name=youtube-ios-player-helper_pod_module"
+    "-fmodule-name=youtube-ios-player-helper"
   ],
   data = [
     ":youtube-ios-player-helper_Bundle_Assets"
@@ -315,53 +349,80 @@ swift_library(
 )
 filegroup(
   name = "youtube-ios-player-helper_hdrs",
-  srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + select(
+  srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "Classes/**/*.h",
-          "Classes/**/*.hpp",
-          "Classes/**/*.hxx"
-        ],
-        exclude = [
-          "Classes/osx/**/*.h",
-          "Classes/osx/**/*.hpp",
-          "Classes/osx/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/**/*.h",
+            "Classes/**/*.hpp",
+            "Classes/**/*.hxx"
+          ],
+          exclude = [
+            "Classes/osx/**/*.h",
+            "Classes/osx/**/*.hpp",
+            "Classes/osx/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":osxCase": glob(
-        [
-          "Classes/**/*.h",
-          "Classes/**/*.hpp",
-          "Classes/**/*.hxx"
-        ],
-        exclude = [
-          "Classes/ios/**/*.h",
-          "Classes/ios/**/*.hpp",
-          "Classes/ios/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/**/*.h",
+            "Classes/**/*.hpp",
+            "Classes/**/*.hxx"
+          ],
+          exclude = [
+            "Classes/ios/**/*.h",
+            "Classes/ios/**/*.hpp",
+            "Classes/ios/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "Classes/**/*.h",
-          "Classes/**/*.hpp",
-          "Classes/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/**/*.h",
+            "Classes/**/*.hpp",
+            "Classes/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":watchosCase": glob(
-        [
-          "Classes/**/*.h",
-          "Classes/**/*.hpp",
-          "Classes/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/**/*.h",
+            "Classes/**/*.hpp",
+            "Classes/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       )
     }
@@ -379,8 +440,7 @@ headermap(
     ":youtube-ios-player-helper_hdrs"
   ],
   deps = [
-    ":youtube-ios-player-helper_cxx",
-    ":youtube-ios-player-helper_swift"
+    ":youtube-ios-player-helper_cxx"
   ],
   visibility = [
     "//visibility:public"
@@ -390,14 +450,6 @@ gen_includes(
   name = "youtube-ios-player-helper_includes",
   include = [
     "Vendor/youtube-ios-player-helper/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "youtube-ios-player-helper",
-  "youtube-ios-player-helper_module_map",
-  "youtube_ios_player_helper",
-  [
-    "youtube-ios-player-helper_hdrs"
   ]
 )
 objc_library(
@@ -493,7 +545,7 @@ objc_library(
   ) + [
     "-IVendor/youtube-ios-player-helper/pod_support/Headers/Public/youtube-ios-player-helper/"
   ] + [
-    "-fmodule-name=youtube-ios-player-helper_pod_module"
+    "-fmodule-name=youtube-ios-player-helper"
   ],
   data = [
     ":youtube-ios-player-helper_Bundle_Assets"

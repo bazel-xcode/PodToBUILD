@@ -42,8 +42,8 @@ filegroup(
     ],
     exclude_directories = 1
   ) + [
-    ":Core_hdrs",
-    ":Arc-exception-safe_hdrs"
+    ":Arc-exception-safe_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -67,14 +67,6 @@ gen_includes(
   name = "PINCache_includes",
   include = [
     "Vendor/PINCache/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "PINCache",
-  "PINCache_module_map",
-  "PINCache",
-  [
-    "PINCache_hdrs"
   ]
 )
 objc_library(
@@ -118,7 +110,7 @@ objc_library(
   ) + [
     "-IVendor/PINCache/pod_support/Headers/Public/PINCache/"
   ] + [
-    "-fmodule-name=PINCache_pod_module"
+    "-fmodule-name=PINCache"
   ],
   visibility = [
     "//visibility:public"
@@ -132,9 +124,17 @@ acknowledged_target(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    [
-      "Source/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -186,7 +186,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINCache",
@@ -227,7 +227,7 @@ objc_library(
   ) + [
     "-IVendor/PINCache/pod_support/Headers/Public/PINCache/"
   ] + [
-    "-fmodule-name=PINCache_pod_module"
+    "-fmodule-name=PINCache"
   ],
   visibility = [
     "//visibility:public"
@@ -242,7 +242,12 @@ acknowledged_target(
 )
 filegroup(
   name = "Arc-exception-safe_hdrs",
-  srcs = [],
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
   visibility = [
     "//visibility:public"
   ]
@@ -251,7 +256,8 @@ filegroup(
   name = "Arc-exception-safe_union_hdrs",
   srcs = [
     "Arc-exception-safe_hdrs",
-    "PINCache_hdrs"
+    "PINCache_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -286,7 +292,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Arc-exception-safe_union_hdrs"
+    ":Arc-exception-safe_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINCache",
@@ -329,7 +335,7 @@ objc_library(
   ) + [
     "-IVendor/PINCache/pod_support/Headers/Public/PINCache/"
   ] + [
-    "-fmodule-name=PINCache_pod_module"
+    "-fmodule-name=PINCache"
   ],
   visibility = [
     "//visibility:public"

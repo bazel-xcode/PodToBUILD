@@ -67,14 +67,6 @@ gen_includes(
     "Vendor/GoogleUtilities/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "GoogleUtilities",
-  "GoogleUtilities_module_map",
-  "GoogleUtilities",
-  [
-    "GoogleUtilities_hdrs"
-  ]
-)
 objc_library(
   name = "GoogleUtilities",
   enable_modules = 0,
@@ -110,7 +102,7 @@ objc_library(
   ) + [
     "-IVendor/GoogleUtilities/pod_support/Headers/Public/GoogleUtilities/"
   ] + [
-    "-fmodule-name=GoogleUtilities_pod_module"
+    "-fmodule-name=GoogleUtilities"
   ],
   visibility = [
     "//visibility:public"

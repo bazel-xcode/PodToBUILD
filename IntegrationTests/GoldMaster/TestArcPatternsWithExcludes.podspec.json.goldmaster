@@ -67,14 +67,6 @@ gen_includes(
     "Vendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "FBSDKCoreKit",
-  "FBSDKCoreKit_module_map",
-  "FBSDKCoreKit",
-  [
-    "FBSDKCoreKit_hdrs"
-  ]
-)
 alias(
   name = "FBSDKCoreKit",
   actual = "TestArcPatternsWithExcludes",
@@ -138,7 +130,7 @@ objc_library(
   ) + [
     "-IVendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/FBSDKCoreKit/"
   ] + [
-    "-fmodule-name=FBSDKCoreKit_pod_module"
+    "-fmodule-name=FBSDKCoreKit"
   ],
   visibility = [
     "//visibility:public"
@@ -154,41 +146,73 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "**/*.h"
-        ],
-        exclude = [
-          "CORE_EXCLUDE/**/*.h",
-          "CORE_EXCLUDE_IOS/**/*.h"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "**/*.h"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.h",
+            "CORE_EXCLUDE_IOS/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":osxCase": glob(
-        [
-          "**/*.h"
-        ],
-        exclude = [
-          "CORE_EXCLUDE/**/*.h"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "**/*.h"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "**/*.h"
-        ],
-        exclude = [
-          "CORE_EXCLUDE/**/*.h",
-          "CORE_EXCLUDE_TV/**/*.h"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "**/*.h"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.h",
+            "CORE_EXCLUDE_TV/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":watchosCase": glob(
-        [
-          "**/*.h"
-        ],
-        exclude = [
-          "CORE_EXCLUDE/**/*.h"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "**/*.h"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       )
     }
@@ -458,7 +482,7 @@ objc_library(
     }
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "FBSDKCoreKit",
@@ -485,7 +509,7 @@ objc_library(
   ) + [
     "-IVendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/FBSDKCoreKit/"
   ] + [
-    "-fmodule-name=FBSDKCoreKit_pod_module"
+    "-fmodule-name=FBSDKCoreKit"
   ],
   visibility = [
     "//visibility:public"

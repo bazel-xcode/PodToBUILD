@@ -67,14 +67,6 @@ gen_includes(
     "Vendor/IGListKit/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "IGListKit",
-  "IGListKit_module_map",
-  "IGListKit",
-  [
-    "IGListKit_hdrs"
-  ]
-)
 objc_library(
   name = "IGListKit",
   enable_modules = 0,
@@ -118,7 +110,7 @@ objc_library(
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
-    "-fmodule-name=IGListKit_pod_module"
+    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"
@@ -132,10 +124,18 @@ acknowledged_target(
 filegroup(
   name = "Diffing_cxx_hdrs",
   srcs = glob(
-    [
-      "Source/Common/**/*.h",
-      "Source/Common/Internal/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Common/**/*.h",
+        "Source/Common/Internal/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -172,20 +172,90 @@ gen_includes(
 objc_library(
   name = "Diffing_cxx",
   enable_modules = 0,
-  srcs = glob(
-    [
-      "Source/Common/**/*.mm"
-    ],
-    exclude = glob(
-      [
-        "Source/Common/**/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Source/Common/**/*.mm"
+        ],
+        exclude = glob(
+          [
+            "Source/Common/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        [
+          "Source/Common/**/*.mm"
+        ],
+        exclude = glob(
+          [
+            "Source/Common/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        [
+          "Source/Common/**/*.mm"
+        ],
+        exclude = glob(
+          [
+            "Source/Common/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "Source/Common/**/*.mm"
+        ],
+        exclude = glob(
+          [
+            "Source/Common/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      )
+    }
   ),
   hdrs = [
-    ":Diffing_cxx_union_hdrs"
+    ":Diffing_cxx_hdrs"
   ],
   pch = pch_with_name_hint(
     "IGListKit",
@@ -217,7 +287,8 @@ objc_library(
   ],
   copts = [
     "-std=c++11",
-    "-stdlib=libc++"
+    "-stdlib=libc++",
+    "-std=c++14"
   ] + select(
     {
       "//conditions:default": [
@@ -231,7 +302,7 @@ objc_library(
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
-    "-fmodule-name=IGListKit_pod_module"
+    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"
@@ -245,10 +316,18 @@ acknowledged_target(
 filegroup(
   name = "Diffing_hdrs",
   srcs = glob(
-    [
-      "Source/Common/**/*.h",
-      "Source/Common/Internal/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Common/**/*.h",
+        "Source/Common/Internal/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -259,7 +338,8 @@ filegroup(
   name = "Diffing_union_hdrs",
   srcs = [
     "Diffing_hdrs",
-    "IGListKit_hdrs"
+    "IGListKit_hdrs",
+    ":Diffing_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -303,6 +383,11 @@ objc_library(
             "Source/**/*.m"
           ],
           exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
         ),
         exclude_directories = 1
       ),
@@ -326,6 +411,11 @@ objc_library(
             "Source/**/*.m"
           ],
           exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
         ),
         exclude_directories = 1
       ),
@@ -338,7 +428,7 @@ objc_library(
     }
   ),
   hdrs = [
-    ":Diffing_union_hdrs"
+    ":Diffing_hdrs"
   ],
   pch = pch_with_name_hint(
     "IGListKit",
@@ -382,7 +472,7 @@ objc_library(
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
-    "-fmodule-name=IGListKit_pod_module"
+    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"
@@ -398,18 +488,46 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
         [
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
+          "pod_support/Headers/Public/**/*"
         ],
         exclude_directories = 1
       ),
       ":tvosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
         [
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
+          "pod_support/Headers/Public/**/*"
         ],
         exclude_directories = 1
       )
@@ -423,7 +541,8 @@ filegroup(
   name = "Default_cxx_union_hdrs",
   srcs = [
     "Default_cxx_hdrs",
-    "IGListKit_hdrs"
+    "IGListKit_hdrs",
+    ":Diffing_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -480,7 +599,7 @@ objc_library(
     }
   ),
   hdrs = [
-    ":Default_cxx_union_hdrs"
+    ":Default_cxx_hdrs"
   ],
   pch = select(
     {
@@ -534,7 +653,8 @@ objc_library(
   ],
   copts = [
     "-std=c++11",
-    "-stdlib=libc++"
+    "-stdlib=libc++",
+    "-std=c++14"
   ] + select(
     {
       "//conditions:default": [
@@ -548,7 +668,7 @@ objc_library(
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
-    "-fmodule-name=IGListKit_pod_module"
+    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"
@@ -564,18 +684,46 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
         [
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
+          "pod_support/Headers/Public/**/*"
         ],
         exclude_directories = 1
       ),
       ":tvosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
         [
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
+          "pod_support/Headers/Public/**/*"
         ],
         exclude_directories = 1
       )
@@ -589,7 +737,9 @@ filegroup(
   name = "Default_union_hdrs",
   srcs = [
     "Default_hdrs",
-    "IGListKit_hdrs"
+    "IGListKit_hdrs",
+    ":Default_cxx_hdrs",
+    ":Diffing_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -635,7 +785,7 @@ objc_library(
     }
   ),
   hdrs = [
-    ":Default_union_hdrs"
+    ":Default_hdrs"
   ],
   pch = select(
     {
@@ -701,7 +851,7 @@ objc_library(
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
   ] + [
-    "-fmodule-name=IGListKit_pod_module"
+    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"

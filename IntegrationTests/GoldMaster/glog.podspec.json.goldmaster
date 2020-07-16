@@ -37,24 +37,27 @@ config_setting(
 filegroup(
   name = "glog_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "glog/**/*.h",
-      "glog/**/*.hpp",
-      "glog/**/*.hxx",
-      "src/*.h",
-      "src/base/*.h",
-      "src/glog/*.h"
-    ],
-    exclude = [
-      "src/windows/**/*.h",
-      "src/windows/**/*.hpp",
-      "src/windows/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "glog/**/*.h",
+        "glog/**/*.hpp",
+        "glog/**/*.hxx",
+        "src/*.h",
+        "src/base/*.h",
+        "src/glog/*.h"
+      ],
+      exclude = [
+        "src/windows/**/*.h",
+        "src/windows/**/*.hpp",
+        "src/windows/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -76,14 +79,6 @@ gen_includes(
   name = "glog_includes",
   include = [
     "Vendor/glog/src"
-  ]
-)
-gen_module_map(
-  "glog",
-  "glog_module_map",
-  "glog",
-  [
-    "glog_hdrs"
   ]
 )
 objc_library(
@@ -129,7 +124,9 @@ objc_library(
   deps = [
     ":glog_includes"
   ],
-  copts = select(
+  copts = [
+    "-std=c++14"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -140,7 +137,7 @@ objc_library(
       ]
     }
   ) + [
-    "-fmodule-name=glog_pod_module"
+    "-fmodule-name=glog"
   ],
   visibility = [
     "//visibility:public"

@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "Smartling_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -66,14 +69,6 @@ gen_includes(
   name = "Smartling_includes",
   include = [
     "Vendor/Smartling/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "Smartling",
-  "Smartling_module_map",
-  "Smartling",
-  [
-    "Smartling_hdrs"
   ]
 )
 objc_library(
@@ -108,7 +103,7 @@ objc_library(
   ) + [
     "-IVendor/Smartling/pod_support/Headers/Public/Smartling/"
   ] + [
-    "-fmodule-name=Smartling_pod_module"
+    "-fmodule-name=Smartling"
   ],
   visibility = [
     "//visibility:public"

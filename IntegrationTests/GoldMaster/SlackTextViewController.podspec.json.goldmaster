@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "SlackTextViewController_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "Source/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -66,14 +69,6 @@ gen_includes(
   name = "SlackTextViewController_includes",
   include = [
     "Vendor/SlackTextViewController/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "SlackTextViewController",
-  "SlackTextViewController_module_map",
-  "SlackTextViewController",
-  [
-    "SlackTextViewController_hdrs"
   ]
 )
 objc_library(
@@ -113,7 +108,7 @@ objc_library(
   ) + [
     "-IVendor/SlackTextViewController/pod_support/Headers/Public/SlackTextViewController/"
   ] + [
-    "-fmodule-name=SlackTextViewController_pod_module"
+    "-fmodule-name=SlackTextViewController"
   ],
   visibility = [
     "//visibility:public"

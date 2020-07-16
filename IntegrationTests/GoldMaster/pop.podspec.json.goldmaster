@@ -37,9 +37,17 @@ config_setting(
 filegroup(
   name = "pop_cxx_hdrs",
   srcs = glob(
-    [
-      "pop/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "pop/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -90,7 +98,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":pop_cxx_union_hdrs"
+    ":pop_cxx_hdrs"
   ],
   pch = pch_with_name_hint(
     "pop",
@@ -109,7 +117,8 @@ objc_library(
   ],
   copts = [
     "-std=c++11",
-    "-stdlib=libc++"
+    "-stdlib=libc++",
+    "-std=c++14"
   ] + select(
     {
       "//conditions:default": [
@@ -123,7 +132,7 @@ objc_library(
   ) + [
     "-IVendor/pop/pod_support/Headers/Public/pop/"
   ] + [
-    "-fmodule-name=pop_pod_module"
+    "-fmodule-name=pop"
   ],
   visibility = [
     "//visibility:public"
@@ -137,14 +146,17 @@ acknowledged_target(
 filegroup(
   name = "pop_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "pop/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "pop/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ) + [
     ":pop_cxx_hdrs"
@@ -170,14 +182,6 @@ gen_includes(
   name = "pop_includes",
   include = [
     "Vendor/pop/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "pop",
-  "pop_module_map",
-  "pop",
-  [
-    "pop_hdrs"
   ]
 )
 objc_library(
@@ -221,7 +225,7 @@ objc_library(
   ) + [
     "-IVendor/pop/pod_support/Headers/Public/pop/"
   ] + [
-    "-fmodule-name=pop_pod_module"
+    "-fmodule-name=pop"
   ],
   visibility = [
     "//visibility:public"

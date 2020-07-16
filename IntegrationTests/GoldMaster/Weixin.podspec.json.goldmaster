@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "Weixin_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "SDK1.6.2/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "SDK1.6.2/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -68,14 +71,6 @@ gen_includes(
   name = "Weixin_includes",
   include = [
     "Vendor/Weixin/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "Weixin",
-  "Weixin_module_map",
-  "Weixin",
-  [
-    "Weixin_hdrs"
   ]
 )
 objc_library(
@@ -114,7 +109,7 @@ objc_library(
   ) + [
     "-IVendor/Weixin/pod_support/Headers/Public/Weixin/"
   ] + [
-    "-fmodule-name=Weixin_pod_module"
+    "-fmodule-name=Weixin"
   ],
   visibility = [
     "//visibility:public"

@@ -43,8 +43,8 @@ filegroup(
     ],
     exclude_directories = 1
   ) + [
-    ":Core_hdrs",
     ":Card_hdrs",
+    ":Core_hdrs",
     ":PayPal_hdrs",
     ":UI_hdrs"
   ],
@@ -72,14 +72,6 @@ gen_includes(
   name = "Braintree_includes",
   include = [
     "Vendor/Braintree/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "Braintree",
-  "Braintree_module_map",
-  "Braintree",
-  [
-    "Braintree_hdrs"
   ]
 )
 objc_library(
@@ -114,7 +106,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -128,9 +120,17 @@ acknowledged_target(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    [
-      "BraintreeCore/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeCore/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -225,7 +225,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -260,7 +260,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -274,9 +274,17 @@ acknowledged_target(
 filegroup(
   name = "Apple-Pay_hdrs",
   srcs = glob(
-    [
-      "BraintreeApplePay/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeApplePay/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -287,7 +295,8 @@ filegroup(
   name = "Apple-Pay_union_hdrs",
   srcs = [
     "Apple-Pay_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -322,7 +331,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Apple-Pay_union_hdrs"
+    ":Apple-Pay_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -355,7 +364,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -369,9 +378,17 @@ acknowledged_target(
 filegroup(
   name = "Card_hdrs",
   srcs = glob(
-    [
-      "BraintreeCard/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeCard/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -382,7 +399,8 @@ filegroup(
   name = "Card_union_hdrs",
   srcs = [
     "Card_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -433,7 +451,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Card_union_hdrs"
+    ":Card_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -463,7 +481,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -477,9 +495,17 @@ acknowledged_target(
 filegroup(
   name = "DataCollector_hdrs",
   srcs = glob(
-    [
-      "BraintreeDataCollector/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeDataCollector/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -490,7 +516,8 @@ filegroup(
   name = "DataCollector_union_hdrs",
   srcs = [
     "DataCollector_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -526,7 +553,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":DataCollector_union_hdrs"
+    ":DataCollector_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -557,7 +584,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -582,10 +609,18 @@ acknowledged_target(
 filegroup(
   name = "PayPal_hdrs",
   srcs = glob(
-    [
-      "BraintreePayPal/*.h",
-      "BraintreePayPal/Public/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/*.h",
+        "BraintreePayPal/Public/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -596,7 +631,9 @@ filegroup(
   name = "PayPal_union_hdrs",
   srcs = [
     "PayPal_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Core_hdrs",
+    ":PayPalOneTouch_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -632,7 +669,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":PayPal_union_hdrs"
+    ":PayPal_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -663,7 +700,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -677,9 +714,17 @@ acknowledged_target(
 filegroup(
   name = "Venmo_hdrs",
   srcs = glob(
-    [
-      "BraintreeVenmo/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeVenmo/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -690,7 +735,9 @@ filegroup(
   name = "Venmo_union_hdrs",
   srcs = [
     "Venmo_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Core_hdrs",
+    ":PayPalDataCollector_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -726,7 +773,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Venmo_union_hdrs"
+    ":Venmo_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -757,7 +804,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -799,9 +846,17 @@ acknowledged_target(
 filegroup(
   name = "UI_hdrs",
   srcs = glob(
-    [
-      "BraintreeUI/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeUI/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -812,7 +867,9 @@ filegroup(
   name = "UI_union_hdrs",
   srcs = [
     "UI_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Card_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -848,7 +905,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":UI_union_hdrs"
+    ":UI_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -882,7 +939,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   data = [
     ":UI_Bundle_Braintree-Drop-In-Localization",
@@ -900,9 +957,17 @@ acknowledged_target(
 filegroup(
   name = "UnionPay_hdrs",
   srcs = glob(
-    [
-      "BraintreeUnionPay/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreeUnionPay/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -913,7 +978,9 @@ filegroup(
   name = "UnionPay_union_hdrs",
   srcs = [
     "UnionPay_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Card_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -949,7 +1016,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":UnionPay_union_hdrs"
+    ":UnionPay_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -983,7 +1050,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -1011,9 +1078,17 @@ acknowledged_target(
 filegroup(
   name = "3D-Secure_hdrs",
   srcs = glob(
-    [
-      "Braintree3DSecure/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Braintree3DSecure/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -1024,7 +1099,9 @@ filegroup(
   name = "3D-Secure_union_hdrs",
   srcs = [
     "3D-Secure_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Card_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -1060,7 +1137,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":3D-Secure_union_hdrs"
+    ":3D-Secure_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -1094,7 +1171,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   data = [
     ":3D-Secure_Bundle_Braintree-3D-Secure-Localization"
@@ -1111,9 +1188,17 @@ acknowledged_target(
 filegroup(
   name = "PayPalOneTouch_hdrs",
   srcs = glob(
-    [
-      "BraintreePayPal/PayPalOneTouch/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/PayPalOneTouch/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -1124,7 +1209,10 @@ filegroup(
   name = "PayPalOneTouch_union_hdrs",
   srcs = [
     "PayPalOneTouch_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Core_hdrs",
+    ":PayPalDataCollector_hdrs",
+    ":PayPalUtils_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -1167,7 +1255,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":PayPalOneTouch_union_hdrs"
+    ":PayPalOneTouch_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -1207,7 +1295,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -1221,9 +1309,17 @@ acknowledged_target(
 filegroup(
   name = "PayPalDataCollector_hdrs",
   srcs = glob(
-    [
-      "BraintreePayPal/PayPalDataCollector/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/PayPalDataCollector/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -1234,7 +1330,9 @@ filegroup(
   name = "PayPalDataCollector_union_hdrs",
   srcs = [
     "PayPalDataCollector_hdrs",
-    "Braintree_hdrs"
+    "Braintree_hdrs",
+    ":Core_hdrs",
+    ":PayPalUtils_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -1282,7 +1380,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":PayPalDataCollector_union_hdrs"
+    ":PayPalDataCollector_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -1320,7 +1418,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -1345,9 +1443,17 @@ acknowledged_target(
 filegroup(
   name = "PayPalUtils_hdrs",
   srcs = glob(
-    [
-      "BraintreePayPal/PayPalUtils/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/PayPalUtils/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -1398,11 +1504,16 @@ objc_library(
         "BraintreePayPal/PayPalDataCollector/**/*.m"
       ],
       exclude_directories = 1
+    ) + glob(
+      [
+        "BraintreePayPal/*.m"
+      ],
+      exclude_directories = 1
     ),
     exclude_directories = 1
   ),
   hdrs = [
-    ":PayPalUtils_union_hdrs"
+    ":PayPalUtils_hdrs"
   ],
   pch = pch_with_name_hint(
     "Braintree",
@@ -1437,7 +1548,7 @@ objc_library(
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
   ] + [
-    "-fmodule-name=Braintree_pod_module"
+    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"

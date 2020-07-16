@@ -37,22 +37,25 @@ config_setting(
 filegroup(
   name = "Texture_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "AsyncDisplayKit/**/*.h",
-      "AsyncDisplayKit/**/*.hpp",
-      "AsyncDisplayKit/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "AsyncDisplayKit/**/*.h",
+        "AsyncDisplayKit/**/*.hpp",
+        "AsyncDisplayKit/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ) + [
-    ":PINRemoteImage_hdrs",
+    ":AssetsLibrary_hdrs",
     ":MapKit_hdrs",
-    ":Photos_hdrs",
-    ":AssetsLibrary_hdrs"
+    ":PINRemoteImage_hdrs",
+    ":Photos_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -78,14 +81,6 @@ gen_includes(
   name = "Texture_includes",
   include = [
     "Vendor/Texture/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "AsyncDisplayKit",
-  "Texture_module_map",
-  "AsyncDisplayKit",
-  [
-    "Texture_hdrs"
   ]
 )
 objc_library(
@@ -121,7 +116,7 @@ objc_library(
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
-    "-fmodule-name=AsyncDisplayKit_pod_module"
+    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -135,14 +130,22 @@ acknowledged_target(
 filegroup(
   name = "Core_cxx_hdrs",
   srcs = glob(
-    [
-      "AsyncDisplayKit/**/*.h",
-      "AsyncDisplayKit/**/*.hpp",
-      "AsyncDisplayKit/**/*.hxx",
-      "Base/*.h",
-      "Source/**/*.h",
-      "Source/TextKit/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "AsyncDisplayKit/**/*.h",
+        "AsyncDisplayKit/**/*.hpp",
+        "AsyncDisplayKit/**/*.hxx",
+        "Base/*.h",
+        "Source/**/*.h",
+        "Source/TextKit/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -193,7 +196,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_cxx_union_hdrs"
+    ":Core_cxx_hdrs"
   ],
   pch = pch_with_name_hint(
     "Texture",
@@ -213,7 +216,8 @@ objc_library(
   copts = [
     "-std=c++11",
     "-stdlib=libc++",
-    "-fno-exceptions -fno-objc-arc-exceptions"
+    "-fno-exceptions -fno-objc-arc-exceptions",
+    "-std=c++14"
   ] + select(
     {
       "//conditions:default": [
@@ -227,7 +231,7 @@ objc_library(
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
-    "-fmodule-name=AsyncDisplayKit_pod_module"
+    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -241,14 +245,22 @@ acknowledged_target(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    [
-      "AsyncDisplayKit/**/*.h",
-      "AsyncDisplayKit/**/*.hpp",
-      "AsyncDisplayKit/**/*.hxx",
-      "Base/*.h",
-      "Source/**/*.h",
-      "Source/TextKit/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "AsyncDisplayKit/**/*.h",
+        "AsyncDisplayKit/**/*.hpp",
+        "AsyncDisplayKit/**/*.hxx",
+        "Base/*.h",
+        "Source/**/*.h",
+        "Source/TextKit/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -259,7 +271,8 @@ filegroup(
   name = "Core_union_hdrs",
   srcs = [
     "Core_hdrs",
-    "Texture_hdrs"
+    "Texture_hdrs",
+    ":Core_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -295,7 +308,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "Texture",
@@ -329,7 +342,7 @@ objc_library(
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
-    "-fmodule-name=AsyncDisplayKit_pod_module"
+    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -343,11 +356,19 @@ acknowledged_target(
 filegroup(
   name = "PINRemoteImage_hdrs",
   srcs = glob(
-    [
-      "AsyncDisplayKit/**/*.h",
-      "AsyncDisplayKit/**/*.hpp",
-      "AsyncDisplayKit/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "AsyncDisplayKit/**/*.h",
+        "AsyncDisplayKit/**/*.hpp",
+        "AsyncDisplayKit/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -358,7 +379,8 @@ filegroup(
   name = "PINRemoteImage_union_hdrs",
   srcs = [
     "PINRemoteImage_hdrs",
-    "Texture_hdrs"
+    "Texture_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -389,7 +411,7 @@ objc_library(
   name = "PINRemoteImage",
   enable_modules = 0,
   hdrs = [
-    ":PINRemoteImage_union_hdrs"
+    ":PINRemoteImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "Texture",
@@ -417,7 +439,7 @@ objc_library(
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
-    "-fmodule-name=AsyncDisplayKit_pod_module"
+    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -434,11 +456,19 @@ acknowledged_target(
 filegroup(
   name = "IGListKit_hdrs",
   srcs = glob(
-    [
-      "AsyncDisplayKit/**/*.h",
-      "AsyncDisplayKit/**/*.hpp",
-      "AsyncDisplayKit/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "AsyncDisplayKit/**/*.h",
+        "AsyncDisplayKit/**/*.hpp",
+        "AsyncDisplayKit/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -449,7 +479,8 @@ filegroup(
   name = "IGListKit_union_hdrs",
   srcs = [
     "IGListKit_hdrs",
-    "Texture_hdrs"
+    "Texture_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -479,7 +510,7 @@ objc_library(
   name = "IGListKit",
   enable_modules = 0,
   hdrs = [
-    ":IGListKit_union_hdrs"
+    ":IGListKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "Texture",
@@ -506,7 +537,7 @@ objc_library(
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
-    "-fmodule-name=AsyncDisplayKit_pod_module"
+    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -522,11 +553,19 @@ acknowledged_target(
 filegroup(
   name = "Yoga_hdrs",
   srcs = glob(
-    [
-      "AsyncDisplayKit/**/*.h",
-      "AsyncDisplayKit/**/*.hpp",
-      "AsyncDisplayKit/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "AsyncDisplayKit/**/*.h",
+        "AsyncDisplayKit/**/*.hpp",
+        "AsyncDisplayKit/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -537,7 +576,8 @@ filegroup(
   name = "Yoga_union_hdrs",
   srcs = [
     "Yoga_hdrs",
-    "Texture_hdrs"
+    "Texture_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -567,7 +607,7 @@ objc_library(
   name = "Yoga",
   enable_modules = 0,
   hdrs = [
-    ":Yoga_union_hdrs"
+    ":Yoga_hdrs"
   ],
   pch = pch_with_name_hint(
     "Texture",
@@ -596,7 +636,7 @@ objc_library(
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
-    "-fmodule-name=AsyncDisplayKit_pod_module"
+    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -612,11 +652,19 @@ acknowledged_target(
 filegroup(
   name = "MapKit_hdrs",
   srcs = glob(
-    [
-      "AsyncDisplayKit/**/*.h",
-      "AsyncDisplayKit/**/*.hpp",
-      "AsyncDisplayKit/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "AsyncDisplayKit/**/*.h",
+        "AsyncDisplayKit/**/*.hpp",
+        "AsyncDisplayKit/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -627,7 +675,8 @@ filegroup(
   name = "MapKit_union_hdrs",
   srcs = [
     "MapKit_hdrs",
-    "Texture_hdrs"
+    "Texture_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -656,7 +705,7 @@ objc_library(
   name = "MapKit",
   enable_modules = 0,
   hdrs = [
-    ":MapKit_union_hdrs"
+    ":MapKit_hdrs"
   ],
   pch = pch_with_name_hint(
     "Texture",
@@ -687,7 +736,7 @@ objc_library(
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
-    "-fmodule-name=AsyncDisplayKit_pod_module"
+    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -701,11 +750,19 @@ acknowledged_target(
 filegroup(
   name = "Photos_hdrs",
   srcs = glob(
-    [
-      "AsyncDisplayKit/**/*.h",
-      "AsyncDisplayKit/**/*.hpp",
-      "AsyncDisplayKit/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "AsyncDisplayKit/**/*.h",
+        "AsyncDisplayKit/**/*.hpp",
+        "AsyncDisplayKit/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -716,7 +773,8 @@ filegroup(
   name = "Photos_union_hdrs",
   srcs = [
     "Photos_hdrs",
-    "Texture_hdrs"
+    "Texture_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -745,7 +803,7 @@ objc_library(
   name = "Photos",
   enable_modules = 0,
   hdrs = [
-    ":Photos_union_hdrs"
+    ":Photos_hdrs"
   ],
   pch = pch_with_name_hint(
     "Texture",
@@ -776,7 +834,7 @@ objc_library(
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
-    "-fmodule-name=AsyncDisplayKit_pod_module"
+    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -790,11 +848,19 @@ acknowledged_target(
 filegroup(
   name = "AssetsLibrary_hdrs",
   srcs = glob(
-    [
-      "AsyncDisplayKit/**/*.h",
-      "AsyncDisplayKit/**/*.hpp",
-      "AsyncDisplayKit/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "AsyncDisplayKit/**/*.h",
+        "AsyncDisplayKit/**/*.hpp",
+        "AsyncDisplayKit/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -805,7 +871,8 @@ filegroup(
   name = "AssetsLibrary_union_hdrs",
   srcs = [
     "AssetsLibrary_hdrs",
-    "Texture_hdrs"
+    "Texture_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -834,7 +901,7 @@ objc_library(
   name = "AssetsLibrary",
   enable_modules = 0,
   hdrs = [
-    ":AssetsLibrary_union_hdrs"
+    ":AssetsLibrary_hdrs"
   ],
   pch = pch_with_name_hint(
     "Texture",
@@ -865,7 +932,7 @@ objc_library(
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
   ] + [
-    "-fmodule-name=AsyncDisplayKit_pod_module"
+    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"

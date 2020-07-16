@@ -70,14 +70,6 @@ gen_includes(
     "Vendor/googleapis/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "googleapis",
-  "googleapis_module_map",
-  "googleapis",
-  [
-    "googleapis_hdrs"
-  ]
-)
 objc_library(
   name = "googleapis",
   enable_modules = 0,
@@ -109,7 +101,7 @@ objc_library(
   ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
-    "-fmodule-name=googleapis_pod_module"
+    "-fmodule-name=googleapis"
   ],
   visibility = [
     "//visibility:public"
@@ -125,9 +117,17 @@ acknowledged_target(
 filegroup(
   name = "Messages_hdrs",
   srcs = glob(
-    [
-      "google/**/*.pbobjc.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "google/**/*.pbobjc.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -173,7 +173,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Messages_union_hdrs"
+    ":Messages_hdrs"
   ],
   pch = pch_with_name_hint(
     "googleapis",
@@ -198,7 +198,7 @@ objc_library(
   ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
-    "-fmodule-name=googleapis_pod_module"
+    "-fmodule-name=googleapis"
   ],
   visibility = [
     "//visibility:public"
@@ -214,9 +214,17 @@ acknowledged_target(
 filegroup(
   name = "Services_hdrs",
   srcs = glob(
-    [
-      "google/**/*.pbrpc.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "google/**/*.pbrpc.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -262,7 +270,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Services_union_hdrs"
+    ":Services_hdrs"
   ],
   pch = pch_with_name_hint(
     "googleapis",
@@ -292,7 +300,7 @@ objc_library(
   ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
-    "-fmodule-name=googleapis_pod_module"
+    "-fmodule-name=googleapis"
   ],
   visibility = [
     "//visibility:public"

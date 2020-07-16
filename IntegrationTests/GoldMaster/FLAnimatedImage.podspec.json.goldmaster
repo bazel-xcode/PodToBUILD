@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "FLAnimatedImage_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "FLAnimatedImage/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FLAnimatedImage/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -66,14 +69,6 @@ gen_includes(
   name = "FLAnimatedImage_includes",
   include = [
     "Vendor/FLAnimatedImage/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "FLAnimatedImage",
-  "FLAnimatedImage_module_map",
-  "FLAnimatedImage",
-  [
-    "FLAnimatedImage_hdrs"
   ]
 )
 objc_library(
@@ -119,7 +114,7 @@ objc_library(
   ) + [
     "-IVendor/FLAnimatedImage/pod_support/Headers/Public/FLAnimatedImage/"
   ] + [
-    "-fmodule-name=FLAnimatedImage_pod_module"
+    "-fmodule-name=FLAnimatedImage"
   ],
   visibility = [
     "//visibility:public"

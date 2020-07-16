@@ -39,16 +39,19 @@ config_setting(
 filegroup(
   name = "GoogleAppIndexing_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "Changelog/**/*.h",
-      "Changelog/**/*.hpp",
-      "Changelog/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Changelog/**/*.h",
+        "Changelog/**/*.hpp",
+        "Changelog/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -72,14 +75,6 @@ gen_includes(
   name = "GoogleAppIndexing_includes",
   include = [
     "Vendor/GoogleAppIndexing/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "GoogleAppIndexing",
-  "GoogleAppIndexing_module_map",
-  "GoogleAppIndexing",
-  [
-    "GoogleAppIndexing_hdrs"
   ]
 )
 objc_library(
@@ -113,7 +108,7 @@ objc_library(
   ) + [
     "-IVendor/GoogleAppIndexing/pod_support/Headers/Public/GoogleAppIndexing/"
   ] + [
-    "-fmodule-name=GoogleAppIndexing_pod_module"
+    "-fmodule-name=GoogleAppIndexing"
   ],
   data = [
     ":GoogleAppIndexing_Bundle_GoogleAppIndexingResources"

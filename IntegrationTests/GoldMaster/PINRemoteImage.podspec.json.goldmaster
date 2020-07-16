@@ -69,14 +69,6 @@ gen_includes(
     "Vendor/PINRemoteImage/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "PINRemoteImage",
-  "PINRemoteImage_module_map",
-  "PINRemoteImage",
-  [
-    "PINRemoteImage_hdrs"
-  ]
-)
 objc_library(
   name = "PINRemoteImage",
   enable_modules = 0,
@@ -105,7 +97,7 @@ objc_library(
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
-    "-fmodule-name=PINRemoteImage_pod_module"
+    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -119,13 +111,21 @@ acknowledged_target(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    [
-      "Source/Classes/**/*.h"
-    ],
-    exclude = [
-      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
-      "Source/Classes/PINCache/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Classes/**/*.h"
+      ],
+      exclude = [
+        "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
+        "Source/Classes/PINCache/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -185,7 +185,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -217,7 +217,7 @@ objc_library(
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
-    "-fmodule-name=PINRemoteImage_pod_module"
+    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -232,7 +232,12 @@ acknowledged_target(
 )
 filegroup(
   name = "iOS_hdrs",
-  srcs = [],
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
   visibility = [
     "//visibility:public"
   ]
@@ -241,7 +246,8 @@ filegroup(
   name = "iOS_union_hdrs",
   srcs = [
     "iOS_hdrs",
-    "PINRemoteImage_hdrs"
+    "PINRemoteImage_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -270,7 +276,7 @@ objc_library(
   name = "iOS",
   enable_modules = 0,
   hdrs = [
-    ":iOS_union_hdrs"
+    ":iOS_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -296,7 +302,7 @@ objc_library(
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
-    "-fmodule-name=PINRemoteImage_pod_module"
+    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -309,7 +315,12 @@ acknowledged_target(
 )
 filegroup(
   name = "OSX_hdrs",
-  srcs = [],
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
   visibility = [
     "//visibility:public"
   ]
@@ -318,7 +329,8 @@ filegroup(
   name = "OSX_union_hdrs",
   srcs = [
     "OSX_hdrs",
-    "PINRemoteImage_hdrs"
+    "PINRemoteImage_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -347,7 +359,7 @@ objc_library(
   name = "OSX",
   enable_modules = 0,
   hdrs = [
-    ":OSX_union_hdrs"
+    ":OSX_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -374,7 +386,7 @@ objc_library(
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
-    "-fmodule-name=PINRemoteImage_pod_module"
+    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -387,7 +399,12 @@ acknowledged_target(
 )
 filegroup(
   name = "tvOS_hdrs",
-  srcs = [],
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
   visibility = [
     "//visibility:public"
   ]
@@ -396,7 +413,8 @@ filegroup(
   name = "tvOS_union_hdrs",
   srcs = [
     "tvOS_hdrs",
-    "PINRemoteImage_hdrs"
+    "PINRemoteImage_hdrs",
+    ":iOS_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -425,7 +443,7 @@ objc_library(
   name = "tvOS",
   enable_modules = 0,
   hdrs = [
-    ":tvOS_union_hdrs"
+    ":tvOS_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -448,7 +466,7 @@ objc_library(
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
-    "-fmodule-name=PINRemoteImage_pod_module"
+    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -462,9 +480,17 @@ acknowledged_target(
 filegroup(
   name = "FLAnimatedImage_hdrs",
   srcs = glob(
-    [
-      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -475,7 +501,8 @@ filegroup(
   name = "FLAnimatedImage_union_hdrs",
   srcs = [
     "FLAnimatedImage_hdrs",
-    "PINRemoteImage_hdrs"
+    "PINRemoteImage_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -511,7 +538,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":FLAnimatedImage_union_hdrs"
+    ":FLAnimatedImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -540,7 +567,7 @@ objc_library(
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
-    "-fmodule-name=PINRemoteImage_pod_module"
+    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -555,7 +582,12 @@ acknowledged_target(
 )
 filegroup(
   name = "WebP_hdrs",
-  srcs = [],
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
   visibility = [
     "//visibility:public"
   ]
@@ -564,7 +596,8 @@ filegroup(
   name = "WebP_union_hdrs",
   srcs = [
     "WebP_hdrs",
-    "PINRemoteImage_hdrs"
+    "PINRemoteImage_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -594,7 +627,7 @@ objc_library(
   name = "WebP",
   enable_modules = 0,
   hdrs = [
-    ":WebP_union_hdrs"
+    ":WebP_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -620,7 +653,7 @@ objc_library(
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
-    "-fmodule-name=PINRemoteImage_pod_module"
+    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -636,9 +669,17 @@ acknowledged_target(
 filegroup(
   name = "PINCache_hdrs",
   srcs = glob(
-    [
-      "Source/Classes/PINCache/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Classes/PINCache/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -649,7 +690,8 @@ filegroup(
   name = "PINCache_union_hdrs",
   srcs = [
     "PINCache_hdrs",
-    "PINRemoteImage_hdrs"
+    "PINRemoteImage_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -685,7 +727,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":PINCache_union_hdrs"
+    ":PINCache_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINRemoteImage",
@@ -714,7 +756,7 @@ objc_library(
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
   ] + [
-    "-fmodule-name=PINRemoteImage_pod_module"
+    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"

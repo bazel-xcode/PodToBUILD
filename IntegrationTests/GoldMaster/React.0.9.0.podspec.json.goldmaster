@@ -37,28 +37,31 @@ config_setting(
 filegroup(
   name = "React_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ) + [
     ":Core_hdrs"
@@ -84,14 +87,6 @@ gen_includes(
   name = "React_includes",
   include = [
     "Vendor/React/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "React",
-  "React_module_map",
-  "React",
-  [
-    "React_hdrs"
   ]
 )
 objc_library(
@@ -121,7 +116,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -135,32 +130,40 @@ acknowledged_target(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    [
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "React/**/*.h",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
-    exclude = [
-      "**/__tests__/*.h",
-      "**/__tests__/*.hpp",
-      "**/__tests__/*.hxx",
-      "IntegrationTests/*.h",
-      "IntegrationTests/*.hpp",
-      "IntegrationTests/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "React/**/*.h",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude = [
+        "**/__tests__/*.h",
+        "**/__tests__/*.hpp",
+        "**/__tests__/*.hxx",
+        "IntegrationTests/*.h",
+        "IntegrationTests/*.hpp",
+        "IntegrationTests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -283,7 +286,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -313,7 +316,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -327,24 +330,32 @@ acknowledged_target(
 filegroup(
   name = "ART_hdrs",
   srcs = glob(
-    [
-      "Libraries/ART/**/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/ART/**/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -355,7 +366,8 @@ filegroup(
   name = "ART_union_hdrs",
   srcs = [
     "ART_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -390,7 +402,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":ART_union_hdrs"
+    ":ART_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -418,7 +430,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -432,24 +444,32 @@ acknowledged_target(
 filegroup(
   name = "RCTActionSheet_hdrs",
   srcs = glob(
-    [
-      "Libraries/ActionSheetIOS/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/ActionSheetIOS/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -460,7 +480,8 @@ filegroup(
   name = "RCTActionSheet_union_hdrs",
   srcs = [
     "RCTActionSheet_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -495,7 +516,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTActionSheet_union_hdrs"
+    ":RCTActionSheet_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -523,7 +544,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -537,24 +558,32 @@ acknowledged_target(
 filegroup(
   name = "RCTAdSupport_hdrs",
   srcs = glob(
-    [
-      "Libraries/AdSupport/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/AdSupport/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -565,7 +594,8 @@ filegroup(
   name = "RCTAdSupport_union_hdrs",
   srcs = [
     "RCTAdSupport_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -600,7 +630,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTAdSupport_union_hdrs"
+    ":RCTAdSupport_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -628,7 +658,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -642,24 +672,32 @@ acknowledged_target(
 filegroup(
   name = "RCTGeolocation_hdrs",
   srcs = glob(
-    [
-      "Libraries/Geolocation/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Geolocation/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -670,7 +708,8 @@ filegroup(
   name = "RCTGeolocation_union_hdrs",
   srcs = [
     "RCTGeolocation_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -705,7 +744,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTGeolocation_union_hdrs"
+    ":RCTGeolocation_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -733,7 +772,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -747,24 +786,32 @@ acknowledged_target(
 filegroup(
   name = "RCTImage_hdrs",
   srcs = glob(
-    [
-      "Libraries/Image/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Image/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -775,7 +822,8 @@ filegroup(
   name = "RCTImage_union_hdrs",
   srcs = [
     "RCTImage_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -810,7 +858,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTImage_union_hdrs"
+    ":RCTImage_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -838,7 +886,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -852,24 +900,32 @@ acknowledged_target(
 filegroup(
   name = "RCTNetwork_hdrs",
   srcs = glob(
-    [
-      "Libraries/Network/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Network/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -880,7 +936,8 @@ filegroup(
   name = "RCTNetwork_union_hdrs",
   srcs = [
     "RCTNetwork_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -915,7 +972,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTNetwork_union_hdrs"
+    ":RCTNetwork_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -943,7 +1000,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -957,24 +1014,32 @@ acknowledged_target(
 filegroup(
   name = "RCTPushNotification_hdrs",
   srcs = glob(
-    [
-      "Libraries/PushNotificationIOS/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/PushNotificationIOS/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -985,7 +1050,8 @@ filegroup(
   name = "RCTPushNotification_union_hdrs",
   srcs = [
     "RCTPushNotification_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -1020,7 +1086,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTPushNotification_union_hdrs"
+    ":RCTPushNotification_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -1048,7 +1114,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1062,24 +1128,32 @@ acknowledged_target(
 filegroup(
   name = "RCTSettings_hdrs",
   srcs = glob(
-    [
-      "Libraries/Settings/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Settings/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -1090,7 +1164,8 @@ filegroup(
   name = "RCTSettings_union_hdrs",
   srcs = [
     "RCTSettings_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -1125,7 +1200,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTSettings_union_hdrs"
+    ":RCTSettings_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -1153,7 +1228,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1167,24 +1242,32 @@ acknowledged_target(
 filegroup(
   name = "RCTText_hdrs",
   srcs = glob(
-    [
-      "Libraries/Text/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Text/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -1195,7 +1278,8 @@ filegroup(
   name = "RCTText_union_hdrs",
   srcs = [
     "RCTText_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -1230,7 +1314,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTText_union_hdrs"
+    ":RCTText_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -1258,7 +1342,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1272,24 +1356,32 @@ acknowledged_target(
 filegroup(
   name = "RCTVibration_hdrs",
   srcs = glob(
-    [
-      "Libraries/Vibration/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Vibration/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -1300,7 +1392,8 @@ filegroup(
   name = "RCTVibration_union_hdrs",
   srcs = [
     "RCTVibration_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -1335,7 +1428,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTVibration_union_hdrs"
+    ":RCTVibration_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -1363,7 +1456,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1377,24 +1470,32 @@ acknowledged_target(
 filegroup(
   name = "RCTWebSocket_hdrs",
   srcs = glob(
-    [
-      "Libraries/WebSocket/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/WebSocket/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -1405,7 +1506,8 @@ filegroup(
   name = "RCTWebSocket_union_hdrs",
   srcs = [
     "RCTWebSocket_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -1440,7 +1542,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTWebSocket_union_hdrs"
+    ":RCTWebSocket_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -1468,7 +1570,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1482,24 +1584,32 @@ acknowledged_target(
 filegroup(
   name = "RCTLinkingIOS_hdrs",
   srcs = glob(
-    [
-      "Libraries/LinkingIOS/*.h",
-      "PATENTS/**/*.h",
-      "PATENTS/**/*.hpp",
-      "PATENTS/**/*.hxx",
-      "lint/**/*.h",
-      "lint/**/*.hpp",
-      "lint/**/*.hxx",
-      "node_modules/**/*.h",
-      "node_modules/**/*.hpp",
-      "node_modules/**/*.hxx",
-      "packager/**/*.h",
-      "packager/**/*.hpp",
-      "packager/**/*.hxx",
-      "react-native-cli/**/*.h",
-      "react-native-cli/**/*.hpp",
-      "react-native-cli/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/LinkingIOS/*.h",
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -1510,7 +1620,8 @@ filegroup(
   name = "RCTLinkingIOS_union_hdrs",
   srcs = [
     "RCTLinkingIOS_hdrs",
-    "React_hdrs"
+    "React_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -1545,7 +1656,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":RCTLinkingIOS_union_hdrs"
+    ":RCTLinkingIOS_hdrs"
   ],
   pch = pch_with_name_hint(
     "React",
@@ -1573,7 +1684,7 @@ objc_library(
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
   ] + [
-    "-fmodule-name=React_pod_module"
+    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"

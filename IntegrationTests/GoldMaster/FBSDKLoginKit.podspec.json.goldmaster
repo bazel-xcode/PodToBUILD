@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "FBSDKLoginKit_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -68,14 +71,6 @@ gen_includes(
   name = "FBSDKLoginKit_includes",
   include = [
     "Vendor/FBSDKLoginKit/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "FBSDKLoginKit",
-  "FBSDKLoginKit_module_map",
-  "FBSDKLoginKit",
-  [
-    "FBSDKLoginKit_hdrs"
   ]
 )
 objc_library(
@@ -129,7 +124,7 @@ objc_library(
   ) + [
     "-IVendor/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
   ] + [
-    "-fmodule-name=FBSDKLoginKit_pod_module"
+    "-fmodule-name=FBSDKLoginKit"
   ],
   visibility = [
     "//visibility:public"

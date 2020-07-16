@@ -66,14 +66,6 @@ gen_includes(
     "Vendor/EarlGrey/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "EarlGrey",
-  "EarlGrey_module_map",
-  "EarlGrey",
-  [
-    "EarlGrey_hdrs"
-  ]
-)
 objc_library(
   name = "EarlGrey",
   enable_modules = 0,
@@ -113,7 +105,7 @@ objc_library(
   ) + [
     "-IVendor/EarlGrey/pod_support/Headers/Public/EarlGrey/"
   ] + [
-    "-fmodule-name=EarlGrey_pod_module"
+    "-fmodule-name=EarlGrey"
   ],
   visibility = [
     "//visibility:public"

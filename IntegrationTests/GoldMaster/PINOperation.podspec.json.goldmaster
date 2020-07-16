@@ -37,9 +37,17 @@ config_setting(
 filegroup(
   name = "PINOperation_cxx_hdrs",
   srcs = glob(
-    [
-      "Source/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -89,7 +97,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":PINOperation_cxx_union_hdrs"
+    ":PINOperation_cxx_hdrs"
   ],
   pch = pch_with_name_hint(
     "PINOperation",
@@ -106,7 +114,9 @@ objc_library(
   deps = [
     ":PINOperation_cxx_includes"
   ],
-  copts = select(
+  copts = [
+    "-std=c++14"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -119,7 +129,7 @@ objc_library(
   ) + [
     "-IVendor/PINOperation/pod_support/Headers/Public/PINOperation/"
   ] + [
-    "-fmodule-name=PINOperation_pod_module"
+    "-fmodule-name=PINOperation"
   ],
   visibility = [
     "//visibility:public"
@@ -133,14 +143,17 @@ acknowledged_target(
 filegroup(
   name = "PINOperation_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "Source/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ) + [
     ":PINOperation_cxx_hdrs"
@@ -166,14 +179,6 @@ gen_includes(
   name = "PINOperation_includes",
   include = [
     "Vendor/PINOperation/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "PINOperation",
-  "PINOperation_module_map",
-  "PINOperation",
-  [
-    "PINOperation_hdrs"
   ]
 )
 objc_library(
@@ -217,7 +222,7 @@ objc_library(
   ) + [
     "-IVendor/PINOperation/pod_support/Headers/Public/PINOperation/"
   ] + [
-    "-fmodule-name=PINOperation_pod_module"
+    "-fmodule-name=PINOperation"
   ],
   visibility = [
     "//visibility:public"

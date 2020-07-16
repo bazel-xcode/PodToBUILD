@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "KVOController_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "FBKVOController/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBKVOController/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -66,14 +69,6 @@ gen_includes(
   name = "KVOController_includes",
   include = [
     "Vendor/KVOController/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "KVOController",
-  "KVOController_module_map",
-  "KVOController",
-  [
-    "KVOController_hdrs"
   ]
 )
 objc_library(
@@ -113,7 +108,7 @@ objc_library(
   ) + [
     "-IVendor/KVOController/pod_support/Headers/Public/KVOController/"
   ] + [
-    "-fmodule-name=KVOController_pod_module"
+    "-fmodule-name=KVOController"
   ],
   visibility = [
     "//visibility:public"

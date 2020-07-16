@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "Masonry_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "Masonry/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Masonry/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -66,14 +69,6 @@ gen_includes(
   name = "Masonry_includes",
   include = [
     "Vendor/Masonry/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "Masonry",
-  "Masonry_module_map",
-  "Masonry",
-  [
-    "Masonry_hdrs"
   ]
 )
 objc_library(
@@ -129,7 +124,7 @@ objc_library(
   ) + [
     "-IVendor/Masonry/pod_support/Headers/Public/Masonry/"
   ] + [
-    "-fmodule-name=Masonry_pod_module"
+    "-fmodule-name=Masonry"
   ],
   visibility = [
     "//visibility:public"

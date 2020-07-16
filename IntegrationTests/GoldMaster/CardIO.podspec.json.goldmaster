@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "CardIO_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "CardIO/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "CardIO/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -68,14 +71,6 @@ gen_includes(
   name = "CardIO_includes",
   include = [
     "Vendor/CardIO/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "CardIO",
-  "CardIO_module_map",
-  "CardIO",
-  [
-    "CardIO_hdrs"
   ]
 )
 objc_library(
@@ -120,7 +115,7 @@ objc_library(
   ) + [
     "-IVendor/CardIO/pod_support/Headers/Public/CardIO/"
   ] + [
-    "-fmodule-name=CardIO_pod_module"
+    "-fmodule-name=CardIO"
   ],
   visibility = [
     "//visibility:public"

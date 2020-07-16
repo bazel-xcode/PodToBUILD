@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "ColorCube_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "ColorCube/ColorCube/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ColorCube/ColorCube/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -66,14 +69,6 @@ gen_includes(
   name = "ColorCube_includes",
   include = [
     "Vendor/ColorCube/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "ColorCube",
-  "ColorCube_module_map",
-  "ColorCube",
-  [
-    "ColorCube_hdrs"
   ]
 )
 objc_library(
@@ -113,7 +108,7 @@ objc_library(
   ) + [
     "-IVendor/ColorCube/pod_support/Headers/Public/ColorCube/"
   ] + [
-    "-fmodule-name=ColorCube_pod_module"
+    "-fmodule-name=ColorCube"
   ],
   visibility = [
     "//visibility:public"

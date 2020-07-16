@@ -38,14 +38,17 @@ config_setting(
 filegroup(
   name = "iRate_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "iRate/iRate.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "iRate/iRate.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -67,14 +70,6 @@ gen_includes(
   name = "iRate_includes",
   include = [
     "Vendor/iRate/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "iRate",
-  "iRate_module_map",
-  "iRate",
-  [
-    "iRate_hdrs"
   ]
 )
 objc_library(
@@ -114,7 +109,7 @@ objc_library(
   ) + [
     "-IVendor/iRate/pod_support/Headers/Public/iRate/"
   ] + [
-    "-fmodule-name=iRate_pod_module"
+    "-fmodule-name=iRate"
   ],
   data = [
     ":iRate_Bundle_iRate"

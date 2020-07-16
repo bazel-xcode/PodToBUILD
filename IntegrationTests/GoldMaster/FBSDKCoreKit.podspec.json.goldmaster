@@ -37,71 +37,98 @@ config_setting(
 )
 filegroup(
   name = "FBSDKCoreKit_hdrs",
-  srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + select(
+  srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
-        ],
-        exclude = [
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hpp",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+          ],
+          exclude = [
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":osxCase": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
-        ],
-        exclude = [
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.h",
-          "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.hpp",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.hxx",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.hpp",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.hxx",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.hpp",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.hxx",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hpp",
-          "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+          ],
+          exclude = [
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.h",
+            "FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*.hxx",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*.hxx",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*.hxx",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hpp",
+            "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       ),
       ":watchosCase": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
-        ],
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
         exclude_directories = 1
       )
     }
@@ -131,14 +158,6 @@ gen_includes(
   name = "FBSDKCoreKit_includes",
   include = [
     "Vendor/FBSDKCoreKit/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "FBSDKCoreKit",
-  "FBSDKCoreKit_module_map",
-  "FBSDKCoreKit",
-  [
-    "FBSDKCoreKit_hdrs"
   ]
 )
 objc_library(
@@ -807,7 +826,7 @@ objc_library(
   ) + [
     "-IVendor/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/"
   ] + [
-    "-fmodule-name=FBSDKCoreKit_pod_module"
+    "-fmodule-name=FBSDKCoreKit"
   ],
   data = [
     ":FBSDKCoreKit_Bundle_FacebookSDKStrings"

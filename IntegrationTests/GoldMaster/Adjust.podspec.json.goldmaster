@@ -67,14 +67,6 @@ gen_includes(
     "Vendor/Adjust/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "Adjust",
-  "Adjust_module_map",
-  "Adjust",
-  [
-    "Adjust_hdrs"
-  ]
-)
 objc_library(
   name = "Adjust",
   enable_modules = 0,
@@ -116,7 +108,7 @@ objc_library(
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
-    "-fmodule-name=Adjust_pod_module"
+    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -130,10 +122,18 @@ acknowledged_target(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    [
-      "Adjust/*.h",
-      "Adjust/ADJAdditions/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Adjust/*.h",
+        "Adjust/ADJAdditions/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -194,7 +194,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -235,7 +235,7 @@ objc_library(
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
-    "-fmodule-name=Adjust_pod_module"
+    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -249,9 +249,17 @@ acknowledged_target(
 filegroup(
   name = "Sociomantic_hdrs",
   srcs = glob(
-    [
-      "plugin/Sociomantic/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "plugin/Sociomantic/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -262,7 +270,8 @@ filegroup(
   name = "Sociomantic_union_hdrs",
   srcs = [
     "Sociomantic_hdrs",
-    "Adjust_hdrs"
+    "Adjust_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -297,7 +306,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Sociomantic_union_hdrs"
+    ":Sociomantic_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -339,7 +348,7 @@ objc_library(
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
-    "-fmodule-name=Adjust_pod_module"
+    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -353,9 +362,17 @@ acknowledged_target(
 filegroup(
   name = "Criteo_hdrs",
   srcs = glob(
-    [
-      "plugin/Criteo/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "plugin/Criteo/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -366,7 +383,8 @@ filegroup(
   name = "Criteo_union_hdrs",
   srcs = [
     "Criteo_hdrs",
-    "Adjust_hdrs"
+    "Adjust_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -401,7 +419,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Criteo_union_hdrs"
+    ":Criteo_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -443,7 +461,7 @@ objc_library(
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
-    "-fmodule-name=Adjust_pod_module"
+    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -457,9 +475,17 @@ acknowledged_target(
 filegroup(
   name = "Trademob_hdrs",
   srcs = glob(
-    [
-      "plugin/Trademob/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "plugin/Trademob/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -470,7 +496,8 @@ filegroup(
   name = "Trademob_union_hdrs",
   srcs = [
     "Trademob_hdrs",
-    "Adjust_hdrs"
+    "Adjust_hdrs",
+    ":Core_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -505,7 +532,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Trademob_union_hdrs"
+    ":Trademob_hdrs"
   ],
   pch = pch_with_name_hint(
     "Adjust",
@@ -547,7 +574,7 @@ objc_library(
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
   ] + [
-    "-fmodule-name=Adjust_pod_module"
+    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"

@@ -37,17 +37,20 @@ config_setting(
 filegroup(
   name = "FBSDKMessengerShareKit_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "FBSDKMessengerShareKit/**/*.h",
-      "FBSDKMessengerShareKit/**/*.hpp",
-      "FBSDKMessengerShareKit/**/*.hxx",
-      "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKMessengerShareKit/**/*.h",
+        "FBSDKMessengerShareKit/**/*.hpp",
+        "FBSDKMessengerShareKit/**/*.hxx",
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -69,14 +72,6 @@ gen_includes(
   name = "FBSDKMessengerShareKit_includes",
   include = [
     "Vendor/FBSDKMessengerShareKit/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "FBSDKMessengerShareKit",
-  "FBSDKMessengerShareKit_module_map",
-  "FBSDKMessengerShareKit",
-  [
-    "FBSDKMessengerShareKit_hdrs"
   ]
 )
 objc_library(
@@ -116,7 +111,7 @@ objc_library(
   ) + [
     "-IVendor/FBSDKMessengerShareKit/pod_support/Headers/Public/FBSDKMessengerShareKit/"
   ] + [
-    "-fmodule-name=FBSDKMessengerShareKit_pod_module"
+    "-fmodule-name=FBSDKMessengerShareKit"
   ],
   visibility = [
     "//visibility:public"

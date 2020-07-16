@@ -37,16 +37,19 @@ config_setting(
 filegroup(
   name = "Folly_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "folly/*.h",
-      "folly/detail/*.h",
-      "folly/portability/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "folly/*.h",
+        "folly/detail/*.h",
+        "folly/portability/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -74,14 +77,6 @@ gen_includes(
     "Vendor/Folly",
     "Vendor/boost-for-react-native",
     "Vendor/DoubleConversion"
-  ]
-)
-gen_module_map(
-  "folly",
-  "Folly_module_map",
-  "folly",
-  [
-    "Folly_hdrs"
   ]
 )
 objc_library(
@@ -124,7 +119,8 @@ objc_library(
   ],
   copts = [
     "-std=c++14",
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
+    "-std=c++14"
   ] + select(
     {
       "//conditions:default": [
@@ -136,7 +132,7 @@ objc_library(
       ]
     }
   ) + [
-    "-fmodule-name=folly_pod_module"
+    "-fmodule-name=folly"
   ],
   visibility = [
     "//visibility:public"

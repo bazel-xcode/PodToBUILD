@@ -69,14 +69,6 @@ gen_includes(
     "Vendor/Branch/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "Branch",
-  "Branch_module_map",
-  "Branch",
-  [
-    "Branch_hdrs"
-  ]
-)
 objc_library(
   name = "Branch",
   enable_modules = 0,
@@ -105,7 +97,7 @@ objc_library(
   ) + [
     "-IVendor/Branch/pod_support/Headers/Public/Branch/"
   ] + [
-    "-fmodule-name=Branch_pod_module"
+    "-fmodule-name=Branch"
   ],
   visibility = [
     "//visibility:public"
@@ -119,11 +111,19 @@ acknowledged_target(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    [
-      "Branch-SDK/Branch-SDK/*.h",
-      "Branch-SDK/Branch-SDK/Requests/*.h",
-      "Branch-SDK/Fabric/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Branch-SDK/Branch-SDK/*.h",
+        "Branch-SDK/Branch-SDK/Requests/*.h",
+        "Branch-SDK/Fabric/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -168,7 +168,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "Branch",
@@ -200,7 +200,7 @@ objc_library(
   ) + [
     "-IVendor/Branch/pod_support/Headers/Public/Branch/"
   ] + [
-    "-fmodule-name=Branch_pod_module"
+    "-fmodule-name=Branch"
   ],
   visibility = [
     "//visibility:public"
@@ -214,11 +214,19 @@ acknowledged_target(
 filegroup(
   name = "without-IDFA_hdrs",
   srcs = glob(
-    [
-      "Branch-SDK/Branch-SDK/*.h",
-      "Branch-SDK/Branch-SDK/Requests/*.h",
-      "Branch-SDK/Fabric/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Branch-SDK/Branch-SDK/*.h",
+        "Branch-SDK/Branch-SDK/Requests/*.h",
+        "Branch-SDK/Fabric/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -263,7 +271,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":without-IDFA_union_hdrs"
+    ":without-IDFA_hdrs"
   ],
   pch = pch_with_name_hint(
     "Branch",
@@ -294,7 +302,7 @@ objc_library(
   ) + [
     "-IVendor/Branch/pod_support/Headers/Public/Branch/"
   ] + [
-    "-fmodule-name=Branch_pod_module"
+    "-fmodule-name=Branch"
   ],
   visibility = [
     "//visibility:public"

@@ -67,14 +67,6 @@ gen_includes(
     "Vendor/FMDB/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "FMDB",
-  "FMDB_module_map",
-  "FMDB",
-  [
-    "FMDB_hdrs"
-  ]
-)
 objc_library(
   name = "FMDB",
   enable_modules = 0,
@@ -102,7 +94,7 @@ objc_library(
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
-    "-fmodule-name=FMDB_pod_module"
+    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -116,9 +108,17 @@ acknowledged_target(
 filegroup(
   name = "standard_hdrs",
   srcs = glob(
-    [
-      "src/fmdb/FM*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/fmdb/FM*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -170,7 +170,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":standard_union_hdrs"
+    ":standard_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -200,7 +200,7 @@ objc_library(
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
-    "-fmodule-name=FMDB_pod_module"
+    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -214,9 +214,17 @@ acknowledged_target(
 filegroup(
   name = "FTS_hdrs",
   srcs = glob(
-    [
-      "src/extra/fts3/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/extra/fts3/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -227,7 +235,8 @@ filegroup(
   name = "FTS_union_hdrs",
   srcs = [
     "FTS_hdrs",
-    "FMDB_hdrs"
+    "FMDB_hdrs",
+    ":standard_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -262,7 +271,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":FTS_union_hdrs"
+    ":FTS_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -290,7 +299,7 @@ objc_library(
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
-    "-fmodule-name=FMDB_pod_module"
+    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -303,7 +312,12 @@ acknowledged_target(
 )
 filegroup(
   name = "standalone_hdrs",
-  srcs = [],
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
   visibility = [
     "//visibility:public"
   ]
@@ -339,7 +353,7 @@ objc_library(
   name = "standalone",
   enable_modules = 0,
   hdrs = [
-    ":standalone_union_hdrs"
+    ":standalone_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -363,7 +377,7 @@ objc_library(
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
-    "-fmodule-name=FMDB_pod_module"
+    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -377,9 +391,17 @@ acknowledged_target(
 filegroup(
   name = "standalone_default_hdrs",
   srcs = glob(
-    [
-      "src/fmdb/FM*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/fmdb/FM*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -428,7 +450,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":standalone_default_union_hdrs"
+    ":standalone_default_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -458,7 +480,7 @@ objc_library(
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
-    "-fmodule-name=FMDB_pod_module"
+    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -474,10 +496,18 @@ acknowledged_target(
 filegroup(
   name = "standalone_FTS_hdrs",
   srcs = glob(
-    [
-      "src/extra/fts3/*.h",
-      "src/fmdb/FM*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/extra/fts3/*.h",
+        "src/fmdb/FM*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -527,7 +557,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":standalone_FTS_union_hdrs"
+    ":standalone_FTS_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -557,7 +587,7 @@ objc_library(
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
-    "-fmodule-name=FMDB_pod_module"
+    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -573,9 +603,17 @@ acknowledged_target(
 filegroup(
   name = "SQLCipher_hdrs",
   srcs = glob(
-    [
-      "src/fmdb/FM*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/fmdb/FM*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -624,7 +662,7 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":SQLCipher_union_hdrs"
+    ":SQLCipher_hdrs"
   ],
   pch = pch_with_name_hint(
     "FMDB",
@@ -655,7 +693,7 @@ objc_library(
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
   ] + [
-    "-fmodule-name=FMDB_pod_module"
+    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"

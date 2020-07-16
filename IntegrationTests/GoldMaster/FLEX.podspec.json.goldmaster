@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "FLEX_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "Classes/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -66,14 +69,6 @@ gen_includes(
   name = "FLEX_includes",
   include = [
     "Vendor/FLEX/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "FLEX",
-  "FLEX_module_map",
-  "FLEX",
-  [
-    "FLEX_hdrs"
   ]
 )
 objc_library(
@@ -122,7 +117,7 @@ objc_library(
   ) + [
     "-IVendor/FLEX/pod_support/Headers/Public/FLEX/"
   ] + [
-    "-fmodule-name=FLEX_pod_module"
+    "-fmodule-name=FLEX"
   ],
   visibility = [
     "//visibility:public"

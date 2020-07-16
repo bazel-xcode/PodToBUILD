@@ -37,14 +37,17 @@ config_setting(
 filegroup(
   name = "IBActionSheet_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -66,14 +69,6 @@ gen_includes(
   name = "IBActionSheet_includes",
   include = [
     "Vendor/IBActionSheet/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "IBActionSheet",
-  "IBActionSheet_module_map",
-  "IBActionSheet",
-  [
-    "IBActionSheet_hdrs"
   ]
 )
 objc_library(
@@ -116,7 +111,7 @@ objc_library(
   ) + [
     "-IVendor/IBActionSheet/pod_support/Headers/Public/IBActionSheet/"
   ] + [
-    "-fmodule-name=IBActionSheet_pod_module"
+    "-fmodule-name=IBActionSheet"
   ],
   visibility = [
     "//visibility:public"

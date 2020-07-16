@@ -37,19 +37,22 @@ config_setting(
 filegroup(
   name = "ZipArchive_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "*.h",
-      "minizip/crypt.h",
-      "minizip/ioapi.h",
-      "minizip/mztools.h",
-      "minizip/unzip.h",
-      "minizip/zip.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "*.h",
+        "minizip/crypt.h",
+        "minizip/ioapi.h",
+        "minizip/mztools.h",
+        "minizip/unzip.h",
+        "minizip/zip.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -71,14 +74,6 @@ gen_includes(
   name = "ZipArchive_includes",
   include = [
     "Vendor/ZipArchive/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "ZipArchive",
-  "ZipArchive_module_map",
-  "ZipArchive",
-  [
-    "ZipArchive_hdrs"
   ]
 )
 objc_library(
@@ -123,7 +118,7 @@ objc_library(
   ) + [
     "-IVendor/ZipArchive/pod_support/Headers/Public/ZipArchive/"
   ] + [
-    "-fmodule-name=ZipArchive_pod_module"
+    "-fmodule-name=ZipArchive"
   ],
   visibility = [
     "//visibility:public"

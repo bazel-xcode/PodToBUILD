@@ -38,11 +38,19 @@ config_setting(
 filegroup(
   name = "Calabash_cxx_hdrs",
   srcs = glob(
-    [
-      "calabash.framework/Versions/A/Headers/*.h",
-      "calabash.framework/Versions/A/Headers/*.hpp",
-      "calabash.framework/Versions/A/Headers/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.h",
+        "calabash.framework/Versions/A/Headers/*.hpp",
+        "calabash.framework/Versions/A/Headers/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -79,7 +87,7 @@ gen_includes(
 objc_library(
   name = "Calabash_cxx",
   enable_modules = 0,
-  non_arc_srcs = glob(
+  srcs = glob(
     [
       "calabash.framework/Versions/A/Headers/*.cc",
       "calabash.framework/Versions/A/Headers/*.cpp",
@@ -98,11 +106,16 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Calabash_cxx_union_hdrs"
+    ":Calabash_cxx_hdrs"
   ],
   pch = pch_with_name_hint(
     "Calabash",
-    []
+    glob(
+      [
+        "calabash.framework/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = select(
     {
@@ -117,7 +130,8 @@ objc_library(
   copts = [
     ""Vendor/Calabash/calabash.framework/calabash"",
     "-ObjC",
-    "-force_load"
+    "-force_load",
+    "-std=c++14"
   ] + select(
     {
       "//conditions:default": [
@@ -131,7 +145,7 @@ objc_library(
   ) + [
     "-IVendor/Calabash/pod_support/Headers/Public/Calabash/"
   ] + [
-    "-fmodule-name=Calabash_pod_module"
+    "-fmodule-name=Calabash"
   ],
   visibility = [
     "//visibility:public"
@@ -156,16 +170,19 @@ swift_library(
 filegroup(
   name = "Calabash_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "calabash.framework/Versions/A/Headers/*.h",
-      "calabash.framework/Versions/A/Headers/*.hpp",
-      "calabash.framework/Versions/A/Headers/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.h",
+        "calabash.framework/Versions/A/Headers/*.hpp",
+        "calabash.framework/Versions/A/Headers/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ) + [
     ":Calabash_cxx_hdrs"
@@ -181,8 +198,7 @@ headermap(
     ":Calabash_hdrs"
   ],
   deps = [
-    ":Calabash_cxx",
-    ":Calabash_swift"
+    ":Calabash_cxx"
   ],
   visibility = [
     "//visibility:public"
@@ -192,14 +208,6 @@ gen_includes(
   name = "Calabash_includes",
   include = [
     "Vendor/Calabash/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "Calabash",
-  "Calabash_module_map",
-  "Calabash",
-  [
-    "Calabash_hdrs"
   ]
 )
 objc_library(
@@ -250,7 +258,7 @@ objc_library(
   ) + [
     "-IVendor/Calabash/pod_support/Headers/Public/Calabash/"
   ] + [
-    "-fmodule-name=Calabash_pod_module"
+    "-fmodule-name=Calabash"
   ],
   visibility = [
     "//visibility:public"
