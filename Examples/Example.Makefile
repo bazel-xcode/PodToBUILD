@@ -9,7 +9,8 @@ BAZEL=~/.bazelenv/versions/0.28.1/bin/bazel
 
 # Override the repository to point at the source. It does a source build of the
 # current code.
-BAZEL_OPTS=--override_repository=rules_pods=$(RULES_PODS_DIR) \
+REPOSITORY_OVERRIDE=--override_repository=rules_pods=$(RULES_PODS_DIR)
+BAZEL_OPTS=$(REPOSITORY_OVERRIDE) \
 	--disk_cache=$(HOME)/Library/Caches/Bazel \
 	--apple_platform_type=ios
 
@@ -40,10 +41,10 @@ vendorize:
 
 fetch: info 
 	[[ ! -f Pods.WORKSPACE ]] || $(MAKE) vendorize
-	$(BAZEL) fetch :* --override_repository=rules_pods=$(RULES_PODS_DIR)
+	$(BAZEL) fetch :* $(REPOSITORY_OVERRIDE)
 
 info:
-	$(BAZEL) info
+	$(BAZEL) info $(REPOSITORY_OVERRIDE)
 
 # This command generates a workspace from a Podfile
 gen_workspace:
