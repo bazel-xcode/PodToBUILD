@@ -221,8 +221,10 @@ def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
         _fetch_remote_repo(repository_ctx, repo_tool_bin_path, target_name, url)
     elif url.startswith("/"):
         _link_local_repo(repository_ctx, target_name, url)
-    else:
-        _link_local_repo(repository_ctx, target_name, SRC_ROOT+"/"+url)
+    elif not url.startswith("Vendor"):
+        # Assume that if a directory is already in vendor, then we should not
+        # link
+        _link_local_repo(repository_ctx, target_name, SRC_ROOT + "/" + url)
 
 def _update_repo_impl(invocation_info):
     repository_ctx = invocation_info.repository_ctx
