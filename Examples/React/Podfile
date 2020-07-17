@@ -9,3 +9,8 @@ def rn_pods()
     require_relative pod_dir + '/React/scripts/react_native_pods'
     use_react_native!(path: pod_dir + '/React', turbo_modules_enabled: false)
 end
+
+target 'ios-app' do
+    rn_pods()
+end
+

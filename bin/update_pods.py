@@ -347,12 +347,11 @@ def new_pod_repository(name,
             strip_prefix = "",
             user_options = [],
             install_script = None, 
-            inhibit_warnings = False,
+            inhibit_warnings = True,
             trace = False,
             enable_modules = True,
             generate_module_map = False,
-            # TODO: true?
-            generate_header_map = True,
+            generate_header_map = False,
             owner = "", # This is a Noop
             header_visibility = "pod_support"):
     """Declare a repository for a Pod

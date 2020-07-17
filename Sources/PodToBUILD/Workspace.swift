@@ -30,6 +30,7 @@ enum WorkspaceError: Error {
 public struct PodRepositoryWorkspaceEntry: SkylarkConvertible {
     var name: String
     var url: String?
+    var generateHeaderMap: Bool?
     var podspecURL: String?
 
     public func toSkylark() -> SkylarkNode {
@@ -40,6 +41,8 @@ public struct PodRepositoryWorkspaceEntry: SkylarkConvertible {
         if let aPodspecURL = podspecURL {
             args.append(.named(name: "podspec_url", value: .string(aPodspecURL)))
         }
+        let generateHeaderMap = (self.generateHeaderMap ?? true) ? 1 : 0
+        args.append(.named(name: "generate_header_map", value: .int(generateHeaderMap)))
         let repoSkylark = SkylarkNode.functionCall(name: "new_pod_repository",
                                                    arguments: args)
         return repoSkylark
