@@ -87,7 +87,6 @@ public class Glob: Collection {
                 adjustedPattern += "*"
             }
         }
-
         let patterns = behavior.supportsGlobstar ? expandGlobstar(pattern: adjustedPattern) : [adjustedPattern]
 
         for pattern in patterns {
@@ -130,20 +129,25 @@ public class Glob: Collection {
         let fileManager = FileManager.default
 
         var directories: [String]
-
-        do {
-            directories = try fileManager.subpathsOfDirectory(atPath: firstPart).compactMap { subpath in
-                let fullPath = NSString(string: firstPart).appendingPathComponent(subpath)
-                var isDirectory = ObjCBool(false)
-                if fileManager.fileExists(atPath: fullPath, isDirectory: &isDirectory) && isDirectory.boolValue {
-                    return fullPath
-                } else {
-                    return nil
+        // If using an empty filepath then no need to look for it
+        if !firstPart.isEmpty {
+            do {
+                directories = try fileManager.subpathsOfDirectory(atPath: firstPart).compactMap { subpath in
+                    let fullPath = NSString(string: firstPart).appendingPathComponent(subpath)
+                    var isDirectory = ObjCBool(false)
+                    if fileManager.fileExists(atPath: fullPath, isDirectory: &isDirectory) && isDirectory.boolValue {
+                        return fullPath
+                    } else {
+                        return nil
+                    }
                 }
+            } catch {
+                directories = []
+                print("Error parsing file system item: \(error)")
             }
-        } catch {
+        } else {
             directories = []
-            print("Error parsing file system item: \(error)")
+            print("Error parsing file system item: EMPTY")
         }
 
         if behavior.includesFilesFromRootOfGlobstar {

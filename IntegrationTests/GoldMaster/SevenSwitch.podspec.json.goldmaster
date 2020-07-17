@@ -54,5 +54,8 @@ swift_library(
     exclude_directories = 1
   ),
   deps = [],
-  data = []
+  data = [],
+  visibility = [
+    "//visibility:public"
+  ]
 )

@@ -53,6 +53,10 @@ def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
 
 def _link_local_repo(repository_ctx, target_name, url):
     cd = _exec(repository_ctx, ["pwd"]).stdout.split("\n")[0]
+    if url.startswith("/"):
+      url = url
+    else:
+      url = cd + "/" + url
     from_dir = url + "/"
     to_dir = cd + "/"
     all_files = _exec(repository_ctx, ["ls", url]).stdout.split("\n")
@@ -157,10 +161,18 @@ def _impl(repository_ctx):
 
     if repository_ctx.attr.podspec_url:
         # For now, we curl the podspec url before the script runs
-        if repository_ctx.attr.podspec_file:
-            fail("Cannot specify both podspec_url and podspec_file")
-        script += "curl -O " + repository_ctx.attr.podspec_url
-        script += "\n"
+        if repository_ctx.attr.podspec_url.startswith("http"):
+            script += "curl -O " + repository_ctx.attr.podspec_url
+            script += "\n"
+        else:
+            # Dump a podspec into this directory
+            if repository_ctx.attr.podspec_url.startswith("/"):
+                script += "ditto " + repository_ctx.attr.podspec_url + " ."
+                script += "\n"
+            else:
+                workspace_dir = _exec(repository_ctx, ["pwd"]).stdout.split("\n")[0]
+                script += "ditto " + workspace_dir + "/" + repository_ctx.attr.podspec_url + " ."
+                script += "\n"
     elif repository_ctx.attr.podspec_file:
         # Note that we can't re-use the podspec_url attribute for this since
         # that would require being able to determine the root of the main
@@ -169,7 +181,6 @@ def _impl(repository_ctx):
             fail("Cannot specify both podspec_url and podspec_file")
         script += "ditto " + str(repository_ctx.path(repository_ctx.attr.podspec_file)) + " ."
         script += "\n"
-
     if repository_ctx.attr.install_script_tpl:
         for sub in substitutions:
             install_script_tpl = install_script_tpl.replace(sub, substitutions[sub])
@@ -195,8 +206,8 @@ pod_repo_ = repository_rule(
         "install_script_tpl": attr.string(),
         "inhibit_warnings": attr.bool(default=False, mandatory=True),
         "trace": attr.bool(default=False, mandatory=True),
-        "enable_modules": attr.bool(default=True, mandatory=True),
-        "generate_module_map": attr.bool(default=True, mandatory=True),
+        "enable_modules": attr.bool(default=False, mandatory=True),
+        "generate_module_map": attr.bool(default=False, mandatory=True),
         "header_visibility": attr.string(),
     }
 )

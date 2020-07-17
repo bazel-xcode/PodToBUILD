@@ -275,5 +275,8 @@ swift_library(
   deps = [
     ":Core"
   ],
-  data = []
+  data = [],
+  visibility = [
+    "//visibility:public"
+  ]
 )

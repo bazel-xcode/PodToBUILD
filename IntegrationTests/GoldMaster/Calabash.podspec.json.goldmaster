@@ -232,7 +232,10 @@ swift_library(
     exclude_directories = 1
   ),
   deps = [],
-  data = []
+  data = [],
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "Calabash_direct_hdrs",

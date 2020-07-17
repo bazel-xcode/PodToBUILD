@@ -440,7 +440,10 @@ swift_library(
     }
   ),
   deps = [],
-  data = []
+  data = [],
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "youtube-ios-player-helper_direct_hdrs",
