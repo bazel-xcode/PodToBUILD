@@ -831,14 +831,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         }
 
         let moduleHeaders: [String]
-        if let moduleMap = lib.moduleMap {
-            moduleHeaders = [":" + moduleMap.dirname + "_module_map_file"]
+        if options.generateModuleMap {
+            let moduleMapDirname = lib.moduleMap?.dirname ?? externalName + "_module_map"
+            moduleHeaders = [":" + moduleMapDirname + "_module_map_file"]
             // TODO:
             // - Consider moving this module map into deps 
             // - Propagate as a module map
             libArguments.append(.named(
                 name: "includes",
-                value: [moduleMap.dirname].toSkylark()
+                value: [moduleMapDirname].toSkylark()
              ))
         } else {
             moduleHeaders = []
