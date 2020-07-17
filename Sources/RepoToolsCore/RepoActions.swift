@@ -293,6 +293,9 @@ public enum RepoActions {
             let name = target.name
             let head = buildOptions.podName + "_"
             let getName: () -> String = {
+                if head + "acknowledgement" == target.name {
+                    return target.name
+                }
                 if let headIdx = name.range(of: head) {
                     return String(name[headIdx.upperBound...])
                 } else {
@@ -308,6 +311,16 @@ public enum RepoActions {
         let compiler = SkylarkCompiler(lines)
         shell.write(value: compiler.run(), toPath:
             BazelConstants.buildFileURL())
+        // assume _PATH_TO_SOME/bin/RepoTools
+        let assetRoot = RepoActions.assetRoot(buildOptions: buildOptions)
+
+        shell.dir(PodSupportSystemPublicHeaderDir)
+        shell.dir(PodSupportBuidableDir)
+        shell.symLink(from: "\(assetRoot)/support.BUILD",
+            to: "\(PodSupportBuidableDir)/\(BazelConstants.buildFilePath)")
+        let entry = RenderAcknowledgmentEntry(entry: AcknowledgmentEntry(forPodspec: podSpec))
+        let acknowledgementFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "acknowledgement.plist")
+        shell.write(value: entry, toPath: acknowledgementFilePath)
     }
 
     private static func initializePodspecDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
@@ -450,12 +463,7 @@ public enum RepoActions {
 
     // Assume the directory structure relative to the pod root
     private static func assetRoot(buildOptions: BuildOptions) -> String {
-        if buildOptions.path ==  "." {
-            return "../../../Vendor/rules_pods/BazelExtensions"
-        }
-        let nestingDepth = buildOptions.path.split(separator: "/").count
-        let relativePathToWorkspace = (0..<nestingDepth).map { _ in ".." }.joined(separator: "/") 
-        return "\(relativePathToWorkspace)/../Vendor/rules_pods/BazelExtensions"
+        return "../../../Vendor/rules_pods/BazelExtensions"
     }
 
     /// Generates a workspace from a Podfile.lock
