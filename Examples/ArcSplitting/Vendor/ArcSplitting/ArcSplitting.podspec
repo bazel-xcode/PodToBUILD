@@ -6,7 +6,7 @@ Pod::Spec.new do |spec|
   spec.homepage     = "http://p"
   spec.license      = "MIT"
   spec.author             = { "Jerry Marino" => "i@jerrymarino.com" }
-  spec.source       = { :git => "http://p/ChildPodspec.git", :tag => "#{spec.version}" }
+  spec.source       = { :git => "http://p/ArcSplitting.git", :tag => "#{spec.version}" }
   spec.source_files  = "ArcSplitting", "ArcSplitting/**/*.{h,m,mm}"
 
   mrr_files = [
