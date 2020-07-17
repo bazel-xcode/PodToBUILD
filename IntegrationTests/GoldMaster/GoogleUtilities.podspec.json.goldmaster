@@ -36,6 +36,27 @@ config_setting(
   }
 )
 filegroup(
+  name = "GoogleUtilities_package_hdrs",
+  srcs = [
+    "GoogleUtilities_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "GoogleUtilities_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "GoogleUtilities_hdrs",
   srcs = glob(
     [
@@ -51,6 +72,7 @@ headermap(
   name = "GoogleUtilities_hmap",
   namespace = "GoogleUtilities",
   hdrs = [
+    "GoogleUtilities_package_hdrs",
     ":GoogleUtilities_hdrs"
   ],
   deps = [

@@ -35,6 +35,33 @@ config_setting(
   }
 )
 filegroup(
+  name = "FMDB_package_hdrs",
+  srcs = [
+    "FMDB_direct_hdrs",
+    "standard_direct_hdrs",
+    "FTS_direct_hdrs",
+    "standalone_direct_hdrs",
+    "standalone_default_direct_hdrs",
+    "standalone_FTS_direct_hdrs",
+    "SQLCipher_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FMDB_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FMDB_hdrs",
   srcs = glob(
     [
@@ -52,6 +79,7 @@ headermap(
   name = "FMDB_hmap",
   namespace = "FMDB",
   hdrs = [
+    "FMDB_package_hdrs",
     ":FMDB_hdrs"
   ],
   deps = [
@@ -106,6 +134,26 @@ acknowledged_target(
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "standard_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/fmdb/FM*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "standard_hdrs",
   srcs = glob(
     glob(
@@ -139,6 +187,7 @@ headermap(
   name = "standard_hmap",
   namespace = "FMDB",
   hdrs = [
+    "FMDB_package_hdrs",
     ":standard_union_hdrs"
   ],
   deps = [],
@@ -212,6 +261,26 @@ acknowledged_target(
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "FTS_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/extra/fts3/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FTS_hdrs",
   srcs = glob(
     glob(
@@ -246,6 +315,7 @@ headermap(
   name = "FTS_hmap",
   namespace = "FMDB",
   hdrs = [
+    "FMDB_package_hdrs",
     ":FTS_union_hdrs"
   ],
   deps = [
@@ -311,6 +381,18 @@ acknowledged_target(
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "standalone_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "standalone_hdrs",
   srcs = glob(
     [
@@ -336,6 +418,7 @@ headermap(
   name = "standalone_hmap",
   namespace = "FMDB",
   hdrs = [
+    "FMDB_package_hdrs",
     ":standalone_union_hdrs"
   ],
   deps = [],
@@ -389,6 +472,26 @@ acknowledged_target(
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "standalone_default_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/fmdb/FM*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "standalone_default_hdrs",
   srcs = glob(
     glob(
@@ -422,6 +525,7 @@ headermap(
   name = "standalone_default_hmap",
   namespace = "FMDB",
   hdrs = [
+    "FMDB_package_hdrs",
     ":standalone_default_union_hdrs"
   ],
   deps = [
@@ -494,6 +598,27 @@ acknowledged_target(
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "standalone_FTS_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/extra/fts3/*.h",
+        "src/fmdb/FM*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "standalone_FTS_hdrs",
   srcs = glob(
     glob(
@@ -528,6 +653,7 @@ headermap(
   name = "standalone_FTS_hmap",
   namespace = "FMDB",
   hdrs = [
+    "FMDB_package_hdrs",
     ":standalone_FTS_union_hdrs"
   ],
   deps = [
@@ -601,6 +727,26 @@ acknowledged_target(
   value = "//Vendor/FMDB/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "SQLCipher_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/fmdb/FM*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "SQLCipher_hdrs",
   srcs = glob(
     glob(
@@ -634,6 +780,7 @@ headermap(
   name = "SQLCipher_hmap",
   namespace = "FMDB",
   hdrs = [
+    "FMDB_package_hdrs",
     ":SQLCipher_union_hdrs"
   ],
   deps = [

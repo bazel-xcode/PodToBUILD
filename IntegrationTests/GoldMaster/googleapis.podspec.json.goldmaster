@@ -35,6 +35,29 @@ config_setting(
   }
 )
 filegroup(
+  name = "googleapis_package_hdrs",
+  srcs = [
+    "googleapis_direct_hdrs",
+    "Messages_direct_hdrs",
+    "Services_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "googleapis_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "googleapis_hdrs",
   srcs = glob(
     [
@@ -53,6 +76,7 @@ headermap(
   name = "googleapis_hmap",
   namespace = "googleapis",
   hdrs = [
+    "googleapis_package_hdrs",
     ":googleapis_hdrs"
   ],
   deps = [
@@ -115,6 +139,26 @@ acknowledged_target(
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Messages_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "google/**/*.pbobjc.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Messages_hdrs",
   srcs = glob(
     glob(
@@ -148,10 +192,11 @@ headermap(
   name = "Messages_hmap",
   namespace = "googleapis",
   hdrs = [
+    "googleapis_package_hdrs",
     ":Messages_union_hdrs"
   ],
   deps = [
-    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin"
+    "//Vendor/Protobuf:Protobuf"
   ],
   visibility = [
     "//visibility:public"
@@ -170,6 +215,12 @@ objc_library(
     [
       "google/**/*.pbobjc.m"
     ],
+    exclude = glob(
+      [
+        "google/**/*.pbrpc.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
@@ -180,7 +231,7 @@ objc_library(
     []
   ),
   deps = [
-    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin",
+    "//Vendor/Protobuf:Protobuf",
     ":Messages_includes"
   ],
   copts = [
@@ -207,9 +258,29 @@ objc_library(
 acknowledged_target(
   name = "Messages_acknowledgement",
   deps = [
-    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin_acknowledgement"
+    "//Vendor/Protobuf:Protobuf_acknowledgement"
   ],
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Services_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "google/**/*.pbrpc.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "Services_hdrs",
@@ -235,7 +306,8 @@ filegroup(
   name = "Services_union_hdrs",
   srcs = [
     "Services_hdrs",
-    "googleapis_hdrs"
+    "googleapis_hdrs",
+    ":Messages_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -245,10 +317,12 @@ headermap(
   name = "Services_hmap",
   namespace = "googleapis",
   hdrs = [
+    "googleapis_package_hdrs",
     ":Services_union_hdrs"
   ],
   deps = [
-    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin"
+    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
+    ":Messages"
   ],
   visibility = [
     "//visibility:public"
@@ -282,7 +356,8 @@ objc_library(
     )
   ),
   deps = [
-    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin",
+    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
+    ":Messages",
     ":Services_includes"
   ],
   copts = [
@@ -309,7 +384,7 @@ objc_library(
 acknowledged_target(
   name = "Services_acknowledgement",
   deps = [
-    "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin_acknowledgement"
+    "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC_acknowledgement"
   ],
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
 )

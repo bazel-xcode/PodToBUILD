@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "ColorCube_package_hdrs",
+  srcs = [
+    "ColorCube_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "ColorCube_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ColorCube/ColorCube/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "ColorCube_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "ColorCube_hmap",
   namespace = "ColorCube",
   hdrs = [
+    "ColorCube_package_hdrs",
     ":ColorCube_hdrs"
   ],
   deps = [],

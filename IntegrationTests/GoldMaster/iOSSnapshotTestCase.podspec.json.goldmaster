@@ -36,6 +36,28 @@ config_setting(
   }
 )
 filegroup(
+  name = "iOSSnapshotTestCase_package_hdrs",
+  srcs = [
+    "iOSSnapshotTestCase_direct_hdrs",
+    "Core_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "iOSSnapshotTestCase_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "iOSSnapshotTestCase_hdrs",
   srcs = glob(
     [
@@ -51,6 +73,7 @@ headermap(
   name = "iOSSnapshotTestCase_hmap",
   namespace = "FBSnapshotTestCase",
   hdrs = [
+    "iOSSnapshotTestCase_package_hdrs",
     ":iOSSnapshotTestCase_hdrs"
   ],
   deps = [
@@ -111,6 +134,30 @@ acknowledged_target(
   value = "//Vendor/iOSSnapshotTestCase/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Core_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSnapshotTestCase/**/*.h",
+        "FBSnapshotTestCase/*.h",
+        "FBSnapshotTestCase/Categories/UIImage+Compare.h",
+        "FBSnapshotTestCase/Categories/UIImage+Diff.h",
+        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Core_hdrs",
   srcs = glob(
     glob(
@@ -148,6 +195,7 @@ headermap(
   name = "Core_hmap",
   namespace = "FBSnapshotTestCase",
   hdrs = [
+    "iOSSnapshotTestCase_package_hdrs",
     ":Core_union_hdrs"
   ],
   deps = [],

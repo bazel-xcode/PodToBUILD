@@ -35,7 +35,16 @@ config_setting(
   }
 )
 filegroup(
-  name = "FBSDKShareKit_hdrs",
+  name = "FBSDKShareKit_package_hdrs",
+  srcs = [
+    "FBSDKShareKit_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKShareKit_direct_hdrs",
   srcs = select(
     {
       "//conditions:default": glob(
@@ -46,9 +55,6 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKShareKit/**/*.h",
-            "FBSDKShareKit/**/*.hpp",
-            "FBSDKShareKit/**/*.hxx",
             "FBSDKShareKit/FBSDKShareKit/**/*.h"
           ],
           exclude = [
@@ -60,19 +66,9 @@ filegroup(
         exclude_directories = 1
       ),
       ":osxCase": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
-          [
-            "FBSDKShareKit/**/*.h",
-            "FBSDKShareKit/**/*.hpp",
-            "FBSDKShareKit/**/*.hxx"
-          ],
-          exclude_directories = 1
-        ),
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
         exclude_directories = 1
       ),
       ":tvosCase": glob(
@@ -83,9 +79,6 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKShareKit/**/*.h",
-            "FBSDKShareKit/**/*.hpp",
-            "FBSDKShareKit/**/*.hxx",
             "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
             "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h",
             "FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.h",
@@ -116,6 +109,22 @@ filegroup(
         exclude_directories = 1
       ),
       ":watchosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKShareKit_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
         glob(
           [
             "pod_support/Headers/Public/**/*"
@@ -123,12 +132,63 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKShareKit/**/*.h",
-            "FBSDKShareKit/**/*.hpp",
-            "FBSDKShareKit/**/*.hxx"
+            "FBSDKShareKit/FBSDKShareKit/**/*.h"
+          ],
+          exclude = [
+            "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h"
           ],
           exclude_directories = 1
         ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareMediaContent.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphContent.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphObject.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphValueContainer.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKSharePhoto.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKSharePhotoContent.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareVideo.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKShareVideoContent.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKSharing.h",
+            "FBSDKShareKit/FBSDKShareKit/FBSDKSharingContent.h",
+            "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareDefines.h",
+            "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareError.h",
+            "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareLinkContent+Internal.h",
+            "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareOpenGraphValueContainer+Internal.h",
+            "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareUtility.h",
+            "FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
         exclude_directories = 1
       )
     }
@@ -141,6 +201,7 @@ headermap(
   name = "FBSDKShareKit_hmap",
   namespace = "FBSDKShareKit",
   hdrs = [
+    "FBSDKShareKit_package_hdrs",
     ":FBSDKShareKit_hdrs"
   ],
   deps = [

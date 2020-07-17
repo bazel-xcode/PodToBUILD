@@ -36,6 +36,27 @@ config_setting(
   }
 )
 filegroup(
+  name = "GoogleAuthUtilities_package_hdrs",
+  srcs = [
+    "GoogleAuthUtilities_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "GoogleAuthUtilities_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "GoogleAuthUtilities_hdrs",
   srcs = glob(
     [
@@ -51,6 +72,7 @@ headermap(
   name = "GoogleAuthUtilities_hmap",
   namespace = "GoogleAuthUtilities",
   hdrs = [
+    "GoogleAuthUtilities_package_hdrs",
     ":GoogleAuthUtilities_hdrs"
   ],
   deps = [

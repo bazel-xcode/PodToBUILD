@@ -36,6 +36,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "iRate_package_hdrs",
+  srcs = [
+    "iRate_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "iRate_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "iRate/iRate.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "iRate_hdrs",
   srcs = glob(
     glob(
@@ -59,6 +88,7 @@ headermap(
   name = "iRate_hmap",
   namespace = "iRate",
   hdrs = [
+    "iRate_package_hdrs",
     ":iRate_hdrs"
   ],
   deps = [],

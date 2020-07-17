@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "FBSDKMessengerShareKit_package_hdrs",
+  srcs = [
+    "FBSDKMessengerShareKit_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKMessengerShareKit_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FBSDKMessengerShareKit_hdrs",
   srcs = glob(
     glob(
@@ -44,9 +73,6 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "FBSDKMessengerShareKit/**/*.h",
-        "FBSDKMessengerShareKit/**/*.hpp",
-        "FBSDKMessengerShareKit/**/*.hxx",
         "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h"
       ],
       exclude_directories = 1
@@ -61,6 +87,7 @@ headermap(
   name = "FBSDKMessengerShareKit_hmap",
   namespace = "FBSDKMessengerShareKit",
   hdrs = [
+    "FBSDKMessengerShareKit_package_hdrs",
     ":FBSDKMessengerShareKit_hdrs"
   ],
   deps = [],

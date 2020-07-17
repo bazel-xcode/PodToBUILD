@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "kingpin_package_hdrs",
+  srcs = [
+    "kingpin_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "kingpin_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "kingpin/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "kingpin_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "kingpin_hmap",
   namespace = "kingpin",
   hdrs = [
+    "kingpin_package_hdrs",
     ":kingpin_hdrs"
   ],
   deps = [],

@@ -218,35 +218,119 @@ public enum RepoActions {
         let podspecName = CommandLine.arguments[1]
         if buildOptions.path != "." && buildOptions.childPaths.count == 0 {
             // Write an alias BUILD file that points to the source directory
-            let visibility = SkylarkNode.functionCall(name: "package",
-                arguments: [
-                    .named(name: "default_visibility",
-                           value: .list([.string("//visibility:public")]))
-                ])
-            let alias = Alias(name: podspecName,
-                actual: "//" + buildOptions.path + ":" + podspecName)
-            let acknowledgmentAlias = Alias(name: podspecName + "_acknowledgement",
-                actual: "//" + buildOptions.path + ":" + podspecName + "_acknowledgement")
-            let compiler = SkylarkCompiler(.lines([
-                    visibility.toSkylark(),
-                    alias.toSkylark(),
-                    acknowledgmentAlias.toSkylark()
-            ]))
-            shell.write(value: compiler.run(), toPath:
-                BazelConstants.buildFileURL())
-            return
+            // this supports naming conventions of //Vendor|external/Podname
+            initializeAliasDirectory(shell: shell, podspecName: podspecName,
+                buildOptions: buildOptions)
+        } else {
+            initializePodspecDirectory(shell: shell, podspecName: podspecName,
+                buildOptions: buildOptions)
+        }
+    }
+
+    static func getJSONPodspec(shell: ShellContext, podspecName: String, path: String, childPaths: [String]) -> JSONDict {
+        let jsonData: Data
+
+        // Check the path and child paths
+        let podspecPath = "\(path)/\(podspecName).podspec"
+        let currentDirectoryPath = FileManager.default.currentDirectoryPath
+        if FileManager.default.fileExists(atPath: "\(podspecPath).json") {
+            jsonData = shell.command("/bin/cat", arguments: [podspecPath + ".json"]).standardOutputData
+        } else if FileManager.default.fileExists(atPath: podspecPath) {
+            // This uses the current environment's cocoapods installation.
+            let whichPod = shell.shellOut("which pod").standardOutputAsString
+            if whichPod.isEmpty {
+                fatalError("RepoTools requires a cocoapod installation on host")
+            }
+            let podBin = whichPod.components(separatedBy: "\n")[0]
+            let podResult = shell.command(podBin, arguments: ["ipc", "spec", podspecPath])
+            guard podResult.terminationStatus == 0 else {
+                fatalError("""
+                        PodSpec decoding failed \(podResult.terminationStatus)
+                        stdout: \(podResult.standardOutputAsString)
+                        stderr: \(podResult.standardErrorAsString)
+                """)
+            }
+            jsonData = podResult.standardOutputData
+        } else {
+            fatalError("Missing podspec ( \(podspecPath) ) inside \(currentDirectoryPath)")
         }
 
-        initializePodspecDirectory(shell: shell, podspecName: podspecName,
-                buildOptions: buildOptions)
-        let currentDirectoryPath = FileManager.default.currentDirectoryPath
-        // Child podspec logic - initializes a child pod, for a given Podspec url
+        guard let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
+            JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
+            let JSONPodspec = JSONFile as? JSONDict
+        else {
+            fatalError("Invalid JSON Podspec: (look inside \(currentDirectoryPath))")
+        }
+        return JSONPodspec
+    }
+
+    private static func initializeAliasDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
+        let visibility = SkylarkNode.functionCall(name: "package",
+            arguments: [
+                .named(name: "default_visibility",
+                       value: .list([.string("//visibility:public")]))
+            ])
+
+        let parts = buildOptions.path.split(separator: "/")
+        let addName = getNamePrefix()
+        let JSONPodspec = getJSONPodspec(shell: shell, podspecName:
+                                      podspecName, path: "../../" + buildOptions.path,
+                                      childPaths: buildOptions.childPaths)
+        guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
+            fatalError("Cant read in podspec")
+        }
+        let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions:
+            buildOptions, assimilate: true)
+
+        let actualPath = parts[0] + "/" + parts[1]
+        let aliases = buildFile.skylarkConvertibles.compactMap {
+            convertible -> SkylarkNode? in
+            guard let target = convertible as? BazelTarget else {
+                return nil
+            }
+            guard target.name != "" else {
+                return nil
+            }
+            let name = target.name
+            let head = buildOptions.podName + "_"
+            let getName: () -> String = {
+                if let headIdx = name.range(of: head) {
+                    return String(name[headIdx.upperBound...])
+                } else {
+                    return name
+                }
+            }
+            let alias = Alias(name: getName(),
+                actual: "//" + actualPath + ":" + name)
+            return alias.toSkylark()
+        }
+
+        let lines = [visibility] + aliases
+        let compiler = SkylarkCompiler(lines)
+        shell.write(value: compiler.run(), toPath:
+            BazelConstants.buildFileURL())
+    }
+
+    private static func initializePodspecDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
+        let workspaceRootPath: String
+        if buildOptions.path != "." && buildOptions.childPaths.count == 0 {
+            workspaceRootPath = "../..\(buildOptions.path)"
+        } else {
+            workspaceRootPath =  "."
+        }
+        let JSONPodspec = getJSONPodspec(shell: shell, podspecName:
+            podspecName, path: workspaceRootPath,
+            childPaths: buildOptions.childPaths)
         var childInfoIter = buildOptions.childPaths.makeIterator()
+        // Batch create several symlinks for Pod style includes
+        let currentDirectoryPath = FileManager.default.currentDirectoryPath
+        var childBuildFiles: [PodBuildFile] = []
         while let childInfo = childInfoIter.next() {
             let childName = childInfo
             guard let childPath = childInfoIter.next() else {
-                fatalError("Invalid path in update_pods.py")
+                fatalError("Invalid child path")
             }
+
             let childBuildOptions = BasicBuildOptions(
                 podName: childName,
                 path: childPath,
@@ -260,72 +344,24 @@ public enum RepoActions {
                 alwaysSplitRules: buildOptions.alwaysSplitRules,
                 vendorize: buildOptions.vendorize,
                 childPaths: buildOptions.childPaths)
-            let absPath = "\(currentDirectoryPath)/../../\(childPath)"
-            guard
-            FileManager.default.changeCurrentDirectoryPath(
-                absPath) else {
-                fatalError("Can't change path to child subspec path: " + String(describing: absPath))
+
+            // We need to drop off the childpath passed in. e.g. Vendor/React
+            // as the source files in the podspec are relative to the podspec
+            let relChildPath = String(childPath.split(separator: "/")
+                .dropFirst().dropFirst().joined(separator: "/") )
+            let childJSONPodspec = getJSONPodspec(shell: shell, podspecName:
+                  childName, path: currentDirectoryPath + "/" + relChildPath,
+                  childPaths: buildOptions.childPaths)
+            guard let podSpec = try? PodSpec(JSONPodspec: childJSONPodspec) else {
+                fatalError("Cant read in podspec")
+
             }
-
-            initializePodspecDirectory(shell: shell, podspecName: childName,
-                buildOptions: childBuildOptions)
-            guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
-                fatalError("Can't change path back to original directory after genning subspec")
-            }
+            let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: childBuildOptions, assimilate: true)
+            childBuildFiles.append(buildFile)
         }
-    }
-
-    private static func initializePodspecDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
-        // This uses the current environment's cocoapods installation.
-        let whichPod = shell.shellOut("which pod").standardOutputAsString
-        if whichPod.isEmpty {
-            fatalError("RepoTools requires a cocoapod installation on host")
-        }
-
-        // make json data
-        let jsonData: Data
-        let hasFile: (String) -> Bool = { file in
-            // did you know that [ is the name of the binary that tests stuff!
-            return shell.command("/bin/[",
-                          arguments: ["-e", file, "]"]).terminationStatus == 0
-        }
-
-        let workspaceRootPath: String
-        if buildOptions.path != "." && buildOptions.childPaths.count == 0 {
-            workspaceRootPath = "../..\(buildOptions.path)"
-        } else {
-            workspaceRootPath =  "."
-        }
-
-        let podspecPath = "\(workspaceRootPath)/\(podspecName).podspec"
-        if hasFile("\(podspecPath).json") {
-            jsonData = shell.command("/bin/cat", arguments: [podspecName + ".podspec.json"]).standardOutputData
-        } else if hasFile(podspecPath) {
-            let podBin = whichPod.components(separatedBy: "\n")[0]
-            let podResult = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"])
-            guard podResult.terminationStatus == 0 else {
-                fatalError("""
-                        PodSpec decoding failed \(podResult.terminationStatus)
-                        stdout: \(podResult.standardOutputAsString)
-                        stderr: \(podResult.standardErrorAsString)
-                """)
-            }
-            jsonData = podResult.standardOutputData
-        } else {
-            fatalError("Missing podspec ( \(podspecPath) )")
-        }
-
-        guard let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
-            JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
-            let JSONPodspec = JSONFile as? JSONDict
-        else {
-            fatalError("Invalid JSON Podspec: (look inside \(FileManager.default.currentDirectoryPath))")
-        }
-
         guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
             fatalError("Cant read in podspec")
         }
-
         shell.dir(PodSupportSystemPublicHeaderDir)
         shell.dir(PodSupportDir + "Headers/Private/")
         shell.dir(PodSupportBuidableDir)
@@ -335,8 +371,6 @@ public enum RepoActions {
         // - Put them into the public header directory
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)
 
-        // Batch create several symlinks for Pod style includes
-        let currentDirectoryPath = FileManager.default.currentDirectoryPath
         // ideally this check should introspec the podspecs value.
         if buildOptions.generateHeaderMap == false {
             let objcLibraries: [ObjcLibrary] = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
@@ -407,24 +441,12 @@ public enum RepoActions {
             to: "\(PodSupportBuidableDir)/\(BazelConstants.buildFilePath)")
 
         // Write the root BUILD file
-        let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
+        let buildFileSkylarkCompiler = SkylarkCompiler([
+            .lines([buildFile.toSkylark()])
+        ] + childBuildFiles.map { $0.toSkylark() })
         let buildFileOut = buildFileSkylarkCompiler.run()
-
-        // When there is a "child" podspec adjacent to a parent, concat the
-        // "child" BUILD file into the parents
-        if PodBuildFile.shouldAssimilate(buildOptions: buildOptions) {
-            let fileUpdater = try! FileHandle(forWritingTo:
+        shell.write(value: buildFileOut, toPath:
                 BazelConstants.buildFileURL())
-            fileUpdater.seekToEndOfFile()
-            fileUpdater.write("\n".data(using: .utf8)!)
-            if let data = buildFileOut.data(using: .utf8) {
-                fileUpdater.write(data)
-            }
-            fileUpdater.closeFile()
-        } else {
-            shell.write(value: buildFileOut, toPath:
-                BazelConstants.buildFileURL())
-        }
     }
 
     // Assume the directory structure relative to the pod root

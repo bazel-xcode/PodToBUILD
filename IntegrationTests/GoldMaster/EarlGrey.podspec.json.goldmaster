@@ -36,6 +36,27 @@ config_setting(
   }
 )
 filegroup(
+  name = "EarlGrey_package_hdrs",
+  srcs = [
+    "EarlGrey_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "EarlGrey_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "EarlGrey_hdrs",
   srcs = glob(
     [
@@ -51,6 +72,7 @@ headermap(
   name = "EarlGrey_hmap",
   namespace = "EarlGrey",
   hdrs = [
+    "EarlGrey_package_hdrs",
     ":EarlGrey_hdrs"
   ],
   deps = [

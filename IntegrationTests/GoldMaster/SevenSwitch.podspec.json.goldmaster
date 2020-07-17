@@ -35,6 +35,13 @@ config_setting(
     "apple_platform_type": "watchos"
   }
 )
+filegroup(
+  name = "SevenSwitch_package_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 swift_library(
   name = "SevenSwitch",
   srcs = glob(

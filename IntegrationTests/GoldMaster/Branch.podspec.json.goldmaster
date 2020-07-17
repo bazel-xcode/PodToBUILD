@@ -35,6 +35,29 @@ config_setting(
   }
 )
 filegroup(
+  name = "Branch_package_hdrs",
+  srcs = [
+    "Branch_direct_hdrs",
+    "Core_direct_hdrs",
+    "without-IDFA_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Branch_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Branch_hdrs",
   srcs = glob(
     [
@@ -53,6 +76,7 @@ headermap(
   name = "Branch_hmap",
   namespace = "Branch",
   hdrs = [
+    "Branch_package_hdrs",
     ":Branch_hdrs"
   ],
   deps = [
@@ -109,6 +133,28 @@ acknowledged_target(
   value = "//Vendor/Branch/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Core_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Branch-SDK/Branch-SDK/*.h",
+        "Branch-SDK/Branch-SDK/Requests/*.h",
+        "Branch-SDK/Fabric/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Core_hdrs",
   srcs = glob(
     glob(
@@ -144,6 +190,7 @@ headermap(
   name = "Core_hmap",
   namespace = "Branch",
   hdrs = [
+    "Branch_package_hdrs",
     ":Core_union_hdrs"
   ],
   deps = [],
@@ -212,6 +259,28 @@ acknowledged_target(
   value = "//Vendor/Branch/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "without-IDFA_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Branch-SDK/Branch-SDK/*.h",
+        "Branch-SDK/Branch-SDK/Requests/*.h",
+        "Branch-SDK/Fabric/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "without-IDFA_hdrs",
   srcs = glob(
     glob(
@@ -247,6 +316,7 @@ headermap(
   name = "without-IDFA_hmap",
   namespace = "Branch",
   hdrs = [
+    "Branch_package_hdrs",
     ":without-IDFA_union_hdrs"
   ],
   deps = [],

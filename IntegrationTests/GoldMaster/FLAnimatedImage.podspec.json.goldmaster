@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "FLAnimatedImage_package_hdrs",
+  srcs = [
+    "FLAnimatedImage_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FLAnimatedImage_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FLAnimatedImage/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FLAnimatedImage_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "FLAnimatedImage_hmap",
   namespace = "FLAnimatedImage",
   hdrs = [
+    "FLAnimatedImage_package_hdrs",
     ":FLAnimatedImage_hdrs"
   ],
   deps = [],

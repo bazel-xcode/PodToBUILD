@@ -36,6 +36,71 @@ config_setting(
   }
 )
 filegroup(
+  name = "React_package_hdrs",
+  srcs = [
+    "React_direct_hdrs",
+    "Core_cxx_direct_hdrs",
+    "Core_direct_hdrs",
+    "CxxBridge_cxx_direct_hdrs",
+    "CxxBridge_direct_hdrs",
+    "DevSupport_cxx_direct_hdrs",
+    "DevSupport_direct_hdrs",
+    "RCTFabric_cxx_direct_hdrs",
+    "RCTFabric_direct_hdrs",
+    "tvOS_direct_hdrs",
+    "jschelpers_direct_hdrs",
+    "jsinspector_direct_hdrs",
+    "PrivateDatabase_direct_hdrs",
+    "cxxreact_direct_hdrs",
+    "fabric_direct_hdrs",
+    "fabric_activityindicator_direct_hdrs",
+    "fabric_attributedstring_direct_hdrs",
+    "fabric_core_direct_hdrs",
+    "fabric_debug_direct_hdrs",
+    "fabric_graphics_direct_hdrs",
+    "fabric_scrollview_direct_hdrs",
+    "fabric_text_direct_hdrs",
+    "fabric_textlayoutmanager_direct_hdrs",
+    "fabric_uimanager_direct_hdrs",
+    "fabric_view_direct_hdrs",
+    "RCTFabricSample_direct_hdrs",
+    "ART_direct_hdrs",
+    "RCTActionSheet_direct_hdrs",
+    "RCTAnimation_direct_hdrs",
+    "RCTBlob_cxx_direct_hdrs",
+    "RCTBlob_direct_hdrs",
+    "RCTCameraRoll_direct_hdrs",
+    "RCTGeolocation_direct_hdrs",
+    "RCTImage_direct_hdrs",
+    "RCTNetwork_cxx_direct_hdrs",
+    "RCTNetwork_direct_hdrs",
+    "RCTPushNotification_direct_hdrs",
+    "RCTSettings_direct_hdrs",
+    "RCTText_direct_hdrs",
+    "RCTVibration_direct_hdrs",
+    "RCTWebSocket_direct_hdrs",
+    "fishhook_direct_hdrs",
+    "RCTLinkingIOS_direct_hdrs",
+    "RCTTest_direct_hdrs",
+    "_ignore_me_subspec_for_linting__direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "React_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "React_hdrs",
   srcs = glob(
     [
@@ -53,6 +118,7 @@ headermap(
   name = "React_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":React_hdrs"
   ],
   deps = [
@@ -107,7 +173,7 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
-  name = "Core_cxx_hdrs",
+  name = "Core_cxx_direct_hdrs",
   srcs = select(
     {
       "//conditions:default": glob(
@@ -118,9 +184,7 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "React/**/*.h",
-            "React/**/*.hpp",
-            "React/**/*.hxx"
+            "React/**/*.h"
           ],
           exclude = [
             "**/__tests__/*.h",
@@ -160,9 +224,7 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "React/**/*.h",
-            "React/**/*.hpp",
-            "React/**/*.hxx"
+            "React/**/*.h"
           ],
           exclude = [
             "**/__tests__/*.h",
@@ -199,9 +261,7 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "React/**/*.h",
-            "React/**/*.hpp",
-            "React/**/*.hxx"
+            "React/**/*.h"
           ],
           exclude = [
             "**/__tests__/*.h",
@@ -259,9 +319,189 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "React/**/*.h",
-            "React/**/*.hpp",
-            "React/**/*.hxx"
+            "React/**/*.h"
+          ],
+          exclude = [
+            "**/__tests__/*.h",
+            "**/__tests__/*.hpp",
+            "**/__tests__/*.hxx",
+            "IntegrationTests/*.h",
+            "IntegrationTests/*.hpp",
+            "IntegrationTests/*.hxx",
+            "React/Cxx*/*.h",
+            "React/Cxx*/*.hpp",
+            "React/Cxx*/*.hxx",
+            "React/DevSupport/*.h",
+            "React/DevSupport/*.hpp",
+            "React/DevSupport/*.hxx",
+            "React/Fabric/**/*.h",
+            "React/Fabric/**/*.hpp",
+            "React/Fabric/**/*.hxx",
+            "React/Inspector/*.h",
+            "React/Inspector/*.hpp",
+            "React/Inspector/*.hxx",
+            "ReactCommon/yoga/*.h",
+            "ReactCommon/yoga/*.hpp",
+            "ReactCommon/yoga/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_cxx_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/*.h"
+          ],
+          exclude = [
+            "**/__tests__/*.h",
+            "**/__tests__/*.hpp",
+            "**/__tests__/*.hxx",
+            "IntegrationTests/*.h",
+            "IntegrationTests/*.hpp",
+            "IntegrationTests/*.hxx",
+            "React/**/RCTTV*.h",
+            "React/**/RCTTV*.hpp",
+            "React/**/RCTTV*.hxx",
+            "React/Cxx*/*.h",
+            "React/Cxx*/*.hpp",
+            "React/Cxx*/*.hxx",
+            "React/DevSupport/*.h",
+            "React/DevSupport/*.hpp",
+            "React/DevSupport/*.hxx",
+            "React/Fabric/**/*.h",
+            "React/Fabric/**/*.hpp",
+            "React/Fabric/**/*.hxx",
+            "React/Inspector/*.h",
+            "React/Inspector/*.hpp",
+            "React/Inspector/*.hxx",
+            "ReactCommon/yoga/*.h",
+            "ReactCommon/yoga/*.hpp",
+            "ReactCommon/yoga/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/*.h"
+          ],
+          exclude = [
+            "**/__tests__/*.h",
+            "**/__tests__/*.hpp",
+            "**/__tests__/*.hxx",
+            "IntegrationTests/*.h",
+            "IntegrationTests/*.hpp",
+            "IntegrationTests/*.hxx",
+            "React/Cxx*/*.h",
+            "React/Cxx*/*.hpp",
+            "React/Cxx*/*.hxx",
+            "React/DevSupport/*.h",
+            "React/DevSupport/*.hpp",
+            "React/DevSupport/*.hxx",
+            "React/Fabric/**/*.h",
+            "React/Fabric/**/*.hpp",
+            "React/Fabric/**/*.hxx",
+            "React/Inspector/*.h",
+            "React/Inspector/*.hpp",
+            "React/Inspector/*.hxx",
+            "ReactCommon/yoga/*.h",
+            "ReactCommon/yoga/*.hpp",
+            "ReactCommon/yoga/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/*.h"
+          ],
+          exclude = [
+            "**/__tests__/*.h",
+            "**/__tests__/*.hpp",
+            "**/__tests__/*.hxx",
+            "IntegrationTests/*.h",
+            "IntegrationTests/*.hpp",
+            "IntegrationTests/*.hxx",
+            "React/Cxx*/*.h",
+            "React/Cxx*/*.hpp",
+            "React/Cxx*/*.hxx",
+            "React/DevSupport/*.h",
+            "React/DevSupport/*.hpp",
+            "React/DevSupport/*.hxx",
+            "React/Fabric/**/*.h",
+            "React/Fabric/**/*.hpp",
+            "React/Fabric/**/*.hxx",
+            "React/Inspector/*.h",
+            "React/Inspector/*.hpp",
+            "React/Inspector/*.hxx",
+            "React/Modules/RCTClipboard*.h",
+            "React/Modules/RCTClipboard*.hpp",
+            "React/Modules/RCTClipboard*.hxx",
+            "React/Views/RCTDatePicker*.h",
+            "React/Views/RCTDatePicker*.hpp",
+            "React/Views/RCTDatePicker*.hxx",
+            "React/Views/RCTPicker*.h",
+            "React/Views/RCTPicker*.hpp",
+            "React/Views/RCTPicker*.hxx",
+            "React/Views/RCTRefreshControl*.h",
+            "React/Views/RCTRefreshControl*.hpp",
+            "React/Views/RCTRefreshControl*.hxx",
+            "React/Views/RCTSlider*.h",
+            "React/Views/RCTSlider*.hpp",
+            "React/Views/RCTSlider*.hxx",
+            "React/Views/RCTSwitch*.h",
+            "React/Views/RCTSwitch*.hpp",
+            "React/Views/RCTSwitch*.hxx",
+            "React/Views/RCTWebView*.h",
+            "React/Views/RCTWebView*.hpp",
+            "React/Views/RCTWebView*.hxx",
+            "ReactCommon/yoga/*.h",
+            "ReactCommon/yoga/*.hpp",
+            "ReactCommon/yoga/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/*.h"
           ],
           exclude = [
             "**/__tests__/*.h",
@@ -310,6 +550,7 @@ headermap(
   name = "Core_cxx_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":Core_cxx_union_hdrs"
   ],
   deps = [
@@ -322,6 +563,7 @@ headermap(
 gen_includes(
   name = "Core_cxx_includes",
   include = [
+    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -1639,7 +1881,6 @@ objc_library(
     ":Core_cxx_includes"
   ],
   copts = [
-    "-std=c++14",
     "-std=c++14"
   ] + select(
     {
@@ -1668,7 +1909,7 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
-  name = "Core_hdrs",
+  name = "Core_direct_hdrs",
   srcs = select(
     {
       "//conditions:default": glob(
@@ -1679,9 +1920,7 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "React/**/*.h",
-            "React/**/*.hpp",
-            "React/**/*.hxx"
+            "React/**/*.h"
           ],
           exclude = [
             "**/__tests__/*.h",
@@ -1721,9 +1960,7 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "React/**/*.h",
-            "React/**/*.hpp",
-            "React/**/*.hxx"
+            "React/**/*.h"
           ],
           exclude = [
             "**/__tests__/*.h",
@@ -1760,9 +1997,7 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "React/**/*.h",
-            "React/**/*.hpp",
-            "React/**/*.hxx"
+            "React/**/*.h"
           ],
           exclude = [
             "**/__tests__/*.h",
@@ -1820,9 +2055,189 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "React/**/*.h",
-            "React/**/*.hpp",
-            "React/**/*.hxx"
+            "React/**/*.h"
+          ],
+          exclude = [
+            "**/__tests__/*.h",
+            "**/__tests__/*.hpp",
+            "**/__tests__/*.hxx",
+            "IntegrationTests/*.h",
+            "IntegrationTests/*.hpp",
+            "IntegrationTests/*.hxx",
+            "React/Cxx*/*.h",
+            "React/Cxx*/*.hpp",
+            "React/Cxx*/*.hxx",
+            "React/DevSupport/*.h",
+            "React/DevSupport/*.hpp",
+            "React/DevSupport/*.hxx",
+            "React/Fabric/**/*.h",
+            "React/Fabric/**/*.hpp",
+            "React/Fabric/**/*.hxx",
+            "React/Inspector/*.h",
+            "React/Inspector/*.hpp",
+            "React/Inspector/*.hxx",
+            "ReactCommon/yoga/*.h",
+            "ReactCommon/yoga/*.hpp",
+            "ReactCommon/yoga/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/*.h"
+          ],
+          exclude = [
+            "**/__tests__/*.h",
+            "**/__tests__/*.hpp",
+            "**/__tests__/*.hxx",
+            "IntegrationTests/*.h",
+            "IntegrationTests/*.hpp",
+            "IntegrationTests/*.hxx",
+            "React/**/RCTTV*.h",
+            "React/**/RCTTV*.hpp",
+            "React/**/RCTTV*.hxx",
+            "React/Cxx*/*.h",
+            "React/Cxx*/*.hpp",
+            "React/Cxx*/*.hxx",
+            "React/DevSupport/*.h",
+            "React/DevSupport/*.hpp",
+            "React/DevSupport/*.hxx",
+            "React/Fabric/**/*.h",
+            "React/Fabric/**/*.hpp",
+            "React/Fabric/**/*.hxx",
+            "React/Inspector/*.h",
+            "React/Inspector/*.hpp",
+            "React/Inspector/*.hxx",
+            "ReactCommon/yoga/*.h",
+            "ReactCommon/yoga/*.hpp",
+            "ReactCommon/yoga/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/*.h"
+          ],
+          exclude = [
+            "**/__tests__/*.h",
+            "**/__tests__/*.hpp",
+            "**/__tests__/*.hxx",
+            "IntegrationTests/*.h",
+            "IntegrationTests/*.hpp",
+            "IntegrationTests/*.hxx",
+            "React/Cxx*/*.h",
+            "React/Cxx*/*.hpp",
+            "React/Cxx*/*.hxx",
+            "React/DevSupport/*.h",
+            "React/DevSupport/*.hpp",
+            "React/DevSupport/*.hxx",
+            "React/Fabric/**/*.h",
+            "React/Fabric/**/*.hpp",
+            "React/Fabric/**/*.hxx",
+            "React/Inspector/*.h",
+            "React/Inspector/*.hpp",
+            "React/Inspector/*.hxx",
+            "ReactCommon/yoga/*.h",
+            "ReactCommon/yoga/*.hpp",
+            "ReactCommon/yoga/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/*.h"
+          ],
+          exclude = [
+            "**/__tests__/*.h",
+            "**/__tests__/*.hpp",
+            "**/__tests__/*.hxx",
+            "IntegrationTests/*.h",
+            "IntegrationTests/*.hpp",
+            "IntegrationTests/*.hxx",
+            "React/Cxx*/*.h",
+            "React/Cxx*/*.hpp",
+            "React/Cxx*/*.hxx",
+            "React/DevSupport/*.h",
+            "React/DevSupport/*.hpp",
+            "React/DevSupport/*.hxx",
+            "React/Fabric/**/*.h",
+            "React/Fabric/**/*.hpp",
+            "React/Fabric/**/*.hxx",
+            "React/Inspector/*.h",
+            "React/Inspector/*.hpp",
+            "React/Inspector/*.hxx",
+            "React/Modules/RCTClipboard*.h",
+            "React/Modules/RCTClipboard*.hpp",
+            "React/Modules/RCTClipboard*.hxx",
+            "React/Views/RCTDatePicker*.h",
+            "React/Views/RCTDatePicker*.hpp",
+            "React/Views/RCTDatePicker*.hxx",
+            "React/Views/RCTPicker*.h",
+            "React/Views/RCTPicker*.hpp",
+            "React/Views/RCTPicker*.hxx",
+            "React/Views/RCTRefreshControl*.h",
+            "React/Views/RCTRefreshControl*.hpp",
+            "React/Views/RCTRefreshControl*.hxx",
+            "React/Views/RCTSlider*.h",
+            "React/Views/RCTSlider*.hpp",
+            "React/Views/RCTSlider*.hxx",
+            "React/Views/RCTSwitch*.h",
+            "React/Views/RCTSwitch*.hpp",
+            "React/Views/RCTSwitch*.hxx",
+            "React/Views/RCTWebView*.h",
+            "React/Views/RCTWebView*.hpp",
+            "React/Views/RCTWebView*.hxx",
+            "ReactCommon/yoga/*.h",
+            "ReactCommon/yoga/*.hpp",
+            "ReactCommon/yoga/*.hxx"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "React/**/*.h"
           ],
           exclude = [
             "**/__tests__/*.h",
@@ -1872,6 +2287,7 @@ headermap(
   name = "Core_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":Core_union_hdrs"
   ],
   deps = [
@@ -1885,6 +2301,7 @@ headermap(
 gen_includes(
   name = "Core_includes",
   include = [
+    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -2909,6 +3326,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "CxxBridge_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "React/Cxx*/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "CxxBridge_cxx_hdrs",
   srcs = glob(
     glob(
@@ -2944,6 +3381,7 @@ headermap(
   name = "CxxBridge_cxx_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":CxxBridge_cxx_union_hdrs"
   ],
   deps = [
@@ -3025,6 +3463,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "CxxBridge_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "React/Cxx*/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "CxxBridge_hdrs",
   srcs = glob(
     glob(
@@ -3061,6 +3519,7 @@ headermap(
   name = "CxxBridge_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":CxxBridge_union_hdrs"
   ],
   deps = [
@@ -3136,6 +3595,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "DevSupport_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "React/DevSupport/*.h",
+        "React/DevSupport/*.hpp",
+        "React/DevSupport/*.hxx",
+        "React/Inspector/*.h",
+        "React/Inspector/*.hpp",
+        "React/Inspector/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "DevSupport_cxx_hdrs",
   srcs = glob(
     glob(
@@ -3176,6 +3660,7 @@ headermap(
   name = "DevSupport_cxx_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":DevSupport_cxx_union_hdrs"
   ],
   deps = [
@@ -3281,6 +3766,31 @@ swift_library(
   data = []
 )
 filegroup(
+  name = "DevSupport_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "React/DevSupport/*.h",
+        "React/DevSupport/*.hpp",
+        "React/DevSupport/*.hxx",
+        "React/Inspector/*.h",
+        "React/Inspector/*.hpp",
+        "React/Inspector/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "DevSupport_hdrs",
   srcs = glob(
     glob(
@@ -3322,6 +3832,7 @@ headermap(
   name = "DevSupport_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":DevSupport_union_hdrs"
   ],
   deps = [
@@ -3399,6 +3910,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTFabric_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "React/Fabric/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTFabric_cxx_hdrs",
   srcs = glob(
     glob(
@@ -3408,9 +3944,6 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "React/**/*.h",
-        "React/**/*.hpp",
-        "React/**/*.hxx",
         "React/Fabric/**/*.h"
       ],
       exclude = [
@@ -3442,6 +3975,7 @@ headermap(
   name = "RCTFabric_cxx_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTFabric_cxx_union_hdrs"
   ],
   deps = [
@@ -3456,6 +3990,7 @@ headermap(
 gen_includes(
   name = "RCTFabric_cxx_includes",
   include = [
+    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -3518,7 +4053,6 @@ objc_library(
     ":RCTFabric_cxx_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -3548,6 +4082,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTFabric_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "React/Fabric/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTFabric_hdrs",
   srcs = glob(
     glob(
@@ -3557,9 +4116,6 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "React/**/*.h",
-        "React/**/*.hpp",
-        "React/**/*.hxx",
         "React/Fabric/**/*.h"
       ],
       exclude = [
@@ -3592,6 +4148,7 @@ headermap(
   name = "RCTFabric_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTFabric_union_hdrs"
   ],
   deps = [
@@ -3607,6 +4164,7 @@ headermap(
 gen_includes(
   name = "RCTFabric_includes",
   include = [
+    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -3682,6 +4240,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "tvOS_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "React/**/RCTTV*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "tvOS_hdrs",
   srcs = glob(
     glob(
@@ -3716,6 +4294,7 @@ headermap(
   name = "tvOS_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":tvOS_union_hdrs"
   ],
   deps = [
@@ -3781,6 +4360,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "jschelpers_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/jschelpers/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "jschelpers_hdrs",
   srcs = glob(
     glob(
@@ -3815,6 +4414,7 @@ headermap(
   name = "jschelpers_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":jschelpers_union_hdrs"
   ],
   deps = [
@@ -3828,6 +4428,7 @@ headermap(
 gen_includes(
   name = "jschelpers_includes",
   include = [
+    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -3892,7 +4493,6 @@ objc_library(
     ":jschelpers_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -3920,6 +4520,26 @@ acknowledged_target(
     "//Vendor/Folly:Folly_acknowledgement"
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "jsinspector_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/jsinspector/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "jsinspector_hdrs",
@@ -3955,6 +4575,7 @@ headermap(
   name = "jsinspector_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":jsinspector_union_hdrs"
   ],
   deps = [],
@@ -3965,6 +4586,7 @@ headermap(
 gen_includes(
   name = "jsinspector_includes",
   include = [
+    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -4024,7 +4646,6 @@ objc_library(
     ":jsinspector_includes"
   ],
   copts = [
-    "-std=c++14",
     "-std=c++14"
   ] + select(
     {
@@ -4049,6 +4670,26 @@ acknowledged_target(
   name = "jsinspector_acknowledgement",
   deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "PrivateDatabase_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/privatedata/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "PrivateDatabase_hdrs",
@@ -4084,6 +4725,7 @@ headermap(
   name = "PrivateDatabase_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":PrivateDatabase_union_hdrs"
   ],
   deps = [],
@@ -4094,6 +4736,7 @@ headermap(
 gen_includes(
   name = "PrivateDatabase_includes",
   include = [
+    "Vendor/React/ReactCommon",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -4158,7 +4801,6 @@ objc_library(
     ":PrivateDatabase_includes"
   ],
   copts = [
-    "-std=c++14",
     "-std=c++14"
   ] + select(
     {
@@ -4183,6 +4825,31 @@ acknowledged_target(
   name = "PrivateDatabase_acknowledgement",
   deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "cxxreact_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/cxxreact/*.h"
+      ],
+      exclude = [
+        "ReactCommon/cxxreact/SampleCxxModule.h",
+        "ReactCommon/cxxreact/SampleCxxModule.hpp",
+        "ReactCommon/cxxreact/SampleCxxModule.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "cxxreact_hdrs",
@@ -4225,6 +4892,7 @@ headermap(
   name = "cxxreact_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":cxxreact_union_hdrs"
   ],
   deps = [
@@ -4240,6 +4908,10 @@ headermap(
 gen_includes(
   name = "cxxreact_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/boost-for-react-native",
+    "Vendor/DoubleConversion",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -4297,7 +4969,6 @@ objc_library(
     ":cxxreact_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -4328,6 +4999,18 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_hdrs",
   srcs = glob(
     [
@@ -4353,6 +5036,7 @@ headermap(
   name = "fabric_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_union_hdrs"
   ],
   deps = [],
@@ -4404,6 +5088,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_activityindicator_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/activityindicator/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_activityindicator_hdrs",
   srcs = glob(
     glob(
@@ -4413,10 +5122,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/activityindicator/**/*.h",
-        "fabric/activityindicator/**/*.h",
-        "fabric/activityindicator/**/*.hpp",
-        "fabric/activityindicator/**/*.hxx"
+        "ReactCommon/fabric/activityindicator/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -4445,6 +5151,7 @@ headermap(
   name = "fabric_activityindicator_hmap",
   namespace = "fabric/activityindicator",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_activityindicator_union_hdrs"
   ],
   deps = [
@@ -4457,6 +5164,8 @@ headermap(
 gen_includes(
   name = "fabric_activityindicator_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -4496,7 +5205,6 @@ objc_library(
     ":fabric_activityindicator_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -4526,6 +5234,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_attributedstring_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/attributedstring/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_attributedstring_hdrs",
   srcs = glob(
     glob(
@@ -4535,10 +5268,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/attributedstring/**/*.h",
-        "fabric/attributedstring/**/*.h",
-        "fabric/attributedstring/**/*.hpp",
-        "fabric/attributedstring/**/*.hxx"
+        "ReactCommon/fabric/attributedstring/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -4567,6 +5297,7 @@ headermap(
   name = "fabric_attributedstring_hmap",
   namespace = "fabric/attributedstring",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_attributedstring_union_hdrs"
   ],
   deps = [
@@ -4579,6 +5310,8 @@ headermap(
 gen_includes(
   name = "fabric_attributedstring_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -4618,7 +5351,6 @@ objc_library(
     ":fabric_attributedstring_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -4648,6 +5380,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_core_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/core/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_core_hdrs",
   srcs = glob(
     glob(
@@ -4657,10 +5414,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/core/**/*.h",
-        "fabric/core/**/*.h",
-        "fabric/core/**/*.hpp",
-        "fabric/core/**/*.hxx"
+        "ReactCommon/fabric/core/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -4689,6 +5443,7 @@ headermap(
   name = "fabric_core_hmap",
   namespace = "fabric/core",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_core_union_hdrs"
   ],
   deps = [
@@ -4701,6 +5456,8 @@ headermap(
 gen_includes(
   name = "fabric_core_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -4740,7 +5497,6 @@ objc_library(
     ":fabric_core_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -4770,6 +5526,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_debug_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/debug/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_debug_hdrs",
   srcs = glob(
     glob(
@@ -4779,10 +5560,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/debug/**/*.h",
-        "fabric/debug/**/*.h",
-        "fabric/debug/**/*.hpp",
-        "fabric/debug/**/*.hxx"
+        "ReactCommon/fabric/debug/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -4811,6 +5589,7 @@ headermap(
   name = "fabric_debug_hmap",
   namespace = "fabric/debug",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_debug_union_hdrs"
   ],
   deps = [
@@ -4823,6 +5602,8 @@ headermap(
 gen_includes(
   name = "fabric_debug_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -4862,7 +5643,6 @@ objc_library(
     ":fabric_debug_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -4892,6 +5672,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_graphics_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/graphics/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_graphics_hdrs",
   srcs = glob(
     glob(
@@ -4901,10 +5706,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/graphics/**/*.h",
-        "fabric/graphics/**/*.h",
-        "fabric/graphics/**/*.hpp",
-        "fabric/graphics/**/*.hxx"
+        "ReactCommon/fabric/graphics/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -4933,6 +5735,7 @@ headermap(
   name = "fabric_graphics_hmap",
   namespace = "fabric/graphics",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_graphics_union_hdrs"
   ],
   deps = [
@@ -4945,6 +5748,8 @@ headermap(
 gen_includes(
   name = "fabric_graphics_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -4984,7 +5789,6 @@ objc_library(
     ":fabric_graphics_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -5014,6 +5818,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_scrollview_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/scrollview/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_scrollview_hdrs",
   srcs = glob(
     glob(
@@ -5023,10 +5852,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/scrollview/**/*.h",
-        "fabric/scrollview/**/*.h",
-        "fabric/scrollview/**/*.hpp",
-        "fabric/scrollview/**/*.hxx"
+        "ReactCommon/fabric/scrollview/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -5055,6 +5881,7 @@ headermap(
   name = "fabric_scrollview_hmap",
   namespace = "fabric/scrollview",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_scrollview_union_hdrs"
   ],
   deps = [
@@ -5067,6 +5894,8 @@ headermap(
 gen_includes(
   name = "fabric_scrollview_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -5106,7 +5935,6 @@ objc_library(
     ":fabric_scrollview_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -5136,6 +5964,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_text_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/text/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_text_hdrs",
   srcs = glob(
     glob(
@@ -5145,10 +5998,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/text/**/*.h",
-        "fabric/text/**/*.h",
-        "fabric/text/**/*.hpp",
-        "fabric/text/**/*.hxx"
+        "ReactCommon/fabric/text/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -5177,6 +6027,7 @@ headermap(
   name = "fabric_text_hmap",
   namespace = "fabric/text",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_text_union_hdrs"
   ],
   deps = [
@@ -5189,6 +6040,8 @@ headermap(
 gen_includes(
   name = "fabric_text_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -5228,7 +6081,6 @@ objc_library(
     ":fabric_text_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -5258,6 +6110,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_textlayoutmanager_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/textlayoutmanager/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_textlayoutmanager_hdrs",
   srcs = glob(
     glob(
@@ -5267,10 +6144,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/textlayoutmanager/**/*.h",
-        "fabric/textlayoutmanager/**/*.h",
-        "fabric/textlayoutmanager/**/*.hpp",
-        "fabric/textlayoutmanager/**/*.hxx"
+        "ReactCommon/fabric/textlayoutmanager/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -5299,6 +6173,7 @@ headermap(
   name = "fabric_textlayoutmanager_hmap",
   namespace = "fabric/textlayoutmanager",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_textlayoutmanager_union_hdrs"
   ],
   deps = [
@@ -5311,6 +6186,8 @@ headermap(
 gen_includes(
   name = "fabric_textlayoutmanager_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -5351,7 +6228,6 @@ objc_library(
     ":fabric_textlayoutmanager_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -5381,6 +6257,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_uimanager_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/uimanager/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_uimanager_hdrs",
   srcs = glob(
     glob(
@@ -5390,10 +6291,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/uimanager/**/*.h",
-        "fabric/uimanager/**/*.h",
-        "fabric/uimanager/**/*.hpp",
-        "fabric/uimanager/**/*.hxx"
+        "ReactCommon/fabric/uimanager/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -5422,6 +6320,7 @@ headermap(
   name = "fabric_uimanager_hmap",
   namespace = "fabric/uimanager",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_uimanager_union_hdrs"
   ],
   deps = [
@@ -5434,6 +6333,8 @@ headermap(
 gen_includes(
   name = "fabric_uimanager_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -5473,7 +6374,6 @@ objc_library(
     ":fabric_uimanager_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -5503,6 +6403,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fabric_view_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/view/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_view_hdrs",
   srcs = glob(
     glob(
@@ -5512,10 +6437,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/view/**/*.h",
-        "fabric/view/**/*.h",
-        "fabric/view/**/*.hpp",
-        "fabric/view/**/*.hxx"
+        "ReactCommon/fabric/view/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -5544,6 +6466,7 @@ headermap(
   name = "fabric_view_hmap",
   namespace = "fabric/view",
   hdrs = [
+    "React_package_hdrs",
     ":fabric_view_union_hdrs"
   ],
   deps = [
@@ -5557,6 +6480,8 @@ headermap(
 gen_includes(
   name = "fabric_view_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -5597,7 +6522,6 @@ objc_library(
     ":fabric_view_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -5628,6 +6552,31 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTFabricSample_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ReactCommon/fabric/sample/**/*.h"
+      ],
+      exclude = [
+        "**/tests/*.h",
+        "**/tests/*.hpp",
+        "**/tests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTFabricSample_hdrs",
   srcs = glob(
     glob(
@@ -5637,10 +6586,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "ReactCommon/fabric/sample/**/*.h",
-        "fabric/sample/**/*.h",
-        "fabric/sample/**/*.hpp",
-        "fabric/sample/**/*.hxx"
+        "ReactCommon/fabric/sample/**/*.h"
       ],
       exclude = [
         "**/tests/*.h",
@@ -5669,6 +6615,7 @@ headermap(
   name = "RCTFabricSample_hmap",
   namespace = "fabric/sample",
   hdrs = [
+    "React_package_hdrs",
     ":RCTFabricSample_union_hdrs"
   ],
   deps = [
@@ -5681,6 +6628,8 @@ headermap(
 gen_includes(
   name = "RCTFabricSample_includes",
   include = [
+    "Vendor/React/ReactCommon",
+    "Vendor/Folly",
     "Vendor/React/pod_support/Headers/Public/"
   ]
 )
@@ -5720,7 +6669,6 @@ objc_library(
     ":RCTFabricSample_includes"
   ],
   copts = [
-    "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
     "-std=c++14"
   ] + select(
@@ -5748,6 +6696,26 @@ acknowledged_target(
     "//Vendor/Folly:Folly_acknowledgement"
   ],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "ART_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/ART/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "ART_hdrs",
@@ -5784,6 +6752,7 @@ headermap(
   name = "ART_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":ART_union_hdrs"
   ],
   deps = [
@@ -5849,6 +6818,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTActionSheet_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/ActionSheetIOS/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTActionSheet_hdrs",
   srcs = glob(
     glob(
@@ -5883,6 +6872,7 @@ headermap(
   name = "RCTActionSheet_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTActionSheet_union_hdrs"
   ],
   deps = [
@@ -5948,6 +6938,28 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTAnimation_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/NativeAnimation/*.h",
+        "Libraries/NativeAnimation/Drivers/*.h",
+        "Libraries/NativeAnimation/Nodes/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTAnimation_hdrs",
   srcs = glob(
     glob(
@@ -5959,10 +6971,7 @@ filegroup(
       [
         "Libraries/NativeAnimation/*.h",
         "Libraries/NativeAnimation/Drivers/*.h",
-        "Libraries/NativeAnimation/Nodes/*.h",
-        "RCTAnimation/**/*.h",
-        "RCTAnimation/**/*.hpp",
-        "RCTAnimation/**/*.hxx"
+        "Libraries/NativeAnimation/Nodes/*.h"
       ],
       exclude_directories = 1
     ),
@@ -5987,6 +6996,7 @@ headermap(
   name = "RCTAnimation_hmap",
   namespace = "RCTAnimation",
   hdrs = [
+    "React_package_hdrs",
     ":RCTAnimation_union_hdrs"
   ],
   deps = [
@@ -6054,6 +7064,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTBlob_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Blob/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTBlob_cxx_hdrs",
   srcs = glob(
     glob(
@@ -6088,6 +7118,7 @@ headermap(
   name = "RCTBlob_cxx_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTBlob_cxx_union_hdrs"
   ],
   deps = [
@@ -6203,6 +7234,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTBlob_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Blob/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTBlob_hdrs",
   srcs = glob(
     glob(
@@ -6238,6 +7289,7 @@ headermap(
   name = "RCTBlob_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTBlob_union_hdrs"
   ],
   deps = [
@@ -6347,6 +7399,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTCameraRoll_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/CameraRoll/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTCameraRoll_hdrs",
   srcs = glob(
     glob(
@@ -6382,6 +7454,7 @@ headermap(
   name = "RCTCameraRoll_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTCameraRoll_union_hdrs"
   ],
   deps = [
@@ -6449,6 +7522,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTGeolocation_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Geolocation/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTGeolocation_hdrs",
   srcs = glob(
     glob(
@@ -6483,6 +7576,7 @@ headermap(
   name = "RCTGeolocation_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTGeolocation_union_hdrs"
   ],
   deps = [
@@ -6548,6 +7642,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTImage_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Image/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTImage_hdrs",
   srcs = glob(
     glob(
@@ -6583,6 +7697,7 @@ headermap(
   name = "RCTImage_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTImage_union_hdrs"
   ],
   deps = [
@@ -6656,6 +7771,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTNetwork_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Network/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTNetwork_cxx_hdrs",
   srcs = glob(
     glob(
@@ -6690,6 +7825,7 @@ headermap(
   name = "RCTNetwork_cxx_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTNetwork_cxx_union_hdrs"
   ],
   deps = [
@@ -6774,6 +7910,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTNetwork_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Network/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTNetwork_hdrs",
   srcs = glob(
     glob(
@@ -6809,6 +7965,7 @@ headermap(
   name = "RCTNetwork_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTNetwork_union_hdrs"
   ],
   deps = [
@@ -6887,6 +8044,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTPushNotification_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/PushNotificationIOS/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTPushNotification_hdrs",
   srcs = glob(
     glob(
@@ -6921,6 +8098,7 @@ headermap(
   name = "RCTPushNotification_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTPushNotification_union_hdrs"
   ],
   deps = [
@@ -6986,6 +8164,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTSettings_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Settings/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTSettings_hdrs",
   srcs = glob(
     glob(
@@ -7020,6 +8218,7 @@ headermap(
   name = "RCTSettings_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTSettings_union_hdrs"
   ],
   deps = [
@@ -7085,6 +8284,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTText_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Text/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTText_hdrs",
   srcs = glob(
     glob(
@@ -7119,6 +8338,7 @@ headermap(
   name = "RCTText_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTText_union_hdrs"
   ],
   deps = [
@@ -7184,6 +8404,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTVibration_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Vibration/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTVibration_hdrs",
   srcs = glob(
     glob(
@@ -7218,6 +8458,7 @@ headermap(
   name = "RCTVibration_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTVibration_union_hdrs"
   ],
   deps = [
@@ -7283,6 +8524,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTWebSocket_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/WebSocket/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTWebSocket_hdrs",
   srcs = glob(
     glob(
@@ -7319,6 +8580,7 @@ headermap(
   name = "RCTWebSocket_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTWebSocket_union_hdrs"
   ],
   deps = [
@@ -7425,6 +8687,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "fishhook_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/fishhook/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fishhook_hdrs",
   srcs = glob(
     glob(
@@ -7434,10 +8716,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/fishhook/*.h",
-        "fishhook/**/*.h",
-        "fishhook/**/*.hpp",
-        "fishhook/**/*.hxx"
+        "Libraries/fishhook/*.h"
       ],
       exclude_directories = 1
     ),
@@ -7461,6 +8740,7 @@ headermap(
   name = "fishhook_hmap",
   namespace = "fishhook",
   hdrs = [
+    "React_package_hdrs",
     ":fishhook_union_hdrs"
   ],
   deps = [],
@@ -7565,6 +8845,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTLinkingIOS_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/LinkingIOS/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTLinkingIOS_hdrs",
   srcs = glob(
     glob(
@@ -7599,6 +8899,7 @@ headermap(
   name = "RCTLinkingIOS_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTLinkingIOS_union_hdrs"
   ],
   deps = [
@@ -7664,6 +8965,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTTest_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/RCTTest/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTTest_hdrs",
   srcs = glob(
     glob(
@@ -7698,6 +9019,7 @@ headermap(
   name = "RCTTest_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTTest_union_hdrs"
   ],
   deps = [
@@ -7766,6 +9088,18 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "_ignore_me_subspec_for_linting__direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "_ignore_me_subspec_for_linting__hdrs",
   srcs = glob(
     [
@@ -7793,6 +9127,7 @@ headermap(
   name = "_ignore_me_subspec_for_linting__hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":_ignore_me_subspec_for_linting__union_hdrs"
   ],
   deps = [

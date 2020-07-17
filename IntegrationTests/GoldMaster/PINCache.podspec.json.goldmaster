@@ -35,6 +35,29 @@ config_setting(
   }
 )
 filegroup(
+  name = "PINCache_package_hdrs",
+  srcs = [
+    "PINCache_direct_hdrs",
+    "Core_direct_hdrs",
+    "Arc-exception-safe_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "PINCache_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "PINCache_hdrs",
   srcs = glob(
     [
@@ -53,6 +76,7 @@ headermap(
   name = "PINCache_hmap",
   namespace = "PINCache",
   hdrs = [
+    "PINCache_package_hdrs",
     ":PINCache_hdrs"
   ],
   deps = [
@@ -122,6 +146,26 @@ acknowledged_target(
   value = "//Vendor/PINCache/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Core_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Core_hdrs",
   srcs = glob(
     glob(
@@ -155,6 +199,7 @@ headermap(
   name = "Core_hmap",
   namespace = "PINCache",
   hdrs = [
+    "PINCache_package_hdrs",
     ":Core_union_hdrs"
   ],
   deps = [
@@ -241,6 +286,18 @@ acknowledged_target(
   value = "//Vendor/PINCache/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Arc-exception-safe_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Arc-exception-safe_hdrs",
   srcs = glob(
     [
@@ -267,6 +324,7 @@ headermap(
   name = "Arc-exception-safe_hmap",
   namespace = "PINCache",
   hdrs = [
+    "PINCache_package_hdrs",
     ":Arc-exception-safe_union_hdrs"
   ],
   deps = [

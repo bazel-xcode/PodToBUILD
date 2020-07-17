@@ -355,7 +355,7 @@ public func ExtractValue<T>(fromJSON JSON: Any?) throws -> T {
 // Pods intermixes arrays and strings all over
 // Coerce to a more sane type, since we don't care about the
 // original input
-fileprivate func strings(fromJSON JSONValue: Any? = nil) -> [String] {
+public func strings(fromJSON JSONValue: Any? = nil) -> [String] {
     if let str = JSONValue as? String {
         return [str]
     }

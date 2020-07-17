@@ -49,6 +49,7 @@ build-test: pod_test build archive init-sandbox
 	cd Examples/BasiciOS && make all
 	cd Examples/PINRemoteImage && make all
 	cd Examples/Texture && make all
+	cd Examples/ChildPodspec && make all
 
 build-example: EXAMPLE=Examples/PINCache.podspec.json
 build-example: CONFIG = debug

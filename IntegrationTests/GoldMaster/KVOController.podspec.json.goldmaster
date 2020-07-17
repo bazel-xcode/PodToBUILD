@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "KVOController_package_hdrs",
+  srcs = [
+    "KVOController_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "KVOController_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBKVOController/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KVOController_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "KVOController_hmap",
   namespace = "KVOController",
   hdrs = [
+    "KVOController_package_hdrs",
     ":KVOController_hdrs"
   ],
   deps = [],

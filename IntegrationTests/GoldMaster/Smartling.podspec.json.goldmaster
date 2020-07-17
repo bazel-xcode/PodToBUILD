@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "Smartling_package_hdrs",
+  srcs = [
+    "Smartling_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Smartling_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Smartling_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "Smartling_hmap",
   namespace = "Smartling",
   hdrs = [
+    "Smartling_package_hdrs",
     ":Smartling_hdrs"
   ],
   deps = [],

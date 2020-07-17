@@ -35,6 +35,28 @@ config_setting(
   }
 )
 filegroup(
+  name = "TestArcPatternsWithExcludes_package_hdrs",
+  srcs = [
+    "TestArcPatternsWithExcludes_direct_hdrs",
+    "Core_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "TestArcPatternsWithExcludes_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FBSDKCoreKit_hdrs",
   srcs = glob(
     [
@@ -52,6 +74,7 @@ headermap(
   name = "TestArcPatternsWithExcludes_hmap",
   namespace = "FBSDKCoreKit",
   hdrs = [
+    "TestArcPatternsWithExcludes_package_hdrs",
     ":FBSDKCoreKit_hdrs"
   ],
   deps = [
@@ -140,6 +163,86 @@ acknowledged_target(
   name = "TestArcPatternsWithExcludes_acknowledgement",
   deps = [],
   value = "//Vendor/TestArcPatternsWithExcludes/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Core_direct_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "**/*.h"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.h",
+            "CORE_EXCLUDE_IOS/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "**/*.h"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "**/*.h"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.h",
+            "CORE_EXCLUDE_TV/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "**/*.h"
+          ],
+          exclude = [
+            "CORE_EXCLUDE/**/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "Core_hdrs",
@@ -235,6 +338,7 @@ headermap(
   name = "Core_hmap",
   namespace = "FBSDKCoreKit",
   hdrs = [
+    "TestArcPatternsWithExcludes_package_hdrs",
     ":Core_union_hdrs"
   ],
   deps = [],

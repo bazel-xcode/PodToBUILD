@@ -36,6 +36,31 @@ config_setting(
   }
 )
 filegroup(
+  name = "CocoaLumberjack_package_hdrs",
+  srcs = [
+    "CocoaLumberjack_direct_hdrs",
+    "Default_direct_hdrs",
+    "Core_direct_hdrs",
+    "Extensions_direct_hdrs",
+    "CLI_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "CocoaLumberjack_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "CocoaLumberjack_hdrs",
   srcs = glob(
     [
@@ -54,6 +79,7 @@ headermap(
   name = "CocoaLumberjack_hmap",
   namespace = "CocoaLumberjack",
   hdrs = [
+    "CocoaLumberjack_package_hdrs",
     ":CocoaLumberjack_hdrs"
   ],
   deps = [
@@ -110,6 +136,27 @@ acknowledged_target(
   value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Default_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/CocoaLumberjack.h",
+        "Classes/DD*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Default_hdrs",
   srcs = glob(
     glob(
@@ -144,6 +191,7 @@ headermap(
   name = "Default_hmap",
   namespace = "CocoaLumberjack",
   hdrs = [
+    "CocoaLumberjack_package_hdrs",
     ":Default_union_hdrs"
   ],
   deps = [],
@@ -212,6 +260,26 @@ acknowledged_target(
   value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Core_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/DD*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Core_hdrs",
   srcs = glob(
     glob(
@@ -245,6 +313,7 @@ headermap(
   name = "Core_hmap",
   namespace = "CocoaLumberjack",
   hdrs = [
+    "CocoaLumberjack_package_hdrs",
     ":Core_union_hdrs"
   ],
   deps = [],
@@ -307,6 +376,26 @@ acknowledged_target(
   value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Extensions_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/Extensions/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Extensions_hdrs",
   srcs = glob(
     glob(
@@ -341,6 +430,7 @@ headermap(
   name = "Extensions_hmap",
   namespace = "CocoaLumberjack",
   hdrs = [
+    "CocoaLumberjack_package_hdrs",
     ":Extensions_union_hdrs"
   ],
   deps = [
@@ -406,6 +496,48 @@ acknowledged_target(
   value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "CLI_direct_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/CLI/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "CLI_hdrs",
   srcs = select(
     {
@@ -468,6 +600,7 @@ headermap(
   name = "CLI_hmap",
   namespace = "CocoaLumberjack",
   hdrs = [
+    "CocoaLumberjack_package_hdrs",
     ":CLI_union_hdrs"
   ],
   deps = select(

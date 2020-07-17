@@ -36,6 +36,31 @@ config_setting(
   }
 )
 filegroup(
+  name = "KakaoOpenSDK_package_hdrs",
+  srcs = [
+    "KakaoOpenSDK_direct_hdrs",
+    "KakaoOpenSDK_direct_hdrs",
+    "KakaoNavi_direct_hdrs",
+    "KakaoLink_direct_hdrs",
+    "KakaoS2_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "KakaoOpenSDK_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KakaoOpenSDK_hdrs",
   srcs = glob(
     [
@@ -56,6 +81,7 @@ headermap(
   name = "KakaoOpenSDK_hmap",
   namespace = "KakaoOpenSDK",
   hdrs = [
+    "KakaoOpenSDK_package_hdrs",
     ":KakaoOpenSDK_hdrs"
   ],
   deps = [
@@ -124,6 +150,18 @@ acknowledged_target(
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "KakaoOpenSDK_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KakaoOpenSDK_hdrs",
   srcs = glob(
     [
@@ -149,6 +187,7 @@ headermap(
   name = "KakaoOpenSDK_hmap",
   namespace = "KakaoOpenSDK",
   hdrs = [
+    "KakaoOpenSDK_package_hdrs",
     ":KakaoOpenSDK_union_hdrs"
   ],
   deps = [
@@ -224,6 +263,18 @@ acknowledged_target(
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "KakaoNavi_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KakaoNavi_hdrs",
   srcs = glob(
     [
@@ -249,6 +300,7 @@ headermap(
   name = "KakaoNavi_hmap",
   namespace = "KakaoOpenSDK",
   hdrs = [
+    "KakaoOpenSDK_package_hdrs",
     ":KakaoNavi_union_hdrs"
   ],
   deps = [
@@ -323,6 +375,18 @@ acknowledged_target(
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "KakaoLink_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KakaoLink_hdrs",
   srcs = glob(
     [
@@ -348,6 +412,7 @@ headermap(
   name = "KakaoLink_hmap",
   namespace = "KakaoOpenSDK",
   hdrs = [
+    "KakaoOpenSDK_package_hdrs",
     ":KakaoLink_union_hdrs"
   ],
   deps = [
@@ -422,6 +487,18 @@ acknowledged_target(
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "KakaoS2_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KakaoS2_hdrs",
   srcs = glob(
     [
@@ -447,6 +524,7 @@ headermap(
   name = "KakaoS2_hmap",
   namespace = "KakaoOpenSDK",
   hdrs = [
+    "KakaoOpenSDK_package_hdrs",
     ":KakaoS2_union_hdrs"
   ],
   deps = [

@@ -71,7 +71,8 @@ class PodWorkspace(object):
         for pod in self.pods:
             if pod.url and pod.url.startswith("Vendor"):
                 parent_pod = pod.url.split("/")[1]
-                invocation_info_by_target[parent_pod].add_child_pod(pod)
+                if parent_pod != pod.target_name:
+                    invocation_info_by_target[parent_pod].add_child_pod(pod)
 
         for pod in self.pods:
             _update_repo_impl(invocation_info_by_target[pod.target_name])

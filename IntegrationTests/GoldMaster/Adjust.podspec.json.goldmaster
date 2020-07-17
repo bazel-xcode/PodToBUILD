@@ -35,6 +35,31 @@ config_setting(
   }
 )
 filegroup(
+  name = "Adjust_package_hdrs",
+  srcs = [
+    "Adjust_direct_hdrs",
+    "Core_direct_hdrs",
+    "Sociomantic_direct_hdrs",
+    "Criteo_direct_hdrs",
+    "Trademob_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Adjust_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Adjust_hdrs",
   srcs = glob(
     [
@@ -52,6 +77,7 @@ headermap(
   name = "Adjust_hmap",
   namespace = "Adjust",
   hdrs = [
+    "Adjust_package_hdrs",
     ":Adjust_hdrs"
   ],
   deps = [
@@ -120,6 +146,27 @@ acknowledged_target(
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Core_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Adjust/*.h",
+        "Adjust/ADJAdditions/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Core_hdrs",
   srcs = glob(
     glob(
@@ -154,6 +201,7 @@ headermap(
   name = "Core_hmap",
   namespace = "Adjust",
   hdrs = [
+    "Adjust_package_hdrs",
     ":Core_union_hdrs"
   ],
   deps = [],
@@ -247,6 +295,26 @@ acknowledged_target(
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Sociomantic_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "plugin/Sociomantic/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Sociomantic_hdrs",
   srcs = glob(
     glob(
@@ -281,6 +349,7 @@ headermap(
   name = "Sociomantic_hmap",
   namespace = "Adjust",
   hdrs = [
+    "Adjust_package_hdrs",
     ":Sociomantic_union_hdrs"
   ],
   deps = [
@@ -360,6 +429,26 @@ acknowledged_target(
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Criteo_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "plugin/Criteo/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Criteo_hdrs",
   srcs = glob(
     glob(
@@ -394,6 +483,7 @@ headermap(
   name = "Criteo_hmap",
   namespace = "Adjust",
   hdrs = [
+    "Adjust_package_hdrs",
     ":Criteo_union_hdrs"
   ],
   deps = [
@@ -473,6 +563,26 @@ acknowledged_target(
   value = "//Vendor/Adjust/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Trademob_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "plugin/Trademob/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Trademob_hdrs",
   srcs = glob(
     glob(
@@ -507,6 +617,7 @@ headermap(
   name = "Trademob_hmap",
   namespace = "Adjust",
   hdrs = [
+    "Adjust_package_hdrs",
     ":Trademob_union_hdrs"
   ],
   deps = [

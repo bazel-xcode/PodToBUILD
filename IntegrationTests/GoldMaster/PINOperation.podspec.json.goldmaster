@@ -35,6 +35,36 @@ config_setting(
   }
 )
 filegroup(
+  name = "PINOperation_package_hdrs",
+  srcs = [
+    "PINOperation_cxx_direct_hdrs",
+    "PINOperation_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "PINOperation_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "PINOperation_cxx_hdrs",
   srcs = glob(
     glob(
@@ -68,6 +98,7 @@ headermap(
   name = "PINOperation_cxx_hmap",
   namespace = "PINOperation",
   hdrs = [
+    "PINOperation_package_hdrs",
     ":PINOperation_cxx_union_hdrs"
   ],
   deps = [],
@@ -141,6 +172,26 @@ acknowledged_target(
   value = "//Vendor/PINOperation/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "PINOperation_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "PINOperation_hdrs",
   srcs = glob(
     glob(
@@ -166,6 +217,7 @@ headermap(
   name = "PINOperation_hmap",
   namespace = "PINOperation",
   hdrs = [
+    "PINOperation_package_hdrs",
     ":PINOperation_hdrs"
   ],
   deps = [

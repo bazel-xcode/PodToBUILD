@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "IBActionSheet_package_hdrs",
+  srcs = [
+    "IBActionSheet_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "IBActionSheet_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "IBActionSheet_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "IBActionSheet_hmap",
   namespace = "IBActionSheet",
   hdrs = [
+    "IBActionSheet_package_hdrs",
     ":IBActionSheet_hdrs"
   ],
   deps = [],

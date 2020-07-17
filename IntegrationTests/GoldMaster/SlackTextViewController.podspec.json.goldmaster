@@ -35,6 +35,35 @@ config_setting(
   }
 )
 filegroup(
+  name = "SlackTextViewController_package_hdrs",
+  srcs = [
+    "SlackTextViewController_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "SlackTextViewController_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "SlackTextViewController_hdrs",
   srcs = glob(
     glob(
@@ -58,6 +87,7 @@ headermap(
   name = "SlackTextViewController_hmap",
   namespace = "SlackTextViewController",
   hdrs = [
+    "SlackTextViewController_package_hdrs",
     ":SlackTextViewController_hdrs"
   ],
   deps = [],

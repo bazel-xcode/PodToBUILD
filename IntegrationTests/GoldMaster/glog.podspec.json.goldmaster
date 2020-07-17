@@ -35,6 +35,42 @@ config_setting(
   }
 )
 filegroup(
+  name = "glog_package_hdrs",
+  srcs = [
+    "glog_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "glog_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "src/*.h",
+        "src/base/*.h",
+        "src/glog/*.h"
+      ],
+      exclude = [
+        "src/windows/**/*.h",
+        "src/windows/**/*.hpp",
+        "src/windows/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "glog_hdrs",
   srcs = glob(
     glob(
@@ -44,9 +80,6 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "glog/**/*.h",
-        "glog/**/*.hpp",
-        "glog/**/*.hxx",
         "src/*.h",
         "src/base/*.h",
         "src/glog/*.h"
@@ -68,6 +101,7 @@ headermap(
   name = "glog_hmap",
   namespace = "glog",
   hdrs = [
+    "glog_package_hdrs",
     ":glog_hdrs"
   ],
   deps = [],

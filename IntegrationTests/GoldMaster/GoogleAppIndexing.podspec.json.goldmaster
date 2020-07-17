@@ -37,6 +37,37 @@ config_setting(
   }
 )
 filegroup(
+  name = "GoogleAppIndexing_package_hdrs",
+  srcs = [
+    "GoogleAppIndexing_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "GoogleAppIndexing_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Changelog/**/*.h",
+        "Changelog/**/*.hpp",
+        "Changelog/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "GoogleAppIndexing_hdrs",
   srcs = glob(
     glob(
@@ -62,6 +93,7 @@ headermap(
   name = "GoogleAppIndexing_hmap",
   namespace = "GoogleAppIndexing",
   hdrs = [
+    "GoogleAppIndexing_package_hdrs",
     ":GoogleAppIndexing_hdrs"
   ],
   deps = [

@@ -35,6 +35,40 @@ config_setting(
   }
 )
 filegroup(
+  name = "ZipArchive_package_hdrs",
+  srcs = [
+    "ZipArchive_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "ZipArchive_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "*.h",
+        "minizip/crypt.h",
+        "minizip/ioapi.h",
+        "minizip/mztools.h",
+        "minizip/unzip.h",
+        "minizip/zip.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "ZipArchive_hdrs",
   srcs = glob(
     glob(
@@ -63,6 +97,7 @@ headermap(
   name = "ZipArchive_hmap",
   namespace = "ZipArchive",
   hdrs = [
+    "ZipArchive_package_hdrs",
     ":ZipArchive_hdrs"
   ],
   deps = [],

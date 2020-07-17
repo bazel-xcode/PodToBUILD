@@ -35,6 +35,62 @@ config_setting(
   }
 )
 filegroup(
+  name = "React_package_hdrs",
+  srcs = [
+    "React_direct_hdrs",
+    "Core_direct_hdrs",
+    "ART_direct_hdrs",
+    "RCTActionSheet_direct_hdrs",
+    "RCTAdSupport_direct_hdrs",
+    "RCTGeolocation_direct_hdrs",
+    "RCTImage_direct_hdrs",
+    "RCTNetwork_direct_hdrs",
+    "RCTPushNotification_direct_hdrs",
+    "RCTSettings_direct_hdrs",
+    "RCTText_direct_hdrs",
+    "RCTVibration_direct_hdrs",
+    "RCTWebSocket_direct_hdrs",
+    "RCTLinkingIOS_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "React_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "React_hdrs",
   srcs = glob(
     glob(
@@ -74,6 +130,7 @@ headermap(
   name = "React_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":React_hdrs"
   ],
   deps = [
@@ -126,6 +183,49 @@ acknowledged_target(
   name = "React_acknowledgement",
   deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Core_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "PATENTS/**/*.h",
+        "PATENTS/**/*.hpp",
+        "PATENTS/**/*.hxx",
+        "React/**/*.h",
+        "lint/**/*.h",
+        "lint/**/*.hpp",
+        "lint/**/*.hxx",
+        "node_modules/**/*.h",
+        "node_modules/**/*.hpp",
+        "node_modules/**/*.hxx",
+        "packager/**/*.h",
+        "packager/**/*.hpp",
+        "packager/**/*.hxx",
+        "react-native-cli/**/*.h",
+        "react-native-cli/**/*.hpp",
+        "react-native-cli/**/*.hxx"
+      ],
+      exclude = [
+        "**/__tests__/*.h",
+        "**/__tests__/*.hpp",
+        "**/__tests__/*.hxx",
+        "IntegrationTests/*.h",
+        "IntegrationTests/*.hpp",
+        "IntegrationTests/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "Core_hdrs",
@@ -184,6 +284,7 @@ headermap(
   name = "Core_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":Core_union_hdrs"
   ],
   deps = [],
@@ -328,6 +429,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "ART_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/ART/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "ART_hdrs",
   srcs = glob(
     glob(
@@ -337,22 +458,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/ART/**/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/ART/**/*.h"
       ],
       exclude_directories = 1
     ),
@@ -377,6 +483,7 @@ headermap(
   name = "ART_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":ART_union_hdrs"
   ],
   deps = [
@@ -442,6 +549,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTActionSheet_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/ActionSheetIOS/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTActionSheet_hdrs",
   srcs = glob(
     glob(
@@ -451,22 +578,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/ActionSheetIOS/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/ActionSheetIOS/*.h"
       ],
       exclude_directories = 1
     ),
@@ -491,6 +603,7 @@ headermap(
   name = "RCTActionSheet_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTActionSheet_union_hdrs"
   ],
   deps = [
@@ -556,6 +669,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTAdSupport_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/AdSupport/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTAdSupport_hdrs",
   srcs = glob(
     glob(
@@ -565,22 +698,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/AdSupport/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/AdSupport/*.h"
       ],
       exclude_directories = 1
     ),
@@ -605,6 +723,7 @@ headermap(
   name = "RCTAdSupport_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTAdSupport_union_hdrs"
   ],
   deps = [
@@ -670,6 +789,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTGeolocation_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Geolocation/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTGeolocation_hdrs",
   srcs = glob(
     glob(
@@ -679,22 +818,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/Geolocation/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/Geolocation/*.h"
       ],
       exclude_directories = 1
     ),
@@ -719,6 +843,7 @@ headermap(
   name = "RCTGeolocation_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTGeolocation_union_hdrs"
   ],
   deps = [
@@ -784,6 +909,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTImage_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Image/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTImage_hdrs",
   srcs = glob(
     glob(
@@ -793,22 +938,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/Image/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/Image/*.h"
       ],
       exclude_directories = 1
     ),
@@ -833,6 +963,7 @@ headermap(
   name = "RCTImage_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTImage_union_hdrs"
   ],
   deps = [
@@ -898,6 +1029,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTNetwork_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Network/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTNetwork_hdrs",
   srcs = glob(
     glob(
@@ -907,22 +1058,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/Network/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/Network/*.h"
       ],
       exclude_directories = 1
     ),
@@ -947,6 +1083,7 @@ headermap(
   name = "RCTNetwork_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTNetwork_union_hdrs"
   ],
   deps = [
@@ -1012,6 +1149,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTPushNotification_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/PushNotificationIOS/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTPushNotification_hdrs",
   srcs = glob(
     glob(
@@ -1021,22 +1178,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/PushNotificationIOS/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/PushNotificationIOS/*.h"
       ],
       exclude_directories = 1
     ),
@@ -1061,6 +1203,7 @@ headermap(
   name = "RCTPushNotification_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTPushNotification_union_hdrs"
   ],
   deps = [
@@ -1126,6 +1269,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTSettings_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Settings/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTSettings_hdrs",
   srcs = glob(
     glob(
@@ -1135,22 +1298,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/Settings/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/Settings/*.h"
       ],
       exclude_directories = 1
     ),
@@ -1175,6 +1323,7 @@ headermap(
   name = "RCTSettings_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTSettings_union_hdrs"
   ],
   deps = [
@@ -1240,6 +1389,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTText_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Text/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTText_hdrs",
   srcs = glob(
     glob(
@@ -1249,22 +1418,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/Text/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/Text/*.h"
       ],
       exclude_directories = 1
     ),
@@ -1289,6 +1443,7 @@ headermap(
   name = "RCTText_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTText_union_hdrs"
   ],
   deps = [
@@ -1354,6 +1509,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTVibration_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/Vibration/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTVibration_hdrs",
   srcs = glob(
     glob(
@@ -1363,22 +1538,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/Vibration/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/Vibration/*.h"
       ],
       exclude_directories = 1
     ),
@@ -1403,6 +1563,7 @@ headermap(
   name = "RCTVibration_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTVibration_union_hdrs"
   ],
   deps = [
@@ -1468,6 +1629,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTWebSocket_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/WebSocket/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTWebSocket_hdrs",
   srcs = glob(
     glob(
@@ -1477,22 +1658,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/WebSocket/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/WebSocket/*.h"
       ],
       exclude_directories = 1
     ),
@@ -1517,6 +1683,7 @@ headermap(
   name = "RCTWebSocket_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTWebSocket_union_hdrs"
   ],
   deps = [
@@ -1582,6 +1749,26 @@ acknowledged_target(
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "RCTLinkingIOS_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Libraries/LinkingIOS/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTLinkingIOS_hdrs",
   srcs = glob(
     glob(
@@ -1591,22 +1778,7 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Libraries/LinkingIOS/*.h",
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
+        "Libraries/LinkingIOS/*.h"
       ],
       exclude_directories = 1
     ),
@@ -1631,6 +1803,7 @@ headermap(
   name = "RCTLinkingIOS_hmap",
   namespace = "React",
   hdrs = [
+    "React_package_hdrs",
     ":RCTLinkingIOS_union_hdrs"
   ],
   deps = [
