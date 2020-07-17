@@ -3434,8 +3434,8 @@ objc_library(
   ],
   copts = [
     "-std=c++14",
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -4053,8 +4053,8 @@ objc_library(
     ":RCTFabric_cxx_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -4493,8 +4493,8 @@ objc_library(
     ":jschelpers_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -4969,8 +4969,8 @@ objc_library(
     ":cxxreact_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -5205,8 +5205,8 @@ objc_library(
     ":fabric_activityindicator_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -5351,8 +5351,8 @@ objc_library(
     ":fabric_attributedstring_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -5497,8 +5497,8 @@ objc_library(
     ":fabric_core_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -5643,8 +5643,8 @@ objc_library(
     ":fabric_debug_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -5789,8 +5789,8 @@ objc_library(
     ":fabric_graphics_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -5935,8 +5935,8 @@ objc_library(
     ":fabric_scrollview_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -6081,8 +6081,8 @@ objc_library(
     ":fabric_text_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -6228,8 +6228,8 @@ objc_library(
     ":fabric_textlayoutmanager_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -6374,8 +6374,8 @@ objc_library(
     ":fabric_uimanager_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -6522,8 +6522,8 @@ objc_library(
     ":fabric_view_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
@@ -6669,8 +6669,8 @@ objc_library(
     ":RCTFabricSample_includes"
   ],
   copts = [
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [

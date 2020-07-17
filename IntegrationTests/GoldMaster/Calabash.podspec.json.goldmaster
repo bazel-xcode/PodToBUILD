@@ -124,8 +124,7 @@ objc_library(
     [
       "calabash.framework/Versions/A/Headers/*.cc",
       "calabash.framework/Versions/A/Headers/*.cpp",
-      "calabash.framework/Versions/A/Headers/*.cxx",
-      "calabash.framework/Versions/A/Headers/*.mm"
+      "calabash.framework/Versions/A/Headers/*.cxx"
     ],
     exclude = glob(
       [
@@ -134,6 +133,41 @@ objc_library(
         "calabash.framework/Versions/A/Headers/*.m",
         "calabash.framework/Versions/A/Headers/*.s"
       ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  non_arc_srcs = glob(
+    glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.mm"
+      ],
+      exclude = glob(
+        [
+          "calabash.framework/Versions/A/Headers/*.S",
+          "calabash.framework/Versions/A/Headers/*.c",
+          "calabash.framework/Versions/A/Headers/*.m",
+          "calabash.framework/Versions/A/Headers/*.s"
+        ],
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
+    exclude = glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.cc",
+        "calabash.framework/Versions/A/Headers/*.cpp",
+        "calabash.framework/Versions/A/Headers/*.cxx"
+      ],
+      exclude = glob(
+        [
+          "calabash.framework/Versions/A/Headers/*.S",
+          "calabash.framework/Versions/A/Headers/*.c",
+          "calabash.framework/Versions/A/Headers/*.m",
+          "calabash.framework/Versions/A/Headers/*.s"
+        ],
+        exclude_directories = 1
+      ),
       exclude_directories = 1
     ),
     exclude_directories = 1
@@ -161,10 +195,10 @@ objc_library(
     ":Calabash_cxx_includes"
   ],
   copts = [
+    "-std=c++14",
     ""Vendor/Calabash/calabash.framework/calabash"",
     "-ObjC",
-    "-force_load",
-    "-std=c++14"
+    "-force_load"
   ] + select(
     {
       "//conditions:default": [

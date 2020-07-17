@@ -122,18 +122,94 @@ objc_library(
   enable_modules = 0,
   srcs = glob(
     [
-      "FBAllocationTracker/**/*.cc",
-      "FBAllocationTracker/**/*.cpp",
-      "FBAllocationTracker/**/*.cxx",
-      "FBAllocationTracker/**/*.mm"
+      "FBAllocationTracker/FBAllocationTrackerImpl.mm",
+      "FBAllocationTracker/FBAllocationTrackerManager.mm",
+      "FBAllocationTracker/FBAllocationTrackerSummary.m",
+      "FBAllocationTracker/Generations/FBAllocationTrackerGeneration.mm",
+      "FBAllocationTracker/Generations/FBAllocationTrackerGenerationManager.mm"
     ],
     exclude = glob(
       [
-        "FBAllocationTracker/**/*.S",
-        "FBAllocationTracker/**/*.c",
-        "FBAllocationTracker/**/*.m",
-        "FBAllocationTracker/**/*.s"
+        "FBAllocationTracker/FBAllocationTrackerImpl.mm",
+        "FBAllocationTracker/FBAllocationTrackerManager.mm",
+        "FBAllocationTracker/FBAllocationTrackerSummary.m",
+        "FBAllocationTracker/Generations/FBAllocationTrackerGeneration.mm",
+        "FBAllocationTracker/Generations/FBAllocationTrackerGenerationManager.mm"
       ],
+      exclude = glob(
+        [
+          "FBAllocationTracker/**/*.cc",
+          "FBAllocationTracker/**/*.cpp",
+          "FBAllocationTracker/**/*.cxx",
+          "FBAllocationTracker/**/*.mm"
+        ],
+        exclude = glob(
+          [
+            "FBAllocationTracker/**/*.S",
+            "FBAllocationTracker/**/*.c",
+            "FBAllocationTracker/**/*.m",
+            "FBAllocationTracker/**/*.s"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  non_arc_srcs = glob(
+    glob(
+      [
+        "FBAllocationTracker/**/*.mm"
+      ],
+      exclude = glob(
+        [
+          "FBAllocationTracker/**/*.S",
+          "FBAllocationTracker/**/*.c",
+          "FBAllocationTracker/**/*.m",
+          "FBAllocationTracker/**/*.s"
+        ],
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
+    exclude = glob(
+      [
+        "FBAllocationTracker/FBAllocationTrackerImpl.mm",
+        "FBAllocationTracker/FBAllocationTrackerManager.mm",
+        "FBAllocationTracker/FBAllocationTrackerSummary.m",
+        "FBAllocationTracker/Generations/FBAllocationTrackerGeneration.mm",
+        "FBAllocationTracker/Generations/FBAllocationTrackerGenerationManager.mm"
+      ],
+      exclude = glob(
+        [
+          "FBAllocationTracker/FBAllocationTrackerImpl.mm",
+          "FBAllocationTracker/FBAllocationTrackerManager.mm",
+          "FBAllocationTracker/FBAllocationTrackerSummary.m",
+          "FBAllocationTracker/Generations/FBAllocationTrackerGeneration.mm",
+          "FBAllocationTracker/Generations/FBAllocationTrackerGenerationManager.mm"
+        ],
+        exclude = glob(
+          [
+            "FBAllocationTracker/**/*.cc",
+            "FBAllocationTracker/**/*.cpp",
+            "FBAllocationTracker/**/*.cxx",
+            "FBAllocationTracker/**/*.mm"
+          ],
+          exclude = glob(
+            [
+              "FBAllocationTracker/**/*.S",
+              "FBAllocationTracker/**/*.c",
+              "FBAllocationTracker/**/*.m",
+              "FBAllocationTracker/**/*.s"
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
       exclude_directories = 1
     ),
     exclude_directories = 1
