@@ -254,10 +254,10 @@ objc_library(
     ":Core_cxx_includes"
   ],
   copts = [
+    "-std=c++14",
     "-std=c++11",
     "-stdlib=libc++",
-    "-fno-exceptions -fno-objc-arc-exceptions",
-    "-std=c++14"
+    "-fno-exceptions -fno-objc-arc-exceptions"
   ] + select(
     {
       "//conditions:default": [

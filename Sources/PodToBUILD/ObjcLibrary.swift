@@ -370,9 +370,8 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         } else {
             extraCopts = AttrSet.empty
         }
-
-        copts = AttrSet(basic: xcconfigCopts.sorted(by: <)) <>
-        fallbackSpec.attr(\.compilerFlags) <> extraCopts
+        copts = extraCopts <> AttrSet(basic: xcconfigCopts.sorted(by: <)) <>
+        fallbackSpec.attr(\.compilerFlags)
 
         // Select resources that are not prebuilt bundles
         let resourceFiles = (spec.attr(\.resources).map { (strArr: [String]) -> [String] in
@@ -519,34 +518,6 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 accumSource.exclude + append)
         }
 
-        // Cpp dectection: In the above code, we stick this in for C++ libs
-        let isCpp: Bool = self.copts.fold(basic: { x -> Bool in
-            x?.contains("-std=c++14") ?? false 
-        },  multi: {
-            (result: Bool, multi: MultiPlatform<[String]>) -> Bool in
-            result ||
-                multi.ios?.contains("-std=c++14") ?? false ||
-                multi.tvos?.contains("-std=c++14") ?? false ||
-                multi.osx?.contains("-std=c++14") ?? false  ||
-                multi.watchos?.contains("-std=c++14") ?? false 
-        })
-        // Cpp doesn't support `non_arc_sources` for some reason. this code path
-        // is invalid in bazel anyhow
-        guard !isCpp else {
-            let lib = self
-            return ObjcLibrary(name: lib.name, externalName: lib.externalName,
-                        sourceFiles: sourcesWithExcludes, headers: lib.headers,
-                        headerName: lib.headerName, moduleMap: lib.moduleMap, prefixHeader:
-                        lib.prefixHeader, includes: lib.includes,
-                        sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
-                        lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
-                        deps, copts: lib.copts, bundles: lib.bundles, resources:
-                        lib.resources, publicHeaders: lib.publicHeaders,
-                        nonArcSrcs: AttrSet.empty, requiresArc:
-                        lib.requiresArc, isTopLevelTarget: lib.isTopLevelTarget)
-
-        }
-
         let requiresArcValue: AttrSet<Either<Bool, [String]>?> = requiresArc
         let arcSources: AttrSet<GlobNode>
         arcSources = sourcesWithExcludes.zip(requiresArcValue).map {
@@ -557,15 +528,31 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             }
             switch requiresArcSources {
             case let .left(boolValue):
-                return boolValue ? arcSources : GlobNode.empty
+                // Logically, this segment of the code is identical to the ruby
+                // code. It would look like:
+                // return boolValue ? arcSources : GlobNode.empty
+                // however, bazel native rules don't allow cpp inside of the
+                // `non_arc_sourcs`. The following code opts in cpp sources only.
+                // the fobjc-arc _feature_ does not apply to the cpp language
+                // inside of clang
+                return boolValue ? arcSources : GlobNode(include: arcSources.include.map {
+                    $0.compactMapInclude {
+                        incPart -> String? in
+                        let suffix = String(incPart.split(separator: ".").last!)
+                        if suffix == "cpp" || suffix == "cxx" || suffix == "cc" {
+                            return incPart
+                        }
+                        return nil
+                    }
+                }, exclude: arcSources.exclude)
             case let .right(patternsValue):
                 // In cocoapods this is:
                 // As we don't have the union in skylark, this implements the
                 // union operator with glob ( see above comment )
                 // ruby: paths_for_attribute(:requires_arc) & source_files
                 return GlobNode(include: .left(Set(patternsValue)),
-                    exclude:.right(GlobNode(include: .left(Set(patternsValue)),
-                         exclude:.right(arcSources))))
+                    exclude:.right(GlobNode(include: [.left(Set(patternsValue))],
+                        exclude: [.right(arcSources)] )))
             default:
                 fatalError("null logic error")
             }
@@ -583,7 +570,22 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             guard let arcSources = attrTuple.second else {
                 return attrTuple.first ?? GlobNode.empty
             }
-            return GlobNode(include: .right(all), exclude: .right(arcSources))
+            return GlobNode(include: [.right(all)],
+                exclude: [.right(arcSources)])
+        }.map {
+            sources -> GlobNode in
+            // This hack corresponds to the above code - we can't allow cpp
+            // files here
+            GlobNode(include: sources.include.map {
+                $0.compactMapInclude {
+                    incPart -> String? in
+                    let suffix = String(incPart.split(separator: ".").last!)
+                    if suffix == "cpp" || suffix == "cxx" || suffix == "cc" {
+                        return nil
+                    }
+                    return incPart
+                }
+            }, exclude: sources.exclude)
         }
 
         let lib = self

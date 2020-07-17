@@ -151,8 +151,8 @@ objc_library(
   ],
   copts = [
     "-std=c++14",
-    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-    "-std=c++14"
+    "-std=c++14",
+    "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [

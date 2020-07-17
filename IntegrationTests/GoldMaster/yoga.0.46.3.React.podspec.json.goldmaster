@@ -126,13 +126,13 @@ objc_library(
     ":yoga_includes"
   ],
   copts = [
+    "-std=c++14",
     "-fno-omit-frame-pointer",
     "-fexceptions",
     "-Wall",
     "-Werror",
     "-std=c++1y",
-    "-fPIC",
-    "-std=c++14"
+    "-fPIC"
   ] + select(
     {
       "//conditions:default": [

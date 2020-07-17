@@ -113,6 +113,20 @@ extension Either: Equatable where T == Set<String>, U == GlobNode {
             ))
         }
     }
+
+    public func compactMapInclude(_ transform: (String) -> String?) -> Either<Set<String>, GlobNode> {
+        switch self {
+        case let .left(setVal):
+            return .left(Set(setVal.compactMap(transform)))
+        case let .right(globVal):
+            let inc = globVal.include.compactMap({
+                    $0.compactMapInclude(transform)
+                })
+            return .right(GlobNode(
+                include: inc, exclude: globVal.exclude))
+        }
+    }
+
 }
 
 extension Array where Iterator.Element == Either<Set<String>, GlobNode> {
