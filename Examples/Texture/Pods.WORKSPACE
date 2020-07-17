@@ -1,6 +1,6 @@
 new_pod_repository(
   name = "Texture",
-  url = "https://github.com/TextureGroup/Texture/archive/8908abe11d92628c3ca01dbfb02a80e160b2d3c3.zip",
+  url = "https://github.com/TextureGroup/Texture/archive/d085cd63494488c5921e20842a585470aa6ab1d9.zip",
   inhibit_warnings = True,
   # Undefined symbols
   # Compilation error: triggered module compilation from ObjC code

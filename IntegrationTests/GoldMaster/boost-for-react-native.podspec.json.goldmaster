@@ -16,19 +16,71 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "boost-for-react-native_package_hdrs",
+  srcs = [
+    "boost-for-react-native_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "boost-for-react-native_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "boost/**/*.h",
+        "boost/**/*.hpp",
+        "boost/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "boost-for-react-native_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "boost/**/*.h",
-      "boost/**/*.hpp",
-      "boost/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "boost/**/*.h",
+        "boost/**/*.hpp",
+        "boost/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -39,6 +91,7 @@ headermap(
   name = "boost-for-react-native_hmap",
   namespace = "boost",
   hdrs = [
+    "boost-for-react-native_package_hdrs",
     ":boost-for-react-native_hdrs"
   ],
   deps = [],
@@ -50,14 +103,6 @@ gen_includes(
   name = "boost-for-react-native_includes",
   include = [
     "Vendor/boost-for-react-native/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "boost",
-  "boost-for-react-native_module_map",
-  "boost",
-  [
-    "boost-for-react-native_hdrs"
   ]
 )
 objc_library(
@@ -86,7 +131,7 @@ objc_library(
   ) + [
     "-IVendor/boost-for-react-native/pod_support/Headers/Public/boost/"
   ] + [
-    "-fmodule-name=boost_pod_module"
+    "-fmodule-name=boost"
   ],
   visibility = [
     "//visibility:public"

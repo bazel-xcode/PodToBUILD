@@ -28,7 +28,7 @@ enum UserConfigurableOpt : String {
    case PlusEqual = "+="
 }
 
-protocol UserConfigurable {
+protocol UserConfigurable: BazelTarget {
     var name : String { get }
 
     /// Add a given value to a key
@@ -53,13 +53,13 @@ extension UserConfigurable {
                 fatalError()
             }
 
-            var components = keyPathOperator.components(separatedBy: opt.rawValue)
+            let components = keyPathOperator.components(separatedBy: opt.rawValue)
             guard components.count > 1 else { continue }
 
-            let key = components[0].replacingOccurrences(of: " ", with: "")
+            let key = components[0].trimmingCharacters(in: .whitespaces)
             let values = components[1].components(separatedBy: ",")
             for value in values {
-                let value = value.replacingOccurrences(of: " ", with: "")
+                let value = value.trimmingCharacters(in: .whitespaces)
                 copy.add(configurableKey: key, value: value)
             }
         }
@@ -68,32 +68,38 @@ extension UserConfigurable {
 }
 
 enum UserConfigurableTransform : SkylarkConvertibleTransform {
-    public static func transform(convertibles: [SkylarkConvertible], options: BuildOptions, podSpec: PodSpec) -> [SkylarkConvertible] {
+    public static func transform(convertibles: [BazelTarget], options:
+                                 BuildOptions, podSpec: PodSpec) -> [BazelTarget] {
         let attributes = UserConfigurableTargetAttributes(buildOptions: options)
         return UserConfigurableTransform.executeUserOptionsTransform(onConvertibles: convertibles, copts: options.globalCopts, userAttributes: attributes)
     }
 
-    public static  func executeUserOptionsTransform(onConvertibles convertibles: [SkylarkConvertible], copts: [String], userAttributes: UserConfigurableTargetAttributes) -> [SkylarkConvertible] {
+    public static  func executeUserOptionsTransform(onConvertibles convertibles:
+                                                    [BazelTarget], copts:
+                                                    [String], userAttributes:
+                                                    UserConfigurableTargetAttributes)
+    -> [BazelTarget] {
         var operatorByTarget = [String: [String]]()
         for keyPath in userAttributes.keyPathOperators {
-            let components = keyPath.components(separatedBy: ".")
+            let components = keyPath.split(separator: ".", maxSplits: 1)
             if let target = components.first {
-                var oprs = (operatorByTarget[target] ?? [String]())
-                oprs.append(components[1])
-                operatorByTarget[target] = oprs
+                var oprs = (operatorByTarget[String(target)] ?? [String]())
+                oprs.append(String(components[1]))
+                operatorByTarget[String(target)] = oprs
             }
         }
 
-        let output: [SkylarkConvertible] = convertibles.map {
-            (inputConvertible: SkylarkConvertible) in
+        let output: [BazelTarget] = convertibles.map {
+            (inputConvertible: BazelTarget) in
             guard let configurable = inputConvertible as? UserConfigurable else {
                 return inputConvertible
             }
 
             if let operators = operatorByTarget[configurable.name] {
-                return configurable.apply(keyPathOperators: operators, copts: copts) as! SkylarkConvertible
+                return configurable.apply(keyPathOperators: operators, copts:
+                                          copts)
             } else {
-                return configurable.apply(keyPathOperators: [], copts: copts) as! SkylarkConvertible
+                return configurable.apply(keyPathOperators: [], copts: copts)
             }
         }
         return output

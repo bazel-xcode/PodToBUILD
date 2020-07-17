@@ -1,0 +1,7 @@
+project 'PodSupport/PodSupport.xcodeproj'
+
+target 'ios-app' do
+    pod "Parent", :path => "Vendor/Parent"
+    pod "Child", :path => "Vendor/Parent/Child"
+end
+

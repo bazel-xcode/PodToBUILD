@@ -17,6 +17,31 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "FolioReaderKit_package_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
 swift_library(
   name = "FolioReaderKit",
   srcs = glob(

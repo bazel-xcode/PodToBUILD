@@ -16,17 +16,67 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "KVOController_package_hdrs",
+  srcs = [
+    "KVOController_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "KVOController_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBKVOController/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "KVOController_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "FBKVOController/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBKVOController/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -37,6 +87,7 @@ headermap(
   name = "KVOController_hmap",
   namespace = "KVOController",
   hdrs = [
+    "KVOController_package_hdrs",
     ":KVOController_hdrs"
   ],
   deps = [],
@@ -48,14 +99,6 @@ gen_includes(
   name = "KVOController_includes",
   include = [
     "Vendor/KVOController/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "KVOController",
-  "KVOController_module_map",
-  "KVOController",
-  [
-    "KVOController_hdrs"
   ]
 )
 objc_library(
@@ -72,9 +115,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "KVOController",
-    [
-      "FBKVOController/**/*.pch"
-    ]
+    glob(
+      [
+        "FBKVOController/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":KVOController_includes"
@@ -92,7 +138,7 @@ objc_library(
   ) + [
     "-IVendor/KVOController/pod_support/Headers/Public/KVOController/"
   ] + [
-    "-fmodule-name=KVOController_pod_module"
+    "-fmodule-name=KVOController"
   ],
   visibility = [
     "//visibility:public"

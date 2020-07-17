@@ -1,0 +1,712 @@
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
+load(
+  "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
+  "pch_with_name_hint",
+  "acknowledged_target",
+  "gen_module_map",
+  "gen_includes",
+  "headermap"
+)
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://docs.bazel.build/versions/master/be/general.html#config_setting
+config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+)
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "CocoaLumberjack_package_hdrs",
+  srcs = [
+    "CocoaLumberjack_direct_hdrs",
+    "Default_direct_hdrs",
+    "Core_direct_hdrs",
+    "Extensions_direct_hdrs",
+    "CLI_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "CocoaLumberjack_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "CocoaLumberjack_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Default_hdrs",
+    ":Extensions_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "CocoaLumberjack_hmap",
+  namespace = "CocoaLumberjack",
+  hdrs = [
+    "CocoaLumberjack_package_hdrs",
+    ":CocoaLumberjack_hdrs"
+  ],
+  deps = [
+    ":Default",
+    ":Extensions"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "CocoaLumberjack_includes",
+  include = [
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "CocoaLumberjack",
+  enable_modules = 0,
+  hdrs = [
+    ":CocoaLumberjack_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "CocoaLumberjack",
+    []
+  ),
+  deps = [
+    ":Default",
+    ":Extensions",
+    ":CocoaLumberjack_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
+  ] + [
+    "-fmodule-name=CocoaLumberjack"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "CocoaLumberjack_acknowledgement",
+  deps = [],
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Default_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/CocoaLumberjack.h",
+        "Classes/DD*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Default_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/CocoaLumberjack.h",
+        "Classes/DD*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Default_union_hdrs",
+  srcs = [
+    "Default_hdrs",
+    "CocoaLumberjack_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Default_hmap",
+  namespace = "CocoaLumberjack",
+  hdrs = [
+    "CocoaLumberjack_package_hdrs",
+    ":Default_union_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "Default_includes",
+  include = [
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "Default",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "Classes/DD*.m"
+    ],
+    exclude = glob(
+      [
+        "Classes/Extensions/*.m"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":Default_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "CocoaLumberjack",
+    glob(
+      [
+        "Classes/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
+  ),
+  deps = [
+    ":Default_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
+  ] + [
+    "-fmodule-name=CocoaLumberjack"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "Default_acknowledgement",
+  deps = [],
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Core_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/DD*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/DD*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_union_hdrs",
+  srcs = [
+    "Core_hdrs",
+    "CocoaLumberjack_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Core_hmap",
+  namespace = "CocoaLumberjack",
+  hdrs = [
+    "CocoaLumberjack_package_hdrs",
+    ":Core_union_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "Core_includes",
+  include = [
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "Core",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "Classes/DD*.m"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":Core_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "CocoaLumberjack",
+    glob(
+      [
+        "Classes/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
+  ),
+  deps = [
+    ":Core_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
+  ] + [
+    "-fmodule-name=CocoaLumberjack"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "Core_acknowledgement",
+  deps = [],
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Extensions_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/Extensions/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Extensions_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/Extensions/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Extensions_union_hdrs",
+  srcs = [
+    "Extensions_hdrs",
+    "CocoaLumberjack_hdrs",
+    ":Default_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Extensions_hmap",
+  namespace = "CocoaLumberjack",
+  hdrs = [
+    "CocoaLumberjack_package_hdrs",
+    ":Extensions_union_hdrs"
+  ],
+  deps = [
+    ":Default"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "Extensions_includes",
+  include = [
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "Extensions",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "Classes/Extensions/*.m"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":Extensions_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "CocoaLumberjack",
+    glob(
+      [
+        "Classes/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
+  ),
+  deps = [
+    ":Default",
+    ":Extensions_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
+  ] + [
+    "-fmodule-name=CocoaLumberjack"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "Extensions_acknowledgement",
+  deps = [],
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "CLI_direct_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/CLI/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "CLI_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      ),
+      ":osxCase": glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Classes/CLI/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      ),
+      ":watchosCase": glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "CLI_union_hdrs",
+  srcs = [
+    "CLI_hdrs",
+    "CocoaLumberjack_hdrs"
+  ] + select(
+    {
+      "//conditions:default": [],
+      ":osxCase": [
+        ":Default_hdrs"
+      ]
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "CLI_hmap",
+  namespace = "CocoaLumberjack",
+  hdrs = [
+    "CocoaLumberjack_package_hdrs",
+    ":CLI_union_hdrs"
+  ],
+  deps = select(
+    {
+      "//conditions:default": [],
+      ":osxCase": [
+        ":Default"
+      ]
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "CLI_includes",
+  include = [
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "CLI",
+  enable_modules = 0,
+  srcs = select(
+    {
+      "//conditions:default": [],
+      ":osxCase": glob(
+        [
+          "Classes/CLI/*.m"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ),
+  hdrs = [
+    ":CLI_hdrs"
+  ],
+  pch = select(
+    {
+      "//conditions:default": pch_with_name_hint(
+        "CocoaLumberjack",
+        []
+      ),
+      ":osxCase": pch_with_name_hint(
+        "CocoaLumberjack",
+        glob(
+          [
+            "Classes/**/*.pch"
+          ],
+          exclude_directories = 1
+        )
+      ),
+      ":tvosCase": pch_with_name_hint(
+        "CocoaLumberjack",
+        []
+      ),
+      ":watchosCase": pch_with_name_hint(
+        "CocoaLumberjack",
+        []
+      )
+    }
+  ),
+  deps = select(
+    {
+      "//conditions:default": [],
+      ":osxCase": [
+        ":Default"
+      ]
+    }
+  ) + [
+    ":CLI_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
+  ] + [
+    "-fmodule-name=CocoaLumberjack"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "CLI_acknowledgement",
+  deps = [],
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
+)
+swift_library(
+  name = "Swift",
+  srcs = glob(
+    [
+      "Classes/CocoaLumberjack.swift"
+    ],
+    exclude_directories = 1
+  ),
+  deps = [
+    ":Default"
+  ],
+  data = []
+)

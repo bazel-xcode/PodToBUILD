@@ -17,14 +17,72 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "SFHFKeychainUtils_package_hdrs",
+  srcs = [
+    "SFHFKeychainUtils_cxx_direct_hdrs",
+    "SFHFKeychainUtils_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "SFHFKeychainUtils_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "security/**/*.h",
+        "security/**/*.hpp",
+        "security/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "SFHFKeychainUtils_cxx_hdrs",
   srcs = glob(
-    [
-      "security/**/*.h",
-      "security/**/*.hpp",
-      "security/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "security/**/*.h",
+        "security/**/*.hpp",
+        "security/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -45,6 +103,7 @@ headermap(
   name = "SFHFKeychainUtils_cxx_hmap",
   namespace = "SFHFKeychainUtils",
   hdrs = [
+    "SFHFKeychainUtils_package_hdrs",
     ":SFHFKeychainUtils_cxx_union_hdrs"
   ],
   deps = [],
@@ -67,31 +126,63 @@ objc_library(
       "security/**/*.cpp",
       "security/**/*.cxx"
     ],
-    exclude = [
-      "security/**/*.S",
-      "security/**/*.c",
-      "security/**/*.m",
-      "security/**/*.s"
-    ],
+    exclude = glob(
+      [
+        "security/**/*.S",
+        "security/**/*.c",
+        "security/**/*.m",
+        "security/**/*.s"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   non_arc_srcs = glob(
-    [
-      "security/**/*.mm"
-    ],
-    exclude = [
-      "security/**/*.m"
-    ],
+    glob(
+      [
+        "security/**/*.mm"
+      ],
+      exclude = glob(
+        [
+          "security/**/*.S",
+          "security/**/*.c",
+          "security/**/*.m",
+          "security/**/*.s"
+        ],
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
+    exclude = glob(
+      [
+        "security/**/*.cc",
+        "security/**/*.cpp",
+        "security/**/*.cxx"
+      ],
+      exclude = glob(
+        [
+          "security/**/*.S",
+          "security/**/*.c",
+          "security/**/*.m",
+          "security/**/*.s"
+        ],
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
-    ":SFHFKeychainUtils_cxx_union_hdrs"
+    ":SFHFKeychainUtils_cxx_hdrs"
   ],
   pch = pch_with_name_hint(
     "SFHFKeychainUtils",
-    [
-      "security/**/*.pch"
-    ]
+    glob(
+      [
+        "security/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "Security"
@@ -99,7 +190,9 @@ objc_library(
   deps = [
     ":SFHFKeychainUtils_cxx_includes"
   ],
-  copts = select(
+  copts = [
+    "-std=c++14"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -112,7 +205,7 @@ objc_library(
   ) + [
     "-IVendor/SFHFKeychainUtils/pod_support/Headers/Public/SFHFKeychainUtils/"
   ] + [
-    "-fmodule-name=SFHFKeychainUtils_pod_module"
+    "-fmodule-name=SFHFKeychainUtils"
   ],
   visibility = [
     "//visibility:public"
@@ -138,18 +231,43 @@ swift_library(
   ]
 )
 filegroup(
+  name = "SFHFKeychainUtils_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "security/**/*.h",
+        "security/**/*.hpp",
+        "security/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "SFHFKeychainUtils_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "security/**/*.h",
-      "security/**/*.hpp",
-      "security/**/*.hxx"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "security/**/*.h",
+        "security/**/*.hpp",
+        "security/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ) + [
     ":SFHFKeychainUtils_cxx_hdrs"
@@ -162,11 +280,11 @@ headermap(
   name = "SFHFKeychainUtils_hmap",
   namespace = "SFHFKeychainUtils",
   hdrs = [
+    "SFHFKeychainUtils_package_hdrs",
     ":SFHFKeychainUtils_hdrs"
   ],
   deps = [
-    ":SFHFKeychainUtils_cxx",
-    ":SFHFKeychainUtils_swift"
+    ":SFHFKeychainUtils_cxx"
   ],
   visibility = [
     "//visibility:public"
@@ -178,28 +296,15 @@ gen_includes(
     "Vendor/SFHFKeychainUtils/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "SFHFKeychainUtils",
-  "SFHFKeychainUtils_module_map",
-  "SFHFKeychainUtils",
-  [
-    "SFHFKeychainUtils_hdrs"
-  ]
-)
 objc_library(
   name = "SFHFKeychainUtils",
   enable_modules = 0,
-  srcs = glob(
+  non_arc_srcs = glob(
     [
       "security/**/*.S",
       "security/**/*.c",
+      "security/**/*.m",
       "security/**/*.s"
-    ],
-    exclude_directories = 1
-  ),
-  non_arc_srcs = glob(
-    [
-      "security/**/*.m"
     ],
     exclude_directories = 1
   ),
@@ -208,9 +313,7 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "SFHFKeychainUtils",
-    [
-      "security/**/*.pch"
-    ]
+    []
   ),
   sdk_frameworks = [
     "Security"
@@ -233,7 +336,7 @@ objc_library(
   ) + [
     "-IVendor/SFHFKeychainUtils/pod_support/Headers/Public/SFHFKeychainUtils/"
   ] + [
-    "-fmodule-name=SFHFKeychainUtils_pod_module"
+    "-fmodule-name=SFHFKeychainUtils"
   ],
   visibility = [
     "//visibility:public"

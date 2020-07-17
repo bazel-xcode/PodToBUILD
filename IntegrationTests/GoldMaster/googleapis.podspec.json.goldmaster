@@ -16,6 +16,47 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "googleapis_package_hdrs",
+  srcs = [
+    "googleapis_direct_hdrs",
+    "Messages_direct_hdrs",
+    "Services_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "googleapis_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "googleapis_hdrs",
   srcs = glob(
@@ -35,6 +76,7 @@ headermap(
   name = "googleapis_hmap",
   namespace = "googleapis",
   hdrs = [
+    "googleapis_package_hdrs",
     ":googleapis_hdrs"
   ],
   deps = [
@@ -50,14 +92,6 @@ gen_includes(
   name = "googleapis_includes",
   include = [
     "Vendor/googleapis/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "googleapis",
-  "googleapis_module_map",
-  "googleapis",
-  [
-    "googleapis_hdrs"
   ]
 )
 objc_library(
@@ -91,7 +125,7 @@ objc_library(
   ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
-    "-fmodule-name=googleapis_pod_module"
+    "-fmodule-name=googleapis"
   ],
   visibility = [
     "//visibility:public"
@@ -105,11 +139,39 @@ acknowledged_target(
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Messages_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "google/**/*.pbobjc.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Messages_hdrs",
   srcs = glob(
-    [
-      "google/**/*.pbobjc.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "google/**/*.pbobjc.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -130,6 +192,7 @@ headermap(
   name = "Messages_hmap",
   namespace = "googleapis",
   hdrs = [
+    "googleapis_package_hdrs",
     ":Messages_union_hdrs"
   ],
   deps = [
@@ -152,19 +215,20 @@ objc_library(
     [
       "google/**/*.pbobjc.m"
     ],
-    exclude = [
-      "google/**/*.pbrpc.m"
-    ],
+    exclude = glob(
+      [
+        "google/**/*.pbrpc.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
-    ":Messages_union_hdrs"
+    ":Messages_hdrs"
   ],
   pch = pch_with_name_hint(
     "googleapis",
-    [
-      "google/**/*.pch"
-    ]
+    []
   ),
   deps = [
     "//Vendor/Protobuf:Protobuf",
@@ -185,7 +249,7 @@ objc_library(
   ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
-    "-fmodule-name=googleapis_pod_module"
+    "-fmodule-name=googleapis"
   ],
   visibility = [
     "//visibility:public"
@@ -199,11 +263,39 @@ acknowledged_target(
   value = "//Vendor/googleapis/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Services_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "google/**/*.pbrpc.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Services_hdrs",
   srcs = glob(
-    [
-      "google/**/*.pbrpc.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "google/**/*.pbrpc.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -214,7 +306,8 @@ filegroup(
   name = "Services_union_hdrs",
   srcs = [
     "Services_hdrs",
-    "googleapis_hdrs"
+    "googleapis_hdrs",
+    ":Messages_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -224,6 +317,7 @@ headermap(
   name = "Services_hmap",
   namespace = "googleapis",
   hdrs = [
+    "googleapis_package_hdrs",
     ":Services_union_hdrs"
   ],
   deps = [
@@ -250,13 +344,16 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Services_union_hdrs"
+    ":Services_hdrs"
   ],
   pch = pch_with_name_hint(
     "googleapis",
-    [
-      "google/**/*.pch"
-    ]
+    glob(
+      [
+        "google/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
@@ -278,7 +375,7 @@ objc_library(
   ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
   ] + [
-    "-fmodule-name=googleapis_pod_module"
+    "-fmodule-name=googleapis"
   ],
   visibility = [
     "//visibility:public"

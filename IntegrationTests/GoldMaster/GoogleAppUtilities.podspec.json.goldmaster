@@ -17,6 +17,45 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "GoogleAppUtilities_package_hdrs",
+  srcs = [
+    "GoogleAppUtilities_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "GoogleAppUtilities_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "GoogleAppUtilities_hdrs",
   srcs = glob(
@@ -33,6 +72,7 @@ headermap(
   name = "GoogleAppUtilities_hmap",
   namespace = "GoogleAppUtilities",
   hdrs = [
+    "GoogleAppUtilities_package_hdrs",
     ":GoogleAppUtilities_hdrs"
   ],
   deps = [
@@ -47,14 +87,6 @@ gen_includes(
   name = "GoogleAppUtilities_includes",
   include = [
     "Vendor/GoogleAppUtilities/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "GoogleAppUtilities",
-  "GoogleAppUtilities_module_map",
-  "GoogleAppUtilities",
-  [
-    "GoogleAppUtilities_hdrs"
   ]
 )
 objc_library(
@@ -85,7 +117,7 @@ objc_library(
   ) + [
     "-IVendor/GoogleAppUtilities/pod_support/Headers/Public/GoogleAppUtilities/"
   ] + [
-    "-fmodule-name=GoogleAppUtilities_pod_module"
+    "-fmodule-name=GoogleAppUtilities"
   ],
   visibility = [
     "//visibility:public"
@@ -109,4 +141,9 @@ apple_static_framework_import(
   visibility = [
     "//visibility:public"
   ]
+)
+acknowledged_target(
+  name = "GoogleAppUtilities_VendoredFrameworks_acknowledgement",
+  deps = [],
+  value = "//Vendor/GoogleAppUtilities/pod_support_buildable:acknowledgement_fragment"
 )

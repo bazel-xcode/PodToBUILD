@@ -16,17 +16,67 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "ColorCube_package_hdrs",
+  srcs = [
+    "ColorCube_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "ColorCube_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ColorCube/ColorCube/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "ColorCube_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "ColorCube/ColorCube/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "ColorCube/ColorCube/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -37,6 +87,7 @@ headermap(
   name = "ColorCube_hmap",
   namespace = "ColorCube",
   hdrs = [
+    "ColorCube_package_hdrs",
     ":ColorCube_hdrs"
   ],
   deps = [],
@@ -48,14 +99,6 @@ gen_includes(
   name = "ColorCube_includes",
   include = [
     "Vendor/ColorCube/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "ColorCube",
-  "ColorCube_module_map",
-  "ColorCube",
-  [
-    "ColorCube_hdrs"
   ]
 )
 objc_library(
@@ -72,9 +115,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "ColorCube",
-    [
-      "ColorCube/**/*.pch"
-    ]
+    glob(
+      [
+        "ColorCube/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":ColorCube_includes"
@@ -92,7 +138,7 @@ objc_library(
   ) + [
     "-IVendor/ColorCube/pod_support/Headers/Public/ColorCube/"
   ] + [
-    "-fmodule-name=ColorCube_pod_module"
+    "-fmodule-name=ColorCube"
   ],
   visibility = [
     "//visibility:public"

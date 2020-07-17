@@ -16,17 +16,67 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "PaymentKit_package_hdrs",
+  srcs = [
+    "PaymentKit_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "PaymentKit_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "PaymentKit/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "PaymentKit_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "PaymentKit/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "PaymentKit/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -37,6 +87,7 @@ headermap(
   name = "PaymentKit_hmap",
   namespace = "PaymentKit",
   hdrs = [
+    "PaymentKit_package_hdrs",
     ":PaymentKit_hdrs"
   ],
   deps = [],
@@ -48,14 +99,6 @@ gen_includes(
   name = "PaymentKit_includes",
   include = [
     "Vendor/PaymentKit/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "PaymentKit",
-  "PaymentKit_module_map",
-  "PaymentKit",
-  [
-    "PaymentKit_hdrs"
   ]
 )
 objc_library(
@@ -72,9 +115,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "PaymentKit",
-    [
-      "PaymentKit/**/*.pch"
-    ]
+    glob(
+      [
+        "PaymentKit/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":PaymentKit_includes"
@@ -92,7 +138,7 @@ objc_library(
   ) + [
     "-IVendor/PaymentKit/pod_support/Headers/Public/PaymentKit/"
   ] + [
-    "-fmodule-name=PaymentKit_pod_module"
+    "-fmodule-name=PaymentKit"
   ],
   data = glob(
     [

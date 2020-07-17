@@ -17,34 +17,66 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
-  values = {
-    "cpu": "powerpc1"
-  }
-)
-config_setting(
   name = "osxCase",
   values = {
-    "cpu": "powerpc2"
+    "apple_platform_type": "macos"
   }
 )
 config_setting(
   name = "tvosCase",
   values = {
-    "cpu": "powerpc3"
+    "apple_platform_type": "tvos"
   }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "Masonry_package_hdrs",
+  srcs = [
+    "Masonry_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Masonry_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Masonry/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "Masonry_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "Masonry/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Masonry/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -55,6 +87,7 @@ headermap(
   name = "Masonry_hmap",
   namespace = "Masonry",
   hdrs = [
+    "Masonry_package_hdrs",
     ":Masonry_hdrs"
   ],
   deps = [],
@@ -66,14 +99,6 @@ gen_includes(
   name = "Masonry_includes",
   include = [
     "Vendor/Masonry/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "Masonry",
-  "Masonry_module_map",
-  "Masonry",
-  [
-    "Masonry_hdrs"
   ]
 )
 objc_library(
@@ -90,9 +115,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Masonry",
-    [
-      "Masonry/**/*.pch"
-    ]
+    glob(
+      [
+        "Masonry/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = select(
     {
@@ -126,7 +154,7 @@ objc_library(
   ) + [
     "-IVendor/Masonry/pod_support/Headers/Public/Masonry/"
   ] + [
-    "-fmodule-name=Masonry_pod_module"
+    "-fmodule-name=Masonry"
   ],
   visibility = [
     "//visibility:public"

@@ -16,17 +16,67 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "Weixin_package_hdrs",
+  srcs = [
+    "Weixin_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Weixin_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "SDK1.6.2/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "Weixin_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "SDK1.6.2/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "SDK1.6.2/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -37,6 +87,7 @@ headermap(
   name = "Weixin_hmap",
   namespace = "Weixin",
   hdrs = [
+    "Weixin_package_hdrs",
     ":Weixin_hdrs"
   ],
   deps = [
@@ -50,14 +101,6 @@ gen_includes(
   name = "Weixin_includes",
   include = [
     "Vendor/Weixin/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "Weixin",
-  "Weixin_module_map",
-  "Weixin",
-  [
-    "Weixin_hdrs"
   ]
 )
 objc_library(
@@ -96,7 +139,7 @@ objc_library(
   ) + [
     "-IVendor/Weixin/pod_support/Headers/Public/Weixin/"
   ] + [
-    "-fmodule-name=Weixin_pod_module"
+    "-fmodule-name=Weixin"
   ],
   visibility = [
     "//visibility:public"
@@ -112,4 +155,9 @@ objc_import(
   archives = [
     "SDK1.6.2/libWeChatSDK.a"
   ]
+)
+acknowledged_target(
+  name = "Weixin_VendoredLibraries_acknowledgement",
+  deps = [],
+  value = "//Vendor/Weixin/pod_support_buildable:acknowledgement_fragment"
 )

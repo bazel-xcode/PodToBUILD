@@ -17,6 +17,7 @@ let PodStoreCacheDir = "\(NSHomeDirectory())/.bazel_pod_store/"
 enum RepoToolsActionValue: String {
     case fetch
     case initialize = "init"
+    case generateWorkspace = "generate_workspace"
 }
 
 /// Fetch options are command line options for a given fetch
@@ -25,6 +26,12 @@ public struct FetchOptions {
     public let url: String
     public let trace: Bool
     public let subDir: String?
+}
+
+
+public struct WorkspaceOptions {
+    public let vendorize: Bool = true
+    public let trace: Bool
 }
 
 /// Parse in Command Line arguments
@@ -39,14 +46,22 @@ enum CLIArgumentType {
 public enum SerializedRepoToolsAction {
     case fetch(FetchOptions)
     case initialize(BasicBuildOptions)
+    case generateWorkspace(WorkspaceOptions)
 
     public static func parse(args: [String]) -> SerializedRepoToolsAction {
-        guard args.count >= 2 else {
-            print("Usage: PodName <init|fetch> ")
+        guard args.count >= 1 else {
+            print("Usage: PodName <init|fetch|generate_workspace> ")
             exit(0)
         }
+
+        // Program, Action
+        // or
         // Program, PodName, Action
-        let action = RepoToolsActionValue(rawValue: args[2])!
+        let actionStr = args.count == 2 ? args[1] : args[2]
+        guard let action = RepoToolsActionValue(rawValue: actionStr) else {
+            print("Usage: PodName <init|fetch|generate_workspace> ")
+            fatalError()
+        }
         switch action {
         case .fetch:
             let fetchOpts = SerializedRepoToolsAction.tryParseFetch(args: args)
@@ -54,6 +69,9 @@ public enum SerializedRepoToolsAction {
         case .initialize:
             let initOpts = SerializedRepoToolsAction.tryParseInit(args: args)
             return .initialize(initOpts)
+        case .generateWorkspace:
+            let trace = UserDefaults.standard.bool(forKey: "-trace")
+            return .generateWorkspace(WorkspaceOptions(trace: trace))
         }
     }
 
@@ -78,6 +96,7 @@ public enum SerializedRepoToolsAction {
         // First arg is the path, we don't care about it
         // The right most option will be the winner.
         var options: [String: CLIArgumentType] = [
+            "--path": .string,
             "--user_option": .stringList,
             "--global_copt": .string,
             "--trace": .bool,
@@ -86,6 +105,7 @@ public enum SerializedRepoToolsAction {
             "--generate_header_map": .bool,
             "--vendorize": .bool,
             "--header_visibility": .string,
+            "--child_path": .stringList,
         ]
 
         var idx = 0
@@ -128,21 +148,23 @@ public enum SerializedRepoToolsAction {
                 }
                 parsed[arg] = collected
             } else {
-                print("Invalid Arg: " + arg)
+                print("Invalid Arg: \(arg)")
                 error()
             }
         }
 
         return BasicBuildOptions(podName: podName,
-                                 userOptions: parsed["--user_option"] as? [String] ?? [String](),
-                                 globalCopts: parsed["--global_copt"] as? [String] ?? [String](),
+                                 path: parsed["--path"]?.first as? String ?? ".",
+                                 userOptions: parsed["--user_option"] as? [String] ?? [],
+                                 globalCopts: parsed["--global_copt"] as? [String] ?? [],
                                  trace: parsed["--trace"]?.first as? Bool ?? false,
                                  enableModules: parsed["--enable_modules"]?.first as? Bool ?? false,
                                  generateModuleMap: parsed["--generate_module_map"]?.first as? Bool ?? false,
                                  generateHeaderMap: parsed["--generate_header_map"]?.first as? Bool ?? false,
                                  headerVisibility: parsed["--header_visibility"]?.first as? String ?? "",
                                  alwaysSplitRules: false,
-                                 vendorize: parsed["--vendorize"]?.first as? Bool ?? true
+                                 vendorize: parsed["--vendorize"]?.first as? Bool ?? true,
+                                 childPaths: parsed["--child_path"] as? [String] ?? []
         )
     }
 }
@@ -192,33 +214,35 @@ public enum RepoActions {
     /// - Get the IPC JSON PodSpec
     /// - Compile a build file based on the PodSpec
     /// - Create a symLinked header structure to support angle bracket includes
-    public static func initializeRepository(shell: ShellContext, buildOptions: BasicBuildOptions) {
-        // This uses the current environment's cocoapods installation.
-        let whichPod = shell.shellOut("which pod").standardOutputAsString
-        if whichPod.isEmpty {
-            fatalError("RepoTools requires a cocoapod installation on host")
-        }
+    public static func initializeRepository(shell: ShellContext, buildOptions: BuildOptions) {
         let podspecName = CommandLine.arguments[1]
-
-        // make json data
-        let jsonData: Data
-        let hasFile: (String) -> Bool = { file in
-            // did you know that [ is the name of the binary that tests stuff!
-            return shell.command("/bin/[",
-                          arguments: ["-e", file, "]"]).terminationStatus == 0
+        if buildOptions.path != "." && buildOptions.childPaths.count == 0 {
+            // Write an alias BUILD file that points to the source directory
+            // this supports naming conventions of //Vendor|external/Podname
+            initializeAliasDirectory(shell: shell, podspecName: podspecName,
+                buildOptions: buildOptions)
+        } else {
+            initializePodspecDirectory(shell: shell, podspecName: podspecName,
+                buildOptions: buildOptions)
         }
-        let hasPodspec: () -> Bool = {
-            hasFile(FileManager.default.currentDirectoryPath + "/" + podspecName
-                    + ".podspec") }
-        let hasPodspecJson: () -> Bool = {
-            hasFile(FileManager.default.currentDirectoryPath + "/"
-                    + podspecName + ".podspec.json") }
+    }
 
-        if hasPodspecJson() {
-            jsonData = shell.command("/bin/cat", arguments: [podspecName + ".podspec.json"]).standardOutputData
-        } else if hasPodspec() {
+    static func getJSONPodspec(shell: ShellContext, podspecName: String, path: String, childPaths: [String]) -> JSONDict {
+        let jsonData: Data
+
+        // Check the path and child paths
+        let podspecPath = "\(path)/\(podspecName).podspec"
+        let currentDirectoryPath = FileManager.default.currentDirectoryPath
+        if FileManager.default.fileExists(atPath: "\(podspecPath).json") {
+            jsonData = shell.command("/bin/cat", arguments: [podspecPath + ".json"]).standardOutputData
+        } else if FileManager.default.fileExists(atPath: podspecPath) {
+            // This uses the current environment's cocoapods installation.
+            let whichPod = shell.shellOut("which pod").standardOutputAsString
+            if whichPod.isEmpty {
+                fatalError("RepoTools requires a cocoapod installation on host")
+            }
             let podBin = whichPod.components(separatedBy: "\n")[0]
-            let podResult = shell.command(podBin, arguments: ["ipc", "spec", podspecName + ".podspec"])
+            let podResult = shell.command(podBin, arguments: ["ipc", "spec", podspecPath])
             guard podResult.terminationStatus == 0 else {
                 fatalError("""
                         PodSpec decoding failed \(podResult.terminationStatus)
@@ -228,144 +252,179 @@ public enum RepoActions {
             }
             jsonData = podResult.standardOutputData
         } else {
-            fatalError("Missing podspec!")
+            fatalError("Missing podspec ( \(podspecPath) ) inside \(currentDirectoryPath)")
         }
 
         guard let JSONFile = try? JSONSerialization.jsonObject(with: jsonData, options:
             JSONSerialization.ReadingOptions.allowFragments) as AnyObject,
             let JSONPodspec = JSONFile as? JSONDict
         else {
-            fatalError("Invalid JSON Podspec: (look inside \(FileManager.default.currentDirectoryPath))")
+            fatalError("Invalid JSON Podspec: (look inside \(currentDirectoryPath))")
         }
+        return JSONPodspec
+    }
 
+    private static func initializeAliasDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
+        let visibility = SkylarkNode.functionCall(name: "package",
+            arguments: [
+                .named(name: "default_visibility",
+                       value: .list([.string("//visibility:public")]))
+            ])
+
+        let parts = buildOptions.path.split(separator: "/")
+        let addName = getNamePrefix()
+        let JSONPodspec = getJSONPodspec(shell: shell, podspecName:
+                                      podspecName, path: "../../" + buildOptions.path,
+                                      childPaths: buildOptions.childPaths)
         guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
             fatalError("Cant read in podspec")
         }
+        let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions:
+            buildOptions, assimilate: true)
 
+        let actualPath = parts[0] + "/" + parts[1]
+        let aliases = buildFile.skylarkConvertibles.compactMap {
+            convertible -> SkylarkNode? in
+            guard let target = convertible as? BazelTarget else {
+                return nil
+            }
+            guard target.name != "" else {
+                return nil
+            }
+            let name = target.name
+            let head = buildOptions.podName + "_"
+            let getName: () -> String = {
+                if let headIdx = name.range(of: head) {
+                    return String(name[headIdx.upperBound...])
+                } else {
+                    return name
+                }
+            }
+            let alias = Alias(name: getName(),
+                actual: "//" + actualPath + ":" + name)
+            return alias.toSkylark()
+        }
+
+        let lines = [visibility] + aliases
+        let compiler = SkylarkCompiler(lines)
+        shell.write(value: compiler.run(), toPath:
+            BazelConstants.buildFileURL())
+    }
+
+    private static func initializePodspecDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
+        let workspaceRootPath: String
+        if buildOptions.path != "." && buildOptions.childPaths.count == 0 {
+            workspaceRootPath = "../..\(buildOptions.path)"
+        } else {
+            workspaceRootPath =  "."
+        }
+        let JSONPodspec = getJSONPodspec(shell: shell, podspecName:
+            podspecName, path: workspaceRootPath,
+            childPaths: buildOptions.childPaths)
+        var childInfoIter = buildOptions.childPaths.makeIterator()
+        // Batch create several symlinks for Pod style includes
+        let currentDirectoryPath = FileManager.default.currentDirectoryPath
+        var childBuildFiles: [PodBuildFile] = []
+        while let childInfo = childInfoIter.next() {
+            let childName = childInfo
+            guard let childPath = childInfoIter.next() else {
+                fatalError("Invalid child path")
+            }
+
+            let childBuildOptions = BasicBuildOptions(
+                podName: childName,
+                path: childPath,
+                userOptions: buildOptions.userOptions,
+                globalCopts: buildOptions.globalCopts,
+                trace: buildOptions.trace,
+                enableModules: buildOptions.enableModules,
+                generateModuleMap: buildOptions.generateModuleMap,
+                generateHeaderMap: buildOptions.generateHeaderMap,
+                headerVisibility: buildOptions.headerVisibility,
+                alwaysSplitRules: buildOptions.alwaysSplitRules,
+                vendorize: buildOptions.vendorize,
+                childPaths: buildOptions.childPaths)
+
+            // We need to drop off the childpath passed in. e.g. Vendor/React
+            // as the source files in the podspec are relative to the podspec
+            let relChildPath = String(childPath.split(separator: "/")
+                .dropFirst().dropFirst().joined(separator: "/") )
+            let childJSONPodspec = getJSONPodspec(shell: shell, podspecName:
+                  childName, path: currentDirectoryPath + "/" + relChildPath,
+                  childPaths: buildOptions.childPaths)
+            guard let podSpec = try? PodSpec(JSONPodspec: childJSONPodspec) else {
+                fatalError("Cant read in podspec")
+
+            }
+            let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: childBuildOptions, assimilate: true)
+            childBuildFiles.append(buildFile)
+        }
+        guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
+            fatalError("Cant read in podspec")
+        }
         shell.dir(PodSupportSystemPublicHeaderDir)
         shell.dir(PodSupportDir + "Headers/Private/")
         shell.dir(PodSupportBuidableDir)
-
-        // This closure looks up all of the headers from the project.
-        // We don't really need to touch the file system during generation time
-        // given:
-        // - Bazel can lookup all of the headers
-        // - All namespaces are accounted for by the headermap
-        //
-        // - We may need to have file groups for headers that
-        //   associate a given directory with a group of headers.
-        //
-        // - Consider how XCConfig namespaces will be propagated
-
-        let searchPaths = { (spec: ComposedSpec) -> Set<String> in
-            let fallbackSpec = spec
-            let moduleName = AttrSet<String>(
-                value: fallbackSpec ^* ComposedSpec.lens.fallback(PodSpec.lens.liftOntoPodSpec(PodSpec.lens.moduleName))
-            )
-            let headerDirectoryName: AttrSet<String?> = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.headerDirectory))
-            guard let externalName = (moduleName.isEmpty ? nil : moduleName) ??
-                (headerDirectoryName.isEmpty ? nil : headerDirectoryName.denormalize()) else {
-                return Set<String>()
-            }
-
-            let headerDirs = externalName.map { $0 }
-            let customHeaderSearchPaths: Set<String> = headerDirs.fold(basic: { str in Set<String>([str].compactMap { $0 }) },
-                                                                       multi: { (result: Set<String>, multi: MultiPlatform<String>) -> Set<String> in
-                                                                        result.union([multi.ios, multi.osx, multi.watchos, multi.tvos].compactMap { $0 })
-            })
-            return customHeaderSearchPaths
-        }
-
-        // Get the xcconfigHeaderSearchPaths
-        let podSpecs: [PodSpec] = podSpec.subspecs + [podSpec]
-        let xcconfigHeaderSearchPaths: Set<String> = Set(podSpecs
-            // Grab the search paths from xcconfig
-            .compactMap{ (spec: PodSpec) -> Set<String> in
-                Set([spec.xcconfig, spec.podTargetXcconfig, spec.userTargetXcconfig].flatMap{ (xcconfigDict: [String: String]?) -> [String] in
-                    let searchPathValue: String? = xcconfigDict?[HeaderSearchPathTransformer.xcconfigKey]
-                    return (searchPathValue.map{ [$0] }) ?? []
-                })
-            }
-            .reduce(Set<String>(), { $0.union(Set($1)) })
-            // Add the subdirectories in the search paths (as xcode does
-            .flatMap{ (searchPath: String) -> [String] in
-                // we're already cd-ed to this directory
-                // so we can just rip out the variable
-                let cleansedPath = searchPath.replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)/", with: "").replacingOccurrences(of: "\"", with: "")
-                let cmd = shell.command("/bin/ls", arguments: [cleansedPath])
-                return cmd.standardOutputAsString.components(separatedBy: "\n").map{ String($0) }
-            })
-
-        // Get the rest of the header searchpaths
-        let customHeaderSearchPaths = Set([podSpec.name])
-            .union(searchPaths(ComposedSpec.composed(child: podSpec, parent: nil)))
-            .union(podSpec.subspecs.reduce(Set<String>(), { result, subspec in
-                result.union(searchPaths(ComposedSpec.composed(child: subspec, parent: ComposedSpec.composed(child: podSpec, parent: nil))))
-            }))
-            // and add the xcconfig header searchpaths here
-            .union(xcconfigHeaderSearchPaths)
-            // do case-insensitive de-duplication in a deterministic manner. Sort the entries, then create a mapping
-            // from lowercase entry to actual entry, only keeping the first of each lowercase entry we see. Then just
-            // use the values of the mapping.
-            .sorted()
-            .reduce([:]) { mapping, path in
-                var updatedMapping = mapping;
-                let canonicalPath = path.lowercased()
-                if !updatedMapping.keys.contains(canonicalPath) {
-                    updatedMapping[canonicalPath] = path
-                }
-                return updatedMapping
-            }
-            .values
-            .map { PodSupportSystemPublicHeaderDir + "\($0)/" }
-
-        customHeaderSearchPaths.forEach(shell.dir)
 
         // Create a directory structure condusive to <> imports
         // - Get all of the paths matching wild card imports
         // - Put them into the public header directory
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: buildOptions)
-        let globResultsArr = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
-            .flatMap {
-                objcLibrary -> Set<String> in
-                let headers: GlobNode = objcLibrary.headers
-                return headers.include.fold(basic: { (patterns: Set<String>?) -> Set<String> in
-                    let s: Set<String> = Set(patterns.map { $0.flatMap(podGlob) } ?? [])
-                    return s
-                }, multi: { (set: Set<String>, multi: MultiPlatform<Set<String>>) -> Set<String> in
-                    let inner: Set<String>? = multi |>
-                        MultiPlatform<Set<String>>.lens.viewAll { Set($0.flatMap(podGlob)) }
-                    return set.union(inner.denormalize())
-                })
-        }
 
-        // Batch create several symlinks for Pod style includes
-        // creating thousands of processes in few milliseconds will
-        // blow up otherwise.
-        let currentDirectoryPath = FileManager.default.currentDirectoryPath
-        // Get a de-duplicated, sorted (for determinism) list of all headers
-        let globResults = Array(Set(globResultsArr)).sorted()
+        // ideally this check should introspec the podspecs value.
         if buildOptions.generateHeaderMap == false {
-            // Warning: the input monoids are wild and will naively create dead
-            // links. Remove symlinks when headermaps are done.
-            customHeaderSearchPaths.forEach { searchPath in
-                let linkPath = currentDirectoryPath + "/" + searchPath
-                guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
-                    print("WARNING: Can't change path while creating symlink")
-                    return
-                }
-                globResults.forEach { globResult in
-                    // i.e. pod_support/Headers/Public/__POD_NAME__
-                    let from = "../../../../\(globResult)"
-                    let to = String(globResult.split(separator: "/").last!)
-                    print("Symlink: \(from) \(to)")
-                    shell.symLink(from: from, to: to)
+            let objcLibraries: [ObjcLibrary] = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
+            objcLibraries.forEach { lib -> Void in
+               let searchPaths = lib.headerName.unpackToMulti().map {
+                   headerName -> [String] in
+                   var paths = [headerName]
+                   if headerName != lib.name {
+                       paths.append(lib.name)
+                   }
+                   if headerName != lib.externalName {
+                       paths.append(lib.externalName)
+                   }
+                   return paths
+               }
+
+                _ = lib.headers.unpackToMulti().zip(searchPaths).map {
+                    attrTuple -> Set<String>? in
+                    defer {
+                        guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
+                            fatalError("Can't change path back to original directory")
+                        }
+                    }
+                    // Note: this is going to evaluate the glob, this needs to
+                    // happen _inside_ of the root directory.
+                    guard let headers = attrTuple.first,
+                         let searchPaths = attrTuple.second else {
+                        return nil
+                    }
+                    let globResults = headers.sourcesOnDisk()
+                    searchPaths.forEach {
+                        searchPath in
+                         defer {
+                            guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
+                                fatalError("Can't change path back to original directory")
+                            }
+                         }
+
+                        let linkPath =   PodSupportSystemPublicHeaderDir + searchPath
+                        shell.dir(linkPath)
+                        guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
+                            print("WARNING: Can't change path while creating symlink: " + linkPath)
+                            return
+                        }
+                        globResults.forEach { globResult in
+                            // i.e. pod_support/Headers/Public/__POD_NAME__
+                            let from = "../../../../\(globResult)"
+                            let to = String(globResult.split(separator: "/").last!)
+                            shell.symLink(from: from, to: to)
+                        }
+                    }
+                    return globResults
                 }
             }
-        }
-
-        guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
-            fatalError("Can't change path back to original directory after creating symlinks")
         }
 
         // Write out contents of PodSupportBuildableDir
@@ -376,23 +435,41 @@ public enum RepoActions {
         shell.write(value: entry, toPath: acknowledgementFilePath)
 
         // assume _PATH_TO_SOME/bin/RepoTools
-        let assetRoot = RepoActions.assetRoot()
+        let assetRoot = RepoActions.assetRoot(buildOptions: buildOptions)
 
-        let supportBUILDFile = assetRoot.appendingPathComponent("support")
-            .appendingPathExtension("BUILD")
-        let supportBUILDFileFilePath = URL(fileURLWithPath: PodSupportBuidableDir + "BUILD.bazel")
-        shell.symLink(from: supportBUILDFile.relativePath, to: supportBUILDFileFilePath.path)
+        shell.symLink(from: "\(assetRoot)/support.BUILD",
+            to: "\(PodSupportBuidableDir)/\(BazelConstants.buildFilePath)")
 
         // Write the root BUILD file
-        let buildFileSkylarkCompiler = SkylarkCompiler(buildFile.toSkylark())
+        let buildFileSkylarkCompiler = SkylarkCompiler([
+            .lines([buildFile.toSkylark()])
+        ] + childBuildFiles.map { $0.toSkylark() })
         let buildFileOut = buildFileSkylarkCompiler.run()
-        let buildFilePath = URL(fileURLWithPath: "BUILD.bazel")
-        shell.write(value: buildFileOut, toPath: buildFilePath)
+        shell.write(value: buildFileOut, toPath:
+                BazelConstants.buildFileURL())
     }
 
     // Assume the directory structure relative to the pod root
-    private static func assetRoot() -> URL {
-      return URL(fileURLWithPath: "../../../Vendor/rules_pods/BazelExtensions")
+    private static func assetRoot(buildOptions: BuildOptions) -> String {
+        if buildOptions.path ==  "." {
+            return "../../../Vendor/rules_pods/BazelExtensions"
+        }
+        let nestingDepth = buildOptions.path.split(separator: "/").count
+        let relativePathToWorkspace = (0..<nestingDepth).map { _ in ".." }.joined(separator: "/") 
+        return "\(relativePathToWorkspace)/../Vendor/rules_pods/BazelExtensions"
+    }
+
+    /// Generates a workspace from a Podfile.lock
+    public static func generateWorkspace(shell: ShellContext, workspaceOptions: WorkspaceOptions) {
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: "Podfile.lock"))
+            let lockfile = try Lockfile(data: data)
+            let workspace = try PodsWorkspace(lockfile: lockfile, shell: shell)
+            let compiler = SkylarkCompiler(workspace.toSkylark())
+            print(compiler.run())
+        } catch {
+            print("Error", error)
+        }
     }
 
     /// Fetch pods from urls.

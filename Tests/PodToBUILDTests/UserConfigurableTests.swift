@@ -82,6 +82,24 @@ class UserConfigurableTests: XCTestCase {
         XCTAssertEqual(outputCopts?[1], "CoreGraphics")
         XCTAssertEqual(outputCopts?[2], "Foundation")
     }
+
+    func testUserOptionPresevesDotExtensions() {
+        let target = TestTarget()
+        let attributes = UserConfigurableTargetAttributes(keyPathOperators:  ["TestTarget.copts += TargetConditionals.h"])
+        let output = UserConfigurableTransform.executeUserOptionsTransform(onConvertibles: [target], copts: [String](), userAttributes: attributes)
+        let outputLib = output[0] as! TestTarget
+        let outputCopts = outputLib.copts.basic
+        XCTAssertEqual(outputCopts?[0], "TargetConditionals.h")
+    }
+
+    func testUserOptionPresevesSpaces() {
+        let target = TestTarget()
+        let attributes = UserConfigurableTargetAttributes(keyPathOperators:  ["TestTarget.copts += --include TargetConditionals.h"])
+        let output = UserConfigurableTransform.executeUserOptionsTransform(onConvertibles: [target], copts: [String](), userAttributes: attributes)
+        let outputLib = output[0] as! TestTarget
+        let outputCopts = outputLib.copts.basic
+        XCTAssertEqual(outputCopts?[0], "--include TargetConditionals.h")
+    }
 }
 
 

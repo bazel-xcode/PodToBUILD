@@ -16,17 +16,67 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "FBSDKLoginKit_package_hdrs",
+  srcs = [
+    "FBSDKLoginKit_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKLoginKit_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "FBSDKLoginKit_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKLoginKit/FBSDKLoginKit/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -37,6 +87,7 @@ headermap(
   name = "FBSDKLoginKit_hmap",
   namespace = "FBSDKLoginKit",
   hdrs = [
+    "FBSDKLoginKit_package_hdrs",
     ":FBSDKLoginKit_hdrs"
   ],
   deps = [
@@ -50,14 +101,6 @@ gen_includes(
   name = "FBSDKLoginKit_includes",
   include = [
     "Vendor/FBSDKLoginKit/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "FBSDKLoginKit",
-  "FBSDKLoginKit_module_map",
-  "FBSDKLoginKit",
-  [
-    "FBSDKLoginKit_hdrs"
   ]
 )
 objc_library(
@@ -74,9 +117,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FBSDKLoginKit",
-    [
-      "FBSDKLoginKit/**/*.pch"
-    ]
+    glob(
+      [
+        "FBSDKLoginKit/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   weak_sdk_frameworks = [
     "Accounts",
@@ -108,7 +154,7 @@ objc_library(
   ) + [
     "-IVendor/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
   ] + [
-    "-fmodule-name=FBSDKLoginKit_pod_module"
+    "-fmodule-name=FBSDKLoginKit"
   ],
   visibility = [
     "//visibility:public"

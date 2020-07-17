@@ -16,17 +16,67 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "FLEX_package_hdrs",
+  srcs = [
+    "FLEX_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FLEX_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "FLEX_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "Classes/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Classes/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -37,6 +87,7 @@ headermap(
   name = "FLEX_hmap",
   namespace = "FLEX",
   hdrs = [
+    "FLEX_package_hdrs",
     ":FLEX_hdrs"
   ],
   deps = [],
@@ -48,14 +99,6 @@ gen_includes(
   name = "FLEX_includes",
   include = [
     "Vendor/FLEX/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "FLEX",
-  "FLEX_module_map",
-  "FLEX",
-  [
-    "FLEX_hdrs"
   ]
 )
 objc_library(
@@ -72,9 +115,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "FLEX",
-    [
-      "Classes/**/*.pch"
-    ]
+    glob(
+      [
+        "Classes/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "Foundation",
@@ -101,7 +147,7 @@ objc_library(
   ) + [
     "-IVendor/FLEX/pod_support/Headers/Public/FLEX/"
   ] + [
-    "-fmodule-name=FLEX_pod_module"
+    "-fmodule-name=FLEX"
   ],
   visibility = [
     "//visibility:public"

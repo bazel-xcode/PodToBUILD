@@ -16,17 +16,67 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "SlackTextViewController_package_hdrs",
+  srcs = [
+    "SlackTextViewController_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "SlackTextViewController_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "SlackTextViewController_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "Source/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -37,6 +87,7 @@ headermap(
   name = "SlackTextViewController_hmap",
   namespace = "SlackTextViewController",
   hdrs = [
+    "SlackTextViewController_package_hdrs",
     ":SlackTextViewController_hdrs"
   ],
   deps = [],
@@ -48,14 +99,6 @@ gen_includes(
   name = "SlackTextViewController_includes",
   include = [
     "Vendor/SlackTextViewController/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "SlackTextViewController",
-  "SlackTextViewController_module_map",
-  "SlackTextViewController",
-  [
-    "SlackTextViewController_hdrs"
   ]
 )
 objc_library(
@@ -72,9 +115,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "SlackTextViewController",
-    [
-      "Source/**/*.pch"
-    ]
+    glob(
+      [
+        "Source/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   deps = [
     ":SlackTextViewController_includes"
@@ -92,7 +138,7 @@ objc_library(
   ) + [
     "-IVendor/SlackTextViewController/pod_support/Headers/Public/SlackTextViewController/"
   ] + [
-    "-fmodule-name=SlackTextViewController_pod_module"
+    "-fmodule-name=SlackTextViewController"
   ],
   visibility = [
     "//visibility:public"

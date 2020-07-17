@@ -1,0 +1,159 @@
+load(
+  "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
+  "pch_with_name_hint",
+  "acknowledged_target",
+  "gen_module_map",
+  "gen_includes",
+  "headermap"
+)
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://docs.bazel.build/versions/master/be/general.html#config_setting
+config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+)
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "yoga_package_hdrs",
+  srcs = [
+    "yoga_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "yoga_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "yoga/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "yoga_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "yoga/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "yoga_hmap",
+  namespace = "yoga",
+  hdrs = [
+    "yoga_package_hdrs",
+    ":yoga_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "yoga_includes",
+  include = [
+    "Vendor/yoga/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "yoga",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "yoga/**/*.cpp"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":yoga_hdrs"
+  ],
+  pch = pch_with_name_hint(
+    "yoga",
+    glob(
+      [
+        "yoga/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
+  ),
+  deps = [
+    ":yoga_includes"
+  ],
+  copts = [
+    "-std=c++14",
+    "-fno-omit-frame-pointer",
+    "-fexceptions",
+    "-Wall",
+    "-Werror",
+    "-std=c++1y",
+    "-fPIC"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/yoga/pod_support/Headers/Public/yoga/"
+  ] + [
+    "-fmodule-name=yoga"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "yoga_acknowledgement",
+  deps = [],
+  value = "//Vendor/yoga/pod_support_buildable:acknowledgement_fragment"
+)

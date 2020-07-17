@@ -17,6 +17,46 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "iOSSnapshotTestCase_package_hdrs",
+  srcs = [
+    "iOSSnapshotTestCase_direct_hdrs",
+    "Core_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "iOSSnapshotTestCase_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "iOSSnapshotTestCase_hdrs",
   srcs = glob(
@@ -33,6 +73,7 @@ headermap(
   name = "iOSSnapshotTestCase_hmap",
   namespace = "FBSnapshotTestCase",
   hdrs = [
+    "iOSSnapshotTestCase_package_hdrs",
     ":iOSSnapshotTestCase_hdrs"
   ],
   deps = [
@@ -46,14 +87,6 @@ gen_includes(
   name = "iOSSnapshotTestCase_includes",
   include = [
     "Vendor/iOSSnapshotTestCase/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "FBSnapshotTestCase",
-  "iOSSnapshotTestCase_module_map",
-  "FBSnapshotTestCase",
-  [
-    "iOSSnapshotTestCase_hdrs"
   ]
 )
 objc_library(
@@ -89,7 +122,7 @@ objc_library(
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
   ] + [
-    "-fmodule-name=FBSnapshotTestCase_pod_module"
+    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"
@@ -101,15 +134,47 @@ acknowledged_target(
   value = "//Vendor/iOSSnapshotTestCase/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "Core_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSnapshotTestCase/**/*.h",
+        "FBSnapshotTestCase/*.h",
+        "FBSnapshotTestCase/Categories/UIImage+Compare.h",
+        "FBSnapshotTestCase/Categories/UIImage+Diff.h",
+        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    [
-      "FBSnapshotTestCase/**/*.h",
-      "FBSnapshotTestCase/*.h",
-      "FBSnapshotTestCase/Categories/UIImage+Compare.h",
-      "FBSnapshotTestCase/Categories/UIImage+Diff.h",
-      "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSnapshotTestCase/**/*.h",
+        "FBSnapshotTestCase/*.h",
+        "FBSnapshotTestCase/Categories/UIImage+Compare.h",
+        "FBSnapshotTestCase/Categories/UIImage+Diff.h",
+        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -130,6 +195,7 @@ headermap(
   name = "Core_hmap",
   namespace = "FBSnapshotTestCase",
   hdrs = [
+    "iOSSnapshotTestCase_package_hdrs",
     ":Core_union_hdrs"
   ],
   deps = [],
@@ -154,13 +220,16 @@ objc_library(
     exclude_directories = 1
   ),
   hdrs = [
-    ":Core_union_hdrs"
+    ":Core_hdrs"
   ],
   pch = pch_with_name_hint(
     "iOSSnapshotTestCase",
-    [
-      "FBSnapshotTestCase/**/*.pch"
-    ]
+    glob(
+      [
+        "FBSnapshotTestCase/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "XCTest",
@@ -184,7 +253,7 @@ objc_library(
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
   ] + [
-    "-fmodule-name=FBSnapshotTestCase_pod_module"
+    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"

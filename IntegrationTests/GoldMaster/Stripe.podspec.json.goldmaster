@@ -18,23 +18,68 @@ config_setting(
   }
 )
 config_setting(
-  name = "iosCase",
+  name = "osxCase",
   values = {
-    "cpu": "powerpc1"
+    "apple_platform_type": "macos"
   }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "Stripe_package_hdrs",
+  srcs = [
+    "Stripe_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Stripe_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Stripe/*.h",
+        "Stripe/PublicHeaders/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "Stripe_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "Stripe/*.h",
-      "Stripe/PublicHeaders/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Stripe/*.h",
+        "Stripe/PublicHeaders/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -45,6 +90,7 @@ headermap(
   name = "Stripe_hmap",
   namespace = "Stripe",
   hdrs = [
+    "Stripe_package_hdrs",
     ":Stripe_hdrs"
   ],
   deps = [],
@@ -56,14 +102,6 @@ gen_includes(
   name = "Stripe_includes",
   include = [
     "Vendor/Stripe/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "Stripe",
-  "Stripe_module_map",
-  "Stripe",
-  [
-    "Stripe_hdrs"
   ]
 )
 objc_library(
@@ -80,9 +118,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Stripe",
-    [
-      "Stripe/**/*.pch"
-    ]
+    glob(
+      [
+        "Stripe/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "Foundation",
@@ -107,7 +148,7 @@ objc_library(
   ) + [
     "-IVendor/Stripe/pod_support/Headers/Public/Stripe/"
   ] + [
-    "-fmodule-name=Stripe_pod_module"
+    "-fmodule-name=Stripe"
   ],
   data = select(
     {
@@ -127,14 +168,15 @@ acknowledged_target(
 )
 apple_resource_bundle(
   name = "Stripe_Bundle_Stripe",
-  resources = select(
-    {
-      "//conditions:default": glob(
-        [
-          "Stripe/Resources/**/*"
-        ],
-        exclude_directories = 1
-      )
-    }
+  resources = glob(
+    [
+      "Stripe/Resources/**/*"
+    ],
+    exclude_directories = 1
   )
+)
+acknowledged_target(
+  name = "Stripe_Bundle_Stripe_acknowledgement",
+  deps = [],
+  value = "//Vendor/Stripe/pod_support_buildable:acknowledgement_fragment"
 )

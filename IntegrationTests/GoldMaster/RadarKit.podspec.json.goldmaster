@@ -16,17 +16,67 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "RadarKit_package_hdrs",
+  srcs = [
+    "RadarKit_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "RadarKit_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "RadarKit/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "RadarKit_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "RadarKit/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "RadarKit/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -37,6 +87,7 @@ headermap(
   name = "RadarKit_hmap",
   namespace = "RadarKit",
   hdrs = [
+    "RadarKit_package_hdrs",
     ":RadarKit_hdrs"
   ],
   deps = [],
@@ -48,14 +99,6 @@ gen_includes(
   name = "RadarKit_includes",
   include = [
     "Vendor/RadarKit/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "RadarKit",
-  "RadarKit_module_map",
-  "RadarKit",
-  [
-    "RadarKit_hdrs"
   ]
 )
 objc_library(
@@ -72,9 +115,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "RadarKit",
-    [
-      "RadarKit/**/*.pch"
-    ]
+    glob(
+      [
+        "RadarKit/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_frameworks = [
     "Foundation",
@@ -96,7 +142,7 @@ objc_library(
   ) + [
     "-IVendor/RadarKit/pod_support/Headers/Public/RadarKit/"
   ] + [
-    "-fmodule-name=RadarKit_pod_module"
+    "-fmodule-name=RadarKit"
   ],
   visibility = [
     "//visibility:public"

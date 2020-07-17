@@ -16,19 +16,71 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "Folly_package_hdrs",
+  srcs = [
+    "Folly_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Folly_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "folly/*.h",
+        "folly/detail/*.h",
+        "folly/portability/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "Folly_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "folly/*.h",
-      "folly/detail/*.h",
-      "folly/portability/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "folly/*.h",
+        "folly/detail/*.h",
+        "folly/portability/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -39,6 +91,7 @@ headermap(
   name = "Folly_hmap",
   namespace = "folly",
   hdrs = [
+    "Folly_package_hdrs",
     ":Folly_hdrs"
   ],
   deps = [
@@ -56,14 +109,6 @@ gen_includes(
     "Vendor/Folly",
     "Vendor/boost-for-react-native",
     "Vendor/DoubleConversion"
-  ]
-)
-gen_module_map(
-  "folly",
-  "Folly_module_map",
-  "folly",
-  [
-    "Folly_hdrs"
   ]
 )
 objc_library(
@@ -88,9 +133,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "Folly",
-    [
-      "folly/**/*.pch"
-    ]
+    glob(
+      [
+        "folly/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_dylibs = [
     "stdc++"
@@ -102,6 +150,7 @@ objc_library(
     ":Folly_includes"
   ],
   copts = [
+    "-std=c++14",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -115,7 +164,7 @@ objc_library(
       ]
     }
   ) + [
-    "-fmodule-name=folly_pod_module"
+    "-fmodule-name=folly"
   ],
   visibility = [
     "//visibility:public"

@@ -1,0 +1,5 @@
+Vendor/**/BUILD*
+Vendor/rules_pods
+**/pod_support**
+*.pod-version
+!Vendor

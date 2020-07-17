@@ -13,49 +13,69 @@
 // - XCConfig / compiler flags
 public struct SwiftLibrary: BazelTarget {
     public let name: String
-    public let sourceFiles: GlobNode
+    public let sourceFiles: AttrSet<GlobNode>
     public let deps: AttrSet<[String]>
 
     public let isTopLevelTarget: Bool
     public let externalName: String
-    public let data: GlobNode
+    public let data: AttrSet<GlobNode>
 
-    init(rootSpec: PodSpec? = nil, spec: PodSpec, extraDeps: [String] = [],
+    public init(name: String,
+                sourceFiles: AttrSet<GlobNode>,
+                deps: AttrSet<[String]>,
+                isTopLevelTarget: Bool,
+                externalName: String,
+                data: AttrSet<GlobNode>) {
+        self.name = name
+        self.sourceFiles = sourceFiles
+        self.externalName = externalName
+
+        self.isTopLevelTarget = isTopLevelTarget
+        self.deps = deps
+        self.data = data
+    }
+
+
+    init(parentSpecs: [PodSpec], spec: PodSpec, extraDeps: [String] = [],
             isSplitDep: Bool = false) {
-        let fallbackSpec: ComposedSpec = ComposedSpec.create(fromSpecs: [rootSpec, spec].compactMap { $0 })
-        self.isTopLevelTarget = rootSpec == nil && isSplitDep == false
+        let fallbackSpec = FallbackSpec(specs: parentSpecs + [spec])
+        self.isTopLevelTarget = parentSpecs.isEmpty && isSplitDep == false
 
         let podName = GetBuildOptions().podName
-		self.name = computeLibName(rootSpec: rootSpec, spec: spec, podName:
-				podName, isSplitDep: isSplitDep, sourceType: .swift)
+        self.name = computeLibName(
+                parentSpecs: parentSpecs,
+                spec: spec,
+                podName: podName,
+                isSplitDep: isSplitDep,
+                sourceType: .swift
+        )
 
-        let allSourceFiles = spec ^* liftToAttr(PodSpec.lens.sourceFiles)
+        let allSourceFiles = spec.attr(\.sourceFiles)
         let implFiles = extractFiles(fromPattern: allSourceFiles,
                 includingFileTypes: SwiftLikeFileTypes)
             .map { Set($0) }
 
 
-        let allExcludes = spec ^* liftToAttr(PodSpec.lens.excludeFiles)
+        let allExcludes = spec.attr(\.excludeFiles)
         let implExcludes = extractFiles(fromPattern: allExcludes,
                 includingFileTypes: SwiftLikeFileTypes)
             .map { Set($0) }
 
-        self.sourceFiles = GlobNode(
-            include: implFiles,
-            exclude: implExcludes)
-        self.externalName = rootSpec?.name ?? spec.name
+        self.sourceFiles = implFiles.zip(implExcludes).unpackToMulti().map {
+            t -> GlobNode in
+            return GlobNode(include: .left(t.first ?? Set()), exclude: .left(t.second ?? Set()))
+        }
 
-        let resourceFiles = ((spec ^* liftToAttr(PodSpec.lens.resources)).map { (strArr: [String]) -> [String] in
+        self.externalName = parentSpecs.first?.name ?? spec.name
+
+        let resourceFiles = (spec.attr(\.resources).map { (strArr: [String]) -> [String] in
             strArr.filter({ (str: String) -> Bool in
                 !str.hasSuffix(".bundle")
             })
         }).map(extractResources)
-        self.data = GlobNode(
-            include: resourceFiles.map{ Set($0) },
-            exclude: AttrSet.empty)
-
+        self.data = resourceFiles.map{ GlobNode(include: Set($0)) }
         // Lift the deps to multiplatform, then get the names of these deps.
-        let mpDeps = fallbackSpec ^* ComposedSpec.lens.fallback(liftToAttr(PodSpec.lens.dependencies))
+        let mpDeps = fallbackSpec.attr(\.dependencies)
         let mpPodSpecDeps = mpDeps.map { $0.map {
             getDependencyName(fromPodDepName: $0, podName: podName) } }
 

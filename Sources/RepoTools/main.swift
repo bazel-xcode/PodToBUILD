@@ -21,7 +21,9 @@ func main() {
     case .fetch(let opts):
         let shell = SystemShellContext(trace: opts.trace)
         RepoActions.fetch(shell: shell, fetchOptions: opts)
-       break
+    case let .generateWorkspace(opts):
+       let shell = SystemShellContext(trace: opts.trace)
+       RepoActions.generateWorkspace(shell: shell, workspaceOptions: opts)
     }
 }
 

@@ -43,8 +43,42 @@ def _cli_bool(b):
 REPO_TOOL_NAME = "RepoTool"
 INIT_REPO_PLACEHOLDER = "__INIT_REPO__"
 
-class RepositoryContext(object):
-    """ RepositoryContext """
+class RepoToolsInvocationInfo(object):
+    def __init__(self, repository_ctx):
+        self.child_pods = []
+        self.repository_ctx = repository_ctx
+
+    def add_child_pod(self, pod):
+        """ Adds the full context of the child pod """
+        self.child_pods.append(pod)
+
+
+class PodWorkspace(object):
+    """ PodRepositoryContext """
+
+    def __init__(self):
+        self.pods = []
+
+    def add(self, pod):
+        """ Adds a pod to all known pods """
+        self.pods.append(pod)
+
+    def update(self):
+        invocation_info_by_target = {}
+        for pod in self.pods:
+            invocation_info_by_target[pod.target_name] = RepoToolsInvocationInfo(repository_ctx=pod)
+
+        for pod in self.pods:
+            if pod.url and pod.url.startswith("Vendor"):
+                parent_pod = pod.url.split("/")[1]
+                if parent_pod != pod.target_name:
+                    invocation_info_by_target[parent_pod].add_child_pod(pod)
+
+        for pod in self.pods:
+            _update_repo_impl(invocation_info_by_target[pod.target_name])
+
+class PodRepositoryContext(object):
+    """ PodRepositoryContext """
 
     def __init__(self,
             target_name,
@@ -94,11 +128,13 @@ def HashFile(path):
     f.close()
     return str(f_hash)
 
-def GetVersion(repository_ctx):
+def GetVersion(invocation_info):
+    repository_ctx = invocation_info.repository_ctx
     self_hash = HashFile(os.path.realpath(__file__))
     repo_tool_hash = HashFile(_getRepoToolPath())
     ctx_hash = str(hash(repository_ctx.GetIdentifier()))
-    return self_hash + repo_tool_hash + ctx_hash
+    child_pods = str(hash("".join([c.url for c in invocation_info.child_pods]))) if invocation_info.child_pods else ""
+    return self_hash + repo_tool_hash + ctx_hash + child_pods
 
 # Compiler Options
 
@@ -155,13 +191,14 @@ def _link_local_repo(repository_ctx, target_name, url):
         ]
         _exec(repository_ctx, link_cmd)
 
-def _needs_update(repository_ctx):
+def _needs_update(invocation_info):
+    repository_ctx = invocation_info.repository_ctx
     target_name = repository_ctx.target_name
     pod_root_dir = repository_ctx.GetPodRootDir()
     _exec(repository_ctx, ["/bin/bash", "-c", "mkdir -p " + pod_root_dir])
     _exec(repository_ctx, ["/bin/bash", "-c", "touch .pod-version"], pod_root_dir)
     cached_version = _exec(repository_ctx, ["/bin/bash", "-c", "cat .pod-version"], pod_root_dir).split("\n")[0]
-    return GetVersion(repository_ctx) != cached_version
+    return GetVersion(invocation_info) != cached_version
 
 def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
     url = repository_ctx.url
@@ -171,29 +208,33 @@ def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
         # the repo with that code.
         return
 
-    # Note: the pod is not cleaned out if the sourcecode is loaded from the
-    # current directory
-    _exec(repository_ctx, ["rm", "-rf", repository_ctx.GetPodRootDir()])
+
+    if _is_http_url(url) or url.startswith("/"):
+        _exec(repository_ctx, ["rm", "-rf", repository_ctx.GetPodRootDir()])
     _exec(repository_ctx, ["mkdir", "-p", repository_ctx.GetPodRootDir()])
 
-    if url.startswith("http"):
+    if _is_http_url(url):
         _fetch_remote_repo(repository_ctx, repo_tool_bin_path, target_name, url)
     elif url.startswith("/"):
         _link_local_repo(repository_ctx, target_name, url)
     else:
         _link_local_repo(repository_ctx, target_name, SRC_ROOT+"/"+url)
 
-def _update_repo_impl(repository_ctx):
+def _update_repo_impl(invocation_info):
+    repository_ctx = invocation_info.repository_ctx
     if repository_ctx.GetTrace():
         print("__RUN with repository_ctx", repository_ctx.__dict__)
 
     global POD_PATHS
     POD_PATHS.append(repository_ctx.GetPodRootDir())
 
-    if not _needs_update(repository_ctx):
+    if not _needs_update(invocation_info):
         return
 
+    # Note: the pod is not cleaned out if the sourcecode is loaded from the
+    # current directory
     print("Updating Pod " + repository_ctx.target_name + "...")
+
     # Note: the root directory that these commands execute is external/name
     # after the source code has been fetched
     target_name = repository_ctx.target_name
@@ -223,6 +264,8 @@ def _update_repo_impl(repository_ctx):
             # Set the first argument for RepoTool to "target_name"
             entry.append(target_name)
             entry.append("init")
+
+            ## We need to assimilate the child pod options
             for user_option in repository_ctx.user_options:
                 entry.extend(["--user_option", "'" + user_option + "'"])
 
@@ -232,6 +275,12 @@ def _update_repo_impl(repository_ctx):
 
             for global_copt in GLOBAL_COPTS:
                 entry.extend(["--global_copt", global_copt])
+
+            if repository_ctx.url and repository_ctx.url.startswith("Vendor"):
+                entry.extend([
+                    "--path",
+                    repository_ctx.url
+                ])
 
             entry.extend([
                 "--trace",
@@ -245,6 +294,13 @@ def _update_repo_impl(repository_ctx):
                 "--generate_header_map",
                 _cli_bool(repository_ctx.generate_header_map)
             ])
+
+            for child_pod in invocation_info.child_pods:
+                entry.extend(["--child_path", child_pod.target_name])
+                entry.extend(["--child_path", child_pod.url])
+                for user_option in child_pod.user_options:
+                    entry.extend(["--user_option", "'" + user_option + "'"])
+
             substitutions[INIT_REPO_PLACEHOLDER] = " ".join(entry)
         else:
             substitutions[name] = " ".join(entry)
@@ -254,7 +310,7 @@ def _update_repo_impl(repository_ctx):
 
     if repository_ctx.podspec_url:
         # For now, we curl the podspec url before the script runs
-        if repository_ctx.podspec_url.startswith("http"):
+        if _is_http_url(repository_ctx.podspec_url):
             script += "curl -O " + repository_ctx.podspec_url
             script += "\n"
         else:
@@ -279,7 +335,7 @@ def _update_repo_impl(repository_ctx):
             repository_ctx.GetPodRootDir())
 
     with open(repository_ctx.GetPodRootDir() + "/.pod-version", "w") as version_file:
-        version_file.write(GetVersion(repository_ctx))
+        version_file.write(GetVersion(invocation_info))
 
 def new_pod_repository(name,
             url = None,
@@ -358,11 +414,12 @@ def new_pod_repository(name,
 
     # The SRC_ROOT is the directory of the WORKSPACE and Pods.WORKSPACE
     global SRC_ROOT
+    global WORKSPACE
 
     if generate_module_map == None:
         generate_module_map = enable_modules
 
-    repository_ctx = RepositoryContext(
+    repository_ctx = PodRepositoryContext(
             target_name = name,
             url = url,
             podspec_url = podspec_url,
@@ -376,9 +433,9 @@ def new_pod_repository(name,
             generate_header_map = generate_header_map,
             header_visibility = header_visibility,
             src_root = SRC_ROOT)
-    _update_repo_impl(repository_ctx)
+    WORKSPACE.add(repository_ctx)
 
-def _cleanupPods():
+def _cleanup_pods():
     """Cleanup removed Pods from Vendor"""
     pods_dir = SRC_ROOT + "/Vendor"
     known_pods = set(POD_PATHS)
@@ -391,18 +448,21 @@ def _cleanupPods():
             continue
         shutil.rmtree(full_path)
 
+def _is_http_url(url):
+    return url.startswith("http://") or url.startswith("https://")
+
 # Build a release of `RepoTools` if needed. Under a release package,
 # the makefile is a noop.
-def _buildRepoToolsRelease():
+def _build_repo_tools():
     print("Building PodToBUILD dependencies...")
-    _exec(RepositoryContext(None, None, None, None, None, None, None, trace=True), [
+    _exec(PodRepositoryContext(None, None, None, None, None, None, None, trace=True), [
         "make",
         "release"],
         os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 # If using `bazel run` to Vendorize pods, copy the contents required into
 # //Vendor/rules_pods. This is required to ensure consistency.
-def _vendorizeBazelExtensionsIfNeeded():
+def _vendorize_bazel_extensions_if_needed():
     current_dir = os.path.dirname(os.path.realpath(__file__))
     rules_pods_root = os.path.dirname(current_dir)
     install_root = os.path.dirname(rules_pods_root)
@@ -434,6 +494,8 @@ def main():
     global SRC_ROOT
     SRC_ROOT = args.src_root
 
+    global WORKSPACE
+    WORKSPACE = PodWorkspace()
     if not SRC_ROOT:
         SRC_ROOT = os.getcwd()
 
@@ -441,15 +503,17 @@ def main():
     global OVERRIDE_TRACE
     OVERRIDE_TRACE = args.trace
 
-    _buildRepoToolsRelease()
+    _build_repo_tools()
 
     # Eval the Pods.WORKSPACE
+    # Here, we simply collect pods
     with open(SRC_ROOT + "/Pods.WORKSPACE", "r") as workspace:
         workspace_str = workspace.read()
         d = dict(locals(), **globals())
         exec(workspace_str, d, d)
 
-    _cleanupPods()
-    _vendorizeBazelExtensionsIfNeeded()
+    WORKSPACE.update()
+    _cleanup_pods()
+    _vendorize_bazel_extensions_if_needed()
 
 main()

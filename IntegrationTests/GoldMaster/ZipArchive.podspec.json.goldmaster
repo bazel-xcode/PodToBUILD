@@ -16,22 +16,77 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "ZipArchive_package_hdrs",
+  srcs = [
+    "ZipArchive_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "ZipArchive_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "*.h",
+        "minizip/crypt.h",
+        "minizip/ioapi.h",
+        "minizip/mztools.h",
+        "minizip/unzip.h",
+        "minizip/zip.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "ZipArchive_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "*.h",
-      "minizip/crypt.h",
-      "minizip/ioapi.h",
-      "minizip/mztools.h",
-      "minizip/unzip.h",
-      "minizip/zip.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "*.h",
+        "minizip/crypt.h",
+        "minizip/ioapi.h",
+        "minizip/mztools.h",
+        "minizip/unzip.h",
+        "minizip/zip.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -42,6 +97,7 @@ headermap(
   name = "ZipArchive_hmap",
   namespace = "ZipArchive",
   hdrs = [
+    "ZipArchive_package_hdrs",
     ":ZipArchive_hdrs"
   ],
   deps = [],
@@ -55,19 +111,12 @@ gen_includes(
     "Vendor/ZipArchive/pod_support/Headers/Public/"
   ]
 )
-gen_module_map(
-  "ZipArchive",
-  "ZipArchive_module_map",
-  "ZipArchive",
-  [
-    "ZipArchive_hdrs"
-  ]
-)
 objc_library(
   name = "ZipArchive",
   enable_modules = 0,
-  srcs = glob(
+  non_arc_srcs = glob(
     [
+      "*.m",
       "minizip/crypt.c",
       "minizip/ioapi.c",
       "minizip/mztools.c",
@@ -76,20 +125,12 @@ objc_library(
     ],
     exclude_directories = 1
   ),
-  non_arc_srcs = glob(
-    [
-      "*.m"
-    ],
-    exclude_directories = 1
-  ),
   hdrs = [
     ":ZipArchive_hdrs"
   ],
   pch = pch_with_name_hint(
     "ZipArchive",
-    [
-      "minizip/**/*.pch"
-    ]
+    []
   ),
   sdk_dylibs = [
     "z"
@@ -112,7 +153,7 @@ objc_library(
   ) + [
     "-IVendor/ZipArchive/pod_support/Headers/Public/ZipArchive/"
   ] + [
-    "-fmodule-name=ZipArchive_pod_module"
+    "-fmodule-name=ZipArchive"
   ],
   visibility = [
     "//visibility:public"

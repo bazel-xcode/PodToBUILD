@@ -16,12 +16,68 @@ config_setting(
     "compilation_mode": "opt"
   }
 )
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "pop_package_hdrs",
+  srcs = [
+    "pop_cxx_direct_hdrs",
+    "pop_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "pop_cxx_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "pop/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
 filegroup(
   name = "pop_cxx_hdrs",
   srcs = glob(
-    [
-      "pop/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "pop/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   visibility = [
@@ -42,6 +98,7 @@ headermap(
   name = "pop_cxx_hmap",
   namespace = "pop",
   hdrs = [
+    "pop_package_hdrs",
     ":pop_cxx_union_hdrs"
   ],
   deps = [],
@@ -63,19 +120,25 @@ objc_library(
       "pop/**/*.cpp",
       "pop/**/*.mm"
     ],
-    exclude = [
-      "pop/**/*.m"
-    ],
+    exclude = glob(
+      [
+        "pop/**/*.m"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ),
   hdrs = [
-    ":pop_cxx_union_hdrs"
+    ":pop_cxx_hdrs"
   ],
   pch = pch_with_name_hint(
     "pop",
-    [
-      "pop/**/*.pch"
-    ]
+    glob(
+      [
+        "pop/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_dylibs = [
     "c++"
@@ -84,6 +147,7 @@ objc_library(
     ":pop_cxx_includes"
   ],
   copts = [
+    "-std=c++14",
     "-std=c++11",
     "-stdlib=libc++"
   ] + select(
@@ -99,7 +163,7 @@ objc_library(
   ) + [
     "-IVendor/pop/pod_support/Headers/Public/pop/"
   ] + [
-    "-fmodule-name=pop_pod_module"
+    "-fmodule-name=pop"
   ],
   visibility = [
     "//visibility:public"
@@ -111,16 +175,39 @@ acknowledged_target(
   value = "//Vendor/pop/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
+  name = "pop_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "pop/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "pop_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
-  ) + glob(
-    [
-      "pop/**/*.h"
-    ],
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "pop/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
     exclude_directories = 1
   ) + [
     ":pop_cxx_hdrs"
@@ -133,6 +220,7 @@ headermap(
   name = "pop_hmap",
   namespace = "pop",
   hdrs = [
+    "pop_package_hdrs",
     ":pop_hdrs"
   ],
   deps = [
@@ -146,14 +234,6 @@ gen_includes(
   name = "pop_includes",
   include = [
     "Vendor/pop/pod_support/Headers/Public/"
-  ]
-)
-gen_module_map(
-  "pop",
-  "pop_module_map",
-  "pop",
-  [
-    "pop_hdrs"
   ]
 )
 objc_library(
@@ -170,9 +250,12 @@ objc_library(
   ],
   pch = pch_with_name_hint(
     "pop",
-    [
-      "pop/**/*.pch"
-    ]
+    glob(
+      [
+        "pop/**/*.pch"
+      ],
+      exclude_directories = 1
+    )
   ),
   sdk_dylibs = [
     "c++"
@@ -194,7 +277,7 @@ objc_library(
   ) + [
     "-IVendor/pop/pod_support/Headers/Public/pop/"
   ] + [
-    "-fmodule-name=pop_pod_module"
+    "-fmodule-name=pop"
   ],
   visibility = [
     "//visibility:public"
