@@ -40,7 +40,7 @@ test: info
 # Generally, this would be ran when dependencies are updated, and then,
 # dependencies _would_ be checked in.
 vendorize:
-	PYTHONPATH=$(PWD) $(BAZEL) run @rules_pods//:update_pods $(BAZEL_OPTS) -- --src_root $(PWD)
+	$(BAZEL) run @rules_pods//:update_pods $(BAZEL_OPTS) -- --src_root $(PWD)
 	# The above is similar to running ../../bin/update_pods.py --src_root $(PWD)
 	# however, `rules_pods` is overriden
 	ditto $(RULES_PODS_DIR)/BazelExtensions Vendor/rules_pods/BazelExtensions
