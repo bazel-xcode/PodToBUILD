@@ -49,24 +49,64 @@ public struct PodRepositoryWorkspaceEntry: SkylarkConvertible {
 public struct PodsWorkspace: SkylarkConvertible {
     var pods: [PodRepositoryWorkspaceEntry] = []
 
+    public static func vendorizePodspec(depName: String, shell: ShellContext) throws -> String {
+        // If there is not an explicit podspec then copy it out of
+        // the cocoapods repo
+        let whichPodspec = shell.shellOut("pod spec which \(depName)")
+            .standardOutputAsString
+        guard !whichPodspec.isEmpty else {
+            throw WorkspaceError.invalidPodSpec
+        }
+        guard let podSpecPath = whichPodspec.components(separatedBy:
+        "\n").first else  {
+            throw WorkspaceError.invalidPodSpec
+        }
+        let specsDir = "Vendor/Podspecs"
+        try? FileManager.default.createDirectory(atPath: specsDir,
+            withIntermediateDirectories: true,
+            attributes: [:])
+        guard let basenamePart = podSpecPath.split(separator: "/").last else {
+            throw WorkspaceError.invalidPodSpec
+        }
+        let basename = String(basenamePart)
+        let vendoredPath = "\(specsDir)/\(basename)"
+        if FileManager.default.fileExists(atPath: vendoredPath) {
+            try FileManager.default.removeItem(atPath: vendoredPath)
+        }
+
+        try FileManager.default.copyItem(atPath: podSpecPath,
+            toPath: vendoredPath)
+        return vendoredPath
+    }
+
     public init(lockfile: Lockfile, shell: ShellContext) throws {
+        let specRepoPods = Array(lockfile.specRepos.values).reduce(into: [String]()) {
+            accum, next in
+            accum.append(contentsOf: next)
+        }
+
+        var foundPods: Set<String> = Set()
         pods = try Array(lockfile.pods).compactMap {
             depStr in
-            let depName: String!
+            var depName: String!
             if let depDict = depStr as? [String: Any],
-                let key = depDict.keys.first as? String {
+                let key = depDict.keys.first {
                 depName = String(key.split(separator: " ")[0])
             } else if let key = depStr as? String {
                 depName = String(key.split(separator: " ")[0])
             } else {
                 fatalError("Unknown key" + String(describing: depStr))
-                return nil
             }
+            // All pods are namespaced at a later point.
             let components = depName.split(separator: "/")
             if components.count > 1 {
-                // For now, we drop this
+                depName = String(components[0])
+            }
+
+            if foundPods.contains(depName) {
                 return nil
             }
+            foundPods.insert(depName)
             // let depName = ""
             var podspecSourceURL: String?
             var podspecURL: String?
@@ -77,7 +117,7 @@ public struct PodsWorkspace: SkylarkConvertible {
             //  - React-Core/RCTWebSocket (from `Vendor/React/`)
             //  - ReactCommon/turbomodule/core (from `Vendor/React/ReactCommon`)
             if let externalDepInfo = lockfile.externalSources[depName] {
-                if var pathStr = externalDepInfo[":path"] {
+                if let pathStr = externalDepInfo[":path"] {
                     // If this is local path, it cannot end in a /
                     if pathStr.hasSuffix("/") {
                         sourceURL = String(pathStr.dropLast())
@@ -102,6 +142,10 @@ public struct PodsWorkspace: SkylarkConvertible {
                         podspecSourceURL = try? PodsWorkspace.getURL(podSpec: podSpec)
                     }
                 }
+            }
+            // If there is no podspec then we need to vendorize the podspec
+            if podspecURL == nil && specRepoPods.contains(depName)  {
+                podspecURL = try? PodsWorkspace.vendorizePodspec(depName: depName, shell: shell)
             }
 
             let implicitSourceURL = try? PodsWorkspace.getURL(depName: depName, shell: shell)

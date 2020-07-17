@@ -16,7 +16,11 @@ BAZEL_OPTS=$(REPOSITORY_OVERRIDE) -s \
 	--spawn_strategy=standalone \
 	--apple_platform_type=ios
 
-all: pod_test fetch build
+# Some examples require out of band loading
+bootstrap:
+	[[ ! -x bootstrap.sh ]] || ./bootstrap.sh
+
+all: bootstrap pod_test fetch build
 
 # This command ensures that cocoapods is installed on the host
 pod_test:
@@ -36,7 +40,7 @@ test: info
 # Generally, this would be ran when dependencies are updated, and then,
 # dependencies _would_ be checked in.
 vendorize:
-	$(BAZEL) run @rules_pods//:update_pods $(BAZEL_OPTS) -- --src_root $(PWD)
+	PYTHONPATH=$(PWD) $(BAZEL) run @rules_pods//:update_pods $(BAZEL_OPTS) -- --src_root $(PWD)
 	# The above is similar to running ../../bin/update_pods.py --src_root $(PWD)
 	# however, `rules_pods` is overriden
 	ditto $(RULES_PODS_DIR)/BazelExtensions Vendor/rules_pods/BazelExtensions
@@ -48,8 +52,13 @@ fetch: info
 info:
 	$(BAZEL) info $(REPOSITORY_OVERRIDE)
 
+update_xcodeproj:
+	[[ ! -d PodsHost ]] || rm -rf PodsHost
+	ditto ../.PodsHost PodsHost
+	pod install
+
 # This command generates a workspace from a Podfile
-gen_workspace:
+gen_podfile_deps:
 	make -C ../../ build
-	[[ ! -f Podfile ]]  ||../../bin/RepoTools generate_workspace > Pods.WORKSPACE
+	[[ ! -f Podfile ]]  ||../../bin/RepoTools generate_workspace > podfile_deps.py
 
