@@ -270,7 +270,10 @@ swift_library(
     exclude_directories = 1
   ),
   deps = [],
-  data = []
+  data = [],
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "FBAllocationTracker_direct_hdrs",

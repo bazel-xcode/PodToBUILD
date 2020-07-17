@@ -61,6 +61,10 @@ class PodWorkspace(object):
 
     def add(self, pod):
         """ Adds a pod to all known pods """
+        # If there's already a pod defined, then don't add it again.
+        for existing_pod in self.pods:
+            if existing_pod.target_name == pod.target_name:
+                return
         self.pods.append(pod)
 
     def update(self):
@@ -90,8 +94,8 @@ class PodRepositoryContext(object):
             inhibit_warnings = False,
             trace = False,
             enable_modules = True,
-            generate_module_map = True,
-            generate_header_map = False,
+            generate_module_map = False,
+            generate_header_map = True,
             header_visibility = "pod_support",
             src_root = None):
         self.target_name = target_name
@@ -217,8 +221,10 @@ def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
         _fetch_remote_repo(repository_ctx, repo_tool_bin_path, target_name, url)
     elif url.startswith("/"):
         _link_local_repo(repository_ctx, target_name, url)
-    else:
-        _link_local_repo(repository_ctx, target_name, SRC_ROOT+"/"+url)
+    elif not url.startswith("Vendor"):
+        # Assume that if a directory is already in vendor, then we should not
+        # link
+        _link_local_repo(repository_ctx, target_name, SRC_ROOT + "/" + url)
 
 def _update_repo_impl(invocation_info):
     repository_ctx = invocation_info.repository_ctx
@@ -343,10 +349,10 @@ def new_pod_repository(name,
             strip_prefix = "",
             user_options = [],
             install_script = None, 
-            inhibit_warnings = False,
+            inhibit_warnings = True,
             trace = False,
             enable_modules = True,
-            generate_module_map = True,
+            generate_module_map = False,
             generate_header_map = False,
             owner = "", # This is a Noop
             header_visibility = "pod_support"):
@@ -416,9 +422,6 @@ def new_pod_repository(name,
     global SRC_ROOT
     global WORKSPACE
 
-    if generate_module_map == None:
-        generate_module_map = enable_modules
-
     repository_ctx = PodRepositoryContext(
             target_name = name,
             url = url,
@@ -476,6 +479,18 @@ def _vendorize_bazel_extensions_if_needed():
         os.makedirs(rules_pods_root)
         shutil.copytree(bazel_extension_dir, vendor_path)
 
+def load(path):
+    """
+    Loads a Pods.WORKSPACE file
+    """
+    global SRC_ROOT
+    # Eval the Pods.WORKSPACE
+    # Here, we simply collect pods
+    with open(SRC_ROOT +  "/" + path, "r") as workspace:
+        workspace_str = workspace.read()
+        d = dict(locals(), **globals())
+        exec(workspace_str, d, d)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--src_root",
@@ -505,13 +520,7 @@ def main():
 
     _build_repo_tools()
 
-    # Eval the Pods.WORKSPACE
-    # Here, we simply collect pods
-    with open(SRC_ROOT + "/Pods.WORKSPACE", "r") as workspace:
-        workspace_str = workspace.read()
-        d = dict(locals(), **globals())
-        exec(workspace_str, d, d)
-
+    load("Pods.WORKSPACE")
     WORKSPACE.update()
     _cleanup_pods()
     _vendorize_bazel_extensions_if_needed()

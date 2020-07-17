@@ -16,7 +16,11 @@ BAZEL_OPTS=$(REPOSITORY_OVERRIDE) -s \
 	--spawn_strategy=standalone \
 	--apple_platform_type=ios
 
-all: pod_test fetch build
+# Some examples require out of band loading
+bootstrap:
+	[[ ! -x bootstrap.sh ]] || ./bootstrap.sh
+
+all: bootstrap pod_test fetch build
 
 # This command ensures that cocoapods is installed on the host
 pod_test:
@@ -48,8 +52,13 @@ fetch: info
 info:
 	$(BAZEL) info $(REPOSITORY_OVERRIDE)
 
+update_xcodeproj:
+	[[ ! -d PodsHost ]] || rm -rf PodsHost
+	ditto ../.PodsHost PodsHost
+	pod install
+
 # This command generates a workspace from a Podfile
-gen_workspace:
+gen_podfile_deps:
 	make -C ../../ build
-	[[ ! -f Podfile ]]  ||../../bin/RepoTools generate_workspace > Pods.WORKSPACE
+	[[ ! -f Podfile ]]  ||../../bin/RepoTools generate_workspace > podfile_deps.py
 

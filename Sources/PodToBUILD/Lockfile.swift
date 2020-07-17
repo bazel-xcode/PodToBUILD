@@ -17,27 +17,28 @@ import Foundation
 import Yams
 
 public struct Lockfile {
-    // FIXME: complete impl, spec
     var pods: [Any] = []
     var dependencies: [String] = []
     var externalSources: [String: [String: String]] = [:]
-    var specChecksums: [String] = []
+    var specRepos: [String: [String]] = [:]
+    var specChecksums: [String: String] = [:]
     var podfileChecksum: String = ""
     var cocoapods: String = ""
 
     public init(data: Data) throws {
-        /// Don't use codeable for simplicity to handle the dynamic nature of this
         let loadedDictionary = try Yams.load(yaml: String(data: data, encoding:
             .utf8)!) as! [String: Any]
-        // FIXME: complete impl, spec
-        guard let externalDepsYams = loadedDictionary["EXTERNAL SOURCES"] as? [String:
-            [String: String]] else {
-            fatalError("Missing deps")
+        guard let cocoapodsval = loadedDictionary["COCOAPODS"] as? String else {
+            fatalError("Invalid lockfile")
         }
-        externalSources = externalDepsYams
-        guard let depsYams = loadedDictionary["PODS"] as? [Any] else {
-            fatalError("Missing deps" + String(describing: loadedDictionary["PODS"]))
-        }
-        pods = depsYams
+        cocoapods = cocoapodsval
+        specRepos = loadedDictionary["SPEC REPOS"] as? [String: [String]] ?? [:]
+        externalSources = loadedDictionary["EXTERNAL SOURCES"] as? [String:
+            [String: String]] ?? [:]
+        dependencies = loadedDictionary["DEPENDENCIES"] as? [String] ?? []
+        specChecksums = loadedDictionary["SPEC CHECKSUMS"] as? [String: String] ?? [:]
+        podfileChecksum = loadedDictionary["PODFILE CHECKSUM"] as? String ?? ""
+        pods = loadedDictionary["PODS"] as? [Any] ?? []
+
     }
 }

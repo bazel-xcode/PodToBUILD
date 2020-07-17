@@ -272,7 +272,6 @@ public enum RepoActions {
             ])
 
         let parts = buildOptions.path.split(separator: "/")
-        let addName = getNamePrefix()
         let JSONPodspec = getJSONPodspec(shell: shell, podspecName:
                                       podspecName, path: "../../" + buildOptions.path,
                                       childPaths: buildOptions.childPaths)

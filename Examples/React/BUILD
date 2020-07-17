@@ -1,0 +1,14 @@
+objc_library(
+    name="all",
+    deps=[
+        "//Vendor/React:React-Core",
+        "//Vendor/React:DevSupport",
+        "//Vendor/React-RCTImage:React-RCTImage",
+        "//Vendor/React-RCTNetwork:React-RCTNetwork",
+        "//Vendor/React-RCTText:React-RCTText",
+        "//Vendor/React-Core:RCTWebSocket",
+        "//Vendor/React-CoreModules:React-CoreModules",
+        "//Vendor/React-RCTAnimation:React-RCTAnimation",
+        "//Vendor/ReactCommon:turbomodule_core",
+        ]
+)

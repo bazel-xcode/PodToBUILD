@@ -708,5 +708,8 @@ swift_library(
   deps = [
     ":Default"
   ],
-  data = []
+  data = [],
+  visibility = [
+    "//visibility:public"
+  ]
 )

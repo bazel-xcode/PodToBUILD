@@ -1,0 +1,16 @@
+project 'PodsHost/PodsHost.xcodeproj'
+
+def rn_pods()
+    pod_dir = "Vendor"
+    # In earlier versions ( 0.62~ ) the script was called this.
+    # Note: that react native is pre-loaded out of band with ./update-react.sh
+    #require_relative pod_dir + '/React/scripts/autolink-ios'
+
+    require_relative pod_dir + '/React/scripts/react_native_pods'
+    use_react_native!(path: pod_dir + '/React', turbo_modules_enabled: false)
+end
+
+target 'ios-app' do
+    rn_pods()
+end
+
