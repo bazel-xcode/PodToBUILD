@@ -1,6 +1,9 @@
 set -x
 # This is not trival and generally installed with npm
 # Alternatively, add an entry in Pods.WORKSPACE with the latest URL for RN
+# Note: on this release, there's an issue with this commit.
+# this should be patched on somehow
+# https://github.com/facebook/react-native/pull/28946
 VERSION="0.63.0"
 
 cleanup() {
