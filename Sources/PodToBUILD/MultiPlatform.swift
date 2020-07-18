@@ -183,6 +183,17 @@ public struct AttrSet<T: AttrSetConstraint>: Monoid, SkylarkConvertible, EmptyAw
         return multi(basic(self.basic), self.multi)
     }
 
+    public func trivialize<U>(into accum: U, _ transform: ((inout U, T) -> Void)) -> U {
+        var mutAccum = accum
+        self.basic.map { transform(&mutAccum, $0) }
+        let multi = self.multi
+        multi.ios.map { transform(&mutAccum, $0) }
+        multi.tvos.map { transform(&mutAccum, $0) }
+        multi.osx.map { transform(&mutAccum, $0) }
+        multi.watchos.map { transform(&mutAccum, $0) }
+        return mutAccum
+    }
+
     public func zip<U>(_ other: AttrSet<U>) -> AttrSet<AttrTuple<T,U>> {
         return AttrSet<AttrTuple<T,U>>(
             basic: AttrTuple(self.basic, other.basic),
