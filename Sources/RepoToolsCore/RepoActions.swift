@@ -385,56 +385,54 @@ public enum RepoActions {
 
         // ideally this check should introspec the podspecs value.
         if buildOptions.generateHeaderMap == false {
-            let objcLibraries: [ObjcLibrary] = buildFile.skylarkConvertibles.compactMap { $0 as? ObjcLibrary }
-            objcLibraries.forEach { lib -> Void in
-               let searchPaths = lib.headerName.unpackToMulti().map {
-                   headerName -> [String] in
-                   var paths = [headerName]
-                   if headerName != lib.name {
-                       paths.append(lib.name)
-                   }
-                   if headerName != lib.externalName {
-                       paths.append(lib.externalName)
-                   }
-                   return paths
-               }
+            var globResults: Set<String> = Set()
+            var searchPaths: Set<String> = Set()
+            buildFile.skylarkConvertibles.forEach {
+                convertible in
+                if let lib = convertible as? ObjcLibrary {
+                    // Collect all the search paths, there is no per platform header
+                    // directories in cocoapods, and do an O(N) operation
+                    searchPaths.formUnion(lib.headerName.trivialize(into: Set<String>()) {
+                        $0.insert($1)
+                    })
+                    searchPaths.insert(lib.externalName)
+                    searchPaths.insert(lib.name)
+                    globResults.formUnion(lib.headers.trivialize(into: Set<String>()) {
+                        $0.formUnion($1.sourcesOnDisk())
+                    })
+                }
+                if let fwImport = convertible as? AppleStaticFrameworkImport {
+                    globResults.formUnion(fwImport.frameworkImports.trivialize(into: Set<String>()) {
+                        accum, next in
+                        let HeaderFileTypes = Set([".h", ".hpp", ".hxx"])
+                        let imports = next.reduce(into: Set<String>()) {
+                            accum, nextImport in
+                            accum.formUnion(Set(HeaderFileTypes.map { nextImport + "/**/*" + $0 }))
+                        }
+                        let headersDir = GlobNode(include: imports)
+                        accum.formUnion(headersDir.sourcesOnDisk())
+                    })
+                }
+            }
+            searchPaths.forEach {
+                searchPath in
+                 defer {
+                    guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
+                        fatalError("Can't change path back to original directory")
+                    }
+                 }
 
-                _ = lib.headers.unpackToMulti().zip(searchPaths).map {
-                    attrTuple -> Set<String>? in
-                    defer {
-                        guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
-                            fatalError("Can't change path back to original directory")
-                        }
-                    }
-                    // Note: this is going to evaluate the glob, this needs to
-                    // happen _inside_ of the root directory.
-                    guard let headers = attrTuple.first,
-                         let searchPaths = attrTuple.second else {
-                        return nil
-                    }
-                    let globResults = headers.sourcesOnDisk()
-                    searchPaths.forEach {
-                        searchPath in
-                         defer {
-                            guard FileManager.default.changeCurrentDirectoryPath(currentDirectoryPath) else {
-                                fatalError("Can't change path back to original directory")
-                            }
-                         }
-
-                        let linkPath =   PodSupportSystemPublicHeaderDir + searchPath
-                        shell.dir(linkPath)
-                        guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
-                            print("WARNING: Can't change path while creating symlink: " + linkPath)
-                            return
-                        }
-                        globResults.forEach { globResult in
-                            // i.e. pod_support/Headers/Public/__POD_NAME__
-                            let from = "../../../../\(globResult)"
-                            let to = String(globResult.split(separator: "/").last!)
-                            shell.symLink(from: from, to: to)
-                        }
-                    }
-                    return globResults
+                let linkPath =   PodSupportSystemPublicHeaderDir + searchPath
+                shell.dir(linkPath)
+                guard FileManager.default.changeCurrentDirectoryPath(linkPath) else {
+                    print("WARNING: Can't change path while creating symlink: " + linkPath)
+                    return
+                }
+                globResults.forEach { globResult in
+                    // i.e. pod_support/Headers/Public/__POD_NAME__
+                    let from = "../../../../\(globResult)"
+                    let to = String(globResult.split(separator: "/").last!)
+                    shell.symLink(from: from, to: to)
                 }
             }
         }
