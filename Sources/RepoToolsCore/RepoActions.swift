@@ -356,6 +356,10 @@ public enum RepoActions {
         } else {
             workspaceRootPath =  "."
         }
+        shell.dir(PodSupportSystemPublicHeaderDir)
+        shell.dir(PodSupportDir + "Headers/Private/")
+        shell.dir(PodSupportBuidableDir)
+
         let JSONPodspec = getJSONPodspec(shell: shell, podspecName:
             podspecName, path: workspaceRootPath,
             childPaths: buildOptions.childPaths)
@@ -403,10 +407,6 @@ public enum RepoActions {
         guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
             fatalError("Cant read in podspec")
         }
-        shell.dir(PodSupportSystemPublicHeaderDir)
-        shell.dir(PodSupportDir + "Headers/Private/")
-        shell.dir(PodSupportBuidableDir)
-
         writeDefaultPrefixHeader(shell: shell, buildOptions: buildOptions)
         writeSpecPrefixHeader(shell: shell, podSpec: podSpec)
 
