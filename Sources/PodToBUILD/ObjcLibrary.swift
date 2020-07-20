@@ -304,7 +304,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         } + includePodHeaderDirs()
         self.headerName = headerName
 
-        // If the suspec has a prefix header than use that
+        // If the subspec has a prefix header than use that
         let prefixHeaderFile: AttrSet<Either<Bool, String>?> = spec.attr(\.prefixHeaderFile)
         let prefixHeaderContents: AttrSet<String?> = spec.attr(\.prefixHeaderContents)
         let defaultPrefixHeader =
