@@ -176,7 +176,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
     public let isTopLevelTarget: Bool
     public let externalName: String
-    public let prefixHeader: String
+    public let prefixHeader: AttrSet<String?>
 
     public init(name: String,
         externalName: String,
@@ -184,7 +184,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         headers: AttrSet<GlobNode> = AttrSet.empty,
         headerName: AttrSet<String> = AttrSet.empty,
         moduleMap: ModuleMap? = nil,
-        prefixHeader: String = "",
+        prefixHeader: AttrSet<String?> = AttrSet.empty,
         includes: [String] = [],
         sdkFrameworks: AttrSet<[String]> = AttrSet.empty,
         weakSdkFrameworks: AttrSet<[String]> = AttrSet.empty,
@@ -303,7 +303,33 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             String($0.dropFirst(2))
         } + includePodHeaderDirs()
         self.headerName = headerName
-        prefixHeader = ""
+
+        // If the suspec has a prefix header than use that
+        let prefixHeaderFile: AttrSet<Either<Bool, String>?> = spec.attr(\.prefixHeaderFile)
+        let prefixHeaderContents: AttrSet<String?> = spec.attr(\.prefixHeaderContents)
+        let defaultPrefixHeader =
+        "\(PodSupportDir)Headers/Private/\(podName)-prefix.pch"
+        if prefixHeaderContents != AttrSet.empty {
+            self.prefixHeader = AttrSet(basic:
+                 "\(PodSupportDir)Headers/Private/\(spec.name)-prefix.pch")
+        } else {
+            let prefixHeaderVal: AttrSet<String?> = prefixHeaderFile.map {
+                value in
+                switch value {
+                case let .left(boolVal):
+                    // When it's false don't use one
+                    // lib/cocoapods/installer/xcode/pods_project_generator/pod_target_installer.rb:170
+                    return boolVal == false ? nil : defaultPrefixHeader
+                case let .right(strVal):
+                    return strVal
+                default:
+                    return defaultPrefixHeader
+                }
+            }
+            self.prefixHeader = prefixHeaderVal != .empty ? prefixHeaderVal :
+                AttrSet(basic: defaultPrefixHeader)
+        }
+
         self.externalName = externalName
 
         sourceFiles = implFiles.zip(implExcludes).map {
@@ -776,62 +802,6 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             ))
         }
 
-        func buildPCHList(sources: GlobNode) -> GlobNode {
-            // Note: this PCH search looks in source file paths adjacent to
-            // source files.
-            let nestedComponents: [Either<Set<String>, GlobNode>] = sources.include.map {
-                incValue -> Either<Set<String>, GlobNode> in
-                incValue.map {
-                    pattern -> String in
-                    let components = URL(fileURLWithPath: pattern)
-                        .deletingPathExtension()
-                        .appendingPathExtension("pch")
-                        .relativePath
-                        .components(separatedBy: "/")
-                    return [components.first ?? "", "**", "*.pch"].joined(separator: "/")
-                }
-            }
-            return GlobNode(include: nestedComponents, exclude: [])
-        }
-
-        func getPCHSkylark(sourcePaths: GlobNode?) -> SkylarkNode {
-            return .functionCall(
-                // Call internal function to find a PCH.
-                // @see workspace.bzl
-                name: "pch_with_name_hint",
-                arguments: [
-                    .basic(.string(lib.externalName)),
-                    .basic((sourcePaths ?? GlobNode.empty).toSkylark()),
-                ]
-            )
-        }
-
-        let pchSourcePaths = lib.sourceFiles.map {
-            buildPCHList(sources: $0)
-        }.flattenToBasicIfPossible()
-
-        let pchSkylark: SkylarkNode
-        if pchSourcePaths.isEmpty {
-            pchSkylark = getPCHSkylark(sourcePaths: nil)
-        } else {
-            // The empty value for rendering a glob is []
-            // We need to render a non for //conditions:default
-            if pchSourcePaths.multi.isEmpty {
-                pchSkylark = getPCHSkylark(sourcePaths: pchSourcePaths.basic)
-            } else {
-                let multi = pchSourcePaths.multi
-                let arg = [
-                    ":\(SelectCase.osx.rawValue)": getPCHSkylark(sourcePaths: multi.osx),
-                    ":\(SelectCase.tvos.rawValue)": getPCHSkylark(sourcePaths: multi.tvos),
-                    ":\(SelectCase.watchos.rawValue)": getPCHSkylark(sourcePaths: multi.watchos),
-                    "\(SelectCase.fallback.rawValue)": getPCHSkylark(sourcePaths: multi.ios),
-                ]
-                pchSkylark = SkylarkNode.functionCall(name: "select", arguments: [
-                    .basic(arg.toSkylark()),
-                ])
-            }
-        }
-
         let moduleHeaders: [String]
         if options.generateModuleMap {
             let moduleMapDirname = lib.moduleMap?.dirname ?? externalName + "_module_map"
@@ -852,15 +822,11 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             value: ([":" + headerSrcsName + "_hdrs"] + moduleHeaders + (options.generateHeaderMap ? [":" + name + "_hmap"] : [])).toSkylark()
         ))
 
-        if lib.prefixHeader == "" {
-            libArguments.append(.named(
-                name: "pch",
-                value: pchSkylark
-            ))
-        } else {
+        if AttrSet.empty != lib.prefixHeader {
             libArguments.append(.named(
                 name: "pch",
                 value: lib.prefixHeader.toSkylark()))
+
         }
 
         if !lib.sdkFrameworks.isEmpty {

@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -113,15 +112,7 @@ objc_library(
   hdrs = [
     ":IBActionSheet_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "IBActionSheet",
-    glob(
-      [
-        "IBActionSheetSample/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/IBActionSheet-prefix.pch",
   sdk_frameworks = [
     "QuartzCore"
   ],

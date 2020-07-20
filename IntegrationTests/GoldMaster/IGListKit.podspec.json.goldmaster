@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -99,10 +98,7 @@ objc_library(
   hdrs = [
     ":IGListKit_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "IGListKit",
-    []
-  ),
+  pch = "pod_support/Headers/Private/IGListKit-prefix.pch",
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -305,15 +301,7 @@ objc_library(
   hdrs = [
     ":Diffing_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "IGListKit",
-    glob(
-      [
-        "Source/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/IGListKit-prefix.pch",
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -500,15 +488,7 @@ objc_library(
   hdrs = [
     ":Diffing_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "IGListKit",
-    glob(
-      [
-        "Source/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/IGListKit-prefix.pch",
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -726,36 +706,7 @@ objc_library(
   hdrs = [
     ":Default_cxx_hdrs"
   ],
-  pch = select(
-    {
-      "//conditions:default": pch_with_name_hint(
-        "IGListKit",
-        glob(
-          [
-            "Source/**/*.pch"
-          ],
-          exclude_directories = 1
-        )
-      ),
-      ":osxCase": pch_with_name_hint(
-        "IGListKit",
-        []
-      ),
-      ":tvosCase": pch_with_name_hint(
-        "IGListKit",
-        glob(
-          [
-            "Source/**/*.pch"
-          ],
-          exclude_directories = 1
-        )
-      ),
-      ":watchosCase": pch_with_name_hint(
-        "IGListKit",
-        []
-      )
-    }
-  ),
+  pch = "pod_support/Headers/Private/IGListKit-prefix.pch",
   sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -967,36 +918,7 @@ objc_library(
   hdrs = [
     ":Default_hdrs"
   ],
-  pch = select(
-    {
-      "//conditions:default": pch_with_name_hint(
-        "IGListKit",
-        glob(
-          [
-            "Source/**/*.pch"
-          ],
-          exclude_directories = 1
-        )
-      ),
-      ":osxCase": pch_with_name_hint(
-        "IGListKit",
-        []
-      ),
-      ":tvosCase": pch_with_name_hint(
-        "IGListKit",
-        glob(
-          [
-            "Source/**/*.pch"
-          ],
-          exclude_directories = 1
-        )
-      ),
-      ":watchosCase": pch_with_name_hint(
-        "IGListKit",
-        []
-      )
-    }
-  ),
+  pch = "pod_support/Headers/Private/IGListKit-prefix.pch",
   sdk_frameworks = select(
     {
       "//conditions:default": [

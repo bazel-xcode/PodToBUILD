@@ -2,7 +2,6 @@ load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -362,15 +361,7 @@ objc_library(
   hdrs = [
     ":youtube-ios-player-helper_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "youtube-ios-player-helper",
-    glob(
-      [
-        "Classes/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/youtube-ios-player-helper-prefix.pch",
   deps = [
     ":youtube-ios-player-helper_cxx_includes"
   ],
@@ -701,15 +692,7 @@ objc_library(
   hdrs = [
     ":youtube-ios-player-helper_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "youtube-ios-player-helper",
-    glob(
-      [
-        "Classes/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/youtube-ios-player-helper-prefix.pch",
   deps = [
     ":youtube-ios-player-helper_cxx",
     ":youtube-ios-player-helper_swift",

@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -113,15 +112,7 @@ objc_library(
   hdrs = [
     ":Masonry_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Masonry",
-    glob(
-      [
-        "Masonry/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Masonry-prefix.pch",
   sdk_frameworks = select(
     {
       "//conditions:default": [

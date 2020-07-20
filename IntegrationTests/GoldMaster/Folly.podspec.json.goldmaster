@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -131,15 +130,7 @@ objc_library(
   hdrs = [
     ":Folly_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Folly",
-    glob(
-      [
-        "folly/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Folly-prefix.pch",
   sdk_dylibs = [
     "stdc++"
   ],

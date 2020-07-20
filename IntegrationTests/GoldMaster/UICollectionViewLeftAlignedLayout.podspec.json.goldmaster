@@ -1,7 +1,6 @@
 load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -141,15 +140,7 @@ objc_library(
   hdrs = [
     ":UICollectionViewLeftAlignedLayout_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "UICollectionViewLeftAlignedLayout",
-    glob(
-      [
-        "UICollectionViewLeftAlignedLayout/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/UICollectionViewLeftAlignedLayout-prefix.pch",
   deps = [
     ":UICollectionViewLeftAlignedLayout_cxx_includes"
   ],
@@ -274,15 +265,7 @@ objc_library(
   hdrs = [
     ":UICollectionViewLeftAlignedLayout_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "UICollectionViewLeftAlignedLayout",
-    glob(
-      [
-        "UICollectionViewLeftAlignedLayout/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/UICollectionViewLeftAlignedLayout-prefix.pch",
   deps = [
     ":UICollectionViewLeftAlignedLayout_cxx",
     ":UICollectionViewLeftAlignedLayout_swift",

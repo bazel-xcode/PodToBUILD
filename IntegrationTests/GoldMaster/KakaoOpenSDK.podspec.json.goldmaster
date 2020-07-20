@@ -1,7 +1,6 @@
 load('@build_bazel_rules_apple//apple:apple.bzl', 'apple_static_framework_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -110,10 +109,7 @@ objc_library(
   hdrs = [
     ":KakaoOpenSDK_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "KakaoOpenSDK",
-    []
-  ),
+  pch = "pod_support/Headers/Private/KakaoOpenSDK-prefix.pch",
   deps = [
     ":KakaoLink",
     ":KakaoLink_VendoredFrameworks",
@@ -209,10 +205,7 @@ objc_library(
   hdrs = [
     ":KakaoOpenSDK_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "KakaoOpenSDK",
-    []
-  ),
+  pch = "pod_support/Headers/Private/KakaoOpenSDK-prefix.pch",
   sdk_frameworks = [
     "UIKit",
     "WebKit"
@@ -322,10 +315,7 @@ objc_library(
   hdrs = [
     ":KakaoNavi_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "KakaoOpenSDK",
-    []
-  ),
+  pch = "pod_support/Headers/Private/KakaoOpenSDK-prefix.pch",
   sdk_frameworks = [
     "UIKit"
   ],
@@ -434,10 +424,7 @@ objc_library(
   hdrs = [
     ":KakaoLink_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "KakaoOpenSDK",
-    []
-  ),
+  pch = "pod_support/Headers/Private/KakaoOpenSDK-prefix.pch",
   sdk_frameworks = [
     "UIKit"
   ],
@@ -546,10 +533,7 @@ objc_library(
   hdrs = [
     ":KakaoS2_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "KakaoOpenSDK",
-    []
-  ),
+  pch = "pod_support/Headers/Private/KakaoOpenSDK-prefix.pch",
   sdk_frameworks = [
     "Foundation"
   ],

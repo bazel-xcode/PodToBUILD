@@ -1,7 +1,6 @@
 load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -266,15 +265,7 @@ objc_library(
   hdrs = [
     ":FBSDKCoreKit_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "FBSDKCoreKit",
-    glob(
-      [
-        "FBSDKCoreKit/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/FBSDKCoreKit-prefix.pch",
   weak_sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -1580,15 +1571,7 @@ objc_library(
   hdrs = [
     ":Basics_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "FBSDKCoreKit",
-    glob(
-      [
-        "FBSDKCoreKit/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/FBSDKCoreKit-prefix.pch",
   weak_sdk_frameworks = select(
     {
       "//conditions:default": [
@@ -3035,15 +3018,7 @@ objc_library(
   hdrs = [
     ":Core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "FBSDKCoreKit",
-    glob(
-      [
-        "FBSDKCoreKit/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/FBSDKCoreKit-prefix.pch",
   weak_sdk_frameworks = select(
     {
       "//conditions:default": [

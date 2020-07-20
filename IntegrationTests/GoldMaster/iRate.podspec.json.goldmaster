@@ -1,7 +1,6 @@
 load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -114,15 +113,7 @@ objc_library(
   hdrs = [
     ":iRate_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "iRate",
-    glob(
-      [
-        "iRate/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/iRate-prefix.pch",
   deps = [
     ":iRate_includes"
   ],

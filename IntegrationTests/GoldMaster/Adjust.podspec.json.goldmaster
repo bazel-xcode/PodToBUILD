@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -99,10 +98,7 @@ objc_library(
   hdrs = [
     ":Adjust_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Adjust",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Adjust-prefix.pch",
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -244,15 +240,7 @@ objc_library(
   hdrs = [
     ":Core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Adjust",
-    glob(
-      [
-        "Adjust/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Adjust-prefix.pch",
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -377,15 +365,7 @@ objc_library(
   hdrs = [
     ":Sociomantic_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Adjust",
-    glob(
-      [
-        "plugin/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Adjust-prefix.pch",
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -511,15 +491,7 @@ objc_library(
   hdrs = [
     ":Criteo_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Adjust",
-    glob(
-      [
-        "plugin/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Adjust-prefix.pch",
   sdk_frameworks = [
     "SystemConfiguration"
   ],
@@ -645,15 +617,7 @@ objc_library(
   hdrs = [
     ":Trademob_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Adjust",
-    glob(
-      [
-        "plugin/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Adjust-prefix.pch",
   sdk_frameworks = [
     "SystemConfiguration"
   ],
