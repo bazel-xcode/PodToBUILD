@@ -1,6 +1,6 @@
 .PHONY: build 
 build:
-	@tools/bazelwrapper build \
+	@tools/bazel build \
 		--disk_cache=$(HOME)/Library/Caches/Bazel \
 		--spawn_strategy=standalone \
 		:RepoTools :Compiler
@@ -11,7 +11,7 @@ build:
 # There are a few issues with SwiftPackageManager and incremental builds
 clean:
 	rm -rf .build
-	tools/bazelwrapper clean
+	tools/bazel clean
 
 compiler: release
 
@@ -22,12 +22,12 @@ goldmaster: build
 	@./MakeGoldMaster.sh
 
 unit-test: 
-	tools/bazelwrapper test :PodToBUILDTests --test_strategy=standalone
+	tools/bazel test :PodToBUILDTests --test_strategy=standalone
 
 
 # Running this is non trival from within the SwiftTest - do it here.
 install-bazel:
-	./tools/bazelwrapper info
+	./tools/bazel info
 
 SANDBOX=/var/tmp/PodTestSandbox
 init-sandbox: install-bazel release
@@ -78,7 +78,7 @@ ci: clean
 	$(MAKE) build-test
 
 release:
-	@tools/bazelwrapper build \
+	@tools/bazel build \
 		--disk_cache=$(HOME)/Library/Caches/Bazel \
 		--spawn_strategy=standalone \
 		-c opt \
