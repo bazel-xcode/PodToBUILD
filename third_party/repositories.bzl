@@ -53,6 +53,7 @@ objc_library(
 swift_c_module(
   name = "{name}",
   deps = [":{name}Lib"],
+  module_name = "{name}",
   module_map = "{module_map}",
 )
 """.format(**dict(

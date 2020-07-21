@@ -3,8 +3,6 @@
 build \
  --spawn_strategy=standalone \
  --strategy=SwiftCompile=worker \
- --incompatible_disallow_load_labels_to_cross_package_boundaries=false \
- --incompatible_new_actions_api=false \
  --swiftcopt=-Xwrapped-swift=-debug-prefix-pwd-is-dot \
  --experimental_strict_action_env=true
 
