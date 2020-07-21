@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -99,10 +98,7 @@ objc_library(
   hdrs = [
     ":Bolts_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Bolts",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Bolts-prefix.pch",
   deps = [
     ":AppLinks",
     ":Tasks",
@@ -240,15 +236,7 @@ objc_library(
   hdrs = [
     ":Tasks_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Bolts",
-    glob(
-      [
-        "Bolts/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Bolts-prefix.pch",
   deps = [
     ":Tasks_includes"
   ],
@@ -407,31 +395,7 @@ objc_library(
   hdrs = [
     ":AppLinks_hdrs"
   ],
-  pch = select(
-    {
-      "//conditions:default": pch_with_name_hint(
-        "Bolts",
-        glob(
-          [
-            "Bolts/**/*.pch"
-          ],
-          exclude_directories = 1
-        )
-      ),
-      ":osxCase": pch_with_name_hint(
-        "Bolts",
-        []
-      ),
-      ":tvosCase": pch_with_name_hint(
-        "Bolts",
-        []
-      ),
-      ":watchosCase": pch_with_name_hint(
-        "Bolts",
-        []
-      )
-    }
-  ),
+  pch = "pod_support/Headers/Private/Bolts-prefix.pch",
   deps = [
     ":Tasks",
     ":AppLinks_includes"

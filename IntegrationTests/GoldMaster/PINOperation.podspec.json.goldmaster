@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -130,15 +129,7 @@ objc_library(
   hdrs = [
     ":PINOperation_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINOperation",
-    glob(
-      [
-        "Source/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/PINOperation-prefix.pch",
   sdk_frameworks = [
     "Foundation"
   ],
@@ -245,15 +236,7 @@ objc_library(
   hdrs = [
     ":PINOperation_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINOperation",
-    glob(
-      [
-        "Source/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/PINOperation-prefix.pch",
   sdk_frameworks = [
     "Foundation"
   ],

@@ -83,35 +83,6 @@ def acknowledged_target(name,
         visibility=["//visibility:public"]
     )
 
-# pch_with_name_hint
-#
-#   Take in a name hint and return the PCH with that name
-#
-# Parameters
-#
-#   hint - Suggestion of pch file name. If any part of this is in a PCH
-#   filename it will match
-#
-#   sources - a list of source file patterns with pch extensions to search
-
-
-def pch_with_name_hint(hint, sources):
-    # Recursive glob the sources directories and the root directory
-    candidates = native.glob(["*.pch", hint + "/*.pch"] + sources)
-    if len(candidates) == 0:
-        return None
-
-    # We want to get the candidates in order of lowest to highest
-    for candidate in candidates:
-        if hint in candidate:
-            return candidate
-    # It is a convention in iOS/OSX development to use a PCH
-    # with the name of the target.
-    # This is a hack because, the recursive glob may find some
-    # arbitrary PCH.
-    return None
-
-
 def _make_module_map(pod_name, module_name, deps, is_system):
     # Up some dirs to the compilation root
     # bazel-out/ios_x86_64-fastbuild/genfiles/external/__Pod__

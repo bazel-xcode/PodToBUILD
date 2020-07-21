@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -109,10 +108,7 @@ objc_library(
   hdrs = [
     ":Texture_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Texture",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Texture-prefix.pch",
   sdk_dylibs = [
     "c++"
   ],
@@ -238,15 +234,7 @@ objc_library(
   hdrs = [
     ":Core_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Texture",
-    glob(
-      [
-        "Source/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Texture-prefix.pch",
   sdk_dylibs = [
     "c++"
   ],
@@ -370,16 +358,7 @@ objc_library(
   hdrs = [
     ":Core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Texture",
-    glob(
-      [
-        "Base/**/*.pch",
-        "Source/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Texture-prefix.pch",
   sdk_dylibs = [
     "c++"
   ],
@@ -476,10 +455,7 @@ objc_library(
   hdrs = [
     ":PINRemoteImage_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Texture",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Texture-prefix.pch",
   sdk_dylibs = [
     "c++"
   ],
@@ -578,10 +554,7 @@ objc_library(
   hdrs = [
     ":IGListKit_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Texture",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Texture-prefix.pch",
   sdk_dylibs = [
     "c++"
   ],
@@ -678,10 +651,7 @@ objc_library(
   hdrs = [
     ":Yoga_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Texture",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Texture-prefix.pch",
   sdk_dylibs = [
     "c++"
   ],
@@ -779,10 +749,7 @@ objc_library(
   hdrs = [
     ":MapKit_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Texture",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Texture-prefix.pch",
   sdk_frameworks = [
     "MapKit"
   ],
@@ -880,10 +847,7 @@ objc_library(
   hdrs = [
     ":Photos_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Texture",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Texture-prefix.pch",
   sdk_frameworks = [
     "Photos"
   ],
@@ -981,10 +945,7 @@ objc_library(
   hdrs = [
     ":AssetsLibrary_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Texture",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Texture-prefix.pch",
   sdk_frameworks = [
     "AssetsLibrary"
   ],

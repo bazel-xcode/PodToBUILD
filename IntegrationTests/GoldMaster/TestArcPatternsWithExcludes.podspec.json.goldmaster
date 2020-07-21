@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -127,15 +126,7 @@ objc_library(
   hdrs = [
     ":FBSDKCoreKit_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "FBSDKCoreKit",
-    glob(
-      [
-        "POD_REQUIRES_ARC/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/TestArcPatternsWithExcludes-prefix.pch",
   deps = [
     ":Core",
     ":TestArcPatternsWithExcludes_includes"
@@ -588,15 +579,7 @@ objc_library(
   hdrs = [
     ":Core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "FBSDKCoreKit",
-    glob(
-      [
-        "POD_REQUIRES_ARC/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/TestArcPatternsWithExcludes-prefix.pch",
   deps = [
     ":Core_includes"
   ],

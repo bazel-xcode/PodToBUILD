@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -113,15 +112,7 @@ objc_library(
   hdrs = [
     ":RadarKit_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "RadarKit",
-    glob(
-      [
-        "RadarKit/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "RadarKit-Prefix.pch",
   sdk_frameworks = [
     "Foundation",
     "SystemConfiguration"

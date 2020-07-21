@@ -323,6 +323,32 @@ public enum RepoActions {
         shell.write(value: entry, toPath: acknowledgementFilePath)
     }
 
+    private static func writeSpecPrefixHeader(shell: ShellContext, podSpec: PodSpec) {
+        if let contents = podSpec.prefixHeaderContents {
+            let path = "\(PodSupportDir)/Headers/Private/\(podSpec.name)-prefix.pch"
+            shell.write(value: contents, toPath: URL(fileURLWithPath: path))
+        }
+        podSpec.subspecs.forEach{ writeSpecPrefixHeader(shell: shell, podSpec: $0) }
+    }
+
+    private static func writeDefaultPrefixHeader(shell: ShellContext, buildOptions: BuildOptions) {
+        let path = "\(PodSupportDir)/Headers/Private/\(buildOptions.podName)-prefix.pch"
+        let defaultContents = """
+        #ifdef __OBJC__
+        #import <UIKit/UIKit.h>
+        #else
+        #ifndef FOUNDATION_EXPORT
+        #if defined(__cplusplus)
+        #define FOUNDATION_EXPORT extern "C"
+        #else
+        #define FOUNDATION_EXPORT extern
+        #endif
+        #endif
+        #endif
+        """
+        shell.write(value: defaultContents, toPath: URL(fileURLWithPath: path))
+    }
+
     private static func initializePodspecDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
         let workspaceRootPath: String
         if buildOptions.path != "." && buildOptions.childPaths.count == 0 {
@@ -330,6 +356,10 @@ public enum RepoActions {
         } else {
             workspaceRootPath =  "."
         }
+        shell.dir(PodSupportSystemPublicHeaderDir)
+        shell.dir(PodSupportDir + "Headers/Private/")
+        shell.dir(PodSupportBuidableDir)
+
         let JSONPodspec = getJSONPodspec(shell: shell, podspecName:
             podspecName, path: workspaceRootPath,
             childPaths: buildOptions.childPaths)
@@ -368,15 +398,17 @@ public enum RepoActions {
                 fatalError("Cant read in podspec")
 
             }
+
+            writeDefaultPrefixHeader(shell: shell, buildOptions: childBuildOptions)
+            writeSpecPrefixHeader(shell: shell, podSpec: podSpec)
             let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions: childBuildOptions, assimilate: true)
             childBuildFiles.append(buildFile)
         }
         guard let podSpec = try? PodSpec(JSONPodspec: JSONPodspec) else {
             fatalError("Cant read in podspec")
         }
-        shell.dir(PodSupportSystemPublicHeaderDir)
-        shell.dir(PodSupportDir + "Headers/Private/")
-        shell.dir(PodSupportBuidableDir)
+        writeDefaultPrefixHeader(shell: shell, buildOptions: buildOptions)
+        writeSpecPrefixHeader(shell: shell, podSpec: podSpec)
 
         // Create a directory structure condusive to <> imports
         // - Get all of the paths matching wild card imports

@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -111,10 +110,7 @@ objc_library(
   hdrs = [
     ":boost-for-react-native_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "boost-for-react-native",
-    []
-  ),
+  pch = "pod_support/Headers/Private/boost-for-react-native-prefix.pch",
   deps = [
     ":boost-for-react-native_includes"
   ],

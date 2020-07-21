@@ -1,7 +1,6 @@
 load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -140,10 +139,7 @@ objc_library(
   hdrs = [
     ":React_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    []
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":React_includes"
@@ -1861,15 +1857,7 @@ objc_library(
   hdrs = [
     ":Core_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "React/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   sdk_frameworks = [
     "JavaScriptCore"
   ],
@@ -3279,15 +3267,7 @@ objc_library(
   hdrs = [
     ":Core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "React/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   sdk_frameworks = [
     "JavaScriptCore"
   ],
@@ -3417,15 +3397,7 @@ objc_library(
   hdrs = [
     ":CxxBridge_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "React/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":Core",
@@ -3550,15 +3522,7 @@ objc_library(
   hdrs = [
     ":CxxBridge_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "React/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":Core",
@@ -3709,15 +3673,7 @@ objc_library(
   hdrs = [
     ":DevSupport_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "React/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTWebSocket",
@@ -3872,15 +3828,7 @@ objc_library(
   hdrs = [
     ":DevSupport_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "React/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":DevSupport_cxx",
@@ -4037,15 +3985,7 @@ objc_library(
   hdrs = [
     ":RCTFabric_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "React/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   sdk_frameworks = [
     "JavaScriptCore"
   ],
@@ -4195,15 +4135,7 @@ objc_library(
   hdrs = [
     ":RCTFabric_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "React/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   sdk_frameworks = [
     "JavaScriptCore"
   ],
@@ -4325,15 +4257,7 @@ objc_library(
   hdrs = [
     ":tvOS_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "React/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":tvOS_includes"
@@ -4478,15 +4402,7 @@ objc_library(
   hdrs = [
     ":jschelpers_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   sdk_frameworks = [
     "JavaScriptCore"
   ],
@@ -4636,15 +4552,7 @@ objc_library(
   hdrs = [
     ":jsinspector_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":jsinspector_includes"
   ],
@@ -4791,15 +4699,7 @@ objc_library(
   hdrs = [
     ":PrivateDatabase_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":PrivateDatabase_includes"
   ],
@@ -4955,15 +4855,7 @@ objc_library(
   hdrs = [
     ":cxxreact_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     "//Vendor/boost-for-react-native:boost-for-react-native",
@@ -5059,10 +4951,7 @@ objc_library(
   hdrs = [
     ":fabric_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    []
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":fabric_includes"
   ],
@@ -5194,15 +5083,7 @@ objc_library(
   hdrs = [
     ":fabric_activityindicator_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_activityindicator_includes"
@@ -5340,15 +5221,7 @@ objc_library(
   hdrs = [
     ":fabric_attributedstring_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_attributedstring_includes"
@@ -5486,15 +5359,7 @@ objc_library(
   hdrs = [
     ":fabric_core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_core_includes"
@@ -5632,15 +5497,7 @@ objc_library(
   hdrs = [
     ":fabric_debug_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_debug_includes"
@@ -5778,15 +5635,7 @@ objc_library(
   hdrs = [
     ":fabric_graphics_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_graphics_includes"
@@ -5924,15 +5773,7 @@ objc_library(
   hdrs = [
     ":fabric_scrollview_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_scrollview_includes"
@@ -6070,15 +5911,7 @@ objc_library(
   hdrs = [
     ":fabric_text_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_text_includes"
@@ -6217,15 +6050,7 @@ objc_library(
   hdrs = [
     ":fabric_textlayoutmanager_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_textlayoutmanager_includes"
@@ -6363,15 +6188,7 @@ objc_library(
   hdrs = [
     ":fabric_uimanager_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":fabric_uimanager_includes"
@@ -6510,15 +6327,7 @@ objc_library(
   hdrs = [
     ":fabric_view_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     "//Vendor/Yoga:Yoga",
@@ -6658,15 +6467,7 @@ objc_library(
   hdrs = [
     ":RCTFabricSample_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "ReactCommon/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     "//Vendor/Folly:Folly",
     ":RCTFabricSample_includes"
@@ -6783,15 +6584,7 @@ objc_library(
   hdrs = [
     ":ART_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":ART_includes"
@@ -6903,15 +6696,7 @@ objc_library(
   hdrs = [
     ":RCTActionSheet_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTActionSheet_includes"
@@ -7029,15 +6814,7 @@ objc_library(
   hdrs = [
     ":RCTAnimation_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTAnimation_includes"
@@ -7196,15 +6973,7 @@ objc_library(
   hdrs = [
     ":RCTBlob_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTBlob_cxx_includes"
@@ -7363,15 +7132,7 @@ objc_library(
   hdrs = [
     ":RCTBlob_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTBlob_cxx",
@@ -7486,15 +7247,7 @@ objc_library(
   hdrs = [
     ":RCTCameraRoll_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTImage",
@@ -7607,15 +7360,7 @@ objc_library(
   hdrs = [
     ":RCTGeolocation_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTGeolocation_includes"
@@ -7735,15 +7480,7 @@ objc_library(
   hdrs = [
     ":RCTImage_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTNetwork",
@@ -7872,15 +7609,7 @@ objc_library(
   hdrs = [
     ":RCTNetwork_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTNetwork_cxx_includes"
@@ -8008,15 +7737,7 @@ objc_library(
   hdrs = [
     ":RCTNetwork_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTNetwork_cxx",
@@ -8129,15 +7850,7 @@ objc_library(
   hdrs = [
     ":RCTPushNotification_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTPushNotification_includes"
@@ -8249,15 +7962,7 @@ objc_library(
   hdrs = [
     ":RCTSettings_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTSettings_includes"
@@ -8369,15 +8074,7 @@ objc_library(
   hdrs = [
     ":RCTText_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTText_includes"
@@ -8489,15 +8186,7 @@ objc_library(
   hdrs = [
     ":RCTVibration_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTVibration_includes"
@@ -8650,15 +8339,7 @@ objc_library(
   hdrs = [
     ":RCTWebSocket_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTBlob",
@@ -8811,15 +8492,7 @@ objc_library(
   hdrs = [
     ":fishhook_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":fishhook_includes"
   ],
@@ -8930,15 +8603,7 @@ objc_library(
   hdrs = [
     ":RCTLinkingIOS_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":RCTLinkingIOS_includes"
@@ -9050,15 +8715,7 @@ objc_library(
   hdrs = [
     ":RCTTest_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    glob(
-      [
-        "Libraries/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   sdk_frameworks = [
     "XCTest"
   ],
@@ -9153,10 +8810,7 @@ objc_library(
   hdrs = [
     ":_ignore_me_subspec_for_linting__hdrs"
   ],
-  pch = pch_with_name_hint(
-    "React",
-    []
-  ),
+  pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
     ":CxxBridge",

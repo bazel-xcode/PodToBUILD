@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -100,10 +99,7 @@ objc_library(
   hdrs = [
     ":googleapis_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "googleapis",
-    []
-  ),
+  pch = "pod_support/Headers/Private/googleapis-prefix.pch",
   deps = [
     "//Vendor/!ProtoCompiler-gRPCPlugin:!ProtoCompiler-gRPCPlugin",
     ":Messages",
@@ -226,10 +222,7 @@ objc_library(
   hdrs = [
     ":Messages_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "googleapis",
-    []
-  ),
+  pch = "pod_support/Headers/Private/googleapis-prefix.pch",
   deps = [
     "//Vendor/Protobuf:Protobuf",
     ":Messages_includes"
@@ -346,15 +339,7 @@ objc_library(
   hdrs = [
     ":Services_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "googleapis",
-    glob(
-      [
-        "google/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/googleapis-prefix.pch",
   deps = [
     "//Vendor/gRPC-ProtoRPC:gRPC-ProtoRPC",
     ":Messages",

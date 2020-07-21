@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -99,10 +98,7 @@ objc_library(
   hdrs = [
     ":Branch_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Branch",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Branch-prefix.pch",
   deps = [
     ":Core",
     ":without-IDFA",
@@ -217,15 +213,7 @@ objc_library(
   hdrs = [
     ":Core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Branch",
-    glob(
-      [
-        "Branch-SDK/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Branch-prefix.pch",
   sdk_frameworks = [
     "AdSupport",
     "CoreTelephony",
@@ -343,15 +331,7 @@ objc_library(
   hdrs = [
     ":without-IDFA_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Branch",
-    glob(
-      [
-        "Branch-SDK/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Branch-prefix.pch",
   sdk_frameworks = [
     "CoreTelephony",
     "MobileCoreServices"

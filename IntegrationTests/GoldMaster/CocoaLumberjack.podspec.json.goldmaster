@@ -1,7 +1,6 @@
 load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -102,10 +101,7 @@ objc_library(
   hdrs = [
     ":CocoaLumberjack_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "CocoaLumberjack",
-    []
-  ),
+  pch = "pod_support/Headers/Private/CocoaLumberjack-prefix.pch",
   deps = [
     ":Default",
     ":Extensions",
@@ -223,15 +219,7 @@ objc_library(
   hdrs = [
     ":Default_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "CocoaLumberjack",
-    glob(
-      [
-        "Classes/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/CocoaLumberjack-prefix.pch",
   deps = [
     ":Default_includes"
   ],
@@ -339,15 +327,7 @@ objc_library(
   hdrs = [
     ":Core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "CocoaLumberjack",
-    glob(
-      [
-        "Classes/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/CocoaLumberjack-prefix.pch",
   deps = [
     ":Core_includes"
   ],
@@ -458,15 +438,7 @@ objc_library(
   hdrs = [
     ":Extensions_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "CocoaLumberjack",
-    glob(
-      [
-        "Classes/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/CocoaLumberjack-prefix.pch",
   deps = [
     ":Default",
     ":Extensions_includes"
@@ -638,31 +610,7 @@ objc_library(
   hdrs = [
     ":CLI_hdrs"
   ],
-  pch = select(
-    {
-      "//conditions:default": pch_with_name_hint(
-        "CocoaLumberjack",
-        []
-      ),
-      ":osxCase": pch_with_name_hint(
-        "CocoaLumberjack",
-        glob(
-          [
-            "Classes/**/*.pch"
-          ],
-          exclude_directories = 1
-        )
-      ),
-      ":tvosCase": pch_with_name_hint(
-        "CocoaLumberjack",
-        []
-      ),
-      ":watchosCase": pch_with_name_hint(
-        "CocoaLumberjack",
-        []
-      )
-    }
-  ),
+  pch = "pod_support/Headers/Private/CocoaLumberjack-prefix.pch",
   deps = select(
     {
       "//conditions:default": [],

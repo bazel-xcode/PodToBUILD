@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -128,10 +127,7 @@ objc_library(
   hdrs = [
     ":ZipArchive_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "ZipArchive",
-    []
-  ),
+  pch = "pod_support/Headers/Private/ZipArchive-prefix.pch",
   sdk_dylibs = [
     "z"
   ],

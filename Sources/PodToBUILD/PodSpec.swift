@@ -101,6 +101,8 @@ public enum PodSpecField: String {
     case sourceFiles = "source_files"
     case publicHeaders = "public_header_files"
     case privateHeaders = "private_header_files"
+    case prefixHeaderFile = "prefix_header_file"
+    case prefixHeaderContents = "prefix_header_contents"
     case preservePaths = "preserve_paths"
     case compilerFlags = "compiler_flags"
     case libraries
@@ -148,6 +150,8 @@ public protocol PodSpecRepresentable {
     var requiresArc: Either<Bool, [String]>? { get }
     var publicHeaders: [String] { get }
     var privateHeaders: [String] { get }
+    var prefixHeaderContents: String? { get }
+    var prefixHeaderFile: Either<Bool, String>? { get }
     var preservePaths: [String] { get }
     var defaultSubspecs: [String] { get }
 }
@@ -175,6 +179,11 @@ public struct PodSpec: PodSpecRepresentable {
 
     public let publicHeaders: [String]
     public let privateHeaders: [String]
+
+    // lib/cocoapods/installer/xcode/pods_project_generator/pod_target_installer.rb:170
+    public let prefixHeaderFile: Either<Bool, String>?
+    public let prefixHeaderContents: String?
+
     public let preservePaths: [String]
 
     public let vendoredFrameworks: [String]
@@ -217,6 +226,12 @@ public struct PodSpec: PodSpecRepresentable {
         sourceFiles = strings(fromJSON: fieldMap[.sourceFiles])
         publicHeaders = strings(fromJSON: fieldMap[.publicHeaders])
         privateHeaders = strings(fromJSON: fieldMap[.privateHeaders])
+
+        prefixHeaderFile  = (fieldMap[.prefixHeaderFile] as? Bool).map{ .left($0) } ?? // try a bool
+	        (fieldMap[.prefixHeaderFile] as? String).map { .right($0) } // try a string
+
+        prefixHeaderContents = fieldMap[.prefixHeaderContents] as? String
+
         preservePaths = strings(fromJSON: fieldMap[.preservePaths])
         compilerFlags = strings(fromJSON: fieldMap[.compilerFlags])
         libraries = strings(fromJSON: fieldMap[.libraries])

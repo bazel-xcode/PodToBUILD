@@ -1,7 +1,6 @@
 load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_resource_bundle')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -116,15 +115,7 @@ objc_library(
   hdrs = [
     ":Stripe_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Stripe",
-    glob(
-      [
-        "Stripe/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Stripe-prefix.pch",
   sdk_frameworks = [
     "Foundation",
     "Security",

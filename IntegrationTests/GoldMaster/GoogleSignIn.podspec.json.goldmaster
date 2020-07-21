@@ -2,7 +2,6 @@ load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')
 load('@build_bazel_rules_apple//apple:apple.bzl', 'apple_static_framework_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -99,10 +98,7 @@ objc_library(
   hdrs = [
     ":GoogleSignIn_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "GoogleSignIn",
-    []
-  ),
+  pch = "pod_support/Headers/Private/GoogleSignIn-prefix.pch",
   sdk_frameworks = [
     "CoreText",
     "SafariServices",

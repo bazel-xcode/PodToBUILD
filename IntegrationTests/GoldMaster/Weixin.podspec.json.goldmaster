@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -109,10 +108,7 @@ objc_library(
   hdrs = [
     ":Weixin_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Weixin",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Weixin-prefix.pch",
   sdk_frameworks = [
     "CoreTelephony",
     "SystemConfiguration"

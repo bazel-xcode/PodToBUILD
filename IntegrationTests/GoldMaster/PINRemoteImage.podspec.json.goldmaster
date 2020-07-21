@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -104,10 +103,7 @@ objc_library(
   hdrs = [
     ":PINRemoteImage_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINRemoteImage",
-    []
-  ),
+  pch = "pod_support/Headers/Private/PINRemoteImage-prefix.pch",
   deps = [
     ":FLAnimatedImage",
     ":PINCache",
@@ -241,15 +237,7 @@ objc_library(
   hdrs = [
     ":Core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINRemoteImage",
-    glob(
-      [
-        "Source/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/PINRemoteImage-prefix.pch",
   sdk_frameworks = [
     "ImageIO",
     "Accelerate"
@@ -345,10 +333,7 @@ objc_library(
   hdrs = [
     ":iOS_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINRemoteImage",
-    []
-  ),
+  pch = "pod_support/Headers/Private/PINRemoteImage-prefix.pch",
   sdk_frameworks = [
     "UIKit"
   ],
@@ -441,10 +426,7 @@ objc_library(
   hdrs = [
     ":OSX_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINRemoteImage",
-    []
-  ),
+  pch = "pod_support/Headers/Private/PINRemoteImage-prefix.pch",
   sdk_frameworks = [
     "Cocoa",
     "CoreServices"
@@ -538,10 +520,7 @@ objc_library(
   hdrs = [
     ":tvOS_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINRemoteImage",
-    []
-  ),
+  pch = "pod_support/Headers/Private/PINRemoteImage-prefix.pch",
   deps = [
     ":iOS",
     ":tvOS_includes"
@@ -654,15 +633,7 @@ objc_library(
   hdrs = [
     ":FLAnimatedImage_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINRemoteImage",
-    glob(
-      [
-        "Source/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/PINRemoteImage-prefix.pch",
   deps = [
     "//Vendor/FLAnimatedImage:FLAnimatedImage",
     ":Core",
@@ -756,10 +727,7 @@ objc_library(
   hdrs = [
     ":WebP_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINRemoteImage",
-    []
-  ),
+  pch = "pod_support/Headers/Private/PINRemoteImage-prefix.pch",
   deps = [
     "//Vendor/libwebp:libwebp",
     ":Core",
@@ -877,15 +845,7 @@ objc_library(
   hdrs = [
     ":PINCache_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "PINRemoteImage",
-    glob(
-      [
-        "Source/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/PINRemoteImage-prefix.pch",
   deps = [
     "//Vendor/PINCache:PINCache",
     ":Core",

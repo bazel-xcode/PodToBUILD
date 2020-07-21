@@ -1,7 +1,6 @@
 load('@build_bazel_rules_apple//apple:apple.bzl', 'apple_static_framework_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -94,10 +93,7 @@ objc_library(
   hdrs = [
     ":GoogleSymbolUtilities_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "GoogleSymbolUtilities",
-    []
-  ),
+  pch = "pod_support/Headers/Private/GoogleSymbolUtilities-prefix.pch",
   deps = [
     ":GoogleSymbolUtilities_VendoredFrameworks",
     ":GoogleSymbolUtilities_includes"

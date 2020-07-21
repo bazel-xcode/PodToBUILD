@@ -63,7 +63,6 @@ public func makePrefixNodes() -> SkylarkNode {
     let lineNodes = [
         SkylarkNode.functionCall(name: "load", arguments: [
             .basic(.string(extFile)),
-            .basic(.string("pch_with_name_hint")),
             .basic(.string("acknowledged_target")),
             .basic(.string("gen_module_map")),
             .basic(.string("gen_includes")),

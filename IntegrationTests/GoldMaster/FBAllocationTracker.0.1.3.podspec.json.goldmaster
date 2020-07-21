@@ -1,7 +1,6 @@
 load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -217,15 +216,7 @@ objc_library(
   hdrs = [
     ":FBAllocationTracker_cxx_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "FBAllocationTracker",
-    glob(
-      [
-        "FBAllocationTracker/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/FBAllocationTracker-prefix.pch",
   sdk_frameworks = [
     "Foundation"
   ],
@@ -417,15 +408,7 @@ objc_library(
   hdrs = [
     ":FBAllocationTracker_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "FBAllocationTracker",
-    glob(
-      [
-        "FBAllocationTracker/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/FBAllocationTracker-prefix.pch",
   sdk_frameworks = [
     "Foundation"
   ],

@@ -51,6 +51,7 @@ build-test: pod_test build archive init-sandbox
 	cd Examples/Texture && make all
 	cd Examples/ChildPodspec && make all
 	cd Examples/ArcSplitting && make all
+	cd Examples/React && make all
 
 build-example: EXAMPLE=Examples/PINCache.podspec.json
 build-example: CONFIG = debug

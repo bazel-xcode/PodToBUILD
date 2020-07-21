@@ -1,6 +1,5 @@
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -260,36 +259,7 @@ objc_library(
   hdrs = [
     ":FBSDKShareKit_hdrs"
   ],
-  pch = select(
-    {
-      "//conditions:default": pch_with_name_hint(
-        "FBSDKShareKit",
-        glob(
-          [
-            "FBSDKShareKit/**/*.pch"
-          ],
-          exclude_directories = 1
-        )
-      ),
-      ":osxCase": pch_with_name_hint(
-        "FBSDKShareKit",
-        []
-      ),
-      ":tvosCase": pch_with_name_hint(
-        "FBSDKShareKit",
-        glob(
-          [
-            "FBSDKShareKit/**/*.pch"
-          ],
-          exclude_directories = 1
-        )
-      ),
-      ":watchosCase": pch_with_name_hint(
-        "FBSDKShareKit",
-        []
-      )
-    }
-  ),
+  pch = "pod_support/Headers/Private/FBSDKShareKit-prefix.pch",
   weak_sdk_frameworks = select(
     {
       "//conditions:default": [

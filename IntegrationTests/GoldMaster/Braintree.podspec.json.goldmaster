@@ -1,7 +1,6 @@
 load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_resource_bundle')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
-  "pch_with_name_hint",
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
@@ -114,10 +113,7 @@ objc_library(
   hdrs = [
     ":Braintree_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    []
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   deps = [
     ":Card",
     ":Core",
@@ -282,15 +278,7 @@ objc_library(
   hdrs = [
     ":Core_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreeCore/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   sdk_frameworks = [
     "AddressBook"
   ],
@@ -409,15 +397,7 @@ objc_library(
   hdrs = [
     ":Apple-Pay_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreeApplePay/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   sdk_frameworks = [
     "PassKit"
   ],
@@ -550,15 +530,7 @@ objc_library(
   hdrs = [
     ":Card_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreeCard/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   deps = [
     ":Core",
     ":Card_includes"
@@ -673,15 +645,7 @@ objc_library(
   hdrs = [
     ":DataCollector_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreeDataCollector/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   deps = [
     ":Core",
     ":DataCollector_VendoredLibraries",
@@ -811,15 +775,7 @@ objc_library(
   hdrs = [
     ":PayPal_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreePayPal/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   deps = [
     ":Core",
     ":PayPalOneTouch",
@@ -936,15 +892,7 @@ objc_library(
   hdrs = [
     ":Venmo_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreeVenmo/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   deps = [
     ":Core",
     ":PayPalDataCollector",
@@ -1089,15 +1037,7 @@ objc_library(
   hdrs = [
     ":UI_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreeUI/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   sdk_frameworks = [
     "UIKit"
   ],
@@ -1221,15 +1161,7 @@ objc_library(
   hdrs = [
     ":UnionPay_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreeUnionPay/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   sdk_frameworks = [
     "UIKit"
   ],
@@ -1363,15 +1295,7 @@ objc_library(
   hdrs = [
     ":3D-Secure_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "Braintree3DSecure/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   sdk_frameworks = [
     "UIKit"
   ],
@@ -1502,15 +1426,7 @@ objc_library(
   hdrs = [
     ":PayPalOneTouch_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreePayPal/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   sdk_frameworks = [
     "UIKit"
   ],
@@ -1648,15 +1564,7 @@ objc_library(
   hdrs = [
     ":PayPalDataCollector_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreePayPal/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   sdk_frameworks = [
     "MessageUI",
     "SystemConfiguration",
@@ -1802,15 +1710,7 @@ objc_library(
   hdrs = [
     ":PayPalUtils_hdrs"
   ],
-  pch = pch_with_name_hint(
-    "Braintree",
-    glob(
-      [
-        "BraintreePayPal/**/*.pch"
-      ],
-      exclude_directories = 1
-    )
-  ),
+  pch = "pod_support/Headers/Private/Braintree-prefix.pch",
   sdk_frameworks = [
     "MessageUI",
     "SystemConfiguration",
