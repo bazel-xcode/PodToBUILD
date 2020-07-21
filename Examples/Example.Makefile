@@ -3,25 +3,22 @@
 # Please see the `README` for regular usage
 RULES_PODS_DIR=$(shell echo $$(dirname $$(dirname $$PWD)))
 
-# Workaround for symlink weirdness.
-# Currently `bazelwrapper` relies on pwd, which causes issues here
-BAZEL=~/.bazelenv/versions/0.28.1/bin/bazel
+BAZEL=../../tools/bazel
 
 # Override the repository to point at the source. It does a source build of the
 # current code.
 # TODO: there's an issue with non hermetic headers in the PINRemoteImage example
 REPOSITORY_OVERRIDE=--override_repository=rules_pods=$(RULES_PODS_DIR)
-BAZEL_OPTS=$(REPOSITORY_OVERRIDE) -s \
+BAZEL_OPTS=$(REPOSITORY_OVERRIDE) \
 	--disk_cache=$(HOME)/Library/Caches/Bazel \
 	--spawn_strategy=standalone \
 	--apple_platform_type=ios
 
+all: bootstrap pod_test fetch build
+
 # Some examples require out of band loading
 bootstrap:
 	[[ ! -x bootstrap.sh ]] || ./bootstrap.sh
-
-all: bootstrap pod_test fetch build
-
 # This command ensures that cocoapods is installed on the host
 pod_test:
 	pod --version

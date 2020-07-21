@@ -7,7 +7,7 @@
 AcknowledgementProvider = provider()
 
 def _acknowledgement_merger_impl(ctx):
-    concat = list(ctx.attr.value.files) if ctx.attr.value else []
+    concat = ctx.attr.value.files.to_list() if ctx.attr.value else []
     action = "--merge" if ctx.attr.value else "--finalize"
     args = [action, ctx.outputs.out.path]
 
