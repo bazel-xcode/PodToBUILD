@@ -44,7 +44,7 @@ vendorize:
 
 fetch: info 
 	[[ ! -f Pods.WORKSPACE ]] || $(MAKE) vendorize
-	$(BAZEL) fetch :ios-app $(REPOSITORY_OVERRIDE)
+	$(BAZEL) fetch :* $(REPOSITORY_OVERRIDE)
 
 info:
 	$(BAZEL) info $(REPOSITORY_OVERRIDE)
