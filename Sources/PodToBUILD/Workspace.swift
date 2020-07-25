@@ -82,14 +82,14 @@ public struct PodsWorkspace: SkylarkConvertible {
         return vendoredPath
     }
 
-    public init(lockfile: Lockfile, shell: ShellContext) throws {
+    public init(lockfile: Lockfile, shell: ShellContext) {
         let specRepoPods = Array(lockfile.specRepos.values).reduce(into: [String]()) {
             accum, next in
             accum.append(contentsOf: next)
         }
 
         var foundPods: Set<String> = Set()
-        pods = try Array(lockfile.pods).compactMap {
+        pods = Array(lockfile.pods).compactMap {
             depStr in
             var depName: String!
             if let depDict = depStr as? [String: Any],

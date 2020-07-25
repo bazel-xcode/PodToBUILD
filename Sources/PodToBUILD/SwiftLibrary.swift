@@ -13,6 +13,8 @@
 // - XCConfig / compiler flags
 public struct SwiftLibrary: BazelTarget {
     public let name: String
+    public let alias: String
+    public let podName: String
     public let sourceFiles: AttrSet<GlobNode>
     public let deps: AttrSet<[String]>
 
@@ -21,12 +23,16 @@ public struct SwiftLibrary: BazelTarget {
     public let data: AttrSet<GlobNode>
 
     public init(name: String,
+                alias: String,
+                podName: String,
                 sourceFiles: AttrSet<GlobNode>,
                 deps: AttrSet<[String]>,
                 isTopLevelTarget: Bool,
                 externalName: String,
                 data: AttrSet<GlobNode>) {
         self.name = name
+        self.alias = alias
+        self.podName = podName
         self.sourceFiles = sourceFiles
         self.externalName = externalName
 
@@ -49,6 +55,8 @@ public struct SwiftLibrary: BazelTarget {
                 isSplitDep: isSplitDep,
                 sourceType: .swift
         )
+
+        self.alias = "\(podName)Module"
 
         let allSourceFiles = spec.attr(\.sourceFiles)
         let implFiles = extractFiles(fromPattern: allSourceFiles,
@@ -81,19 +89,23 @@ public struct SwiftLibrary: BazelTarget {
 
         let extraDepNames = extraDeps.map { bazelLabel(fromString: ":\($0)") }
 
+        self.podName = podName
         self.deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
     }
 
     public func toSkylark() -> SkylarkNode {
-        return .functionCall(
-            name: "swift_library",
-            arguments: [
-                .named(name: "name", value: name.toSkylark()),
-                .named(name: "srcs", value: sourceFiles.toSkylark()),
-                .named(name: "deps", value: deps.sorted(by: (<)).toSkylark()),
-                .named(name: "data", value: data.toSkylark()),
-                .named(name: "visibility", value: .list(["//visibility:public"]))
+        return .lines([
+            .functionCall(
+                name: "swift_library",
+                arguments: [
+                    .named(name: "name", value: name.toSkylark()),
+                    .named(name: "srcs", value: sourceFiles.toSkylark()),
+                    .named(name: "deps", value: deps.sorted(by: (<)).toSkylark()),
+                    .named(name: "module_name" , value: self.podName.toSkylark()),
+                    .named(name: "data", value: data.toSkylark()),
+                    .named(name: "visibility", value: ["//visibility:public"].toSkylark())
             ])
+        ])
     }
 }
 
