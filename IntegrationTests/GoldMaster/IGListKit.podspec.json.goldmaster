@@ -59,6 +59,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "IGListKit_public_hdrs",
+  srcs = [
+    ":Default_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "IGListKit_hdrs",
   srcs = glob(
     [
@@ -158,6 +167,21 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Diffing_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "Source/Common/**/*.h"
+    ],
+    exclude = [
+      "Source/Common/Internal/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -366,6 +390,23 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Diffing_public_hdrs",
+  srcs = glob(
+    [
+      "Source/Common/**/*.h"
+    ],
+    exclude = [
+      "Source/Common/Internal/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Diffing_cxx_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -588,6 +629,38 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Default_cxx_public_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Source/**/*.h"
+        ],
+        exclude = [
+          "Source/Common/Internal/*.h",
+          "Source/Internal/*.h"
+        ],
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        [
+          "Source/**/*.h"
+        ],
+        exclude = [
+          "Source/Common/Internal/*.h",
+          "Source/Internal/*.h"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ) + [
+    ":Diffing_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Default_cxx_hdrs",
   srcs = select(
     {
@@ -805,6 +878,39 @@ filegroup(
       )
     }
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Default_public_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Source/**/*.h"
+        ],
+        exclude = [
+          "Source/Common/Internal/*.h",
+          "Source/Internal/*.h"
+        ],
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        [
+          "Source/**/*.h"
+        ],
+        exclude = [
+          "Source/Common/Internal/*.h",
+          "Source/Internal/*.h"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ) + [
+    ":Default_cxx_public_hdrs",
+    ":Diffing_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]

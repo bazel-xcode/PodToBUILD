@@ -57,6 +57,16 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Bolts_public_hdrs",
+  srcs = [
+    ":AppLinks_public_hdrs",
+    ":Tasks_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Bolts_hdrs",
   srcs = glob(
     [
@@ -142,6 +152,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Tasks_public_hdrs",
+  srcs = glob(
+    [
+      "Bolts/Common/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -276,7 +298,8 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "Bolts/iOS/**/*.h"
+            "Bolts/iOS/**/*.h",
+            "Bolts/iOS/*.h"
           ],
           exclude_directories = 1
         ),
@@ -307,6 +330,24 @@ filegroup(
   ]
 )
 filegroup(
+  name = "AppLinks_public_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "Bolts/iOS/*.h"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ) + [
+    ":Tasks_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "AppLinks_hdrs",
   srcs = select(
     {
@@ -318,7 +359,8 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "Bolts/iOS/**/*.h"
+            "Bolts/iOS/**/*.h",
+            "Bolts/iOS/*.h"
           ],
           exclude_directories = 1
         ),

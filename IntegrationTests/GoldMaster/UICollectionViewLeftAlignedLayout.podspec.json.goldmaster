@@ -67,6 +67,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "UICollectionViewLeftAlignedLayout_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "UICollectionViewLeftAlignedLayout/**/*.h",
+      "UICollectionViewLeftAlignedLayout/**/*.hpp",
+      "UICollectionViewLeftAlignedLayout/**/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "UICollectionViewLeftAlignedLayout_cxx_hdrs",
   srcs = glob(
     glob(
@@ -137,6 +151,7 @@ objc_library(
     ),
     exclude_directories = 1
   ),
+  module_map = ":UICollectionViewLeftAlignedLayout_extended_module_map_module_map_file",
   hdrs = [
     ":UICollectionViewLeftAlignedLayout_cxx_hdrs"
   ],
@@ -207,6 +222,22 @@ filegroup(
   ]
 )
 filegroup(
+  name = "UICollectionViewLeftAlignedLayout_public_hdrs",
+  srcs = glob(
+    [
+      "UICollectionViewLeftAlignedLayout/**/*.h",
+      "UICollectionViewLeftAlignedLayout/**/*.hpp",
+      "UICollectionViewLeftAlignedLayout/**/*.hxx"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":UICollectionViewLeftAlignedLayout_cxx_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "UICollectionViewLeftAlignedLayout_hdrs",
   srcs = glob(
     glob(
@@ -262,6 +293,7 @@ objc_library(
     ],
     exclude_directories = 1
   ),
+  module_map = ":UICollectionViewLeftAlignedLayout_extended_module_map_module_map_file",
   hdrs = [
     ":UICollectionViewLeftAlignedLayout_hdrs"
   ],
@@ -294,4 +326,28 @@ acknowledged_target(
   name = "UICollectionViewLeftAlignedLayout_acknowledgement",
   deps = [],
   value = "//Vendor/UICollectionViewLeftAlignedLayout/pod_support_buildable:acknowledgement_fragment"
+)
+gen_module_map(
+  "UICollectionViewLeftAlignedLayout_extended_module_map_module_map_file",
+  "UICollectionViewLeftAlignedLayout_extended_module_map",
+  "UICollectionViewLeftAlignedLayout",
+  [
+    "UICollectionViewLeftAlignedLayout_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_module_map(
+  "UICollectionViewLeftAlignedLayout_module_map_module_map_file",
+  "UICollectionViewLeftAlignedLayout_module_map",
+  "UICollectionViewLeftAlignedLayout",
+  [
+    "UICollectionViewLeftAlignedLayout_extended_module_map_module_map_file",
+    "UICollectionViewLeftAlignedLayout_public_hdrs"
+  ],
+  module_map_name = "UICollectionViewLeftAlignedLayout.modulemap",
+  visibility = [
+    "//visibility:public"
+  ]
 )

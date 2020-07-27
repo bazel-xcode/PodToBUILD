@@ -58,6 +58,16 @@ filegroup(
   ]
 )
 filegroup(
+  name = "FBSDKCoreKit_public_hdrs",
+  srcs = [
+    ":Basics_public_hdrs",
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FBSDKCoreKit_hdrs",
   srcs = glob(
     [
@@ -335,6 +345,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Basics_public_hdrs",
+  srcs = glob(
+    [
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -1652,7 +1674,10 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
           ],
           exclude = [
             "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",
@@ -1675,7 +1700,10 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
           ],
           exclude = [
             "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",
@@ -1695,7 +1723,10 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
           ],
           exclude = [
             "FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*.h",
@@ -1747,7 +1778,10 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
           ],
           exclude = [
             "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",
@@ -1766,6 +1800,22 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Core_public_hdrs",
+  srcs = glob(
+    [
+      "FBSDKCoreKit/FBSDKCoreKit/*.h",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Basics_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Core_hdrs",
   srcs = select(
     {
@@ -1777,7 +1827,10 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
           ],
           exclude = [
             "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",
@@ -1800,7 +1853,10 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
           ],
           exclude = [
             "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",
@@ -1820,7 +1876,10 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
           ],
           exclude = [
             "FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*.h",
@@ -1872,7 +1931,10 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.h"
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
           ],
           exclude = [
             "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",

@@ -1,0 +1,373 @@
+load(
+  "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
+  "acknowledged_target",
+  "gen_module_map",
+  "gen_includes",
+  "headermap"
+)
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://docs.bazel.build/versions/master/be/general.html#config_setting
+config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+)
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "ObjcParentWithSwiftSubspecs_package_hdrs",
+  srcs = [
+    "ObjcParentWithSwiftSubspecs_direct_hdrs",
+    "Default_direct_hdrs",
+    "Subspec_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "ObjcParentWithSwiftSubspecs_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Sources/**/*.h"
+      ],
+      exclude = [
+        "Classes/Exclude/**/*.h",
+        "Classes/Exclude/**/*.hpp",
+        "Classes/Exclude/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "ObjcParentWithSwiftSubspecs_public_hdrs",
+  srcs = glob(
+    [
+      "Sources/**/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Default_public_hdrs",
+    ":Subspec_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "ObjcParentWithSwiftSubspecs_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Sources/**/*.h"
+      ],
+      exclude = [
+        "Classes/Exclude/**/*.h",
+        "Classes/Exclude/**/*.hpp",
+        "Classes/Exclude/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ) + [
+    ":Default_hdrs",
+    ":Subspec_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "ObjcParentWithSwiftSubspecs_hmap",
+  namespace = "ObjcParentWithSwiftSubspecs",
+  hdrs = [
+    "ObjcParentWithSwiftSubspecs_package_hdrs",
+    ":ObjcParentWithSwiftSubspecs_hdrs"
+  ],
+  deps = [
+    ":Default",
+    ":Subspec"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "ObjcParentWithSwiftSubspecs_includes",
+  include = [
+    "Vendor/ObjcParentWithSwiftSubspecs/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "ObjcParentWithSwiftSubspecs",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "Sources/**/*.m"
+    ],
+    exclude = [
+      "Classes/Exclude/**/*.S",
+      "Classes/Exclude/**/*.c",
+      "Classes/Exclude/**/*.cc",
+      "Classes/Exclude/**/*.cpp",
+      "Classes/Exclude/**/*.cxx",
+      "Classes/Exclude/**/*.m",
+      "Classes/Exclude/**/*.mm",
+      "Classes/Exclude/**/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  hdrs = [
+    ":ObjcParentWithSwiftSubspecs_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/ObjcParentWithSwiftSubspecs-prefix.pch",
+  deps = [
+    ":Default",
+    ":Subspec",
+    ":ObjcParentWithSwiftSubspecs_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/ObjcParentWithSwiftSubspecs/pod_support/Headers/Public/ObjcParentWithSwiftSubspecs/"
+  ] + [
+    "-fmodule-name=ObjcParentWithSwiftSubspecs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "ObjcParentWithSwiftSubspecs_acknowledgement",
+  deps = [],
+  value = "//Vendor/ObjcParentWithSwiftSubspecs/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Default_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Default_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Default_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Default_union_hdrs",
+  srcs = [
+    "Default_hdrs",
+    "ObjcParentWithSwiftSubspecs_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Default_hmap",
+  namespace = "ObjcParentWithSwiftSubspecs",
+  hdrs = [
+    "ObjcParentWithSwiftSubspecs_package_hdrs",
+    ":Default_union_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "Default_includes",
+  include = [
+    "Vendor/ObjcParentWithSwiftSubspecs/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "Default",
+  enable_modules = 0,
+  hdrs = [
+    ":Default_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/ObjcParentWithSwiftSubspecs-prefix.pch",
+  deps = [
+    ":Default_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/ObjcParentWithSwiftSubspecs/pod_support/Headers/Public/ObjcParentWithSwiftSubspecs/"
+  ] + [
+    "-fmodule-name=ObjcParentWithSwiftSubspecs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "Default_acknowledgement",
+  deps = [],
+  value = "//Vendor/ObjcParentWithSwiftSubspecs/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Subspec_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Subspec_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Subspec_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Subspec_union_hdrs",
+  srcs = [
+    "Subspec_hdrs",
+    "ObjcParentWithSwiftSubspecs_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Subspec_hmap",
+  namespace = "ObjcParentWithSwiftSubspecs",
+  hdrs = [
+    "ObjcParentWithSwiftSubspecs_package_hdrs",
+    ":Subspec_union_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "Subspec_includes",
+  include = [
+    "Vendor/ObjcParentWithSwiftSubspecs/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "Subspec",
+  enable_modules = 0,
+  hdrs = [
+    ":Subspec_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/ObjcParentWithSwiftSubspecs-prefix.pch",
+  deps = [
+    ":Subspec_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/ObjcParentWithSwiftSubspecs/pod_support/Headers/Public/ObjcParentWithSwiftSubspecs/"
+  ] + [
+    "-fmodule-name=ObjcParentWithSwiftSubspecs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "Subspec_acknowledgement",
+  deps = [],
+  value = "//Vendor/ObjcParentWithSwiftSubspecs/pod_support_buildable:acknowledgement_fragment"
+)

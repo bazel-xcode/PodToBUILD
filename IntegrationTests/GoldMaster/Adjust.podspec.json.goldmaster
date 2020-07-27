@@ -59,6 +59,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Adjust_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Adjust_hdrs",
   srcs = glob(
     [
@@ -156,6 +165,19 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_public_hdrs",
+  srcs = glob(
+    [
+      "Adjust/*.h",
+      "Adjust/ADJAdditions/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -303,6 +325,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Sociomantic_public_hdrs",
+  srcs = glob(
+    [
+      "plugin/Sociomantic/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Sociomantic_hdrs",
   srcs = glob(
     glob(
@@ -429,6 +465,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Criteo_public_hdrs",
+  srcs = glob(
+    [
+      "plugin/Criteo/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Criteo_hdrs",
   srcs = glob(
     glob(
@@ -550,6 +600,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Trademob_public_hdrs",
+  srcs = glob(
+    [
+      "plugin/Trademob/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]

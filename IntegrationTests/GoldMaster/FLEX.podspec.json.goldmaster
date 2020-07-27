@@ -52,10 +52,25 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Classes/**/*.h"
+        "Classes/**/*.h",
+        "Classes/**/FLEXManager.h",
+        "Classes/FLEX.h"
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FLEX_public_hdrs",
+  srcs = glob(
+    [
+      "Classes/**/FLEXManager.h",
+      "Classes/FLEX.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -72,7 +87,9 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "Classes/**/*.h"
+        "Classes/**/*.h",
+        "Classes/**/FLEXManager.h",
+        "Classes/FLEX.h"
       ],
       exclude_directories = 1
     ),

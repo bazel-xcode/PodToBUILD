@@ -70,6 +70,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "glog_public_hdrs",
+  srcs = glob(
+    [
+      "src/glog/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "glog_hdrs",
   srcs = glob(
     glob(

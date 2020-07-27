@@ -36,13 +36,15 @@ config_setting(
 )
 filegroup(
   name = "FolioReaderKit_package_hdrs",
-  srcs = [],
+  srcs = [
+    "FolioReaderKit_direct_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
 )
 swift_library(
-  name = "FolioReaderKit",
+  name = "FolioReaderKit_swift",
   srcs = glob(
     [
       "Source/**/*.swift",
@@ -73,4 +75,145 @@ swift_library(
   visibility = [
     "//visibility:public"
   ]
+)
+filegroup(
+  name = "FolioReaderKit_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FolioReaderKit_public_hdrs",
+  srcs = glob(
+    [
+      "Source/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FolioReaderKit_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "FolioReaderKit_hmap",
+  namespace = "FolioReaderKit",
+  hdrs = [
+    "FolioReaderKit_package_hdrs",
+    ":FolioReaderKit_hdrs"
+  ],
+  deps = [
+    "//Vendor/AEXML:AEXML",
+    "//Vendor/FontBlaster:FontBlaster",
+    "//Vendor/JSQWebViewController:JSQWebViewController",
+    "//Vendor/MenuItemKit:MenuItemKit",
+    "//Vendor/RealmSwift:RealmSwift",
+    "//Vendor/SSZipArchive:SSZipArchive",
+    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "FolioReaderKit_includes",
+  include = [
+    "Vendor/FolioReaderKit/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "FolioReaderKit",
+  enable_modules = 0,
+  hdrs = [
+    ":FolioReaderKit_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/FolioReaderKit-prefix.pch",
+  sdk_dylibs = [
+    "z"
+  ],
+  deps = [
+    "//Vendor/AEXML:AEXML",
+    "//Vendor/FontBlaster:FontBlaster",
+    "//Vendor/JSQWebViewController:JSQWebViewController",
+    "//Vendor/MenuItemKit:MenuItemKit",
+    "//Vendor/RealmSwift:RealmSwift",
+    "//Vendor/SSZipArchive:SSZipArchive",
+    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition",
+    ":FolioReaderKit_swift",
+    ":FolioReaderKit_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/FolioReaderKit/pod_support/Headers/Public/FolioReaderKit/"
+  ] + [
+    "-fmodule-name=FolioReaderKit"
+  ],
+  data = glob(
+    [
+      "Source/**/*.css",
+      "Source/**/*.js",
+      "Source/Resources/*.xcassets",
+      "Source/Resources/Fonts/**/*.otf",
+      "Source/Resources/Fonts/**/*.ttf"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "FolioReaderKit_acknowledgement",
+  deps = [
+    "//Vendor/AEXML:AEXML_acknowledgement",
+    "//Vendor/FontBlaster:FontBlaster_acknowledgement",
+    "//Vendor/JSQWebViewController:JSQWebViewController_acknowledgement",
+    "//Vendor/MenuItemKit:MenuItemKit_acknowledgement",
+    "//Vendor/RealmSwift:RealmSwift_acknowledgement",
+    "//Vendor/SSZipArchive:SSZipArchive_acknowledgement",
+    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition_acknowledgement"
+  ],
+  value = "//Vendor/FolioReaderKit/pod_support_buildable:acknowledgement_fragment"
 )

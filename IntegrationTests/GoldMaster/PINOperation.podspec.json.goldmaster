@@ -64,6 +64,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "PINOperation_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "Source/**/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "PINOperation_cxx_hdrs",
   srcs = glob(
     glob(
@@ -178,6 +190,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "PINOperation_public_hdrs",
+  srcs = glob(
+    [
+      "Source/**/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":PINOperation_cxx_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]

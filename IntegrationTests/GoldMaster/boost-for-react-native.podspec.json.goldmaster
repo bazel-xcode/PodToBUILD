@@ -65,6 +65,13 @@ filegroup(
   ]
 )
 filegroup(
+  name = "boost-for-react-native_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "boost-for-react-native_hdrs",
   srcs = glob(
     glob(

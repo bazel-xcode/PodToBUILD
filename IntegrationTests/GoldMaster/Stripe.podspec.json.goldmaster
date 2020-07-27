@@ -65,6 +65,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Stripe_public_hdrs",
+  srcs = glob(
+    [
+      "Stripe/PublicHeaders/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Stripe_hdrs",
   srcs = glob(
     glob(

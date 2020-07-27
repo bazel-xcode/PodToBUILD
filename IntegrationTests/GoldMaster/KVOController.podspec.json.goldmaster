@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "KVOController_public_hdrs",
+  srcs = glob(
+    [
+      "FBKVOController/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KVOController_hdrs",
   srcs = glob(
     glob(

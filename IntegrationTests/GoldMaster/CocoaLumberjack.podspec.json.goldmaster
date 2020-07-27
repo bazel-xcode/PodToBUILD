@@ -1,4 +1,3 @@
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "acknowledged_target",
@@ -41,7 +40,8 @@ filegroup(
     "Default_direct_hdrs",
     "Core_direct_hdrs",
     "Extensions_direct_hdrs",
-    "CLI_direct_hdrs"
+    "CLI_direct_hdrs",
+    "Swift_direct_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -55,6 +55,16 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "CocoaLumberjack_public_hdrs",
+  srcs = [
+    ":Default_public_hdrs",
+    ":Extensions_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -146,6 +156,19 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Default_public_hdrs",
+  srcs = glob(
+    [
+      "Classes/CocoaLumberjack.h",
+      "Classes/DD*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -268,6 +291,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Core_public_hdrs",
+  srcs = glob(
+    [
+      "Classes/DD*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Core_hdrs",
   srcs = glob(
     glob(
@@ -371,6 +406,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Extensions_public_hdrs",
+  srcs = glob(
+    [
+      "Classes/Extensions/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Default_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -503,6 +552,30 @@ filegroup(
         ],
         exclude_directories = 1
       )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "CLI_public_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": [],
+      ":osxCase": glob(
+        [
+          "Classes/CLI/*.h"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ) + select(
+    {
+      "//conditions:default": [],
+      ":osxCase": [
+        ":Default_public_hdrs"
+      ]
     }
   ),
   visibility = [
@@ -645,19 +718,102 @@ acknowledged_target(
   deps = [],
   value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )
-swift_library(
-  name = "Swift",
+filegroup(
+  name = "Swift_direct_hdrs",
   srcs = glob(
     [
-      "Classes/CocoaLumberjack.swift"
+      "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
   ),
-  deps = [
-    ":Default"
-  ],
-  data = [],
   visibility = [
     "//visibility:public"
   ]
+)
+filegroup(
+  name = "Swift_public_hdrs",
+  srcs = [
+    ":Default_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Swift_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Swift_union_hdrs",
+  srcs = [
+    "Swift_hdrs",
+    "CocoaLumberjack_hdrs",
+    ":Default_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Swift_hmap",
+  namespace = "CocoaLumberjack",
+  hdrs = [
+    "CocoaLumberjack_package_hdrs",
+    ":Swift_union_hdrs"
+  ],
+  deps = [
+    ":Default"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "Swift_includes",
+  include = [
+    "Vendor/CocoaLumberjack/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "Swift",
+  enable_modules = 0,
+  hdrs = [
+    ":Swift_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/CocoaLumberjack-prefix.pch",
+  deps = [
+    ":Default",
+    ":Swift_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
+  ] + [
+    "-fmodule-name=CocoaLumberjack"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "Swift_acknowledgement",
+  deps = [],
+  value = "//Vendor/CocoaLumberjack/pod_support_buildable:acknowledgement_fragment"
 )

@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "IBActionSheet_public_hdrs",
+  srcs = glob(
+    [
+      "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "IBActionSheet_hdrs",
   srcs = glob(
     glob(

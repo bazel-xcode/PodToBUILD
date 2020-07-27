@@ -67,6 +67,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Calabash_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "calabash.framework/Versions/A/Headers/*.h",
+      "calabash.framework/Versions/A/Headers/*.hpp",
+      "calabash.framework/Versions/A/Headers/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Calabash_cxx_hdrs",
   srcs = glob(
     glob(
@@ -171,6 +185,7 @@ objc_library(
     ),
     exclude_directories = 1
   ),
+  module_map = ":Calabash_extended_module_map_module_map_file",
   hdrs = [
     ":Calabash_cxx_hdrs"
   ],
@@ -251,6 +266,22 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Calabash_public_hdrs",
+  srcs = glob(
+    [
+      "calabash.framework/Versions/A/Headers/*.h",
+      "calabash.framework/Versions/A/Headers/*.hpp",
+      "calabash.framework/Versions/A/Headers/*.hxx"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Calabash_cxx_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Calabash_hdrs",
   srcs = glob(
     glob(
@@ -306,6 +337,7 @@ objc_library(
     ],
     exclude_directories = 1
   ),
+  module_map = ":Calabash_extended_module_map_module_map_file",
   hdrs = [
     ":Calabash_hdrs"
   ],
@@ -349,4 +381,28 @@ acknowledged_target(
   name = "Calabash_acknowledgement",
   deps = [],
   value = "//Vendor/Calabash/pod_support_buildable:acknowledgement_fragment"
+)
+gen_module_map(
+  "Calabash_extended_module_map_module_map_file",
+  "Calabash_extended_module_map",
+  "Calabash",
+  [
+    "Calabash_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_module_map(
+  "Calabash_module_map_module_map_file",
+  "Calabash_module_map",
+  "Calabash",
+  [
+    "Calabash_extended_module_map_module_map_file",
+    "Calabash_public_hdrs"
+  ],
+  module_map_name = "Calabash.modulemap",
+  visibility = [
+    "//visibility:public"
+  ]
 )

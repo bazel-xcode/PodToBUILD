@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Weixin_public_hdrs",
+  srcs = glob(
+    [
+      "SDK1.6.2/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Weixin_hdrs",
   srcs = glob(
     glob(

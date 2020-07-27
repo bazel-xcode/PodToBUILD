@@ -56,6 +56,13 @@ filegroup(
   ]
 )
 filegroup(
+  name = "GoogleUtilities_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "GoogleUtilities_hdrs",
   srcs = glob(
     [

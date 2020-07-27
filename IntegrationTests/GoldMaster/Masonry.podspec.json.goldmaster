@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Masonry_public_hdrs",
+  srcs = glob(
+    [
+      "Masonry/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Masonry_hdrs",
   srcs = glob(
     glob(

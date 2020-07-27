@@ -65,6 +65,13 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Folly_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Folly_hdrs",
   srcs = glob(
     glob(

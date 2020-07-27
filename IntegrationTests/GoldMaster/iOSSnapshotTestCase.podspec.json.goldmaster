@@ -1,4 +1,3 @@
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "acknowledged_target",
@@ -38,7 +37,8 @@ filegroup(
   name = "iOSSnapshotTestCase_package_hdrs",
   srcs = [
     "iOSSnapshotTestCase_direct_hdrs",
-    "Core_direct_hdrs"
+    "Core_direct_hdrs",
+    "SwiftSupport_direct_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -57,13 +57,24 @@ filegroup(
   ]
 )
 filegroup(
+  name = "iOSSnapshotTestCase_public_hdrs",
+  srcs = [
+    ":SwiftSupport_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "iOSSnapshotTestCase_hdrs",
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
-  ),
+  ) + [
+    ":SwiftSupport_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -143,10 +154,32 @@ filegroup(
         "FBSnapshotTestCase/*.h",
         "FBSnapshotTestCase/Categories/UIImage+Compare.h",
         "FBSnapshotTestCase/Categories/UIImage+Diff.h",
-        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
+        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h",
+        "FBSnapshotTestCase/FBSnapshotTestCase.h",
+        "FBSnapshotTestCase/FBSnapshotTestCasePlatform.h",
+        "FBSnapshotTestCase/FBSnapshotTestController.h"
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_public_hdrs",
+  srcs = glob(
+    [
+      "FBSnapshotTestCase/FBSnapshotTestCase.h",
+      "FBSnapshotTestCase/FBSnapshotTestCasePlatform.h",
+      "FBSnapshotTestCase/FBSnapshotTestController.h"
+    ],
+    exclude = [
+      "FBSnapshotTestCase/Categories/UIImage+Compare.h",
+      "FBSnapshotTestCase/Categories/UIImage+Diff.h",
+      "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -167,7 +200,10 @@ filegroup(
         "FBSnapshotTestCase/*.h",
         "FBSnapshotTestCase/Categories/UIImage+Compare.h",
         "FBSnapshotTestCase/Categories/UIImage+Diff.h",
-        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
+        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h",
+        "FBSnapshotTestCase/FBSnapshotTestCase.h",
+        "FBSnapshotTestCase/FBSnapshotTestCasePlatform.h",
+        "FBSnapshotTestCase/FBSnapshotTestController.h"
       ],
       exclude_directories = 1
     ),
@@ -252,19 +288,108 @@ acknowledged_target(
   deps = [],
   value = "//Vendor/iOSSnapshotTestCase/pod_support_buildable:acknowledgement_fragment"
 )
-swift_library(
-  name = "SwiftSupport",
+filegroup(
+  name = "SwiftSupport_direct_hdrs",
   srcs = glob(
     [
-      "FBSnapshotTestCase/**/*.swift"
+      "pod_support/Headers/Public/**/*"
     ],
     exclude_directories = 1
   ),
-  deps = [
-    ":Core"
-  ],
-  data = [],
   visibility = [
     "//visibility:public"
   ]
+)
+filegroup(
+  name = "SwiftSupport_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "SwiftSupport_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "SwiftSupport_union_hdrs",
+  srcs = [
+    "SwiftSupport_hdrs",
+    "iOSSnapshotTestCase_hdrs",
+    ":Core_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "SwiftSupport_hmap",
+  namespace = "FBSnapshotTestCase",
+  hdrs = [
+    "iOSSnapshotTestCase_package_hdrs",
+    ":SwiftSupport_union_hdrs"
+  ],
+  deps = [
+    ":Core"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "SwiftSupport_includes",
+  include = [
+    "Vendor/iOSSnapshotTestCase/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "SwiftSupport",
+  enable_modules = 0,
+  hdrs = [
+    ":SwiftSupport_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/iOSSnapshotTestCase-prefix.pch",
+  sdk_frameworks = [
+    "XCTest",
+    "UIKit",
+    "Foundation",
+    "QuartzCore"
+  ],
+  deps = [
+    ":Core",
+    ":SwiftSupport_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
+  ] + [
+    "-fmodule-name=FBSnapshotTestCase"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "SwiftSupport_acknowledgement",
+  deps = [],
+  value = "//Vendor/iOSSnapshotTestCase/pod_support_buildable:acknowledgement_fragment"
 )

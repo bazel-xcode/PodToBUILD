@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "PaymentKit_public_hdrs",
+  srcs = glob(
+    [
+      "PaymentKit/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "PaymentKit_hdrs",
   srcs = glob(
     glob(

@@ -60,6 +60,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "KakaoOpenSDK_public_hdrs",
+  srcs = [
+    ":KakaoLink_public_hdrs",
+    ":KakaoNavi_public_hdrs",
+    ":KakaoOpenSDK_public_hdrs",
+    ":KakaoS2_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KakaoOpenSDK_hdrs",
   srcs = glob(
     [
@@ -153,6 +165,13 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "KakaoOpenSDK_public_hdrs",
+  srcs = [],
   visibility = [
     "//visibility:public"
   ]
@@ -268,6 +287,13 @@ filegroup(
   ]
 )
 filegroup(
+  name = "KakaoNavi_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KakaoNavi_hdrs",
   srcs = glob(
     [
@@ -377,6 +403,13 @@ filegroup(
   ]
 )
 filegroup(
+  name = "KakaoLink_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "KakaoLink_hdrs",
   srcs = glob(
     [
@@ -481,6 +514,13 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "KakaoS2_public_hdrs",
+  srcs = [],
   visibility = [
     "//visibility:public"
   ]
