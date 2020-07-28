@@ -293,6 +293,7 @@ extension AttrSet where T: AttrSetConstraint, T: Equatable {
         return self
     }
 
+
     /// For simplicity of the BUILD file, we'll condense if all is the same
     public func toSkylark() -> SkylarkNode {
         let renderable = self.flattenToBasicIfPossible()
