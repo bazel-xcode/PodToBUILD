@@ -238,7 +238,7 @@ headermap(
     ":PINOperation_hdrs"
   ],
   deps = [
-    ":PINOperation_cxx"
+    ":PINOperation_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"

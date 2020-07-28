@@ -306,7 +306,7 @@ headermap(
     ":SFHFKeychainUtils_hdrs"
   ],
   deps = [
-    ":SFHFKeychainUtils_cxx"
+    ":SFHFKeychainUtils_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"

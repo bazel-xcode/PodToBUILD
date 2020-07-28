@@ -87,7 +87,7 @@ headermap(
     ":iOSSnapshotTestCase_hdrs"
   ],
   deps = [
-    ":SwiftSupport"
+    ":SwiftSupport_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -340,7 +340,7 @@ headermap(
     ":SwiftSupport_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"

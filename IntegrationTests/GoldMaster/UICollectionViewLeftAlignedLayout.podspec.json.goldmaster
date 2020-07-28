@@ -269,7 +269,7 @@ headermap(
     ":UICollectionViewLeftAlignedLayout_hdrs"
   ],
   deps = [
-    ":UICollectionViewLeftAlignedLayout_cxx"
+    ":UICollectionViewLeftAlignedLayout_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"

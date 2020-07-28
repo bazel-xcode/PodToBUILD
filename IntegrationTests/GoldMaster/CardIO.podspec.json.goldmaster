@@ -101,9 +101,7 @@ headermap(
     "CardIO_package_hdrs",
     ":CardIO_hdrs"
   ],
-  deps = [
-    ":CardIO_VendoredLibraries"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

@@ -89,8 +89,8 @@ headermap(
     ":PINCache_hdrs"
   ],
   deps = [
-    ":Arc-exception-safe",
-    ":Core"
+    ":Arc-exception-safe_hmap",
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -347,7 +347,7 @@ headermap(
     ":Arc-exception-safe_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"

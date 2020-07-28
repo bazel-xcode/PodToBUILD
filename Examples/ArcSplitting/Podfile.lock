@@ -1,0 +1,16 @@
+PODS:
+  - ArcSplitting (0.0.1)
+
+DEPENDENCIES:
+  - ArcSplitting (from `Vendor/ArcSplitting`)
+
+EXTERNAL SOURCES:
+  ArcSplitting:
+    :path: Vendor/ArcSplitting
+
+SPEC CHECKSUMS:
+  ArcSplitting: 43d73b8efe6c2c9aaa838e629da7d8aa4e80b3af
+
+PODFILE CHECKSUM: ee96fece577da80880bf37d7d80c807a514cfa70
+
+COCOAPODS: 1.9.3

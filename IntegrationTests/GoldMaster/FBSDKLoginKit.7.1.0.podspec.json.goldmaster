@@ -1,0 +1,327 @@
+load(
+  "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
+  "acknowledged_target",
+  "gen_module_map",
+  "gen_includes",
+  "headermap"
+)
+# Add a config setting release for compilation mode
+# Assume that people are using `opt` for release mode
+# see the bazel user manual for more information
+# https://docs.bazel.build/versions/master/be/general.html#config_setting
+config_setting(
+  name = "release",
+  values = {
+    "compilation_mode": "opt"
+  }
+)
+config_setting(
+  name = "osxCase",
+  values = {
+    "apple_platform_type": "macos"
+  }
+)
+config_setting(
+  name = "tvosCase",
+  values = {
+    "apple_platform_type": "tvos"
+  }
+)
+config_setting(
+  name = "watchosCase",
+  values = {
+    "apple_platform_type": "watchos"
+  }
+)
+filegroup(
+  name = "FBSDKLoginKit_package_hdrs",
+  srcs = [
+    "FBSDKLoginKit_direct_hdrs",
+    "Login_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKLoginKit_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKLoginKit_public_hdrs",
+  srcs = [
+    ":Login_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKLoginKit_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Login_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "FBSDKLoginKit_hmap",
+  namespace = "FBSDKLoginKit",
+  hdrs = [
+    "FBSDKLoginKit_package_hdrs",
+    ":FBSDKLoginKit_hdrs"
+  ],
+  deps = [
+    ":Login_hmap"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "FBSDKLoginKit_includes",
+  include = [
+    "Vendor/FBSDKLoginKit/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "FBSDKLoginKit",
+  enable_modules = 0,
+  hdrs = [
+    ":FBSDKLoginKit_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/FBSDKLoginKit-prefix.pch",
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "Accounts",
+        "Social",
+        "Security",
+        "QuartzCore",
+        "CoreGraphics",
+        "UIKit",
+        "Foundation",
+        "AudioToolbox"
+      ],
+      ":tvosCase": [
+        "AudioToolbox",
+        "CoreGraphics",
+        "Foundation",
+        "QuartzCore",
+        "Security",
+        "UIKit"
+      ]
+    }
+  ),
+  deps = [
+    ":Login",
+    ":FBSDKLoginKit_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
+  ] + [
+    "-fmodule-name=FBSDKLoginKit"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "FBSDKLoginKit_acknowledgement",
+  deps = [],
+  value = "//Vendor/FBSDKLoginKit/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
+  name = "Login_direct_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKLoginKit/FBSDKLoginKit/**/*.h",
+        "FBSDKLoginKit/FBSDKLoginKit/*.h"
+      ],
+      exclude = [
+        "FBSDKLoginKit/FBSDKLoginKit/include/**/*.h",
+        "FBSDKLoginKit/FBSDKLoginKit/include/**/*.hpp",
+        "FBSDKLoginKit/FBSDKLoginKit/include/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Login_public_hdrs",
+  srcs = glob(
+    [
+      "FBSDKLoginKit/FBSDKLoginKit/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Login_hdrs",
+  srcs = glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKLoginKit/FBSDKLoginKit/**/*.h",
+        "FBSDKLoginKit/FBSDKLoginKit/*.h"
+      ],
+      exclude = [
+        "FBSDKLoginKit/FBSDKLoginKit/include/**/*.h",
+        "FBSDKLoginKit/FBSDKLoginKit/include/**/*.hpp",
+        "FBSDKLoginKit/FBSDKLoginKit/include/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Login_union_hdrs",
+  srcs = [
+    "Login_hdrs",
+    "FBSDKLoginKit_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "Login_hmap",
+  namespace = "FBSDKLoginKit",
+  hdrs = [
+    "FBSDKLoginKit_package_hdrs",
+    ":Login_union_hdrs"
+  ],
+  deps = [
+    "//Vendor/FBSDKCoreKit:FBSDKCoreKit"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "Login_includes",
+  include = [
+    "Vendor/FBSDKLoginKit/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "Login",
+  enable_modules = 0,
+  srcs = glob(
+    [
+      "FBSDKLoginKit/FBSDKLoginKit/**/*.m"
+    ],
+    exclude = [
+      "FBSDKLoginKit/FBSDKLoginKit/include/**/*.S",
+      "FBSDKLoginKit/FBSDKLoginKit/include/**/*.c",
+      "FBSDKLoginKit/FBSDKLoginKit/include/**/*.cc",
+      "FBSDKLoginKit/FBSDKLoginKit/include/**/*.cpp",
+      "FBSDKLoginKit/FBSDKLoginKit/include/**/*.cxx",
+      "FBSDKLoginKit/FBSDKLoginKit/include/**/*.m",
+      "FBSDKLoginKit/FBSDKLoginKit/include/**/*.mm",
+      "FBSDKLoginKit/FBSDKLoginKit/include/**/*.s"
+    ],
+    exclude_directories = 1
+  ),
+  module_map = ":FBSDKLoginKit_extended_module_map_module_map_file",
+  hdrs = [
+    ":Login_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/FBSDKLoginKit-prefix.pch",
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "Accounts",
+        "Social",
+        "Security",
+        "QuartzCore",
+        "CoreGraphics",
+        "UIKit",
+        "Foundation",
+        "AudioToolbox"
+      ],
+      ":tvosCase": [
+        "AudioToolbox",
+        "CoreGraphics",
+        "Foundation",
+        "QuartzCore",
+        "Security",
+        "UIKit"
+      ]
+    }
+  ),
+  deps = [
+    "//Vendor/FBSDKCoreKit:FBSDKCoreKit",
+    ":Login_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
+  ] + [
+    "-fmodule-name=FBSDKLoginKit"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "Login_acknowledgement",
+  deps = [
+    "//Vendor/FBSDKCoreKit:FBSDKCoreKit_acknowledgement"
+  ],
+  value = "//Vendor/FBSDKLoginKit/pod_support_buildable:acknowledgement_fragment"
+)
