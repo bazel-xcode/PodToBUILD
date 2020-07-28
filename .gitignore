@@ -2,7 +2,7 @@ tmp_build_dir
 bazel-*
 bin/WorkspaceTools
 bin/PodSpecToBUILD
-project.xcworkspace
+*.xcworkspace
 !BazelExtensions
 xcuserdata
 .build
@@ -11,3 +11,7 @@ bin/RepoTools
 compile_commands.json
 *.xcode_select_env
 *.pyc
+external
+Pods/
+PodsHost/
+*.xcworkspace
