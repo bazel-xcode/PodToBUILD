@@ -332,8 +332,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.externalName = externalName
 
         sourceFiles = implFiles.zip(implExcludes).map {
-            t -> GlobNode in
-            GlobNode(include: .left(t.first ?? Set()), exclude: .left(t.second ?? Set()))
+            GlobNode(include: .left($0.first ?? Set()), exclude: .left($0.second ?? Set()))
         }
 
         let publicHeadersVal = fallbackSpec.attr(\.publicHeaders).unpackToMulti()
@@ -351,8 +350,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         }
         // lib/cocoapods/sandbox/file_accessor.rb
         self.publicHeaders = basePublicHeaders.zip(privateHeadersVal).map {
-            t -> GlobNode in
-            GlobNode(include: .left(t.first ?? Set()), exclude: .left(Set(t.second ?? [])))
+            GlobNode(include: .left($0.first ?? Set()), exclude: .left(Set($0.second ?? [])))
         }
 
         // It's possible to use preserve_paths for header includes
