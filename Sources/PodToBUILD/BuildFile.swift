@@ -402,6 +402,7 @@ public struct PodBuildFile: SkylarkConvertible {
 
         let allRootDeps = ((defaultSubspecTargets.isEmpty ? subspecTargets :
                     defaultSubspecTargets) + extraDeps)
+            .filter { !($0 is AppleResourceBundle || $0 is AppleBundleImport) }
         let sourceLibs = makeSourceLibs(parentSpecs: [], spec: podSpec, extraDeps:
                 allRootDeps)
 
