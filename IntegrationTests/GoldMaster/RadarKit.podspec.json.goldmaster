@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RadarKit_public_hdrs",
+  srcs = glob(
+    [
+      "RadarKit/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RadarKit_hdrs",
   srcs = glob(
     glob(

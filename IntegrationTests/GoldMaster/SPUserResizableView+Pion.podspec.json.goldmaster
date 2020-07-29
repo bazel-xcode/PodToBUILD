@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "SPUserResizableView+Pion_public_hdrs",
+  srcs = glob(
+    [
+      "SPUserResizableView/SPUserResizableView.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "SPUserResizableView+Pion_hdrs",
   srcs = glob(
     glob(

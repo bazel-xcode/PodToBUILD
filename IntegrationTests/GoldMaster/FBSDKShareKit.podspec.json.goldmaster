@@ -54,7 +54,8 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKShareKit/FBSDKShareKit/**/*.h"
+            "FBSDKShareKit/FBSDKShareKit/**/*.h",
+            "FBSDKShareKit/FBSDKShareKit/*.h"
           ],
           exclude = [
             "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
@@ -120,6 +121,44 @@ filegroup(
   ]
 )
 filegroup(
+  name = "FBSDKShareKit_public_hdrs",
+  srcs = select(
+    {
+      "//conditions:default": glob(
+        [
+          "FBSDKShareKit/FBSDKShareKit/*.h"
+        ],
+        exclude_directories = 1
+      ),
+      ":tvosCase": glob(
+        [
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphContent.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphObject.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphValueContainer.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKSharePhoto.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKSharePhotoContent.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareVideo.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKShareVideoContent.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKSharing.h",
+          "FBSDKShareKit/FBSDKShareKit/FBSDKSharingContent.h"
+        ],
+        exclude_directories = 1
+      )
+    }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FBSDKShareKit_hdrs",
   srcs = select(
     {
@@ -131,7 +170,8 @@ filegroup(
           exclude_directories = 1
         ) + glob(
           [
-            "FBSDKShareKit/FBSDKShareKit/**/*.h"
+            "FBSDKShareKit/FBSDKShareKit/**/*.h",
+            "FBSDKShareKit/FBSDKShareKit/*.h"
           ],
           exclude = [
             "FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h",

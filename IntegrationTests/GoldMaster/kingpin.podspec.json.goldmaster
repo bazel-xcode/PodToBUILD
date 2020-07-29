@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "kingpin_public_hdrs",
+  srcs = glob(
+    [
+      "kingpin/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "kingpin_hdrs",
   srcs = glob(
     glob(

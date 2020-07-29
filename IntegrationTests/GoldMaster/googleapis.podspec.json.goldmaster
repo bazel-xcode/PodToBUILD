@@ -57,6 +57,16 @@ filegroup(
   ]
 )
 filegroup(
+  name = "googleapis_public_hdrs",
+  srcs = [
+    ":Messages_public_hdrs",
+    ":Services_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "googleapis_hdrs",
   srcs = glob(
     [
@@ -148,6 +158,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Messages_public_hdrs",
+  srcs = glob(
+    [
+      "google/**/*.pbobjc.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -271,6 +293,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Services_public_hdrs",
+  srcs = glob(
+    [
+      "google/**/*.pbrpc.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Messages_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]

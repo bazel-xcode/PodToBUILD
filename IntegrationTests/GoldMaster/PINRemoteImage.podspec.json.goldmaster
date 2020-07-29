@@ -62,6 +62,16 @@ filegroup(
   ]
 )
 filegroup(
+  name = "PINRemoteImage_public_hdrs",
+  srcs = [
+    ":FLAnimatedImage_public_hdrs",
+    ":PINCache_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "PINRemoteImage_hdrs",
   srcs = glob(
     [
@@ -151,6 +161,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_public_hdrs",
+  srcs = glob(
+    [
+      "Source/Classes/**/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -285,6 +307,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "iOS_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "iOS_hdrs",
   srcs = glob(
     [
@@ -373,6 +404,15 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "OSX_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -472,6 +512,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "tvOS_public_hdrs",
+  srcs = [
+    ":iOS_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "tvOS_hdrs",
   srcs = glob(
     [
@@ -565,6 +614,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FLAnimatedImage_public_hdrs",
+  srcs = glob(
+    [
+      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -678,6 +741,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "WebP_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "WebP_hdrs",
   srcs = glob(
     [
@@ -777,6 +849,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "PINCache_public_hdrs",
+  srcs = glob(
+    [
+      "Source/Classes/PINCache/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]

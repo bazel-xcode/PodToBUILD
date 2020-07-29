@@ -57,6 +57,16 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Branch_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs",
+    ":without-IDFA_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Branch_hdrs",
   srcs = glob(
     [
@@ -144,6 +154,23 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_public_hdrs",
+  srcs = glob(
+    [
+      "Branch-SDK/Branch-SDK/*.h",
+      "Branch-SDK/Branch-SDK/Requests/*.h",
+      "Branch-SDK/Fabric/*.h"
+    ],
+    exclude = [
+      "Branch-SDK/Fabric/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -262,6 +289,23 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "without-IDFA_public_hdrs",
+  srcs = glob(
+    [
+      "Branch-SDK/Branch-SDK/*.h",
+      "Branch-SDK/Branch-SDK/Requests/*.h",
+      "Branch-SDK/Fabric/*.h"
+    ],
+    exclude = [
+      "Branch-SDK/Fabric/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [

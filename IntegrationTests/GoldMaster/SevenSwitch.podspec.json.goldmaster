@@ -36,13 +36,15 @@ config_setting(
 )
 filegroup(
   name = "SevenSwitch_package_hdrs",
-  srcs = [],
+  srcs = [
+    "SevenSwitch_direct_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
 )
 swift_library(
-  name = "SevenSwitch",
+  name = "SevenSwitch_swift",
   srcs = glob(
     [
       "SevenSwitch.swift"
@@ -57,4 +59,92 @@ swift_library(
   visibility = [
     "//visibility:public"
   ]
+)
+filegroup(
+  name = "SevenSwitch_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "SevenSwitch_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "SevenSwitch_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "SevenSwitch_hmap",
+  namespace = "SevenSwitch",
+  hdrs = [
+    "SevenSwitch_package_hdrs",
+    ":SevenSwitch_hdrs"
+  ],
+  deps = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "SevenSwitch_includes",
+  include = [
+    "Vendor/SevenSwitch/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "SevenSwitch",
+  enable_modules = 0,
+  hdrs = [
+    ":SevenSwitch_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/SevenSwitch-prefix.pch",
+  sdk_frameworks = [
+    "UIKit",
+    "QuartzCore"
+  ],
+  deps = [
+    ":SevenSwitch_swift",
+    ":SevenSwitch_includes"
+  ],
+  copts = select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/SevenSwitch/pod_support/Headers/Public/SevenSwitch/"
+  ] + [
+    "-fmodule-name=SevenSwitch"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "SevenSwitch_acknowledgement",
+  deps = [],
+  value = "//Vendor/SevenSwitch/pod_support_buildable:acknowledgement_fragment"
 )

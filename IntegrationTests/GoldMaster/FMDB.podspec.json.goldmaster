@@ -61,6 +61,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "FMDB_public_hdrs",
+  srcs = [
+    ":standard_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FMDB_hdrs",
   srcs = glob(
     [
@@ -143,6 +152,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "standard_public_hdrs",
+  srcs = glob(
+    [
+      "src/fmdb/FM*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -269,6 +290,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "FTS_public_hdrs",
+  srcs = glob(
+    [
+      "src/extra/fts3/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":standard_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FTS_hdrs",
   srcs = glob(
     glob(
@@ -373,6 +408,13 @@ filegroup(
   ]
 )
 filegroup(
+  name = "standalone_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "standalone_hdrs",
   srcs = glob(
     [
@@ -462,6 +504,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "standalone_default_public_hdrs",
+  srcs = glob(
+    [
+      "src/fmdb/FM*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -588,6 +642,19 @@ filegroup(
   ]
 )
 filegroup(
+  name = "standalone_FTS_public_hdrs",
+  srcs = glob(
+    [
+      "src/extra/fts3/*.h",
+      "src/fmdb/FM*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "standalone_FTS_hdrs",
   srcs = glob(
     glob(
@@ -701,6 +768,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "SQLCipher_public_hdrs",
+  srcs = glob(
+    [
+      "src/fmdb/FM*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [

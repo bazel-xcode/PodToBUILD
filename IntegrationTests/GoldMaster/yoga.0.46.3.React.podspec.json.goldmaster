@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "yoga_public_hdrs",
+  srcs = glob(
+    [
+      "yoga/**/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "yoga_hdrs",
   srcs = glob(
     glob(

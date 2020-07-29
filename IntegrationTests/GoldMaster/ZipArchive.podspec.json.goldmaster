@@ -68,6 +68,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "ZipArchive_public_hdrs",
+  srcs = glob(
+    [
+      "*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "ZipArchive_hdrs",
   srcs = glob(
     glob(

@@ -220,12 +220,6 @@ public struct PodBuildFile: SkylarkConvertible {
         let swiftLike = extractFiles(fromPattern: sources, includingFileTypes:
                 SwiftLikeFileTypes)
         if !swiftLike.isEmpty {
-            // Warning: `swift_library` chokes if we give it empty source files
-            // at link time. Consider fixing that. Otherwise, we can hit the
-            // file system for unbounded globs here and determine deps based on
-            // those globs, or continue to emit the dep and determine if it
-            // should be a dep in Bazel. The latter limiting based on the
-            // current design.
             result.insert(.swift)
         }
         return result
@@ -235,23 +229,100 @@ public struct PodBuildFile: SkylarkConvertible {
     /// Depending on the source files and other factors, we'll return different
     /// kinds of rules for a PodSpec and corresponding SubSpecs
     static func makeSourceLibs(parentSpecs: [PodSpec], spec: PodSpec,
-            extraDeps: [BazelTarget]) -> [BazelTarget] {
+            extraDeps: [BazelTarget], isRootSpec: Bool = false) -> [BazelTarget] {
         var sourceLibs: [BazelTarget] = []
         // Split libs based on the sources involved.
         let sourceTypes = getSourceTypes(fromPodspec: spec)
+
+        let fallbackSpec = FallbackSpec(specs: [spec] +  parentSpecs)
+
+        let externalName = getNamePrefix() + (parentSpecs.first?.name ?? spec.name)
+        let moduleName: AttrSet<String> = fallbackSpec.attr(\.moduleName).map {
+            $0 ?? ""
+        }
+        let headerDirectoryName: AttrSet<String?> = fallbackSpec.attr(\.headerDirectory)
+        let headerName = (moduleName.isEmpty ? nil : moduleName) ??
+            (headerDirectoryName.basic == nil ? nil :
+                headerDirectoryName.denormalize()) ?? AttrSet<String>(value:
+                externalName)
+        let clangModuleName = headerName.basic?.replacingOccurrences(of: "-", with: "_") ?? ""
+
+        let podName = GetBuildOptions().podName
+        let name = computeLibName(parentSpecs: parentSpecs, spec: spec, podName:
+            podName, isSplitDep: false, sourceType: .objc)
+
+        let isTopLevelTarget = parentSpecs.isEmpty
+        let moduleMap: ModuleMap?
+        let moduleMapTargets: [BazelTarget]
+        let extendedModuleMap: ModuleMap?
+        let options = GetBuildOptions()
+
+        // When there is swift and Objc
+        // - generate a module map
+        // - extend the module map with the generated swift header
+        if sourceTypes.count > 1 && sourceTypes.contains(.swift) {
+            // Extend the module map
+            let mrname = clangModuleName
+            moduleMapTargets = [
+                ModuleMap(
+                    name: mrname + "_extended",
+                    dirname: mrname + "_extended_module_map",
+                    moduleName: clangModuleName,
+                    headers: [mrname + "_public_hdrs"],
+                    swiftHeader: "../" + mrname + "-Swift.h"
+                ),
+                ModuleMap(
+                    name: mrname,
+                    dirname: mrname + "_module_map",
+                    moduleName: clangModuleName,
+                    headers: [
+                        mrname + "_extended_module_map_module_map_file",
+                        mrname + "_public_hdrs"
+                    ],
+                    moduleMapName: mrname + ".modulemap"
+                )
+            ]
+            extendedModuleMap = moduleMapTargets[0] as! ModuleMap
+            moduleMap = moduleMapTargets[1] as! ModuleMap
+        } else if options.generateModuleMap {
+            moduleMapTargets = [
+                ModuleMap(
+                name: moduleName.basic ?? "",
+                dirname: name + "_module_map",
+                moduleName: clangModuleName,
+                headers: [externalName + "_hdrs"]
+                )
+            ]
+            moduleMap = moduleMapTargets[0] as! ModuleMap
+            extendedModuleMap = nil
+        } else {
+            extendedModuleMap = nil
+            moduleMap = nil
+            moduleMapTargets = []
+        }
+
+        let objcModuleMap = extendedModuleMap ?? moduleMap
+        let swiftModuleMap = sourceTypes.count == 0  ? nil : moduleMap
         if sourceTypes.count == 0 {
             sourceLibs.append(ObjcLibrary(parentSpecs: parentSpecs, spec: spec,
                         extraDeps: extraDeps.map { $0.name }, sourceType:
-                        .objc))
-        } else if sourceTypes.count == 1 {
+                        .objc, moduleMap: objcModuleMap))
+        } else if sourceTypes.count == 1 && sourceTypes.first != .swift {
+            // For swift, we _always_ generate a top level ObjcLibrary for now.
+            // Currently, the top level ObjcLibray is used to propagate module
+            // maps upwards, and there is no dependency on the module map due to
+            // mixed modules. The following code is dead
             if sourceTypes.first == .swift {
-                sourceLibs.append(SwiftLibrary(parentSpecs: parentSpecs, spec: spec,
-                            extraDeps: extraDeps.map { $0.name }))
-                fputs("WARNING: swift support is currently WIP", __stderrp)
+                if isTopLevelTarget {
+                    sourceLibs.append(SwiftLibrary(parentSpecs: parentSpecs, spec: spec,
+                                extraDeps: extraDeps.map { $0.name },
+                                moduleMap: swiftModuleMap))
+            
+                }
             } else {
                 sourceLibs.append(ObjcLibrary(parentSpecs: parentSpecs, spec: spec,
                             extraDeps: extraDeps.map { $0.name },
-                            sourceType: sourceTypes.first!))
+                            sourceType: sourceTypes.first!, moduleMap: objcModuleMap))
             }
         } else {
             // Split out Cpp and Swift libraries into seperate libraries
@@ -262,28 +333,27 @@ public struct PodBuildFile: SkylarkConvertible {
             if sourceTypes.contains(.cpp) {
                 let cppLib = ObjcLibrary(parentSpecs: parentSpecs, spec: spec,
                         extraDeps: extraDeps.map { $0.name },
-                        isSplitDep: true, sourceType: .cpp)
+                        isSplitDep: true, sourceType: .cpp, moduleMap: objcModuleMap)
                 splitDeps.append(cppLib)
                 sourceLibs.append(cppLib)
             }
 
-            if sourceTypes.contains(.swift) {
+            if isTopLevelTarget && sourceTypes.contains(.swift) {
                 // Append a swift library.
                 let swiftLib = SwiftLibrary(parentSpecs: parentSpecs, spec: spec,
                         extraDeps: extraDeps.map { $0.name },
-                        isSplitDep: true)
+                        isSplitDep: true, moduleMap: swiftModuleMap)
                 splitDeps.append(swiftLib)
                 sourceLibs.append(swiftLib)
-
-                fputs("WARNING: swift support is currently WIP", __stderrp)
             }
 
             // In this case, the root lib is Objc
             let rootLib = ObjcLibrary(parentSpecs: parentSpecs, spec: spec,
-                    extraDeps: (extraDeps + splitDeps).map { $0.name })
+                    extraDeps: (extraDeps + splitDeps).map { $0.name },
+                    moduleMap: objcModuleMap)
             sourceLibs.append(rootLib)
         }
-        return sourceLibs
+        return sourceLibs + (isTopLevelTarget ? moduleMapTargets : [])
     }
 
     private static func makeSubspecTargets(parentSpecs: [PodSpec], spec: PodSpec) -> [BazelTarget] {
@@ -337,17 +407,6 @@ public struct PodBuildFile: SkylarkConvertible {
 
         var output: [BazelTarget] = sourceLibs + subspecTargets +
             bundleLibraries(withPodSpec: podSpec) + extraDeps
-
-        // Note: we don't currently render these inline. This is a stand in
-        // until the ModuleMap is allocated here.
-        output = output.reduce(into: [BazelTarget]()) {
-            accum, next in
-            if let objcLib = next as? ObjcLibrary,
-                let moduleMap = objcLib.moduleMap {
-                accum.append(moduleMap)
-            }
-            accum.append(next)
-        }
 
         // Execute transforms manually
         // Don't use unneeded abstractions to make a few function calls

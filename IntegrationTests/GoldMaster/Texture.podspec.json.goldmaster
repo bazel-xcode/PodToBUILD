@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Texture_public_hdrs",
+  srcs = [
+    ":AssetsLibrary_public_hdrs",
+    ":MapKit_public_hdrs",
+    ":PINRemoteImage_public_hdrs",
+    ":Photos_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Texture_hdrs",
   srcs = glob(
     [
@@ -155,10 +167,35 @@ filegroup(
       [
         "Base/*.h",
         "Source/**/*.h",
-        "Source/TextKit/*.h"
+        "Source/*.h",
+        "Source/Base/*.h",
+        "Source/Debug/**/*.h",
+        "Source/Details/**/*.h",
+        "Source/Layout/**/*.h",
+        "Source/TextKit/*.h",
+        "Source/TextKit/ASTextKitComponents.h",
+        "Source/TextKit/ASTextNodeTypes.h"
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "Source/*.h",
+      "Source/Base/*.h",
+      "Source/Debug/**/*.h",
+      "Source/Details/**/*.h",
+      "Source/Layout/**/*.h",
+      "Source/TextKit/ASTextKitComponents.h",
+      "Source/TextKit/ASTextNodeTypes.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -177,7 +214,14 @@ filegroup(
       [
         "Base/*.h",
         "Source/**/*.h",
-        "Source/TextKit/*.h"
+        "Source/*.h",
+        "Source/Base/*.h",
+        "Source/Debug/**/*.h",
+        "Source/Details/**/*.h",
+        "Source/Layout/**/*.h",
+        "Source/TextKit/*.h",
+        "Source/TextKit/ASTextKitComponents.h",
+        "Source/TextKit/ASTextNodeTypes.h"
       ],
       exclude_directories = 1
     ),
@@ -282,12 +326,39 @@ filegroup(
       [
         "Base/*.h",
         "Source/**/*.h",
-        "Source/TextKit/*.h"
+        "Source/*.h",
+        "Source/Base/*.h",
+        "Source/Debug/**/*.h",
+        "Source/Details/**/*.h",
+        "Source/Layout/**/*.h",
+        "Source/TextKit/*.h",
+        "Source/TextKit/ASTextKitComponents.h",
+        "Source/TextKit/ASTextNodeTypes.h"
       ],
       exclude_directories = 1
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_public_hdrs",
+  srcs = glob(
+    [
+      "Source/*.h",
+      "Source/Base/*.h",
+      "Source/Debug/**/*.h",
+      "Source/Details/**/*.h",
+      "Source/Layout/**/*.h",
+      "Source/TextKit/ASTextKitComponents.h",
+      "Source/TextKit/ASTextNodeTypes.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_cxx_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -304,7 +375,14 @@ filegroup(
       [
         "Base/*.h",
         "Source/**/*.h",
-        "Source/TextKit/*.h"
+        "Source/*.h",
+        "Source/Base/*.h",
+        "Source/Debug/**/*.h",
+        "Source/Details/**/*.h",
+        "Source/Layout/**/*.h",
+        "Source/TextKit/*.h",
+        "Source/TextKit/ASTextKitComponents.h",
+        "Source/TextKit/ASTextNodeTypes.h"
       ],
       exclude_directories = 1
     ),
@@ -400,6 +478,15 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "PINRemoteImage_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -505,6 +592,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "IGListKit_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "IGListKit_hdrs",
   srcs = glob(
     [
@@ -597,6 +693,15 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Yoga_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -701,6 +806,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "MapKit_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "MapKit_hdrs",
   srcs = glob(
     [
@@ -799,6 +913,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Photos_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Photos_hdrs",
   srcs = glob(
     [
@@ -892,6 +1015,15 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "AssetsLibrary_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]

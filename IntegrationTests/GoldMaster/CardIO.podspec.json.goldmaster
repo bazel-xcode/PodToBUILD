@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "CardIO_public_hdrs",
+  srcs = glob(
+    [
+      "CardIO/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "CardIO_hdrs",
   srcs = glob(
     glob(

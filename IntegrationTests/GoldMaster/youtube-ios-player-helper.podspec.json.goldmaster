@@ -130,6 +130,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "youtube-ios-player-helper_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "Classes/**/*.h",
+      "Classes/**/*.hpp",
+      "Classes/**/*.hxx"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "youtube-ios-player-helper_cxx_hdrs",
   srcs = select(
     {
@@ -358,6 +372,7 @@ objc_library(
       )
     }
   ),
+  module_map = ":youtube_ios_player_helper_extended_module_map_module_map_file",
   hdrs = [
     ":youtube-ios-player-helper_cxx_hdrs"
   ],
@@ -516,6 +531,22 @@ filegroup(
       )
     }
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "youtube-ios-player-helper_public_hdrs",
+  srcs = glob(
+    [
+      "Classes/**/*.h",
+      "Classes/**/*.hpp",
+      "Classes/**/*.hxx"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":youtube-ios-player-helper_cxx_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -689,6 +720,7 @@ objc_library(
       )
     }
   ),
+  module_map = ":youtube_ios_player_helper_extended_module_map_module_map_file",
   hdrs = [
     ":youtube-ios-player-helper_hdrs"
   ],
@@ -724,6 +756,30 @@ acknowledged_target(
   name = "youtube-ios-player-helper_acknowledgement",
   deps = [],
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
+)
+gen_module_map(
+  "youtube_ios_player_helper_extended_module_map_module_map_file",
+  "youtube_ios_player_helper_extended_module_map",
+  "youtube_ios_player_helper",
+  [
+    "youtube_ios_player_helper_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_module_map(
+  "youtube_ios_player_helper_module_map_module_map_file",
+  "youtube_ios_player_helper_module_map",
+  "youtube_ios_player_helper",
+  [
+    "youtube_ios_player_helper_extended_module_map_module_map_file",
+    "youtube_ios_player_helper_public_hdrs"
+  ],
+  module_map_name = "youtube_ios_player_helper.modulemap",
+  visibility = [
+    "//visibility:public"
+  ]
 )
 apple_bundle_import(
   name = "youtube-ios-player-helper_Bundle_Assets",

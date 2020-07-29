@@ -56,10 +56,27 @@ filegroup(
       [
         "FBAllocationTracker/**/*.h",
         "FBAllocationTracker/**/*.hpp",
-        "FBAllocationTracker/**/*.hxx"
+        "FBAllocationTracker/**/*.hxx",
+        "FBAllocationTracker/FBAllocationTracker.h",
+        "FBAllocationTracker/FBAllocationTrackerManager.h",
+        "FBAllocationTracker/FBAllocationTrackerSummary.h"
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBAllocationTracker_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "FBAllocationTracker/FBAllocationTracker.h",
+      "FBAllocationTracker/FBAllocationTrackerManager.h",
+      "FBAllocationTracker/FBAllocationTrackerSummary.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -78,7 +95,10 @@ filegroup(
       [
         "FBAllocationTracker/**/*.h",
         "FBAllocationTracker/**/*.hpp",
-        "FBAllocationTracker/**/*.hxx"
+        "FBAllocationTracker/**/*.hxx",
+        "FBAllocationTracker/FBAllocationTracker.h",
+        "FBAllocationTracker/FBAllocationTrackerManager.h",
+        "FBAllocationTracker/FBAllocationTrackerSummary.h"
       ],
       exclude_directories = 1
     ),
@@ -213,6 +233,7 @@ objc_library(
     ),
     exclude_directories = 1
   ),
+  module_map = ":FBAllocationTracker_extended_module_map_module_map_file",
   hdrs = [
     ":FBAllocationTracker_cxx_hdrs"
   ],
@@ -278,12 +299,31 @@ filegroup(
       [
         "FBAllocationTracker/**/*.h",
         "FBAllocationTracker/**/*.hpp",
-        "FBAllocationTracker/**/*.hxx"
+        "FBAllocationTracker/**/*.hxx",
+        "FBAllocationTracker/FBAllocationTracker.h",
+        "FBAllocationTracker/FBAllocationTrackerManager.h",
+        "FBAllocationTracker/FBAllocationTrackerSummary.h"
       ],
       exclude_directories = 1
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBAllocationTracker_public_hdrs",
+  srcs = glob(
+    [
+      "FBAllocationTracker/FBAllocationTracker.h",
+      "FBAllocationTracker/FBAllocationTrackerManager.h",
+      "FBAllocationTracker/FBAllocationTrackerSummary.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":FBAllocationTracker_cxx_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -300,7 +340,10 @@ filegroup(
       [
         "FBAllocationTracker/**/*.h",
         "FBAllocationTracker/**/*.hpp",
-        "FBAllocationTracker/**/*.hxx"
+        "FBAllocationTracker/**/*.hxx",
+        "FBAllocationTracker/FBAllocationTracker.h",
+        "FBAllocationTracker/FBAllocationTrackerManager.h",
+        "FBAllocationTracker/FBAllocationTrackerSummary.h"
       ],
       exclude_directories = 1
     ),
@@ -405,6 +448,7 @@ objc_library(
     ),
     exclude_directories = 1
   ),
+  module_map = ":FBAllocationTracker_extended_module_map_module_map_file",
   hdrs = [
     ":FBAllocationTracker_hdrs"
   ],
@@ -443,4 +487,28 @@ acknowledged_target(
   name = "FBAllocationTracker_acknowledgement",
   deps = [],
   value = "//Vendor/FBAllocationTracker/pod_support_buildable:acknowledgement_fragment"
+)
+gen_module_map(
+  "FBAllocationTracker_extended_module_map_module_map_file",
+  "FBAllocationTracker_extended_module_map",
+  "FBAllocationTracker",
+  [
+    "FBAllocationTracker_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_module_map(
+  "FBAllocationTracker_module_map_module_map_file",
+  "FBAllocationTracker_module_map",
+  "FBAllocationTracker",
+  [
+    "FBAllocationTracker_extended_module_map_module_map_file",
+    "FBAllocationTracker_public_hdrs"
+  ],
+  module_map_name = "FBAllocationTracker.modulemap",
+  visibility = [
+    "//visibility:public"
+  ]
 )

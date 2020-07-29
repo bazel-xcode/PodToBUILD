@@ -57,6 +57,13 @@ filegroup(
   ]
 )
 filegroup(
+  name = "GoogleSignIn_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "GoogleSignIn_hdrs",
   srcs = glob(
     [

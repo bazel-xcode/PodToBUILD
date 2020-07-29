@@ -56,6 +56,15 @@ filegroup(
   ]
 )
 filegroup(
+  name = "TestArcPatternsWithExcludes_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FBSDKCoreKit_hdrs",
   srcs = glob(
     [
@@ -230,6 +239,18 @@ filegroup(
         exclude_directories = 1
       )
     }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_public_hdrs",
+  srcs = glob(
+    [
+      "**/*.h"
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"

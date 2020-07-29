@@ -8,7 +8,7 @@ public struct ModuleMap: BazelTarget {
 
     public init(name: String, dirname: String, moduleName: String, headers:
                 [String], swiftHeader: String? = nil, moduleMapName: String? = nil) {
-        self.name = name
+        self.name = name + "_module_map_module_map_file"
         self.dirname = dirname
         self.moduleName = moduleName
         self.headers = headers
@@ -27,9 +27,6 @@ public struct ModuleMap: BazelTarget {
             .basic(moduleName.toSkylark()),
             .basic(headers.toSkylark())
         ]
-        if let swiftHeader = self.swiftHeader {
-            args.append(.named(name: "swift_header", value: swiftHeader.toSkylark()))
-        }
         if let moduleMapName = self.moduleMapName {
             args.append(.named(name: "module_map_name", value: moduleMapName.toSkylark()))
         }

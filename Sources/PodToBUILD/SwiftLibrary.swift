@@ -37,7 +37,7 @@ public struct SwiftLibrary: BazelTarget {
 
 
     init(parentSpecs: [PodSpec], spec: PodSpec, extraDeps: [String] = [],
-            isSplitDep: Bool = false) {
+            isSplitDep: Bool = false, moduleMap: ModuleMap? = nil) {
         let fallbackSpec = FallbackSpec(specs: parentSpecs + [spec])
         self.isTopLevelTarget = parentSpecs.isEmpty && isSplitDep == false
 

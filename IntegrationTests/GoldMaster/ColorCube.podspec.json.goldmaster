@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "ColorCube_public_hdrs",
+  srcs = glob(
+    [
+      "ColorCube/ColorCube/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "ColorCube_hdrs",
   srcs = glob(
     glob(

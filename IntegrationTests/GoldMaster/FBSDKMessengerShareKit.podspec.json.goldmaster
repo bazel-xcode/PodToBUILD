@@ -52,10 +52,23 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h"
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h",
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/*.h"
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKMessengerShareKit_public_hdrs",
+  srcs = glob(
+    [
+      "FBSDKMessengerShareKit/FBSDKMessengerShareKit/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -72,7 +85,8 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h"
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h",
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/*.h"
       ],
       exclude_directories = 1
     ),

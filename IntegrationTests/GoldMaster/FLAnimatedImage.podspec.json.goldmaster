@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "FLAnimatedImage_public_hdrs",
+  srcs = glob(
+    [
+      "FLAnimatedImage/**/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "FLAnimatedImage_hdrs",
   srcs = glob(
     glob(

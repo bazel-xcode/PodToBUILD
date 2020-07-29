@@ -1,4 +1,3 @@
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "acknowledged_target",
@@ -95,6 +94,15 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "React_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -345,6 +353,18 @@ filegroup(
         exclude_directories = 1
       )
     }
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "Core_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "React/**/*.h"
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -2079,6 +2099,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Core_public_hdrs",
+  srcs = glob(
+    [
+      "React/**/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_cxx_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Core_hdrs",
   srcs = select(
     {
@@ -3326,6 +3360,16 @@ filegroup(
   ]
 )
 filegroup(
+  name = "CxxBridge_cxx_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs",
+    ":cxxreact_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "CxxBridge_cxx_hdrs",
   srcs = glob(
     glob(
@@ -3450,6 +3494,17 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "CxxBridge_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs",
+    ":CxxBridge_cxx_public_hdrs",
+    ":cxxreact_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -3584,6 +3639,26 @@ filegroup(
   ]
 )
 filegroup(
+  name = "DevSupport_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "React/DevSupport/*.h",
+      "React/DevSupport/*.hpp",
+      "React/DevSupport/*.hxx",
+      "React/Inspector/*.h",
+      "React/Inspector/*.hpp",
+      "React/Inspector/*.hxx"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs",
+    ":RCTWebSocket_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "DevSupport_cxx_hdrs",
   srcs = glob(
     glob(
@@ -3670,6 +3745,7 @@ objc_library(
     ),
     exclude_directories = 1
   ),
+  module_map = ":React_extended_module_map_module_map_file",
   hdrs = [
     ":DevSupport_cxx_hdrs"
   ],
@@ -3706,24 +3782,6 @@ acknowledged_target(
   deps = [],
   value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
 )
-swift_library(
-  name = "DevSupport_swift",
-  srcs = glob(
-    [
-      "React/DevSupport/*.swift",
-      "React/Inspector/*.swift"
-    ],
-    exclude_directories = 1
-  ),
-  deps = [
-    ":Core",
-    ":RCTWebSocket"
-  ],
-  data = [],
-  visibility = [
-    "//visibility:public"
-  ]
-)
 filegroup(
   name = "DevSupport_direct_hdrs",
   srcs = glob(
@@ -3745,6 +3803,27 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "DevSupport_public_hdrs",
+  srcs = glob(
+    [
+      "React/DevSupport/*.h",
+      "React/DevSupport/*.hpp",
+      "React/DevSupport/*.hxx",
+      "React/Inspector/*.h",
+      "React/Inspector/*.hpp",
+      "React/Inspector/*.hxx"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs",
+    ":DevSupport_cxx_public_hdrs",
+    ":RCTWebSocket_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -3825,6 +3904,7 @@ objc_library(
     ],
     exclude_directories = 1
   ),
+  module_map = ":React_extended_module_map_module_map_file",
   hdrs = [
     ":DevSupport_hdrs"
   ],
@@ -3832,7 +3912,6 @@ objc_library(
   deps = [
     ":Core",
     ":DevSupport_cxx",
-    ":DevSupport_swift",
     ":RCTWebSocket",
     ":DevSupport_includes"
   ],
@@ -3881,6 +3960,21 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "RCTFabric_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "React/Fabric/**/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs",
+    ":fabric_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -4050,6 +4144,22 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTFabric_public_hdrs",
+  srcs = glob(
+    [
+      "React/Fabric/**/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs",
+    ":RCTFabric_cxx_public_hdrs",
+    ":fabric_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTFabric_hdrs",
   srcs = glob(
     glob(
@@ -4195,6 +4305,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "tvOS_public_hdrs",
+  srcs = glob(
+    [
+      "React/**/RCTTV*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "tvOS_hdrs",
   srcs = glob(
     glob(
@@ -4302,6 +4426,15 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "jschelpers_public_hdrs",
+  srcs = [
+    ":PrivateDatabase_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -4461,6 +4594,13 @@ filegroup(
   ]
 )
 filegroup(
+  name = "jsinspector_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "jsinspector_hdrs",
   srcs = glob(
     glob(
@@ -4598,6 +4738,13 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "PrivateDatabase_public_hdrs",
+  srcs = [],
   visibility = [
     "//visibility:public"
   ]
@@ -4755,6 +4902,16 @@ filegroup(
   ]
 )
 filegroup(
+  name = "cxxreact_public_hdrs",
+  srcs = [
+    ":jschelpers_public_hdrs",
+    ":jsinspector_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "cxxreact_hdrs",
   srcs = glob(
     glob(
@@ -4906,6 +5063,13 @@ filegroup(
   ]
 )
 filegroup(
+  name = "fabric_public_hdrs",
+  srcs = [],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_hdrs",
   srcs = glob(
     [
@@ -4998,6 +5162,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_activityindicator_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/activityindicator/**/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -5143,6 +5319,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "fabric_attributedstring_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/attributedstring/**/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_attributedstring_hdrs",
   srcs = glob(
     glob(
@@ -5274,6 +5462,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_core_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/core/**/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -5419,6 +5619,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "fabric_debug_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/debug/**/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_debug_hdrs",
   srcs = glob(
     glob(
@@ -5550,6 +5762,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_graphics_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/graphics/**/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -5695,6 +5919,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "fabric_scrollview_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/scrollview/**/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_scrollview_hdrs",
   srcs = glob(
     glob(
@@ -5833,6 +6069,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "fabric_text_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/text/**/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_text_hdrs",
   srcs = glob(
     glob(
@@ -5964,6 +6212,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_textlayoutmanager_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/textlayoutmanager/**/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -6110,6 +6370,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "fabric_uimanager_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/uimanager/**/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fabric_uimanager_hdrs",
   srcs = glob(
     glob(
@@ -6241,6 +6513,18 @@ filegroup(
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "fabric_view_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/view/**/*.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -6389,6 +6673,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTFabricSample_public_hdrs",
+  srcs = glob(
+    [
+      "ReactCommon/fabric/sample/**/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTFabricSample_hdrs",
   srcs = glob(
     glob(
@@ -6522,6 +6818,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "ART_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/ART/**/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "ART_hdrs",
   srcs = glob(
     glob(
@@ -6629,6 +6939,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "RCTActionSheet_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/ActionSheetIOS/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -6748,6 +7072,22 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTAnimation_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/NativeAnimation/*.h",
+      "Libraries/NativeAnimation/Drivers/*.h",
+      "Libraries/NativeAnimation/Nodes/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTAnimation_hdrs",
   srcs = glob(
     glob(
@@ -6859,6 +7199,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "RCTBlob_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/Blob/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -7026,6 +7380,21 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTBlob_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/Blob/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs",
+    ":RCTBlob_cxx_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTBlob_hdrs",
   srcs = glob(
     glob(
@@ -7183,6 +7552,21 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTCameraRoll_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/CameraRoll/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs",
+    ":RCTImage_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTCameraRoll_hdrs",
   srcs = glob(
     glob(
@@ -7298,6 +7682,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTGeolocation_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/Geolocation/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTGeolocation_hdrs",
   srcs = glob(
     glob(
@@ -7405,6 +7803,21 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "RCTImage_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/Image/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs",
+    ":RCTNetwork_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -7526,6 +7939,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "RCTNetwork_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/Network/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -7662,6 +8089,21 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTNetwork_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/Network/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs",
+    ":RCTNetwork_cxx_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTNetwork_hdrs",
   srcs = glob(
     glob(
@@ -7788,6 +8230,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTPushNotification_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/PushNotificationIOS/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTPushNotification_hdrs",
   srcs = glob(
     glob(
@@ -7895,6 +8351,20 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "RCTSettings_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/Settings/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -8012,6 +8482,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTText_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/Text/**/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTText_hdrs",
   srcs = glob(
     glob(
@@ -8124,6 +8608,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTVibration_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/Vibration/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTVibration_hdrs",
   srcs = glob(
     glob(
@@ -8231,6 +8729,22 @@ filegroup(
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "RCTWebSocket_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/WebSocket/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs",
+    ":RCTBlob_public_hdrs",
+    ":fishhook_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -8391,6 +8905,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "fishhook_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/fishhook/*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "fishhook_hdrs",
   srcs = glob(
     glob(
@@ -8541,6 +9067,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTLinkingIOS_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/LinkingIOS/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTLinkingIOS_hdrs",
   srcs = glob(
     glob(
@@ -8653,6 +9193,20 @@ filegroup(
   ]
 )
 filegroup(
+  name = "RCTTest_public_hdrs",
+  srcs = glob(
+    [
+      "Libraries/RCTTest/**/*.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "RCTTest_hdrs",
   srcs = glob(
     glob(
@@ -8755,6 +9309,16 @@ filegroup(
     ],
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "_ignore_me_subspec_for_linting__public_hdrs",
+  srcs = [
+    ":Core_public_hdrs",
+    ":CxxBridge_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]

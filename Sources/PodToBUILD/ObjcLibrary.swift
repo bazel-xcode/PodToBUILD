@@ -163,7 +163,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     public let sdkDylibs: AttrSet<[String]>
     public let bundles: AttrSet<[String]>
     public let resources: AttrSet<GlobNode>
-    public let publicHeaders: AttrSet<Set<String>>
+    public let publicHeaders: AttrSet<GlobNode>
     public let nonArcSrcs: AttrSet<GlobNode>
 
     // only used later in transforms
@@ -193,7 +193,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         copts: AttrSet<[String]> = AttrSet.empty,
         bundles: AttrSet<[String]> = AttrSet.empty,
         resources: AttrSet<GlobNode> = AttrSet.empty,
-        publicHeaders: AttrSet<Set<String>> = AttrSet.empty,
+        publicHeaders: AttrSet<GlobNode> = AttrSet.empty,
         nonArcSrcs: AttrSet<GlobNode> = AttrSet.empty,
         requiresArc: AttrSet<Either<Bool, [String]>?> = AttrSet.empty,
         isTopLevelTarget: Bool = false
@@ -227,7 +227,8 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     /// isSplitDep indicates if the library is a split language dependency
     init(parentSpecs: [PodSpec] = [], spec: PodSpec, extraDeps: [String] = [],
          isSplitDep: Bool = false,
-         sourceType: BazelSourceLibType = .objc) {
+         sourceType: BazelSourceLibType = .objc,
+         moduleMap: ModuleMap? = nil) {
         let fallbackSpec = FallbackSpec(specs: [spec] +  parentSpecs)
 
         isTopLevelTarget = parentSpecs.isEmpty && isSplitDep == false
@@ -257,8 +258,6 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                     fatalError("null logic error")
                 }
             }
-        publicHeaders = fallbackSpec.attr(\.publicHeaders).map { Set($0) }
-
         let podName = GetBuildOptions().podName
         name = computeLibName(parentSpecs: parentSpecs, spec: spec, podName:
             podName, isSplitDep: isSplitDep, sourceType: sourceType)
@@ -333,49 +332,48 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.externalName = externalName
 
         sourceFiles = implFiles.zip(implExcludes).map {
-            t -> GlobNode in
-            GlobNode(include: .left(t.first ?? Set()), exclude: .left(t.second ?? Set()))
+            GlobNode(include: .left($0.first ?? Set()), exclude: .left($0.second ?? Set()))
         }
 
-        let privateHeaders = fallbackSpec.attr(\.privateHeaders).unpackToMulti()
+        let publicHeadersVal = fallbackSpec.attr(\.publicHeaders).unpackToMulti()
+        let privateHeadersVal = fallbackSpec.attr(\.privateHeaders).unpackToMulti()
+
+        let sourceHeaders = extractFiles(fromPattern: allSourceFiles, includingFileTypes:
+                HeaderFileTypes)
+        let privateHeaders = extractFiles(fromPattern: privateHeadersVal, includingFileTypes:
+                HeaderFileTypes)
+        let publicHeaders = extractFiles(fromPattern: publicHeadersVal, includingFileTypes:
+                HeaderFileTypes)
+
+        let basePublicHeaders = sourceHeaders.zip(publicHeaders).map {
+            return Set($0.second ?? $0.first ?? [])
+        }
+        // lib/cocoapods/sandbox/file_accessor.rb
+        self.publicHeaders = basePublicHeaders.zip(privateHeadersVal).map {
+            GlobNode(include: .left($0.first ?? Set()), exclude: .left(Set($0.second ?? [])))
+        }
+
         // It's possible to use preserve_paths for header includes
         // also, preserve path may be used for a file, so we'd need to touch
         // the FS here to actually find out.
         let preservePaths = fallbackSpec.attr(\.preservePaths).unpackToMulti().map { $0.filter { !$0.contains("LICENSE") } }
-
         let allSpecHeadersList: AttrSet<[String]> =
-            extractFiles(fromPattern: allSourceFiles, includingFileTypes:
-                HeaderFileTypes) <>
-            extractFiles(fromPattern: privateHeaders, includingFileTypes:
-                HeaderFileTypes) <>
+            sourceHeaders <> privateHeaders <>
             extractFiles(fromPattern: preservePaths, includingFileTypes:
-                HeaderFileTypes)
+                HeaderFileTypes) <> publicHeaders
+
 
         let allSpecHeaders = allSpecHeadersList.map { Set($0) }
         let headerExcludes = extractFiles(fromPattern: allExcludes,
                                           includingFileTypes: HeaderFileTypes).map { Set($0) }
 
         headers = allSpecHeaders.zip(headerExcludes).map {
-            t -> GlobNode in
-            GlobNode(include: Set(t.first ?? []), exclude: Set(t.second
-                    ?? []))
+            GlobNode(include: Set($0.first ?? []), exclude: Set($0.second ?? []))
         }
 
         nonArcSrcs = AttrSet.empty
         sdkFrameworks = fallbackSpec.attr(\.frameworks)
-
-        let clangModuleName = headerName.basic?.replacingOccurrences(of: "-", with: "_")
-        let moduleMapDirectoryName = externalName + "_module_map"
-        if isTopLevelTarget, options.generateModuleMap {
-            moduleMap =  ModuleMap(
-                name: moduleName.basic ?? "",
-                dirname: moduleMapDirectoryName,
-                moduleName: clangModuleName ?? "",
-                headers: [externalName + "_hdrs"]
-                )
-        } else {
-            moduleMap = nil
-        }
+        self.moduleMap = moduleMap
 
         weakSdkFrameworks = fallbackSpec.attr(\.weakFrameworks)
         sdkDylibs = fallbackSpec.attr(\.libraries)
@@ -689,10 +687,26 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             }.sorted(by: <).map { ($0 + "_hdrs").toSkylark() }
         }.toSkylark()
 
+        let depPublicHdrs = deps.map {
+            $0.filter { depLabelName -> Bool in
+                guard depLabelName.hasPrefix(":") else {
+                    return false
+                }
+                let offsetIdx = depLabelName.utf8
+                        .index(depLabelName.utf8.startIndex, offsetBy: 1)
+                let labelName = String(
+                        depLabelName[offsetIdx ..< depLabelName.utf8.endIndex])
+                let target = BuildFileContext.get()?.getBazelTarget(name:
+                        labelName)
+                return target is ObjcLibrary
+            }.sorted(by: <).map { ($0 + "_public_hdrs").toSkylark() }
+        }.toSkylark()
+
+
         let podSupportHeaders = AttrSet(basic: GlobNode(include: [
             PodSupportSystemPublicHeaderDir + "**/*"])).unpackToMulti()
-        let combinedHeaders: AttrSet<GlobNode> =
-        podSupportHeaders.zip(headers.unpackToMulti()).map {
+
+        let combinedHeaders: AttrSet<GlobNode> = (podSupportHeaders.zip(headers)).map {
             attrTuple -> GlobNode in
             if let first = attrTuple.first, let second = attrTuple.second {
                 return GlobNode(include:[.right(first), .right(second)] , exclude: [])
@@ -705,6 +719,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             arguments: [
                 .named(name: "name", value: (name + "_direct_hdrs").toSkylark()),
                 .named(name: "srcs", value: combinedHeaders.toSkylark()),
+                .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
+                ]
+            ))
+
+        inlineSkylark.append(.functionCall(
+            name: "filegroup",
+            arguments: [
+                .named(name: "name", value: (name + "_public_hdrs").toSkylark()),
+                .named(name: "srcs", value: lib.publicHeaders.toSkylark() .+. depPublicHdrs.toSkylark()),
                 .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
                 ]
             ))
@@ -765,8 +788,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 // TODO: in some cases, we may need to break this invariant, as
                 // it may not hold true for all cocoapods ( e.g. give it all
                 // possibilities here )
+		// TODO: Move ad-hoc bazel targets from ObjcLibrary to BuildFile
                 .named(name: "deps", value: deps
-                       .map { $0.filter { !$0.hasSuffix("_swift") } }
+                       .map { Set($0)
+                           .filter { !($0.hasSuffix("_swift") ||
+                           $0.hasSuffix("_VendoredFrameworks") ||
+                           $0.hasSuffix("_VendoredLibraries"))
+                           }
+                           .map { $0.hasPrefix(":") ? $0 + "_hmap" : $0 }
+                       }
                        .sorted(by: (<)).toSkylark()),
                 .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
             ]
@@ -802,24 +832,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             ))
         }
 
-        let moduleHeaders: [String]
-        if options.generateModuleMap {
-            let moduleMapDirname = lib.moduleMap?.dirname ?? externalName + "_module_map"
-            moduleHeaders = [":" + moduleMapDirname + "_module_map_file"]
-            // TODO:
-            // - Consider moving this module map into deps 
-            // - Propagate as a module map
+        if let moduleMap = self.moduleMap {
             libArguments.append(.named(
-                name: "includes",
-                value: [moduleMapDirname].toSkylark()
-             ))
-        } else {
-            moduleHeaders = []
+                name: "module_map",
+                value: (":" + moduleMap.dirname + "_module_map_file").toSkylark()))
         }
 
         libArguments.append(.named(
             name: "hdrs",
-            value: ([":" + headerSrcsName + "_hdrs"] + moduleHeaders + (options.generateHeaderMap ? [":" + name + "_hmap"] : [])).toSkylark()
+            value: ([":" + headerSrcsName + "_hdrs"] + (options.generateHeaderMap ? [":" + name + "_hmap"] : [])).toSkylark()
         ))
 
         if AttrSet.empty != lib.prefixHeader {
@@ -852,7 +873,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         var allDeps: SkylarkNode = SkylarkNode.empty
         if !lib.deps.isEmpty {
-            allDeps = lib.deps.sorted(by: (<)).toSkylark() 
+            allDeps = lib.deps.map { Set($0).sorted(by: (<)) } .toSkylark() 
         }
         if lib.includes.count > 0 {
             allDeps = allDeps .+. [":\(name)_includes"].toSkylark()

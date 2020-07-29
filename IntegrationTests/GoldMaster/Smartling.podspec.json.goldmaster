@@ -63,6 +63,18 @@ filegroup(
   ]
 )
 filegroup(
+  name = "Smartling_public_hdrs",
+  srcs = glob(
+    [
+      "*.h"
+    ],
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
   name = "Smartling_hdrs",
   srcs = glob(
     glob(

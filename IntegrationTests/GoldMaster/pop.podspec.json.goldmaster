@@ -53,10 +53,51 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "pop/**/*.h"
+        "pop/**/*.h",
+        "pop/POP.h",
+        "pop/POPAnimatableProperty.h",
+        "pop/POPAnimation.h",
+        "pop/POPAnimationEvent.h",
+        "pop/POPAnimationExtras.h",
+        "pop/POPAnimationTracer.h",
+        "pop/POPAnimator.h",
+        "pop/POPBasicAnimation.h",
+        "pop/POPCustomAnimation.h",
+        "pop/POPDecayAnimation.h",
+        "pop/POPDefines.h",
+        "pop/POPGeometry.h",
+        "pop/POPLayerExtras.h",
+        "pop/POPPropertyAnimation.h",
+        "pop/POPSpringAnimation.h"
       ],
       exclude_directories = 1
     ),
+    exclude_directories = 1
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "pop_cxx_public_hdrs",
+  srcs = glob(
+    [
+      "pop/POP.h",
+      "pop/POPAnimatableProperty.h",
+      "pop/POPAnimation.h",
+      "pop/POPAnimationEvent.h",
+      "pop/POPAnimationExtras.h",
+      "pop/POPAnimationTracer.h",
+      "pop/POPAnimator.h",
+      "pop/POPBasicAnimation.h",
+      "pop/POPCustomAnimation.h",
+      "pop/POPDecayAnimation.h",
+      "pop/POPDefines.h",
+      "pop/POPGeometry.h",
+      "pop/POPLayerExtras.h",
+      "pop/POPPropertyAnimation.h",
+      "pop/POPSpringAnimation.h"
+    ],
     exclude_directories = 1
   ),
   visibility = [
@@ -73,7 +114,22 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "pop/**/*.h"
+        "pop/**/*.h",
+        "pop/POP.h",
+        "pop/POPAnimatableProperty.h",
+        "pop/POPAnimation.h",
+        "pop/POPAnimationEvent.h",
+        "pop/POPAnimationExtras.h",
+        "pop/POPAnimationTracer.h",
+        "pop/POPAnimator.h",
+        "pop/POPBasicAnimation.h",
+        "pop/POPCustomAnimation.h",
+        "pop/POPDecayAnimation.h",
+        "pop/POPDefines.h",
+        "pop/POPGeometry.h",
+        "pop/POPLayerExtras.h",
+        "pop/POPPropertyAnimation.h",
+        "pop/POPSpringAnimation.h"
       ],
       exclude_directories = 1
     ),
@@ -175,12 +231,55 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "pop/**/*.h"
+        "pop/**/*.h",
+        "pop/POP.h",
+        "pop/POPAnimatableProperty.h",
+        "pop/POPAnimation.h",
+        "pop/POPAnimationEvent.h",
+        "pop/POPAnimationExtras.h",
+        "pop/POPAnimationTracer.h",
+        "pop/POPAnimator.h",
+        "pop/POPBasicAnimation.h",
+        "pop/POPCustomAnimation.h",
+        "pop/POPDecayAnimation.h",
+        "pop/POPDefines.h",
+        "pop/POPGeometry.h",
+        "pop/POPLayerExtras.h",
+        "pop/POPPropertyAnimation.h",
+        "pop/POPSpringAnimation.h"
       ],
       exclude_directories = 1
     ),
     exclude_directories = 1
   ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "pop_public_hdrs",
+  srcs = glob(
+    [
+      "pop/POP.h",
+      "pop/POPAnimatableProperty.h",
+      "pop/POPAnimation.h",
+      "pop/POPAnimationEvent.h",
+      "pop/POPAnimationExtras.h",
+      "pop/POPAnimationTracer.h",
+      "pop/POPAnimator.h",
+      "pop/POPBasicAnimation.h",
+      "pop/POPCustomAnimation.h",
+      "pop/POPDecayAnimation.h",
+      "pop/POPDefines.h",
+      "pop/POPGeometry.h",
+      "pop/POPLayerExtras.h",
+      "pop/POPPropertyAnimation.h",
+      "pop/POPSpringAnimation.h"
+    ],
+    exclude_directories = 1
+  ) + [
+    ":pop_cxx_public_hdrs"
+  ],
   visibility = [
     "//visibility:public"
   ]
@@ -195,7 +294,22 @@ filegroup(
       exclude_directories = 1
     ) + glob(
       [
-        "pop/**/*.h"
+        "pop/**/*.h",
+        "pop/POP.h",
+        "pop/POPAnimatableProperty.h",
+        "pop/POPAnimation.h",
+        "pop/POPAnimationEvent.h",
+        "pop/POPAnimationExtras.h",
+        "pop/POPAnimationTracer.h",
+        "pop/POPAnimator.h",
+        "pop/POPBasicAnimation.h",
+        "pop/POPCustomAnimation.h",
+        "pop/POPDecayAnimation.h",
+        "pop/POPDefines.h",
+        "pop/POPGeometry.h",
+        "pop/POPLayerExtras.h",
+        "pop/POPPropertyAnimation.h",
+        "pop/POPSpringAnimation.h"
       ],
       exclude_directories = 1
     ),
