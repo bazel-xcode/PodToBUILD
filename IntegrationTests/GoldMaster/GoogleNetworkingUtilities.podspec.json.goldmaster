@@ -82,8 +82,7 @@ headermap(
     ":GoogleNetworkingUtilities_hdrs"
   ],
   deps = [
-    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
-    ":GoogleNetworkingUtilities_VendoredFrameworks"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
   ],
   visibility = [
     "//visibility:public"

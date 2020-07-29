@@ -94,8 +94,8 @@ headermap(
     ":PINRemoteImage_hdrs"
   ],
   deps = [
-    ":FLAnimatedImage",
-    ":PINCache"
+    ":FLAnimatedImage_hmap",
+    ":PINCache_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -346,7 +346,7 @@ headermap(
     ":iOS_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -448,7 +448,7 @@ headermap(
     ":OSX_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -551,7 +551,7 @@ headermap(
     ":tvOS_union_hdrs"
   ],
   deps = [
-    ":iOS"
+    ":iOS_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -672,7 +672,7 @@ headermap(
   ],
   deps = [
     "//Vendor/FLAnimatedImage:FLAnimatedImage",
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -781,7 +781,7 @@ headermap(
   ],
   deps = [
     "//Vendor/libwebp:libwebp",
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -907,7 +907,7 @@ headermap(
   ],
   deps = [
     "//Vendor/PINCache:PINCache",
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"

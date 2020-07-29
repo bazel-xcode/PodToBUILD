@@ -86,8 +86,7 @@ headermap(
     "//Vendor/GTMOAuth2:GTMOAuth2",
     "//Vendor/GTMSessionFetcher:Core",
     "//Vendor/GoogleToolboxForMac:NSDictionary_URLArguments",
-    "//Vendor/GoogleToolboxForMac:NSString_URLArguments",
-    ":GoogleSignIn_VendoredFrameworks"
+    "//Vendor/GoogleToolboxForMac:NSString_URLArguments"
   ],
   visibility = [
     "//visibility:public"

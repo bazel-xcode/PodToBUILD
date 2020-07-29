@@ -90,9 +90,9 @@ headermap(
     ":FBSDKCoreKit_hdrs"
   ],
   deps = [
-    ":Basics",
-    ":Core",
-    ":Core_Bundle_FacebookSDKStrings"
+    ":Basics_hmap",
+    ":Core_Bundle_FacebookSDKStrings_hmap",
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1971,7 +1971,7 @@ headermap(
     ":Core_union_hdrs"
   ],
   deps = [
-    ":Basics"
+    ":Basics_hmap"
   ],
   visibility = [
     "//visibility:public"

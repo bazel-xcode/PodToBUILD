@@ -92,8 +92,8 @@ headermap(
     ":CocoaLumberjack_hdrs"
   ],
   deps = [
-    ":Default",
-    ":Extensions"
+    ":Default_hmap",
+    ":Extensions_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -463,7 +463,7 @@ headermap(
     ":Extensions_union_hdrs"
   ],
   deps = [
-    ":Default"
+    ":Default_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -652,7 +652,7 @@ headermap(
     {
       "//conditions:default": [],
       ":osxCase": [
-        ":Default"
+        ":Default_hmap"
       ]
     }
   ),
@@ -770,7 +770,7 @@ headermap(
     ":Swift_union_hdrs"
   ],
   deps = [
-    ":Default"
+    ":Default_hmap"
   ],
   visibility = [
     "//visibility:public"

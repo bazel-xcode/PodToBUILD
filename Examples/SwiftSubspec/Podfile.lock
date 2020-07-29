@@ -1,0 +1,20 @@
+PODS:
+  - Parent (0.0.1):
+    - Parent/Default (= 0.0.1)
+    - Parent/Subspec (= 0.0.1)
+  - Parent/Default (0.0.1)
+  - Parent/Subspec (0.0.1)
+
+DEPENDENCIES:
+  - Parent (from `Vendor/Parent`)
+
+EXTERNAL SOURCES:
+  Parent:
+    :path: Vendor/Parent
+
+SPEC CHECKSUMS:
+  Parent: f1cdf0a3705a647566666f1bb8237812240ddd0c
+
+PODFILE CHECKSUM: f52fcbc8dc7d0da363e63c38023b35c90a4f8f6d
+
+COCOAPODS: 1.9.3

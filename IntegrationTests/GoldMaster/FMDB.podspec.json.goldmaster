@@ -91,7 +91,7 @@ headermap(
     ":FMDB_hdrs"
   ],
   deps = [
-    ":standard"
+    ":standard_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -342,7 +342,7 @@ headermap(
     ":FTS_union_hdrs"
   ],
   deps = [
-    ":standard"
+    ":standard_hmap"
   ],
   visibility = [
     "//visibility:public"

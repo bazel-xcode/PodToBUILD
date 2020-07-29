@@ -86,7 +86,7 @@ headermap(
     ":FBSDKCoreKit_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"

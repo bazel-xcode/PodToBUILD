@@ -102,9 +102,7 @@ headermap(
     "GoogleAppIndexing_package_hdrs",
     ":GoogleAppIndexing_hdrs"
   ],
-  deps = [
-    ":GoogleAppIndexing_VendoredFrameworks"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

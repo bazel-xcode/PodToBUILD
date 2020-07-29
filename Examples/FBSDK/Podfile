@@ -1,0 +1,8 @@
+project 'PodsHost/PodsHost.xcodeproj'
+
+target 'ios-app' do
+   #pod "FBSDKCoreKit" <- this is implicit here
+   pod "FBSDKLoginKit", "~> 7.0"
+   pod "FBSDKShareKit", "~> 7.0"
+end
+

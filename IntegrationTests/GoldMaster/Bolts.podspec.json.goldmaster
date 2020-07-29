@@ -89,8 +89,8 @@ headermap(
     ":Bolts_hdrs"
   ],
   deps = [
-    ":AppLinks",
-    ":Tasks"
+    ":AppLinks_hmap",
+    ":Tasks_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -409,7 +409,7 @@ headermap(
     ":AppLinks_union_hdrs"
   ],
   deps = [
-    ":Tasks"
+    ":Tasks_hmap"
   ],
   visibility = [
     "//visibility:public"

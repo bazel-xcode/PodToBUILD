@@ -120,8 +120,8 @@ headermap(
     ":ObjcParentWithSwiftSubspecs_hdrs"
   ],
   deps = [
-    ":Default",
-    ":Subspec"
+    ":Default_hmap",
+    ":Subspec_hmap"
   ],
   visibility = [
     "//visibility:public"

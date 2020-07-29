@@ -645,7 +645,7 @@ headermap(
     ":youtube-ios-player-helper_hdrs"
   ],
   deps = [
-    ":youtube-ios-player-helper_cxx"
+    ":youtube-ios-player-helper_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"

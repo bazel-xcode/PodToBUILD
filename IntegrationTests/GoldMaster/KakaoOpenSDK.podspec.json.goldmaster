@@ -96,14 +96,10 @@ headermap(
     ":KakaoOpenSDK_hdrs"
   ],
   deps = [
-    ":KakaoLink",
-    ":KakaoLink_VendoredFrameworks",
-    ":KakaoNavi",
-    ":KakaoNavi_VendoredFrameworks",
-    ":KakaoOpenSDK",
-    ":KakaoOpenSDK_VendoredFrameworks",
-    ":KakaoS2",
-    ":KakaoS2_VendoredFrameworks"
+    ":KakaoLink_hmap",
+    ":KakaoNavi_hmap",
+    ":KakaoOpenSDK_hmap",
+    ":KakaoS2_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -205,9 +201,7 @@ headermap(
     "KakaoOpenSDK_package_hdrs",
     ":KakaoOpenSDK_union_hdrs"
   ],
-  deps = [
-    ":KakaoOpenSDK_VendoredFrameworks"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -322,9 +316,7 @@ headermap(
     "KakaoOpenSDK_package_hdrs",
     ":KakaoNavi_union_hdrs"
   ],
-  deps = [
-    ":KakaoNavi_VendoredFrameworks"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -438,9 +430,7 @@ headermap(
     "KakaoOpenSDK_package_hdrs",
     ":KakaoLink_union_hdrs"
   ],
-  deps = [
-    ":KakaoLink_VendoredFrameworks"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]
@@ -554,9 +544,7 @@ headermap(
     "KakaoOpenSDK_package_hdrs",
     ":KakaoS2_union_hdrs"
   ],
-  deps = [
-    ":KakaoS2_VendoredFrameworks"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

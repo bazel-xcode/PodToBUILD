@@ -129,7 +129,7 @@ headermap(
     ":React_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -2314,7 +2314,7 @@ headermap(
   ],
   deps = [
     "//Vendor/Yoga:Yoga",
-    ":Core_cxx"
+    ":Core_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -3410,8 +3410,8 @@ headermap(
   ],
   deps = [
     "//Vendor/Folly:Folly",
-    ":Core",
-    ":cxxreact"
+    ":Core_hmap",
+    ":cxxreact_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -3551,9 +3551,9 @@ headermap(
   ],
   deps = [
     "//Vendor/Folly:Folly",
-    ":Core",
-    ":CxxBridge_cxx",
-    ":cxxreact"
+    ":Core_hmap",
+    ":CxxBridge_cxx_hmap",
+    ":cxxreact_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -3703,8 +3703,8 @@ headermap(
     ":DevSupport_cxx_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":RCTWebSocket"
+    ":Core_hmap",
+    ":RCTWebSocket_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -3874,9 +3874,9 @@ headermap(
     ":DevSupport_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":DevSupport_cxx",
-    ":RCTWebSocket"
+    ":Core_hmap",
+    ":DevSupport_cxx_hmap",
+    ":RCTWebSocket_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -4025,8 +4025,8 @@ headermap(
   ],
   deps = [
     "//Vendor/Folly:Folly",
-    ":Core",
-    ":fabric"
+    ":Core_hmap",
+    ":fabric_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -4206,9 +4206,9 @@ headermap(
   ],
   deps = [
     "//Vendor/Folly:Folly",
-    ":Core",
-    ":RCTFabric_cxx",
-    ":fabric"
+    ":Core_hmap",
+    ":RCTFabric_cxx_hmap",
+    ":fabric_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -4357,7 +4357,7 @@ headermap(
     ":tvOS_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -4479,7 +4479,7 @@ headermap(
   ],
   deps = [
     "//Vendor/Folly:Folly",
-    ":PrivateDatabase"
+    ":PrivateDatabase_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -4958,8 +4958,8 @@ headermap(
   deps = [
     "//Vendor/Folly:Folly",
     "//Vendor/boost-for-react-native:boost-for-react-native",
-    ":jschelpers",
-    ":jsinspector"
+    ":jschelpers_hmap",
+    ":jsinspector_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -6870,7 +6870,7 @@ headermap(
     ":ART_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -6996,7 +6996,7 @@ headermap(
     ":RCTActionSheet_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -7128,7 +7128,7 @@ headermap(
     ":RCTAnimation_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -7256,7 +7256,7 @@ headermap(
     ":RCTBlob_cxx_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -7434,8 +7434,8 @@ headermap(
     ":RCTBlob_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":RCTBlob_cxx"
+    ":Core_hmap",
+    ":RCTBlob_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -7606,8 +7606,8 @@ headermap(
     ":RCTCameraRoll_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":RCTImage"
+    ":Core_hmap",
+    ":RCTImage_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -7734,7 +7734,7 @@ headermap(
     ":RCTGeolocation_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -7862,8 +7862,8 @@ headermap(
     ":RCTImage_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":RCTNetwork"
+    ":Core_hmap",
+    ":RCTNetwork_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -7996,7 +7996,7 @@ headermap(
     ":RCTNetwork_cxx_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -8143,8 +8143,8 @@ headermap(
     ":RCTNetwork_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":RCTNetwork_cxx"
+    ":Core_hmap",
+    ":RCTNetwork_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -8282,7 +8282,7 @@ headermap(
     ":RCTPushNotification_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -8408,7 +8408,7 @@ headermap(
     ":RCTSettings_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -8534,7 +8534,7 @@ headermap(
     ":RCTText_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -8660,7 +8660,7 @@ headermap(
     ":RCTVibration_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -8790,9 +8790,9 @@ headermap(
     ":RCTWebSocket_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":RCTBlob",
-    ":fishhook"
+    ":Core_hmap",
+    ":RCTBlob_hmap",
+    ":fishhook_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -9119,7 +9119,7 @@ headermap(
     ":RCTLinkingIOS_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -9245,7 +9245,7 @@ headermap(
     ":RCTTest_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -9355,8 +9355,8 @@ headermap(
     ":_ignore_me_subspec_for_linting__union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":CxxBridge"
+    ":Core_hmap",
+    ":CxxBridge_hmap"
   ],
   visibility = [
     "//visibility:public"

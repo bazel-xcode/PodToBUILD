@@ -81,9 +81,7 @@ headermap(
     "EarlGrey_package_hdrs",
     ":EarlGrey_hdrs"
   ],
-  deps = [
-    ":EarlGrey_VendoredFrameworks"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

@@ -1,0 +1,5 @@
+project 'PodsHost/PodsHost.xcodeproj'
+
+target 'ios-app' do
+    pod "Parent", :path => "Vendor/Parent"
+end

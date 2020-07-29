@@ -82,8 +82,7 @@ headermap(
     ":GoogleAppUtilities_hdrs"
   ],
   deps = [
-    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
-    ":GoogleAppUtilities_VendoredFrameworks"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
   ],
   visibility = [
     "//visibility:public"

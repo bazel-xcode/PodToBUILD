@@ -99,10 +99,10 @@ headermap(
     ":Texture_hdrs"
   ],
   deps = [
-    ":AssetsLibrary",
-    ":MapKit",
-    ":PINRemoteImage",
-    ":Photos"
+    ":AssetsLibrary_hmap",
+    ":MapKit_hmap",
+    ":PINRemoteImage_hmap",
+    ":Photos_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -411,7 +411,7 @@ headermap(
     ":Core_union_hdrs"
   ],
   deps = [
-    ":Core_cxx"
+    ":Core_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -524,7 +524,7 @@ headermap(
   deps = [
     "//Vendor/PINRemoteImage:PINCache",
     "//Vendor/PINRemoteImage:iOS",
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -632,7 +632,7 @@ headermap(
   ],
   deps = [
     "//Vendor/IGListKit:IGListKit",
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -738,7 +738,7 @@ headermap(
   ],
   deps = [
     "//Vendor/Yoga:Yoga",
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -845,7 +845,7 @@ headermap(
     ":MapKit_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -952,7 +952,7 @@ headermap(
     ":Photos_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1059,7 +1059,7 @@ headermap(
     ":AssetsLibrary_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
