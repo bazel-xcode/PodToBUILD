@@ -45,10 +45,18 @@ filegroup(
 filegroup(
   name = "KVOController_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBKVOController/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBKVOController/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -59,7 +67,8 @@ filegroup(
   srcs = glob(
     [
       "FBKVOController/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -68,10 +77,18 @@ filegroup(
 filegroup(
   name = "KVOController_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBKVOController/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBKVOController/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -101,7 +118,8 @@ objc_library(
   srcs = glob(
     [
       "FBKVOController/*.m"
-    ]
+    ],
+    exclude_directories = 1
   ),
   hdrs = [
     ":KVOController_hdrs"

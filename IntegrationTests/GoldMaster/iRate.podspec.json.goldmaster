@@ -46,10 +46,18 @@ filegroup(
 filegroup(
   name = "iRate_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "iRate/iRate.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "iRate/iRate.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -60,7 +68,8 @@ filegroup(
   srcs = glob(
     [
       "iRate/iRate.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -69,10 +78,18 @@ filegroup(
 filegroup(
   name = "iRate_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "iRate/iRate.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "iRate/iRate.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -102,7 +119,8 @@ objc_library(
   srcs = glob(
     [
       "iRate/iRate.m"
-    ]
+    ],
+    exclude_directories = 1
   ),
   hdrs = [
     ":iRate_hdrs"
@@ -143,7 +161,8 @@ apple_bundle_import(
   bundle_imports = glob(
     [
       "iRate/iRate.bundle/**"
-    ]
+    ],
+    exclude_directories = 1
   )
 )
 acknowledged_target(

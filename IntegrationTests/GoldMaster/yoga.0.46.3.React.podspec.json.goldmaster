@@ -45,10 +45,18 @@ filegroup(
 filegroup(
   name = "yoga_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "yoga/**/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "yoga/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -59,7 +67,8 @@ filegroup(
   srcs = glob(
     [
       "yoga/**/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -68,10 +77,18 @@ filegroup(
 filegroup(
   name = "yoga_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "yoga/**/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "yoga/**/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -101,7 +118,8 @@ objc_library(
   srcs = glob(
     [
       "yoga/**/*.cpp"
-    ]
+    ],
+    exclude_directories = 1
   ),
   hdrs = [
     ":yoga_hdrs"

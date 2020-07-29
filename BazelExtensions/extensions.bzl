@@ -83,79 +83,107 @@ def acknowledged_target(name,
         visibility=["//visibility:public"]
     )
 
-def _make_module_map(pod_name, module_name, deps, is_system):
-    # Up some dirs to the compilation root
-    # bazel-out/ios_x86_64-fastbuild/genfiles/external/__Pod__
-    relative_path = "../../../../../../"
 
-    system_tag = " [system] "
-    template = "module " + module_name + (system_tag if is_system else "" ) + " {\n"
-    template += "    export * \n"
+def _get_module_map_headers(deps):
+    headers_list = []
     for provider in deps:
         for input_file in provider.files.to_list():
             if input_file.path.endswith(".hmap"):
                 continue
-            hdr = input_file
-            template += "    header \"%s%s\"\n" % (relative_path, hdr.path)
-    template += "}\n"
-    return template
+            if input_file.path.endswith(".hpp"):
+                continue
+            if input_file.path.endswith(".modulemap"):
+                continue
+            headers_list.append(input_file)
+    return headers_list
 
-def _gen_module_map_impl(ctx):
-  out = _make_module_map(ctx.attr.pod_name, ctx.attr.module_name, ctx.attr.hdrs, ctx.attr.is_system)
-  ctx.actions.write(
-      content=out,
-      output=ctx.outputs.module_map
-  )
-  objc_provider = apple_common.new_objc_provider(
-      module_map=depset([ctx.outputs.module_map])
-  )
-  return struct(
-     files=depset([ctx.outputs.module_map]),
-     providers=[objc_provider],
-     objc=objc_provider,
-     headers=depset([ctx.outputs.module_map]),
-  )
+def _module_map_impl(ctx):
+    module_name = ctx.attr.module_name
+    deps = ctx.attr.hdrs
+    swift_header = ctx.attr.swift_header
+    headers_list = _get_module_map_headers(deps)
+
+    # Up some dirs to the compilation root
+    # bazel-out/ios_x86_64-fastbuild/genfiles/external/__Pod__
+    relative_path = "../../../../../../"
+    system_tag = " [system] "
+    content = "module " + module_name + (system_tag if ctx.attr.is_system else "" ) + " {\n" 
+    content += "    export * \n"
+    headers = depset(headers_list).to_list()
+    for hdr in headers:
+        content += "    header \"%s%s\"\n" % (relative_path, hdr.path)
+    content += "}\n"
+
+    if swift_header:
+        content += """
+module {module_name}.Swift {{
+    header "{swift_umbrella_header}"
+    requires objc
+}}""".format(
+            module_name = module_name,
+            swift_umbrella_header = swift_header,
+            )
+
+    ctx.actions.write(
+        content=content,
+        output=ctx.outputs.module_map
+    )
+
+    # If the name is `module.modulemap` we propagate this as an include. If a
+    # module map is added to `objc_library` as a dep, bazel will add these
+    # automatically and add a _single_ include to this module map. Ideally there
+    # would be an API to invoke clang with -fmodule-map= 
+    if ctx.attr.module_map_name == "module.modulemap":
+        include = depset([ctx.outputs.module_map.dirname])
+    else:
+        include = depset()
+    objc_provider = apple_common.new_objc_provider(
+        module_map=depset([ctx.outputs.module_map]),
+        include=include
+    )
+
+    return struct(
+        files=depset([ctx.outputs.module_map]),
+        providers=[objc_provider],
+        objc=objc_provider,
+        headers=depset([ctx.outputs.module_map]),
+    )
+
 
 _gen_module_map = rule(
-    implementation=_gen_module_map_impl,
+    implementation=_module_map_impl,
     output_to_genfiles=True,
     attrs = {
-        "pod_name": attr.string(mandatory=True),
         "hdrs": attr.label_list(mandatory=True),
         "module_name": attr.string(mandatory=True),
-        "dir_name": attr.string(mandatory=True),
         "module_map_name": attr.string(mandatory=True),
         "is_system": attr.bool(mandatory=True),
+        "swift_header": attr.string(mandatory=False),
     },
-    outputs = { "module_map": "%{dir_name}/%{module_map_name}" }
+    outputs = { "module_map": "%{name}/%{module_map_name}" }
 )
 
-def gen_module_map(pod_name,
-                   dir_name,
+def gen_module_map(name,
                    module_name,
-                   dep_hdrs=[],
+                   hdrs=[],
                    module_map_name="module.modulemap",
                    tags=["xchammer"],
                    is_system=True,
-                   visibility=["//visibility:public"]):
+                   swift_header=None,
+                   visibility=["//visibility:public"]
+                   ):
     """
-    Generate a module map based on a list of header file groups
-
-    pod_name: the name of the pod
-    dir_name: the name of the output directory, this is generally included by the compiler
+    Generate a mnadule map based on a list of header file groups
     module_name: the name of the module
     is_system: if the module is system module or not. This is useful for
                PodToBUILD to ignore all pod warnings by default
     """
-    # TODO:Modules change the name to dir_name -> pod_name
-    # It's also kind of weird that the rule name is changed inside of here.
-    _gen_module_map(name = dir_name + "_module_map_file",
-                    pod_name=pod_name,
-                    dir_name=dir_name,
+    _gen_module_map(name = name,
                     module_name=module_name,
-                    hdrs=dep_hdrs,
+                    hdrs=hdrs,
                     module_map_name=module_map_name,
                     is_system=is_system,
+                    swift_header=swift_header,
                     visibility=visibility,
                     tags=tags)
 

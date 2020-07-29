@@ -48,9 +48,12 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h"
@@ -61,20 +64,33 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h"
@@ -107,15 +123,25 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -128,7 +154,8 @@ filegroup(
   srcs = glob(
     [
       "FBSDKCoreKit/FBSDKCoreKit/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -139,9 +166,12 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h"
@@ -152,20 +182,33 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h"
@@ -198,15 +241,25 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
-          "FBSDKCoreKit/FBSDKCoreKit/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
+            "FBSDKCoreKit/FBSDKCoreKit/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -296,9 +349,12 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.s"
-            ]
-          )
-        )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
@@ -338,10 +394,15 @@ objc_library(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.s"
           ],
-          exclude = [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
-          ]
-        )
+          exclude = glob(
+            [
+              "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
@@ -431,9 +492,12 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
-            ]
-          )
-        )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
@@ -473,10 +537,15 @@ objc_library(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.s"
           ],
-          exclude = [
-            "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
-          ]
-        )
+          exclude = glob(
+            [
+              "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -498,7 +567,8 @@ objc_library(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.s"
-          ]
+          ],
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -553,15 +623,22 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.mm",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.s"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
-        ],
+        glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
         exclude = glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/*.S",
@@ -600,11 +677,17 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.s"
             ],
-            exclude = [
-              "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
-            ]
-          )
-        )
+            exclude = glob(
+              [
+                "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         glob(
@@ -657,7 +740,8 @@ objc_library(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
-          ]
+          ],
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -747,15 +831,22 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
-        [
-          "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
-        ],
+        glob(
+          [
+            "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
         exclude = glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/*.S",
@@ -794,11 +885,17 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.s"
             ],
-            exclude = [
-              "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
-            ]
-          )
-        )
+            exclude = glob(
+              [
+                "FBSDKCoreKit/FBSDKCoreKit/**/*.m"
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -873,7 +970,8 @@ apple_bundle_import(
   bundle_imports = glob(
     [
       "FacebookSDKStrings.bundle/**"
-    ]
+    ],
+    exclude_directories = 1
   )
 )
 acknowledged_target(

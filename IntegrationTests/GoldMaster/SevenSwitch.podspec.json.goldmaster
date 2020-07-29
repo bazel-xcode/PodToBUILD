@@ -51,7 +51,8 @@ swift_library(
     ],
     exclude = [
       "Classes/Exclude/**/*.swift"
-    ]
+    ],
+    exclude_directories = 1
   ),
   deps = [],
   data = [],
@@ -64,7 +65,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -82,7 +84,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"

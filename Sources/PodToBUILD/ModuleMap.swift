@@ -1,15 +1,13 @@
 public struct ModuleMap: BazelTarget {
     public let name: String // A unique name for this rule.
-    public let dirname: String
     public let moduleName: String
     public let headers: [String]
     public let swiftHeader: String?
     public let moduleMapName: String?
 
-    public init(name: String, dirname: String, moduleName: String, headers:
+    public init(name: String, moduleName: String, headers:
                 [String], swiftHeader: String? = nil, moduleMapName: String? = nil) {
-        self.name = name + "_module_map_module_map_file"
-        self.dirname = dirname
+        self.name = name
         self.moduleName = moduleName
         self.headers = headers
         self.swiftHeader = swiftHeader
@@ -22,13 +20,15 @@ public struct ModuleMap: BazelTarget {
 
     public func toSkylark() -> SkylarkNode {
         var args: [SkylarkFunctionArgument] = [
-            .basic(name.toSkylark()),
-            .basic(dirname.toSkylark()),
-            .basic(moduleName.toSkylark()),
-            .basic(headers.toSkylark())
+            .named(name: "name", value: name.toSkylark()),
+            .named(name: "module_name", value: moduleName.toSkylark()),
+            .named(name: "hdrs", value: headers.toSkylark()),
         ]
         if let moduleMapName = self.moduleMapName {
             args.append(.named(name: "module_map_name", value: moduleMapName.toSkylark()))
+        }
+        if let swiftHeader = self.swiftHeader {
+            args.append(.named(name: "swift_header", value: swiftHeader.toSkylark()))
         }
         args.append(.named(name: "visibility", value: ["//visibility:public"].toSkylark()))
         return SkylarkNode.functionCall(

@@ -45,12 +45,20 @@ filegroup(
 filegroup(
   name = "boost-for-react-native_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "boost/**/*.h",
-      "boost/**/*.hpp",
-      "boost/**/*.hxx"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "boost/**/*.h",
+        "boost/**/*.hpp",
+        "boost/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -66,12 +74,20 @@ filegroup(
 filegroup(
   name = "boost-for-react-native_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "boost/**/*.h",
-      "boost/**/*.hpp",
-      "boost/**/*.hxx"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "boost/**/*.h",
+        "boost/**/*.hpp",
+        "boost/**/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"

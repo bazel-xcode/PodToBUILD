@@ -47,12 +47,20 @@ filegroup(
 filegroup(
   name = "Calabash_cxx_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "calabash.framework/Versions/A/Headers/*.h",
-      "calabash.framework/Versions/A/Headers/*.hpp",
-      "calabash.framework/Versions/A/Headers/*.hxx"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.h",
+        "calabash.framework/Versions/A/Headers/*.hpp",
+        "calabash.framework/Versions/A/Headers/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -65,7 +73,8 @@ filegroup(
       "calabash.framework/Versions/A/Headers/*.h",
       "calabash.framework/Versions/A/Headers/*.hpp",
       "calabash.framework/Versions/A/Headers/*.hxx"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -74,12 +83,20 @@ filegroup(
 filegroup(
   name = "Calabash_cxx_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "calabash.framework/Versions/A/Headers/*.h",
-      "calabash.framework/Versions/A/Headers/*.hpp",
-      "calabash.framework/Versions/A/Headers/*.hxx"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.h",
+        "calabash.framework/Versions/A/Headers/*.hpp",
+        "calabash.framework/Versions/A/Headers/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -122,24 +139,32 @@ objc_library(
       "calabash.framework/Versions/A/Headers/*.cpp",
       "calabash.framework/Versions/A/Headers/*.cxx"
     ],
-    exclude = [
-      "calabash.framework/Versions/A/Headers/*.S",
-      "calabash.framework/Versions/A/Headers/*.c",
-      "calabash.framework/Versions/A/Headers/*.m",
-      "calabash.framework/Versions/A/Headers/*.s"
-    ]
+    exclude = glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.S",
+        "calabash.framework/Versions/A/Headers/*.c",
+        "calabash.framework/Versions/A/Headers/*.m",
+        "calabash.framework/Versions/A/Headers/*.s"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   non_arc_srcs = glob(
     glob(
       [
         "calabash.framework/Versions/A/Headers/*.mm"
       ],
-      exclude = [
-        "calabash.framework/Versions/A/Headers/*.S",
-        "calabash.framework/Versions/A/Headers/*.c",
-        "calabash.framework/Versions/A/Headers/*.m",
-        "calabash.framework/Versions/A/Headers/*.s"
-      ]
+      exclude = glob(
+        [
+          "calabash.framework/Versions/A/Headers/*.S",
+          "calabash.framework/Versions/A/Headers/*.c",
+          "calabash.framework/Versions/A/Headers/*.m",
+          "calabash.framework/Versions/A/Headers/*.s"
+        ],
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
     ),
     exclude = glob(
       [
@@ -147,13 +172,18 @@ objc_library(
         "calabash.framework/Versions/A/Headers/*.cpp",
         "calabash.framework/Versions/A/Headers/*.cxx"
       ],
-      exclude = [
-        "calabash.framework/Versions/A/Headers/*.S",
-        "calabash.framework/Versions/A/Headers/*.c",
-        "calabash.framework/Versions/A/Headers/*.m",
-        "calabash.framework/Versions/A/Headers/*.s"
-      ]
-    )
+      exclude = glob(
+        [
+          "calabash.framework/Versions/A/Headers/*.S",
+          "calabash.framework/Versions/A/Headers/*.c",
+          "calabash.framework/Versions/A/Headers/*.m",
+          "calabash.framework/Versions/A/Headers/*.s"
+        ],
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   module_map = ":Calabash_extended_module_map_module_map_file",
   hdrs = [
@@ -204,7 +234,8 @@ swift_library(
   srcs = glob(
     [
       "calabash.framework/Versions/A/Headers/*.swift"
-    ]
+    ],
+    exclude_directories = 1
   ),
   deps = [],
   data = [],
@@ -215,12 +246,20 @@ swift_library(
 filegroup(
   name = "Calabash_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "calabash.framework/Versions/A/Headers/*.h",
-      "calabash.framework/Versions/A/Headers/*.hpp",
-      "calabash.framework/Versions/A/Headers/*.hxx"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.h",
+        "calabash.framework/Versions/A/Headers/*.hpp",
+        "calabash.framework/Versions/A/Headers/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -233,7 +272,8 @@ filegroup(
       "calabash.framework/Versions/A/Headers/*.h",
       "calabash.framework/Versions/A/Headers/*.hpp",
       "calabash.framework/Versions/A/Headers/*.hxx"
-    ]
+    ],
+    exclude_directories = 1
   ) + [
     ":Calabash_cxx_public_hdrs"
   ],
@@ -244,12 +284,20 @@ filegroup(
 filegroup(
   name = "Calabash_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "calabash.framework/Versions/A/Headers/*.h",
-      "calabash.framework/Versions/A/Headers/*.hpp",
-      "calabash.framework/Versions/A/Headers/*.hxx"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "calabash.framework/Versions/A/Headers/*.h",
+        "calabash.framework/Versions/A/Headers/*.hpp",
+        "calabash.framework/Versions/A/Headers/*.hxx"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ) + [
     ":Calabash_cxx_hdrs"
   ],
@@ -286,7 +334,8 @@ objc_library(
       "calabash.framework/Versions/A/Headers/*.c",
       "calabash.framework/Versions/A/Headers/*.m",
       "calabash.framework/Versions/A/Headers/*.s"
-    ]
+    ],
+    exclude_directories = 1
   ),
   module_map = ":Calabash_extended_module_map_module_map_file",
   hdrs = [

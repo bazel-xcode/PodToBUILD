@@ -777,6 +777,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let baseHeaders: [String] = isTopLevelTarget ?
             [":" + externalName + "_hdrs"] : [":" + name + "_union_hdrs"]
         // TODO: for header_dir, there should be an additonal namespace added in here.
+        // TODO: Move ad-hoc bazel targets from ObjcLibrary to BuildFile
         inlineSkylark.append(.functionCall(
             name: "headermap",
             arguments: [
@@ -785,10 +786,6 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 .named(name: "hdrs", value: [( getNamePrefix() + options.podName +
                     "_package_hdrs")].toSkylark() .+. baseHeaders.toSkylark()),
 
-                // TODO: in some cases, we may need to break this invariant, as
-                // it may not hold true for all cocoapods ( e.g. give it all
-                // possibilities here )
-		// TODO: Move ad-hoc bazel targets from ObjcLibrary to BuildFile
                 .named(name: "deps", value: deps
                        .map { Set($0)
                            .filter { !($0.hasSuffix("_swift") ||
@@ -835,7 +832,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         if let moduleMap = self.moduleMap {
             libArguments.append(.named(
                 name: "module_map",
-                value: (":" + moduleMap.dirname + "_module_map_file").toSkylark()))
+                value: (":" + moduleMap.name).toSkylark()))
         }
 
         libArguments.append(.named(
@@ -880,6 +877,10 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         }
         if options.generateHeaderMap {
             allDeps = allDeps .+. [":" + name + "_hmap"].toSkylark()
+        }
+        if let moduleMap = lib.moduleMap  {
+            // Note that this propagates the module map include
+            allDeps = allDeps .+. [":" + moduleMap.name ].toSkylark()
         }
 
         if allDeps.isEmpty == false { 
@@ -933,11 +934,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 }
         }
 
+        let modulesCopts = enableModules ? [
+            "-fmodule-name=" + moduleName,
+            "-fmodules"
+        ] : []
         libArguments.append(.named(
             name: "copts",
             value: (
                 lib.copts.toSkylark() .+. buildConfigDependenctCOpts .+. getPodIQuotes().toSkylark()
-            ) <> ["-fmodule-name=" + moduleName].toSkylark()))
+            ) <> modulesCopts.toSkylark()))
 
         if !lib.bundles.isEmpty || !lib.resources.isEmpty {
             let dataVal: SkylarkNode = [

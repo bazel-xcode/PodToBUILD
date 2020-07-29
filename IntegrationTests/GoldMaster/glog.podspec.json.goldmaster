@@ -45,9 +45,12 @@ filegroup(
 filegroup(
   name = "glog_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ] + glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
       [
         "src/*.h",
         "src/base/*.h",
@@ -57,8 +60,10 @@ filegroup(
         "src/windows/**/*.h",
         "src/windows/**/*.hpp",
         "src/windows/**/*.hxx"
-      ]
-    )
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -69,7 +74,8 @@ filegroup(
   srcs = glob(
     [
       "src/glog/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -78,9 +84,12 @@ filegroup(
 filegroup(
   name = "glog_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*"
-    ] + glob(
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
       [
         "src/*.h",
         "src/base/*.h",
@@ -90,8 +99,10 @@ filegroup(
         "src/windows/**/*.h",
         "src/windows/**/*.hpp",
         "src/windows/**/*.hxx"
-      ]
-    )
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -137,7 +148,8 @@ objc_library(
       "src/windows/**/*.m",
       "src/windows/**/*.mm",
       "src/windows/**/*.s"
-    ]
+    ],
+    exclude_directories = 1
   ),
   hdrs = [
     ":glog_hdrs"

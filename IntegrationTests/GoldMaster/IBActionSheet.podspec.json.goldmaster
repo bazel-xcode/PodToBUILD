@@ -45,10 +45,18 @@ filegroup(
 filegroup(
   name = "IBActionSheet_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -59,7 +67,8 @@ filegroup(
   srcs = glob(
     [
       "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -68,10 +77,18 @@ filegroup(
 filegroup(
   name = "IBActionSheet_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "IBActionSheetSample/IBActionSheetSample/IBActionSheet.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -101,7 +118,8 @@ objc_library(
   srcs = glob(
     [
       "IBActionSheetSample/IBActionSheetSample/IBActionSheet.m"
-    ]
+    ],
+    exclude_directories = 1
   ),
   hdrs = [
     ":IBActionSheet_hdrs"

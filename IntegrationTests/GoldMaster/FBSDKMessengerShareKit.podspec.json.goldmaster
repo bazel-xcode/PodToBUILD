@@ -45,11 +45,19 @@ filegroup(
 filegroup(
   name = "FBSDKMessengerShareKit_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h",
-      "FBSDKMessengerShareKit/FBSDKMessengerShareKit/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h",
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -60,7 +68,8 @@ filegroup(
   srcs = glob(
     [
       "FBSDKMessengerShareKit/FBSDKMessengerShareKit/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -69,11 +78,19 @@ filegroup(
 filegroup(
   name = "FBSDKMessengerShareKit_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h",
-      "FBSDKMessengerShareKit/FBSDKMessengerShareKit/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.h",
+        "FBSDKMessengerShareKit/FBSDKMessengerShareKit/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -103,7 +120,8 @@ objc_library(
   srcs = glob(
     [
       "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.m"
-    ]
+    ],
+    exclude_directories = 1
   ),
   hdrs = [
     ":FBSDKMessengerShareKit_hdrs"

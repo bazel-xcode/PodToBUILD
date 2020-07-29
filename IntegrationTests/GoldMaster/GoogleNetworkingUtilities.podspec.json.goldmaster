@@ -48,7 +48,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -66,7 +67,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -138,7 +140,8 @@ apple_static_framework_import(
   framework_imports = glob(
     [
       "Frameworks/frameworks/GoogleNetworkingUtilities.framework/**"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"

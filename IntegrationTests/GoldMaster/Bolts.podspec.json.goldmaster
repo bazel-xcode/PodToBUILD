@@ -49,7 +49,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -70,7 +71,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ) + [
     ":AppLinks_hdrs",
     ":Tasks_hdrs"
@@ -139,10 +141,18 @@ acknowledged_target(
 filegroup(
   name = "Tasks_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "Bolts/Common/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Bolts/Common/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -153,7 +163,8 @@ filegroup(
   srcs = glob(
     [
       "Bolts/Common/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -162,10 +173,18 @@ filegroup(
 filegroup(
   name = "Tasks_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "Bolts/Common/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Bolts/Common/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -208,24 +227,31 @@ objc_library(
         [
           "Bolts/Common/*.m"
         ],
-        exclude = [
-          "Bolts/iOS/**/*.m"
-        ]
+        exclude = glob(
+          [
+            "Bolts/iOS/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
           "Bolts/Common/*.m"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
           "Bolts/Common/*.m"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
           "Bolts/Common/*.m"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -265,26 +291,37 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Bolts/iOS/**/*.h",
-          "Bolts/iOS/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Bolts/iOS/**/*.h",
+            "Bolts/iOS/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -299,7 +336,8 @@ filegroup(
       "//conditions:default": glob(
         [
           "Bolts/iOS/*.h"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ) + [
@@ -314,26 +352,37 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Bolts/iOS/**/*.h",
-          "Bolts/iOS/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Bolts/iOS/**/*.h",
+            "Bolts/iOS/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -380,7 +429,8 @@ objc_library(
       "//conditions:default": glob(
         [
           "Bolts/iOS/**/*.m"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),

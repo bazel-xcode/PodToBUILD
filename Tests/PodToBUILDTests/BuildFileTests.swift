@@ -168,6 +168,16 @@ class BuildFileTests: XCTestCase {
         )
     }
 
+    // MARK: - Swift tests
+
+    func testSwiftExtractionSubspec() {
+        let podspec = examplePodSpecNamed(name: "ObjcParentWithSwiftSubspecs")
+        let convs = PodBuildFile.makeConvertables(fromPodspec: podspec)
+        XCTAssertEqual(convs.compactMap{ $0 as? ObjcLibrary }.count, 1)
+        XCTAssertEqual(convs.compactMap{ $0 as? SwiftLibrary }.count, 1)
+    }
+
+
     // MARK: - Source File Extraction Tests
 
     func testExtractionCurly() {

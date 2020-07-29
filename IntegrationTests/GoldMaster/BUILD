@@ -50,7 +50,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -71,7 +72,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ) + [
     ":Basics_hdrs",
     ":Core_hdrs"
@@ -104,6 +106,171 @@ gen_includes(
 objc_library(
   name = "FBSDKCoreKit",
   enable_modules = 0,
+  srcs = glob(
+    [
+      "FBSDKCoreKit/FBSDKCoreKit/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/*.cc",
+      "FBSDKCoreKit/FBSDKCoreKit/*.cpp",
+      "FBSDKCoreKit/FBSDKCoreKit/*.cxx",
+      "FBSDKCoreKit/FBSDKCoreKit/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/*.s",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.cc",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.cpp",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.cxx",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.s",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.cc",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.cpp",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.cxx",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.s",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.cc",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.cpp",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.cxx",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.s",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.cc",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.cpp",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.cxx",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.s"
+    ],
+    exclude = glob(
+      [
+        "FBSDKCoreKit/FBSDKCoreKit/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/*.s",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.s",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.s",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.s",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.s"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  non_arc_srcs = glob(
+    [
+      "FBSDKCoreKit/FBSDKCoreKit/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/*.s",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.s",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.s",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.s",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.S",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.c",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
+      "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.s"
+    ],
+    exclude = glob(
+      [
+        "FBSDKCoreKit/FBSDKCoreKit/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/*.s",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*.s",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*.s",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.s",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.S",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.c",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.cc",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.cpp",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.cxx",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.m",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.mm",
+        "FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.s"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
   hdrs = [
     ":FBSDKCoreKit_hdrs"
   ],
@@ -164,11 +331,19 @@ acknowledged_target(
 filegroup(
   name = "Basics_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",
-      "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -179,7 +354,8 @@ filegroup(
   srcs = glob(
     [
       "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -188,11 +364,19 @@ filegroup(
 filegroup(
   name = "Basics_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",
-      "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.h",
+        "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -339,10 +523,14 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
                 "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
@@ -449,10 +637,14 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
@@ -605,10 +797,14 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
@@ -715,10 +911,14 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -747,8 +947,10 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
               "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m"
-            ]
-          )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -858,11 +1060,16 @@ objc_library(
                   "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
                   "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
                   "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m"
-                ]
-              )
-            )
-          )
-        )
+                ],
+                exclude_directories = 1
+              ),
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         glob(
@@ -884,8 +1091,10 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-            ]
-          )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -992,11 +1201,16 @@ objc_library(
                   "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
                   "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
                   "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-                ]
-              )
-            )
-          )
-        )
+                ],
+                exclude_directories = 1
+              ),
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         glob(
@@ -1064,8 +1278,10 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
-            ]
-          )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -1218,11 +1434,16 @@ objc_library(
                   "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
                   "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
                   "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
-                ]
-              )
-            )
-          )
-        )
+                ],
+                exclude_directories = 1
+              ),
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         glob(
@@ -1244,8 +1465,10 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-            ]
-          )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -1352,11 +1575,16 @@ objc_library(
                   "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
                   "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
                   "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-                ]
-              )
-            )
-          )
-        )
+                ],
+                exclude_directories = 1
+              ),
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -1423,7 +1651,8 @@ apple_bundle_import(
   bundle_imports = glob(
     [
       "FacebookSDKStrings.bundle/**"
-    ]
+    ],
+    exclude_directories = 1
   )
 )
 acknowledged_target(
@@ -1436,9 +1665,12 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h",
@@ -1453,13 +1685,18 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
             "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h",
@@ -1471,13 +1708,18 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h",
@@ -1521,13 +1763,18 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h",
@@ -1539,8 +1786,10 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -1555,7 +1804,8 @@ filegroup(
       "FBSDKCoreKit/FBSDKCoreKit/*.h",
       "FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h",
       "FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ) + [
     ":Basics_public_hdrs"
   ],
@@ -1568,9 +1818,12 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h",
@@ -1585,13 +1838,18 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.h",
             "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.h",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.h"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h",
@@ -1603,13 +1861,18 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h",
@@ -1653,13 +1916,18 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*"
-        ] + glob(
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
           [
             "FBSDKCoreKit/FBSDKCoreKit/**/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/*.h",
@@ -1671,8 +1939,10 @@ filegroup(
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.h",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.hpp",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.hxx"
-          ]
-        )
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -1819,9 +2089,12 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
               "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m"
-            ]
-          )
-        )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
@@ -1923,9 +2196,12 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-            ]
-          )
-        )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
@@ -2073,9 +2349,12 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
-            ]
-          )
-        )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
@@ -2177,9 +2456,12 @@ objc_library(
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
               "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-            ]
-          )
-        )
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -2203,7 +2485,8 @@ objc_library(
             "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
             "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m"
-          ]
+          ],
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -2308,10 +2591,14 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.m",
                 "FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*.m"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         glob(
@@ -2328,7 +2615,8 @@ objc_library(
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-          ]
+          ],
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -2430,10 +2718,14 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         glob(
@@ -2496,7 +2788,8 @@ objc_library(
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
             "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
-          ]
+          ],
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -2644,10 +2937,14 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.mm",
                 "FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*.s"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         glob(
@@ -2664,7 +2961,8 @@ objc_library(
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
             "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-          ]
+          ],
+          exclude_directories = 1
         ),
         exclude = glob(
           [
@@ -2766,10 +3064,14 @@ objc_library(
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.m",
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.mm",
                 "FBSDKCoreKit/FBSDKCoreKit/Basics/*.s"
-              ]
-            )
-          )
-        )
+              ],
+              exclude_directories = 1
+            ),
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),

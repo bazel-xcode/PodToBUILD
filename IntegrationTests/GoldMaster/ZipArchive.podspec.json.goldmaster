@@ -45,15 +45,23 @@ filegroup(
 filegroup(
   name = "ZipArchive_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "*.h",
-      "minizip/crypt.h",
-      "minizip/ioapi.h",
-      "minizip/mztools.h",
-      "minizip/unzip.h",
-      "minizip/zip.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "*.h",
+        "minizip/crypt.h",
+        "minizip/ioapi.h",
+        "minizip/mztools.h",
+        "minizip/unzip.h",
+        "minizip/zip.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -64,7 +72,8 @@ filegroup(
   srcs = glob(
     [
       "*.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -73,15 +82,23 @@ filegroup(
 filegroup(
   name = "ZipArchive_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "*.h",
-      "minizip/crypt.h",
-      "minizip/ioapi.h",
-      "minizip/mztools.h",
-      "minizip/unzip.h",
-      "minizip/zip.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "*.h",
+        "minizip/crypt.h",
+        "minizip/ioapi.h",
+        "minizip/mztools.h",
+        "minizip/unzip.h",
+        "minizip/zip.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -116,7 +133,8 @@ objc_library(
       "minizip/mztools.c",
       "minizip/unzip.c",
       "minizip/zip.c"
-    ]
+    ],
+    exclude_directories = 1
   ),
   hdrs = [
     ":ZipArchive_hdrs"

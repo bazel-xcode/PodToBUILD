@@ -47,15 +47,23 @@ filegroup(
 filegroup(
   name = "FBAllocationTracker_cxx_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBAllocationTracker/**/*.h",
-      "FBAllocationTracker/**/*.hpp",
-      "FBAllocationTracker/**/*.hxx",
-      "FBAllocationTracker/FBAllocationTracker.h",
-      "FBAllocationTracker/FBAllocationTrackerManager.h",
-      "FBAllocationTracker/FBAllocationTrackerSummary.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBAllocationTracker/**/*.h",
+        "FBAllocationTracker/**/*.hpp",
+        "FBAllocationTracker/**/*.hxx",
+        "FBAllocationTracker/FBAllocationTracker.h",
+        "FBAllocationTracker/FBAllocationTrackerManager.h",
+        "FBAllocationTracker/FBAllocationTrackerSummary.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -68,7 +76,8 @@ filegroup(
       "FBAllocationTracker/FBAllocationTracker.h",
       "FBAllocationTracker/FBAllocationTrackerManager.h",
       "FBAllocationTracker/FBAllocationTrackerSummary.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -77,15 +86,23 @@ filegroup(
 filegroup(
   name = "FBAllocationTracker_cxx_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBAllocationTracker/**/*.h",
-      "FBAllocationTracker/**/*.hpp",
-      "FBAllocationTracker/**/*.hxx",
-      "FBAllocationTracker/FBAllocationTracker.h",
-      "FBAllocationTracker/FBAllocationTrackerManager.h",
-      "FBAllocationTracker/FBAllocationTrackerSummary.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBAllocationTracker/**/*.h",
+        "FBAllocationTracker/**/*.hpp",
+        "FBAllocationTracker/**/*.hxx",
+        "FBAllocationTracker/FBAllocationTracker.h",
+        "FBAllocationTracker/FBAllocationTrackerManager.h",
+        "FBAllocationTracker/FBAllocationTrackerSummary.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -145,26 +162,36 @@ objc_library(
           "FBAllocationTracker/**/*.cxx",
           "FBAllocationTracker/**/*.mm"
         ],
-        exclude = [
-          "FBAllocationTracker/**/*.S",
-          "FBAllocationTracker/**/*.c",
-          "FBAllocationTracker/**/*.m",
-          "FBAllocationTracker/**/*.s"
-        ]
-      )
-    )
+        exclude = glob(
+          [
+            "FBAllocationTracker/**/*.S",
+            "FBAllocationTracker/**/*.c",
+            "FBAllocationTracker/**/*.m",
+            "FBAllocationTracker/**/*.s"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   non_arc_srcs = glob(
     glob(
       [
         "FBAllocationTracker/**/*.mm"
       ],
-      exclude = [
-        "FBAllocationTracker/**/*.S",
-        "FBAllocationTracker/**/*.c",
-        "FBAllocationTracker/**/*.m",
-        "FBAllocationTracker/**/*.s"
-      ]
+      exclude = glob(
+        [
+          "FBAllocationTracker/**/*.S",
+          "FBAllocationTracker/**/*.c",
+          "FBAllocationTracker/**/*.m",
+          "FBAllocationTracker/**/*.s"
+        ],
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
     ),
     exclude = glob(
       [
@@ -189,15 +216,22 @@ objc_library(
             "FBAllocationTracker/**/*.cxx",
             "FBAllocationTracker/**/*.mm"
           ],
-          exclude = [
-            "FBAllocationTracker/**/*.S",
-            "FBAllocationTracker/**/*.c",
-            "FBAllocationTracker/**/*.m",
-            "FBAllocationTracker/**/*.s"
-          ]
-        )
-      )
-    )
+          exclude = glob(
+            [
+              "FBAllocationTracker/**/*.S",
+              "FBAllocationTracker/**/*.c",
+              "FBAllocationTracker/**/*.m",
+              "FBAllocationTracker/**/*.s"
+            ],
+            exclude_directories = 1
+          ),
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   module_map = ":FBAllocationTracker_extended_module_map_module_map_file",
   hdrs = [
@@ -244,7 +278,8 @@ swift_library(
   srcs = glob(
     [
       "FBAllocationTracker/**/*.swift"
-    ]
+    ],
+    exclude_directories = 1
   ),
   deps = [],
   data = [],
@@ -255,15 +290,23 @@ swift_library(
 filegroup(
   name = "FBAllocationTracker_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBAllocationTracker/**/*.h",
-      "FBAllocationTracker/**/*.hpp",
-      "FBAllocationTracker/**/*.hxx",
-      "FBAllocationTracker/FBAllocationTracker.h",
-      "FBAllocationTracker/FBAllocationTrackerManager.h",
-      "FBAllocationTracker/FBAllocationTrackerSummary.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBAllocationTracker/**/*.h",
+        "FBAllocationTracker/**/*.hpp",
+        "FBAllocationTracker/**/*.hxx",
+        "FBAllocationTracker/FBAllocationTracker.h",
+        "FBAllocationTracker/FBAllocationTrackerManager.h",
+        "FBAllocationTracker/FBAllocationTrackerSummary.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -276,7 +319,8 @@ filegroup(
       "FBAllocationTracker/FBAllocationTracker.h",
       "FBAllocationTracker/FBAllocationTrackerManager.h",
       "FBAllocationTracker/FBAllocationTrackerSummary.h"
-    ]
+    ],
+    exclude_directories = 1
   ) + [
     ":FBAllocationTracker_cxx_public_hdrs"
   ],
@@ -287,15 +331,23 @@ filegroup(
 filegroup(
   name = "FBAllocationTracker_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "FBAllocationTracker/**/*.h",
-      "FBAllocationTracker/**/*.hpp",
-      "FBAllocationTracker/**/*.hxx",
-      "FBAllocationTracker/FBAllocationTracker.h",
-      "FBAllocationTracker/FBAllocationTrackerManager.h",
-      "FBAllocationTracker/FBAllocationTrackerSummary.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "FBAllocationTracker/**/*.h",
+        "FBAllocationTracker/**/*.hpp",
+        "FBAllocationTracker/**/*.hxx",
+        "FBAllocationTracker/FBAllocationTracker.h",
+        "FBAllocationTracker/FBAllocationTrackerManager.h",
+        "FBAllocationTracker/FBAllocationTrackerSummary.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ) + [
     ":FBAllocationTracker_cxx_hdrs"
   ],
@@ -342,21 +394,29 @@ objc_library(
         "FBAllocationTracker/Generations/FBAllocationTrackerGeneration.mm",
         "FBAllocationTracker/Generations/FBAllocationTrackerGenerationManager.mm"
       ],
-      exclude = [
+      exclude = glob(
+        [
+          "FBAllocationTracker/**/*.S",
+          "FBAllocationTracker/**/*.c",
+          "FBAllocationTracker/**/*.m",
+          "FBAllocationTracker/**/*.s"
+        ],
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
+  ),
+  non_arc_srcs = glob(
+    glob(
+      [
         "FBAllocationTracker/**/*.S",
         "FBAllocationTracker/**/*.c",
         "FBAllocationTracker/**/*.m",
         "FBAllocationTracker/**/*.s"
-      ]
-    )
-  ),
-  non_arc_srcs = glob(
-    [
-      "FBAllocationTracker/**/*.S",
-      "FBAllocationTracker/**/*.c",
-      "FBAllocationTracker/**/*.m",
-      "FBAllocationTracker/**/*.s"
-    ],
+      ],
+      exclude_directories = 1
+    ),
     exclude = glob(
       [
         "FBAllocationTracker/FBAllocationTrackerImpl.mm",
@@ -373,14 +433,20 @@ objc_library(
           "FBAllocationTracker/Generations/FBAllocationTrackerGeneration.mm",
           "FBAllocationTracker/Generations/FBAllocationTrackerGenerationManager.mm"
         ],
-        exclude = [
-          "FBAllocationTracker/**/*.S",
-          "FBAllocationTracker/**/*.c",
-          "FBAllocationTracker/**/*.m",
-          "FBAllocationTracker/**/*.s"
-        ]
-      )
-    )
+        exclude = glob(
+          [
+            "FBAllocationTracker/**/*.S",
+            "FBAllocationTracker/**/*.c",
+            "FBAllocationTracker/**/*.m",
+            "FBAllocationTracker/**/*.s"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
+      ),
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   module_map = ":FBAllocationTracker_extended_module_map_module_map_file",
   hdrs = [

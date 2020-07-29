@@ -45,10 +45,18 @@ filegroup(
 filegroup(
   name = "SPUserResizableView+Pion_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "SPUserResizableView/SPUserResizableView.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "SPUserResizableView/SPUserResizableView.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -59,7 +67,8 @@ filegroup(
   srcs = glob(
     [
       "SPUserResizableView/SPUserResizableView.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -68,10 +77,18 @@ filegroup(
 filegroup(
   name = "SPUserResizableView+Pion_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "SPUserResizableView/SPUserResizableView.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "SPUserResizableView/SPUserResizableView.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -101,7 +118,8 @@ objc_library(
   srcs = glob(
     [
       "SPUserResizableView/SPUserResizableView.m"
-    ]
+    ],
+    exclude_directories = 1
   ),
   hdrs = [
     ":SPUserResizableView+Pion_hdrs"

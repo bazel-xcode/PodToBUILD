@@ -51,7 +51,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -71,7 +72,8 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ]
+    ],
+    exclude_directories = 1
   ) + [
     ":Default_hdrs"
   ],
@@ -153,11 +155,19 @@ acknowledged_target(
 filegroup(
   name = "Diffing_cxx_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "Source/Common/**/*.h",
-      "Source/Common/Internal/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Common/**/*.h",
+        "Source/Common/Internal/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -171,7 +181,8 @@ filegroup(
     ],
     exclude = [
       "Source/Common/Internal/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -180,11 +191,19 @@ filegroup(
 filegroup(
   name = "Diffing_cxx_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "Source/Common/**/*.h",
-      "Source/Common/Internal/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Common/**/*.h",
+        "Source/Common/Internal/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -227,39 +246,79 @@ objc_library(
         [
           "Source/Common/**/*.mm"
         ],
-        exclude = [
-          "Source/Common/**/*.m",
-          "Source/**/*.mm",
-          "Source/**/*.m",
-          "Source/**/*.m"
-        ]
+        exclude = glob(
+          [
+            "Source/Common/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
           "Source/Common/**/*.mm"
         ],
-        exclude = [
-          "Source/Common/**/*.m"
-        ]
+        exclude = glob(
+          [
+            "Source/Common/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
           "Source/Common/**/*.mm"
         ],
-        exclude = [
-          "Source/Common/**/*.m",
-          "Source/**/*.mm",
-          "Source/**/*.m",
-          "Source/**/*.m"
-        ]
+        exclude = glob(
+          [
+            "Source/Common/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
           "Source/Common/**/*.mm"
         ],
-        exclude = [
-          "Source/Common/**/*.m"
-        ]
+        exclude = glob(
+          [
+            "Source/Common/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -317,11 +376,19 @@ acknowledged_target(
 filegroup(
   name = "Diffing_direct_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "Source/Common/**/*.h",
-      "Source/Common/Internal/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Common/**/*.h",
+        "Source/Common/Internal/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -335,7 +402,8 @@ filegroup(
     ],
     exclude = [
       "Source/Common/Internal/*.h"
-    ]
+    ],
+    exclude_directories = 1
   ) + [
     ":Diffing_cxx_public_hdrs"
   ],
@@ -346,11 +414,19 @@ filegroup(
 filegroup(
   name = "Diffing_hdrs",
   srcs = glob(
-    [
-      "pod_support/Headers/Public/**/*",
-      "Source/Common/**/*.h",
-      "Source/Common/Internal/*.h"
-    ]
+    glob(
+      [
+        "pod_support/Headers/Public/**/*"
+      ],
+      exclude_directories = 1
+    ) + glob(
+      [
+        "Source/Common/**/*.h",
+        "Source/Common/Internal/*.h"
+      ],
+      exclude_directories = 1
+    ),
+    exclude_directories = 1
   ),
   visibility = [
     "//visibility:public"
@@ -396,31 +472,57 @@ objc_library(
         [
           "Source/Common/**/*.m"
         ],
-        exclude = [
-          "Source/**/*.mm",
-          "Source/**/*.m",
-          "Source/**/*.m"
-        ]
+        exclude = glob(
+          [
+            "Source/**/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
           "Source/Common/**/*.m"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
           "Source/Common/**/*.m"
         ],
-        exclude = [
-          "Source/**/*.mm",
-          "Source/**/*.m",
-          "Source/**/*.m"
-        ]
+        exclude = glob(
+          [
+            "Source/**/*.mm"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
           "Source/Common/**/*.m"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -477,30 +579,48 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -519,7 +639,8 @@ filegroup(
         exclude = [
           "Source/Common/Internal/*.h",
           "Source/Internal/*.h"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
@@ -528,7 +649,8 @@ filegroup(
         exclude = [
           "Source/Common/Internal/*.h",
           "Source/Internal/*.h"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ) + [
@@ -543,30 +665,48 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -614,17 +754,25 @@ objc_library(
         [
           "Source/**/*.mm"
         ],
-        exclude = [
-          "Source/**/*.m"
-        ]
+        exclude = glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
           "Source/**/*.mm"
         ],
-        exclude = [
-          "Source/**/*.m"
-        ]
+        exclude = glob(
+          [
+            "Source/**/*.m"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       )
     }
   ),
@@ -685,30 +833,48 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -727,7 +893,8 @@ filegroup(
         exclude = [
           "Source/Common/Internal/*.h",
           "Source/Internal/*.h"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
@@ -736,7 +903,8 @@ filegroup(
         exclude = [
           "Source/Common/Internal/*.h",
           "Source/Internal/*.h"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ) + [
@@ -752,30 +920,48 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":osxCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
-        [
-          "pod_support/Headers/Public/**/*",
-          "Source/**/*.h",
-          "Source/Common/Internal/*.h",
-          "Source/Internal/*.h"
-        ]
+        glob(
+          [
+            "pod_support/Headers/Public/**/*"
+          ],
+          exclude_directories = 1
+        ) + glob(
+          [
+            "Source/**/*.h",
+            "Source/Common/Internal/*.h",
+            "Source/Internal/*.h"
+          ],
+          exclude_directories = 1
+        ),
+        exclude_directories = 1
       ),
       ":watchosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),
@@ -824,12 +1010,14 @@ objc_library(
       "//conditions:default": glob(
         [
           "Source/**/*.m"
-        ]
+        ],
+        exclude_directories = 1
       ),
       ":tvosCase": glob(
         [
           "Source/**/*.m"
-        ]
+        ],
+        exclude_directories = 1
       )
     }
   ),
