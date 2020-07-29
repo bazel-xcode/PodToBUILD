@@ -91,7 +91,6 @@ headermap(
   ],
   deps = [
     ":Basics_hmap",
-    ":Core_Bundle_FacebookSDKStrings_hmap",
     ":Core_hmap"
   ],
   visibility = [
@@ -303,7 +302,6 @@ objc_library(
   deps = [
     ":Basics",
     ":Core",
-    ":Core_Bundle_FacebookSDKStrings",
     ":FBSDKCoreKit_includes"
   ],
   copts = select(
