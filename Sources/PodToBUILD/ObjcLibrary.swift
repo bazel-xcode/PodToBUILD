@@ -788,8 +788,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 // TODO: in some cases, we may need to break this invariant, as
                 // it may not hold true for all cocoapods ( e.g. give it all
                 // possibilities here )
+		// TODO: Move ad-hoc bazel targets from ObjcLibrary to BuildFile
                 .named(name: "deps", value: deps
-                       .map { Array(Set($0)).filter { !$0.hasSuffix("_swift") } }
+                       .map { Set($0)
+                           .filter { !($0.hasSuffix("_swift") ||
+                           $0.hasSuffix("_VendoredFrameworks") ||
+                           $0.hasSuffix("_VendoredLibraries"))
+                           }
+                           .map { $0.hasPrefix(":") ? $0 + "_hmap" : $0 }
+                       }
                        .sorted(by: (<)).toSkylark()),
                 .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
             ]
@@ -866,7 +873,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         var allDeps: SkylarkNode = SkylarkNode.empty
         if !lib.deps.isEmpty {
-            allDeps = lib.deps.map { Array(Set($0)).sorted(by: (<)) } .toSkylark() 
+            allDeps = lib.deps.map { Set($0).sorted(by: (<)) } .toSkylark() 
         }
         if lib.includes.count > 0 {
             allDeps = allDeps .+. [":\(name)_includes"].toSkylark()
