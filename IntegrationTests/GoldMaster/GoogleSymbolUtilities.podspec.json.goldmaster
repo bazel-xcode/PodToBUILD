@@ -81,9 +81,7 @@ headermap(
     "GoogleSymbolUtilities_package_hdrs",
     ":GoogleSymbolUtilities_hdrs"
   ],
-  deps = [
-    ":GoogleSymbolUtilities_VendoredFrameworks"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

@@ -329,7 +329,7 @@ headermap(
     ":pop_hdrs"
   ],
   deps = [
-    ":pop_cxx"
+    ":pop_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"

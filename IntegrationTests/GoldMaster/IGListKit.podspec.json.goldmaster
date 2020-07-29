@@ -89,7 +89,7 @@ headermap(
     ":IGListKit_hdrs"
   ],
   deps = [
-    ":Default"
+    ":Default_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -451,7 +451,7 @@ headermap(
     ":Diffing_union_hdrs"
   ],
   deps = [
-    ":Diffing_cxx"
+    ":Diffing_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -733,7 +733,7 @@ headermap(
     ":Default_cxx_union_hdrs"
   ],
   deps = [
-    ":Diffing"
+    ":Diffing_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -989,8 +989,8 @@ headermap(
     ":Default_union_hdrs"
   ],
   deps = [
-    ":Default_cxx",
-    ":Diffing"
+    ":Default_cxx_hmap",
+    ":Diffing_hmap"
   ],
   visibility = [
     "//visibility:public"

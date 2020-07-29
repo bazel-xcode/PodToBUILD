@@ -142,7 +142,7 @@ headermap(
     ":React_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -510,7 +510,7 @@ headermap(
     ":ART_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -636,7 +636,7 @@ headermap(
     ":RCTActionSheet_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -762,7 +762,7 @@ headermap(
     ":RCTAdSupport_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -888,7 +888,7 @@ headermap(
     ":RCTGeolocation_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1014,7 +1014,7 @@ headermap(
     ":RCTImage_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1140,7 +1140,7 @@ headermap(
     ":RCTNetwork_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1266,7 +1266,7 @@ headermap(
     ":RCTPushNotification_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1392,7 +1392,7 @@ headermap(
     ":RCTSettings_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1518,7 +1518,7 @@ headermap(
     ":RCTText_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1644,7 +1644,7 @@ headermap(
     ":RCTVibration_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1770,7 +1770,7 @@ headermap(
     ":RCTWebSocket_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1896,7 +1896,7 @@ headermap(
     ":RCTLinkingIOS_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"

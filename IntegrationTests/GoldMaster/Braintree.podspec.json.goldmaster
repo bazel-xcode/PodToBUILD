@@ -104,10 +104,10 @@ headermap(
     ":Braintree_hdrs"
   ],
   deps = [
-    ":Card",
-    ":Core",
-    ":PayPal",
-    ":UI"
+    ":Card_hmap",
+    ":Core_hmap",
+    ":PayPal_hmap",
+    ":UI_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -415,7 +415,7 @@ headermap(
     ":Apple-Pay_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -548,7 +548,7 @@ headermap(
     ":Card_union_hdrs"
   ],
   deps = [
-    ":Core"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -694,8 +694,7 @@ headermap(
     ":DataCollector_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":DataCollector_VendoredLibraries"
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -839,8 +838,8 @@ headermap(
     ":PayPal_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":PayPalOneTouch"
+    ":Core_hmap",
+    ":PayPalOneTouch_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -973,8 +972,8 @@ headermap(
     ":Venmo_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":PayPalDataCollector"
+    ":Core_hmap",
+    ":PayPalDataCollector_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1135,8 +1134,8 @@ headermap(
     ":UI_union_hdrs"
   ],
   deps = [
-    ":Card",
-    ":Core"
+    ":Card_hmap",
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1276,8 +1275,8 @@ headermap(
     ":UnionPay_union_hdrs"
   ],
   deps = [
-    ":Card",
-    ":Core"
+    ":Card_hmap",
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1427,8 +1426,8 @@ headermap(
     ":3D-Secure_union_hdrs"
   ],
   deps = [
-    ":Card",
-    ":Core"
+    ":Card_hmap",
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1569,9 +1568,9 @@ headermap(
     ":PayPalOneTouch_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":PayPalDataCollector",
-    ":PayPalUtils"
+    ":Core_hmap",
+    ":PayPalDataCollector_hmap",
+    ":PayPalUtils_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1722,9 +1721,8 @@ headermap(
     ":PayPalDataCollector_union_hdrs"
   ],
   deps = [
-    ":Core",
-    ":PayPalDataCollector_VendoredLibraries",
-    ":PayPalUtils"
+    ":Core_hmap",
+    ":PayPalUtils_hmap"
   ],
   visibility = [
     "//visibility:public"

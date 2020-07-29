@@ -91,8 +91,8 @@ headermap(
     ":FBSDKCoreKit_hdrs"
   ],
   deps = [
-    ":Basics",
-    ":Core"
+    ":Basics_hmap",
+    ":Core_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1032,7 +1032,7 @@ headermap(
     ":Core_cxx_union_hdrs"
   ],
   deps = [
-    ":Basics"
+    ":Basics_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -1593,8 +1593,8 @@ headermap(
     ":Core_union_hdrs"
   ],
   deps = [
-    ":Basics",
-    ":Core_cxx"
+    ":Basics_hmap",
+    ":Core_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"

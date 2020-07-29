@@ -101,9 +101,7 @@ headermap(
     "Weixin_package_hdrs",
     ":Weixin_hdrs"
   ],
-  deps = [
-    ":Weixin_VendoredLibraries"
-  ],
+  deps = [],
   visibility = [
     "//visibility:public"
   ]

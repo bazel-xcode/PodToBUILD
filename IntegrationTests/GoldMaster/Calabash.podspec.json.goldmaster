@@ -313,7 +313,7 @@ headermap(
     ":Calabash_hdrs"
   ],
   deps = [
-    ":Calabash_cxx"
+    ":Calabash_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"

@@ -363,7 +363,7 @@ headermap(
     ":FBAllocationTracker_hdrs"
   ],
   deps = [
-    ":FBAllocationTracker_cxx"
+    ":FBAllocationTracker_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"

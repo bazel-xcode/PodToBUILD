@@ -83,8 +83,7 @@ headermap(
   ],
   deps = [
     "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities",
-    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
-    ":GoogleAuthUtilities_VendoredFrameworks"
+    "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities"
   ],
   visibility = [
     "//visibility:public"
