@@ -17,11 +17,11 @@ public struct GlobNode: SkylarkConvertible {
         = Either.left(Set([String]()))
 
     public init(include: Set<String> = Set(), exclude: Set<String> = Set()) {
-        self.init(include:  [.left(include)], exclude: [.left(exclude)])
+        self.init(include: [.left(include)], exclude: [.left(exclude)])
     }
 
     public init(include: Either<Set<String>, GlobNode>, exclude: Either<Set<String>, GlobNode>) {
-        self.init(include:  [include], exclude: [exclude])
+        self.init(include: [include], exclude: [exclude])
     }
 
     public init(include: [Either<Set<String>, GlobNode>] = [], exclude: [Either<Set<String>, GlobNode>] = []) {
@@ -70,9 +70,9 @@ extension Either: Equatable where T == Set<String>, U == GlobNode {
         if case let .right(lhsR) = lhs, case let .right(rhsR) = rhs {
             return lhsR == rhsR
         }
-	if lhs.isEmpty && rhs.isEmpty {
-	    return true
-	}
+        if lhs.isEmpty && rhs.isEmpty {
+            return true
+        }
         return false
     }
 
@@ -109,19 +109,15 @@ extension Either: Equatable where T == Set<String>, U == GlobNode {
 extension Array where Iterator.Element == Either<Set<String>, GlobNode> {
     var isEmpty: Bool {
         return self.reduce(true) {
-            accum, next -> Bool in
-            if accum == false {
-                return false
-            }
-	    return next.isEmpty
+            $0 == false ? $0 | $1.isEmpty
         }
     }
 
     public func simplify() -> [Either<Set<String>, GlobNode>] {
         // First simplify the elements and then filter the empty elements
         return self
-        .map { $0.simplify() }
-        .filter { !$0.isEmpty }
+            .map { $0.simplify() }
+            .filter { !$0.isEmpty }
     }
 }
 
@@ -136,12 +132,12 @@ extension Either: SkylarkConvertible where T == Set<String>, U == GlobNode {
     }
 
     var isEmpty: Bool {
-	switch self {
-	case let .left(val):
-	    return val.isEmpty
-	case let .right(val):
-	    return val.isEmpty
-	}
+        switch self {
+        case let .left(val):
+            return val.isEmpty
+        case let .right(val):
+            return val.isEmpty
+        }
     }
 
     public func simplify() -> Either<Set<String>, GlobNode> {
