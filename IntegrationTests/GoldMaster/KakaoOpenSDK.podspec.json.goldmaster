@@ -52,8 +52,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -76,8 +75,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":KakaoLink_hdrs",
     ":KakaoNavi_hdrs",
@@ -158,8 +156,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -177,8 +174,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -256,8 +252,7 @@ apple_static_framework_import(
   framework_imports = glob(
     [
       "KakaoOpenSDK.framework/**"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -273,8 +268,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -292,8 +286,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -370,8 +363,7 @@ apple_static_framework_import(
   framework_imports = glob(
     [
       "KakaoNavi.framework/**"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -387,8 +379,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -406,8 +397,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -484,8 +474,7 @@ apple_static_framework_import(
   framework_imports = glob(
     [
       "KakaoLink.framework/**"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -501,8 +490,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -520,8 +508,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -598,8 +585,7 @@ apple_static_framework_import(
   framework_imports = glob(
     [
       "KakaoS2.framework/**"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"

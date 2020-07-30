@@ -49,8 +49,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -71,8 +70,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Messages_hdrs",
     ":Services_hdrs"
@@ -147,18 +145,10 @@ acknowledged_target(
 filegroup(
   name = "Messages_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "google/**/*.pbobjc.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "google/**/*.pbobjc.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -169,8 +159,7 @@ filegroup(
   srcs = glob(
     [
       "google/**/*.pbobjc.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -179,18 +168,10 @@ filegroup(
 filegroup(
   name = "Messages_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "google/**/*.pbobjc.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "google/**/*.pbobjc.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -233,13 +214,9 @@ objc_library(
     [
       "google/**/*.pbobjc.m"
     ],
-    exclude = glob(
-      [
-        "google/**/*.pbrpc.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    exclude = [
+      "google/**/*.pbrpc.m"
+    ]
   ),
   hdrs = [
     ":Messages_hdrs"
@@ -280,18 +257,10 @@ acknowledged_target(
 filegroup(
   name = "Services_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "google/**/*.pbrpc.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "google/**/*.pbrpc.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -302,8 +271,7 @@ filegroup(
   srcs = glob(
     [
       "google/**/*.pbrpc.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Messages_public_hdrs"
   ],
@@ -314,18 +282,10 @@ filegroup(
 filegroup(
   name = "Services_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "google/**/*.pbrpc.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "google/**/*.pbrpc.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -369,8 +329,7 @@ objc_library(
   srcs = glob(
     [
       "google/**/*.pbrpc.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Services_hdrs"

@@ -47,12 +47,9 @@ filegroup(
 filegroup(
   name = "ObjcParentWithSwiftSubspecs_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ] + glob(
       [
         "Sources/**/*.h"
       ],
@@ -60,10 +57,8 @@ filegroup(
         "Classes/Exclude/**/*.h",
         "Classes/Exclude/**/*.hpp",
         "Classes/Exclude/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      ]
+    )
   ),
   visibility = [
     "//visibility:public"
@@ -74,8 +69,7 @@ filegroup(
   srcs = glob(
     [
       "Sources/**/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Default_public_hdrs",
     ":Subspec_public_hdrs"
@@ -87,12 +81,9 @@ filegroup(
 filegroup(
   name = "ObjcParentWithSwiftSubspecs_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ] + glob(
       [
         "Sources/**/*.h"
       ],
@@ -100,10 +91,8 @@ filegroup(
         "Classes/Exclude/**/*.h",
         "Classes/Exclude/**/*.hpp",
         "Classes/Exclude/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      ]
+    )
   ) + [
     ":Default_hdrs",
     ":Subspec_hdrs"
@@ -149,8 +138,7 @@ objc_library(
       "Classes/Exclude/**/*.m",
       "Classes/Exclude/**/*.mm",
       "Classes/Exclude/**/*.s"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":ObjcParentWithSwiftSubspecs_hdrs"
@@ -190,8 +178,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -209,8 +196,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -283,8 +269,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -302,8 +287,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"

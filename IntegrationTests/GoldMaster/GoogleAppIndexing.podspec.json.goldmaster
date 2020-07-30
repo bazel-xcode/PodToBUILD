@@ -47,20 +47,12 @@ filegroup(
 filegroup(
   name = "GoogleAppIndexing_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Changelog/**/*.h",
-        "Changelog/**/*.hpp",
-        "Changelog/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Changelog/**/*.h",
+      "Changelog/**/*.hpp",
+      "Changelog/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -76,20 +68,12 @@ filegroup(
 filegroup(
   name = "GoogleAppIndexing_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Changelog/**/*.h",
-        "Changelog/**/*.hpp",
-        "Changelog/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Changelog/**/*.h",
+      "Changelog/**/*.hpp",
+      "Changelog/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -160,8 +144,7 @@ apple_bundle_import(
   bundle_imports = glob(
     [
       "Resources/GoogleAppIndexingResources.bundle/**"
-    ],
-    exclude_directories = 1
+    ]
   )
 )
 acknowledged_target(
@@ -174,8 +157,7 @@ apple_static_framework_import(
   framework_imports = glob(
     [
       "Frameworks/GoogleAppIndexing.framework/**"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"

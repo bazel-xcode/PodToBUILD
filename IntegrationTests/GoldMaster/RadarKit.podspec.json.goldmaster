@@ -45,18 +45,10 @@ filegroup(
 filegroup(
   name = "RadarKit_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "RadarKit/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "RadarKit/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -67,8 +59,7 @@ filegroup(
   srcs = glob(
     [
       "RadarKit/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -77,18 +68,10 @@ filegroup(
 filegroup(
   name = "RadarKit_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "RadarKit/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "RadarKit/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -118,8 +101,7 @@ objc_library(
   srcs = glob(
     [
       "RadarKit/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RadarKit_hdrs"

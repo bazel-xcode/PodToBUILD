@@ -50,8 +50,7 @@ swift_library(
       "Source/**/*.swift",
       "Source/*.swift",
       "Vendor/**/*.swift"
-    ],
-    exclude_directories = 1
+    ]
   ),
   deps = [
     "//Vendor/AEXML:AEXML",
@@ -69,8 +68,7 @@ swift_library(
       "Source/Resources/*.xcassets",
       "Source/Resources/Fonts/**/*.otf",
       "Source/Resources/Fonts/**/*.ttf"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -79,18 +77,10 @@ swift_library(
 filegroup(
   name = "FolioReaderKit_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -101,8 +91,7 @@ filegroup(
   srcs = glob(
     [
       "Source/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -111,18 +100,10 @@ filegroup(
 filegroup(
   name = "FolioReaderKit_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -197,8 +178,7 @@ objc_library(
       "Source/Resources/*.xcassets",
       "Source/Resources/Fonts/**/*.otf",
       "Source/Resources/Fonts/**/*.ttf"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
