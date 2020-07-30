@@ -70,17 +70,9 @@ extension Either: Equatable where T == Set<String>, U == GlobNode {
         if case let .right(lhsR) = lhs, case let .right(rhsR) = rhs {
             return lhsR == rhsR
         }
-        if case let .left(lhsL) = lhs, case let .right(rhsR) = rhs {
-            if lhsL.isEmpty, rhsR.isEmpty {
-                return true
-            }
-        }
-        if case let .right(lhsR) = lhs, case let .left(rhsR) = rhs {
-            if lhsR.isEmpty, rhsR.isEmpty {
-                return true
-            }
-        }
-
+	if lhs.isEmpty && rhs.isEmpty {
+	    return true
+	}
         return false
     }
 
@@ -121,12 +113,7 @@ extension Array where Iterator.Element == Either<Set<String>, GlobNode> {
             if accum == false {
                 return false
             }
-            switch next {
-            case .left(let val):
-                return val.isEmpty
-            case .right(let val):
-                return val.isEmpty
-            }
+	    return next.isEmpty
         }
     }
 
@@ -134,15 +121,7 @@ extension Array where Iterator.Element == Either<Set<String>, GlobNode> {
         // First simplify the elements and then filter the empty elements
         return self
         .map { $0.simplify() }
-        .filter {
-            element in
-            switch element {
-            case let .left(val):
-                return !val.isEmpty
-            case let .right(val):
-                return !val.isEmpty
-            }
-        }
+        .filter { !$0.isEmpty }
     }
 }
 
@@ -154,6 +133,15 @@ extension Either: SkylarkConvertible where T == Set<String>, U == GlobNode {
         case let .right(globVal):
             return globVal.toSkylark()
         }
+    }
+
+    var isEmpty: Bool {
+	switch self {
+	case let .left(val):
+	    return val.isEmpty
+	case let .right(val):
+	    return val.isEmpty
+	}
     }
 
     public func simplify() -> Either<Set<String>, GlobNode> {
