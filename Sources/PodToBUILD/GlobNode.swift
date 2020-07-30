@@ -109,7 +109,7 @@ extension Either: Equatable where T == Set<String>, U == GlobNode {
 extension Array where Iterator.Element == Either<Set<String>, GlobNode> {
     var isEmpty: Bool {
         return self.reduce(true) {
-            $0 == false ? $0 | $1.isEmpty
+            $0 == false ? $0 : $1.isEmpty
         }
     }
 
