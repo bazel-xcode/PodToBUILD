@@ -285,7 +285,6 @@ public enum RepoActions {
             target in
             let name = target.name
             let head = buildOptions.podName + "_"
-            //if target is AcknowledgmentNode {
             if head + "acknowledgement" == target.name {
                 return target.name
             }
