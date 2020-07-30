@@ -103,9 +103,10 @@ def _module_map_impl(ctx):
     swift_header = ctx.attr.swift_header
     headers_list = _get_module_map_headers(deps)
 
-    # Up some dirs to the compilation root
-    # bazel-out/ios_x86_64-fastbuild/genfiles/external/__Pod__
-    relative_path = "../../../../../../"
+    # relative from the module_map dir to the compilation root
+    # e.g. bazel-out/ios_x86_64-fastbuild/genfiles/external/__Pod__
+    module_map = ctx.outputs.module_map
+    relative_path = "".join(["../" for i in range(len(module_map.dirname.split("/")))])
     system_tag = " [system] "
     content = "module " + module_name + (system_tag if ctx.attr.is_system else "" ) + " {\n" 
     content += "    export * \n"
@@ -126,7 +127,7 @@ module {module_name}.Swift {{
 
     ctx.actions.write(
         content=content,
-        output=ctx.outputs.module_map
+        output=module_map
     )
 
     # If the name is `module.modulemap` we propagate this as an include. If a
@@ -138,15 +139,15 @@ module {module_name}.Swift {{
     else:
         include = depset()
     objc_provider = apple_common.new_objc_provider(
-        module_map=depset([ctx.outputs.module_map]),
+        module_map=depset([module_map]),
         include=include
     )
 
     return struct(
-        files=depset([ctx.outputs.module_map]),
+        files=depset([module_map]),
         providers=[objc_provider],
         objc=objc_provider,
-        headers=depset([ctx.outputs.module_map]),
+        headers=depset([module_map]),
     )
 
 
