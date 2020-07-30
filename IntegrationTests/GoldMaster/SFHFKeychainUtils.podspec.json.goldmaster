@@ -47,20 +47,12 @@ filegroup(
 filegroup(
   name = "SFHFKeychainUtils_cxx_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "security/**/*.h",
-        "security/**/*.hpp",
-        "security/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -73,8 +65,7 @@ filegroup(
       "security/**/*.h",
       "security/**/*.hpp",
       "security/**/*.hxx"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -83,20 +74,12 @@ filegroup(
 filegroup(
   name = "SFHFKeychainUtils_cxx_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "security/**/*.h",
-        "security/**/*.hpp",
-        "security/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -139,32 +122,24 @@ objc_library(
       "security/**/*.cpp",
       "security/**/*.cxx"
     ],
-    exclude = glob(
-      [
-        "security/**/*.S",
-        "security/**/*.c",
-        "security/**/*.m",
-        "security/**/*.s"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    exclude = [
+      "security/**/*.S",
+      "security/**/*.c",
+      "security/**/*.m",
+      "security/**/*.s"
+    ]
   ),
   non_arc_srcs = glob(
     glob(
       [
         "security/**/*.mm"
       ],
-      exclude = glob(
-        [
-          "security/**/*.S",
-          "security/**/*.c",
-          "security/**/*.m",
-          "security/**/*.s"
-        ],
-        exclude_directories = 1
-      ),
-      exclude_directories = 1
+      exclude = [
+        "security/**/*.S",
+        "security/**/*.c",
+        "security/**/*.m",
+        "security/**/*.s"
+      ]
     ),
     exclude = glob(
       [
@@ -172,18 +147,13 @@ objc_library(
         "security/**/*.cpp",
         "security/**/*.cxx"
       ],
-      exclude = glob(
-        [
-          "security/**/*.S",
-          "security/**/*.c",
-          "security/**/*.m",
-          "security/**/*.s"
-        ],
-        exclude_directories = 1
-      ),
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      exclude = [
+        "security/**/*.S",
+        "security/**/*.c",
+        "security/**/*.m",
+        "security/**/*.s"
+      ]
+    )
   ),
   module_map = ":SFHFKeychainUtils_extended_module_map_module_map_file",
   hdrs = [
@@ -227,8 +197,7 @@ swift_library(
   srcs = glob(
     [
       "security/**/*.swift"
-    ],
-    exclude_directories = 1
+    ]
   ),
   deps = [],
   data = [],
@@ -239,20 +208,12 @@ swift_library(
 filegroup(
   name = "SFHFKeychainUtils_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "security/**/*.h",
-        "security/**/*.hpp",
-        "security/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -265,8 +226,7 @@ filegroup(
       "security/**/*.h",
       "security/**/*.hpp",
       "security/**/*.hxx"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":SFHFKeychainUtils_cxx_public_hdrs"
   ],
@@ -277,20 +237,12 @@ filegroup(
 filegroup(
   name = "SFHFKeychainUtils_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "security/**/*.h",
-        "security/**/*.hpp",
-        "security/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ]
   ) + [
     ":SFHFKeychainUtils_cxx_hdrs"
   ],
@@ -327,8 +279,7 @@ objc_library(
       "security/**/*.c",
       "security/**/*.m",
       "security/**/*.s"
-    ],
-    exclude_directories = 1
+    ]
   ),
   module_map = ":SFHFKeychainUtils_extended_module_map_module_map_file",
   hdrs = [

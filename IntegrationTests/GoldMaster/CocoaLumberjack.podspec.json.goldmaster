@@ -52,8 +52,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -74,8 +73,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Default_hdrs",
     ":Extensions_hdrs"
@@ -144,19 +142,11 @@ acknowledged_target(
 filegroup(
   name = "Default_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Classes/CocoaLumberjack.h",
-        "Classes/DD*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Classes/CocoaLumberjack.h",
+      "Classes/DD*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -168,8 +158,7 @@ filegroup(
     [
       "Classes/CocoaLumberjack.h",
       "Classes/DD*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -178,19 +167,11 @@ filegroup(
 filegroup(
   name = "Default_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Classes/CocoaLumberjack.h",
-        "Classes/DD*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Classes/CocoaLumberjack.h",
+      "Classes/DD*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -231,13 +212,9 @@ objc_library(
     [
       "Classes/DD*.m"
     ],
-    exclude = glob(
-      [
-        "Classes/Extensions/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    exclude = [
+      "Classes/Extensions/*.m"
+    ]
   ),
   hdrs = [
     ":Default_hdrs"
@@ -273,18 +250,10 @@ acknowledged_target(
 filegroup(
   name = "Core_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Classes/DD*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Classes/DD*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -295,8 +264,7 @@ filegroup(
   srcs = glob(
     [
       "Classes/DD*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -305,18 +273,10 @@ filegroup(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Classes/DD*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Classes/DD*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -356,8 +316,7 @@ objc_library(
   srcs = glob(
     [
       "Classes/DD*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Core_hdrs"
@@ -393,18 +352,10 @@ acknowledged_target(
 filegroup(
   name = "Extensions_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Classes/Extensions/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Classes/Extensions/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -415,8 +366,7 @@ filegroup(
   srcs = glob(
     [
       "Classes/Extensions/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Default_public_hdrs"
   ],
@@ -427,18 +377,10 @@ filegroup(
 filegroup(
   name = "Extensions_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Classes/Extensions/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Classes/Extensions/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -481,8 +423,7 @@ objc_library(
   srcs = glob(
     [
       "Classes/Extensions/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Extensions_hdrs"
@@ -523,34 +464,23 @@ filegroup(
       "//conditions:default": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ],
-        exclude_directories = 1
+        ]
       ),
       ":osxCase": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
-          [
-            "Classes/CLI/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+        [
+          "pod_support/Headers/Public/**/*",
+          "Classes/CLI/*.h"
+        ]
       ),
       ":tvosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ],
-        exclude_directories = 1
+        ]
       ),
       ":watchosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ],
-        exclude_directories = 1
+        ]
       )
     }
   ),
@@ -566,8 +496,7 @@ filegroup(
       ":osxCase": glob(
         [
           "Classes/CLI/*.h"
-        ],
-        exclude_directories = 1
+        ]
       )
     }
   ) + select(
@@ -589,34 +518,23 @@ filegroup(
       "//conditions:default": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ],
-        exclude_directories = 1
+        ]
       ),
       ":osxCase": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
-          [
-            "Classes/CLI/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+        [
+          "pod_support/Headers/Public/**/*",
+          "Classes/CLI/*.h"
+        ]
       ),
       ":tvosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ],
-        exclude_directories = 1
+        ]
       ),
       ":watchosCase": glob(
         [
           "pod_support/Headers/Public/**/*"
-        ],
-        exclude_directories = 1
+        ]
       )
     }
   ),
@@ -675,8 +593,7 @@ objc_library(
       ":osxCase": glob(
         [
           "Classes/CLI/*.m"
-        ],
-        exclude_directories = 1
+        ]
       )
     }
   ),
@@ -723,8 +640,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -744,8 +660,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"

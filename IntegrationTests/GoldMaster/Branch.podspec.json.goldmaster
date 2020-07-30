@@ -49,8 +49,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -71,8 +70,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_hdrs",
     ":without-IDFA_hdrs"
@@ -141,20 +139,12 @@ acknowledged_target(
 filegroup(
   name = "Core_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Branch-SDK/Branch-SDK/*.h",
-        "Branch-SDK/Branch-SDK/Requests/*.h",
-        "Branch-SDK/Fabric/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Branch-SDK/Branch-SDK/*.h",
+      "Branch-SDK/Branch-SDK/Requests/*.h",
+      "Branch-SDK/Fabric/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -170,8 +160,7 @@ filegroup(
     ],
     exclude = [
       "Branch-SDK/Fabric/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -180,20 +169,12 @@ filegroup(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Branch-SDK/Branch-SDK/*.h",
-        "Branch-SDK/Branch-SDK/Requests/*.h",
-        "Branch-SDK/Fabric/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Branch-SDK/Branch-SDK/*.h",
+      "Branch-SDK/Branch-SDK/Requests/*.h",
+      "Branch-SDK/Fabric/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -234,8 +215,7 @@ objc_library(
     [
       "Branch-SDK/Branch-SDK/*.m",
       "Branch-SDK/Branch-SDK/Requests/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Core_hdrs"
@@ -276,20 +256,12 @@ acknowledged_target(
 filegroup(
   name = "without-IDFA_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Branch-SDK/Branch-SDK/*.h",
-        "Branch-SDK/Branch-SDK/Requests/*.h",
-        "Branch-SDK/Fabric/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Branch-SDK/Branch-SDK/*.h",
+      "Branch-SDK/Branch-SDK/Requests/*.h",
+      "Branch-SDK/Fabric/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -305,8 +277,7 @@ filegroup(
     ],
     exclude = [
       "Branch-SDK/Fabric/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -315,20 +286,12 @@ filegroup(
 filegroup(
   name = "without-IDFA_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Branch-SDK/Branch-SDK/*.h",
-        "Branch-SDK/Branch-SDK/Requests/*.h",
-        "Branch-SDK/Fabric/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Branch-SDK/Branch-SDK/*.h",
+      "Branch-SDK/Branch-SDK/Requests/*.h",
+      "Branch-SDK/Fabric/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -369,8 +332,7 @@ objc_library(
     [
       "Branch-SDK/Branch-SDK/*.m",
       "Branch-SDK/Branch-SDK/Requests/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":without-IDFA_hdrs"

@@ -46,19 +46,11 @@ filegroup(
 filegroup(
   name = "Stripe_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Stripe/*.h",
-        "Stripe/PublicHeaders/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Stripe/*.h",
+      "Stripe/PublicHeaders/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -69,8 +61,7 @@ filegroup(
   srcs = glob(
     [
       "Stripe/PublicHeaders/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -79,19 +70,11 @@ filegroup(
 filegroup(
   name = "Stripe_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Stripe/*.h",
-        "Stripe/PublicHeaders/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Stripe/*.h",
+      "Stripe/PublicHeaders/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -121,8 +104,7 @@ objc_library(
   srcs = glob(
     [
       "Stripe/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Stripe_hdrs"
@@ -174,8 +156,7 @@ apple_resource_bundle(
   resources = glob(
     [
       "Stripe/Resources/**/*"
-    ],
-    exclude_directories = 1
+    ]
   )
 )
 acknowledged_target(

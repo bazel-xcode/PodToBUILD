@@ -54,8 +54,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -76,8 +75,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":FLAnimatedImage_hdrs",
     ":PINCache_hdrs"
@@ -146,22 +144,17 @@ acknowledged_target(
 filegroup(
   name = "Core_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ] + glob(
       [
         "Source/Classes/**/*.h"
       ],
       exclude = [
         "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
         "Source/Classes/PINCache/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      ]
+    )
   ),
   visibility = [
     "//visibility:public"
@@ -172,8 +165,7 @@ filegroup(
   srcs = glob(
     [
       "Source/Classes/**/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -182,22 +174,17 @@ filegroup(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ] + glob(
       [
         "Source/Classes/**/*.h"
       ],
       exclude = [
         "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h",
         "Source/Classes/PINCache/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      ]
+    )
   ),
   visibility = [
     "//visibility:public"
@@ -242,19 +229,10 @@ objc_library(
     ],
     exclude = [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m",
+      "Source/Classes/PINCache/*.m",
+      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m",
       "Source/Classes/PINCache/*.m"
-    ] + glob(
-      [
-        "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/Classes/PINCache/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Core_hdrs"
@@ -299,8 +277,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -320,8 +297,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -401,8 +377,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -422,8 +397,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -504,8 +478,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -525,8 +498,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -601,18 +573,10 @@ acknowledged_target(
 filegroup(
   name = "FLAnimatedImage_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -623,8 +587,7 @@ filegroup(
   srcs = glob(
     [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -635,18 +598,10 @@ filegroup(
 filegroup(
   name = "FLAnimatedImage_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -690,8 +645,7 @@ objc_library(
   srcs = glob(
     [
       "Source/Classes/Image Categories/FLAnimatedImageView+PINRemoteImage.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":FLAnimatedImage_hdrs"
@@ -733,8 +687,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -754,8 +707,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -836,18 +788,10 @@ acknowledged_target(
 filegroup(
   name = "PINCache_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/Classes/PINCache/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/Classes/PINCache/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -858,8 +802,7 @@ filegroup(
   srcs = glob(
     [
       "Source/Classes/PINCache/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -870,18 +813,10 @@ filegroup(
 filegroup(
   name = "PINCache_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/Classes/PINCache/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/Classes/PINCache/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -925,8 +860,7 @@ objc_library(
   srcs = glob(
     [
       "Source/Classes/PINCache/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":PINCache_hdrs"

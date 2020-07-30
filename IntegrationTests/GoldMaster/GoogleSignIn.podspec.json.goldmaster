@@ -49,8 +49,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -68,8 +67,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -155,8 +153,7 @@ apple_bundle_import(
   bundle_imports = glob(
     [
       "Resources/GoogleSignIn.bundle/**"
-    ],
-    exclude_directories = 1
+    ]
   )
 )
 acknowledged_target(
@@ -169,8 +166,7 @@ apple_static_framework_import(
   framework_imports = glob(
     [
       "Frameworks/GoogleSignIn.framework/**"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"

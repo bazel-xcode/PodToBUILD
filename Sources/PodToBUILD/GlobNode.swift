@@ -17,63 +17,48 @@ public struct GlobNode: SkylarkConvertible {
         = Either.left(Set([String]()))
 
     public init(include: Set<String> = Set(), exclude: Set<String> = Set()) {
-        self.include = include.count == 0 ? [] : [.left(include)]
-        self.exclude = exclude.count == 0 ? [] : [.left(exclude)]
+        self.init(include:  [.left(include)], exclude: [.left(exclude)])
     }
 
     public init(include: Either<Set<String>, GlobNode>, exclude: Either<Set<String>, GlobNode>) {
-        self.include = [include]
-        self.exclude = [exclude]
+        self.init(include:  [include], exclude: [exclude])
     }
 
     public init(include: [Either<Set<String>, GlobNode>] = [], exclude: [Either<Set<String>, GlobNode>] = []) {
-        self.include = include
-        self.exclude = exclude
+        // Upon allocation, form the most simple version of the glob
+        self.include = include.simplify()
+        self.exclude = exclude.simplify()
     }
 
     public func toSkylark() -> SkylarkNode {
+        // An empty glob doesn't need to be rendered
         guard isEmpty == false else {
             return .empty
         }
 
-        guard include != exclude else {
-            return .empty
-        }
-
+        let include = self.include
+        let exclude = self.exclude
         let includeArgs: [SkylarkFunctionArgument] = [
-            SkylarkFunctionArgument.basic(self.include.reduce(SkylarkNode.empty) {
-                accum, next -> SkylarkNode in
-                accum .+. next.toSkylark()
+            .basic(include.reduce(SkylarkNode.empty) {
+                $0 .+. $1.toSkylark()
             }),
         ]
 
-        let excludeArgs: [SkylarkFunctionArgument]
-
-        let excludeIsEmpty = exclude.reduce(true) {
-            accum, next -> Bool in
-            if accum == false {
-                return false
-            }
-            switch next {
-            case let .left(val):
-                return val.isEmpty
-            case let .right(val):
-                return val.isEmpty
-            }
-        }
-        excludeArgs = excludeIsEmpty ? [] : [
-            SkylarkFunctionArgument.named(name: "exclude", value: self.exclude.reduce(SkylarkNode.empty) {
-                accum, next -> SkylarkNode in
-                accum .+. next.toSkylark()
+        // If there's no excludes omit the argument
+        let excludeArgs: [SkylarkFunctionArgument] = exclude.isEmpty ? [] : [
+            .named(name: "exclude", value: exclude.reduce(SkylarkNode.empty) {
+                $0 .+. $1.toSkylark()
             }),
         ]
 
-        let dirArgs: [SkylarkFunctionArgument] = [
+        // Omit the default argument for exclude_directories
+        let dirArgs: [SkylarkFunctionArgument] = self.excludeDirectories ? [] : [
             .named(name: "exclude_directories",
                    value: .int(self.excludeDirectories ? 1 : 0)),
         ]
-        return SkylarkNode.functionCall(name: "glob",
-                                        arguments: includeArgs + excludeArgs + dirArgs)
+
+        return .functionCall(name: "glob",
+                arguments: includeArgs + excludeArgs + dirArgs)
     }
 }
 
@@ -144,6 +129,21 @@ extension Array where Iterator.Element == Either<Set<String>, GlobNode> {
             }
         }
     }
+
+    public func simplify() -> [Either<Set<String>, GlobNode>] {
+        // First simplify the elements and then filter the empty elements
+        return self
+        .map { $0.simplify() }
+        .filter {
+            element in
+            switch element {
+            case let .left(val):
+                return !val.isEmpty
+            case let .right(val):
+                return !val.isEmpty
+            }
+        }
+    }
 }
 
 extension Either: SkylarkConvertible where T == Set<String>, U == GlobNode {
@@ -153,6 +153,47 @@ extension Either: SkylarkConvertible where T == Set<String>, U == GlobNode {
             return setVal.sorted { $0 < $1 }.toSkylark()
         case let .right(globVal):
             return globVal.toSkylark()
+        }
+    }
+
+    public func simplify() -> Either<Set<String>, GlobNode> {
+        // Recursivly simplfies the globs
+        switch self {
+        case let .left(val):
+            // Base case, this is as simple as it gets
+            return .left(val)
+        case let .right(val):
+            let include = val.include.simplify()
+            let exclude = val.exclude.simplify()
+            if exclude.isEmpty {
+                // When there is no excludes we can do the following:
+                // 1. smash all sets into a single set
+                // 2. return a set if there are no other globs
+                // 3. otherwise, return a simplified glob with 1 set and
+                // remaining globs
+                var setAccum: Set<String> = Set()
+                let remainingGlobs = include
+                    .reduce(into: [Either<Set<String>, GlobNode>]()) {
+                    accum, next in
+                    switch next {
+                    case let .left(val):
+                        setAccum = setAccum <> val
+                    case let .right(val):
+                        if !val.isEmpty {
+                            accum.append(next)
+                        }
+                    }
+                }
+
+                // If there are no remaining globs, simplify to a set
+                if remainingGlobs.count == 0 {
+                    return .left(setAccum)
+                } else {
+                    return .right(GlobNode(include: remainingGlobs + [.left(setAccum)]))
+                }
+            } else {
+                return .right(GlobNode(include: include, exclude: exclude))
+            }
         }
     }
 }

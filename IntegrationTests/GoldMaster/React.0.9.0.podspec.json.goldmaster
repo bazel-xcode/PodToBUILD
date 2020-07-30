@@ -58,32 +58,24 @@ filegroup(
 filegroup(
   name = "React_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -101,32 +93,24 @@ filegroup(
 filegroup(
   name = "React_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "PATENTS/**/*.h",
-        "PATENTS/**/*.hpp",
-        "PATENTS/**/*.hxx",
-        "lint/**/*.h",
-        "lint/**/*.hpp",
-        "lint/**/*.hxx",
-        "node_modules/**/*.h",
-        "node_modules/**/*.hpp",
-        "node_modules/**/*.hxx",
-        "packager/**/*.h",
-        "packager/**/*.hpp",
-        "packager/**/*.hxx",
-        "react-native-cli/**/*.h",
-        "react-native-cli/**/*.hpp",
-        "react-native-cli/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "PATENTS/**/*.h",
+      "PATENTS/**/*.hpp",
+      "PATENTS/**/*.hxx",
+      "lint/**/*.h",
+      "lint/**/*.hpp",
+      "lint/**/*.hxx",
+      "node_modules/**/*.h",
+      "node_modules/**/*.hpp",
+      "node_modules/**/*.hxx",
+      "packager/**/*.h",
+      "packager/**/*.hpp",
+      "packager/**/*.hxx",
+      "react-native-cli/**/*.h",
+      "react-native-cli/**/*.hpp",
+      "react-native-cli/**/*.hxx"
+    ]
   ) + [
     ":Core_hdrs"
   ],
@@ -192,12 +176,9 @@ acknowledged_target(
 filegroup(
   name = "Core_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ] + glob(
       [
         "PATENTS/**/*.h",
         "PATENTS/**/*.hpp",
@@ -223,10 +204,8 @@ filegroup(
         "IntegrationTests/*.h",
         "IntegrationTests/*.hpp",
         "IntegrationTests/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      ]
+    )
   ),
   visibility = [
     "//visibility:public"
@@ -237,8 +216,7 @@ filegroup(
   srcs = glob(
     [
       "React/**/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -247,12 +225,9 @@ filegroup(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ] + glob(
       [
         "PATENTS/**/*.h",
         "PATENTS/**/*.hpp",
@@ -278,10 +253,8 @@ filegroup(
         "IntegrationTests/*.h",
         "IntegrationTests/*.hpp",
         "IntegrationTests/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      ]
+    )
   ),
   visibility = [
     "//visibility:public"
@@ -339,69 +312,20 @@ objc_library(
       "IntegrationTests/*.cxx",
       "IntegrationTests/*.m",
       "IntegrationTests/*.mm",
-      "IntegrationTests/*.s"
-    ] + glob(
-      [
-        "Libraries/ART/**/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/ActionSheetIOS/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/AdSupport/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Geolocation/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Image/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Network/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/PushNotificationIOS/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Settings/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Text/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Vibration/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/WebSocket/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/LinkingIOS/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      "IntegrationTests/*.s",
+      "Libraries/ART/**/*.m",
+      "Libraries/ActionSheetIOS/*.m",
+      "Libraries/AdSupport/*.m",
+      "Libraries/Geolocation/*.m",
+      "Libraries/Image/*.m",
+      "Libraries/Network/*.m",
+      "Libraries/PushNotificationIOS/*.m",
+      "Libraries/Settings/*.m",
+      "Libraries/Text/*.m",
+      "Libraries/Vibration/*.m",
+      "Libraries/WebSocket/*.m",
+      "Libraries/LinkingIOS/*.m"
+    ]
   ),
   hdrs = [
     ":Core_hdrs"
@@ -440,18 +364,10 @@ acknowledged_target(
 filegroup(
   name = "ART_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/ART/**/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/ART/**/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -462,8 +378,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/ART/**/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -474,18 +389,10 @@ filegroup(
 filegroup(
   name = "ART_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/ART/**/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/ART/**/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -528,8 +435,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/ART/**/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":ART_hdrs"
@@ -566,18 +472,10 @@ acknowledged_target(
 filegroup(
   name = "RCTActionSheet_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/ActionSheetIOS/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/ActionSheetIOS/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -588,8 +486,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/ActionSheetIOS/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -600,18 +497,10 @@ filegroup(
 filegroup(
   name = "RCTActionSheet_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/ActionSheetIOS/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/ActionSheetIOS/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -654,8 +543,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/ActionSheetIOS/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTActionSheet_hdrs"
@@ -692,18 +580,10 @@ acknowledged_target(
 filegroup(
   name = "RCTAdSupport_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/AdSupport/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/AdSupport/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -714,8 +594,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/AdSupport/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -726,18 +605,10 @@ filegroup(
 filegroup(
   name = "RCTAdSupport_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/AdSupport/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/AdSupport/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -780,8 +651,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/AdSupport/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTAdSupport_hdrs"
@@ -818,18 +688,10 @@ acknowledged_target(
 filegroup(
   name = "RCTGeolocation_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Geolocation/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Geolocation/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -840,8 +702,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/Geolocation/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -852,18 +713,10 @@ filegroup(
 filegroup(
   name = "RCTGeolocation_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Geolocation/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Geolocation/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -906,8 +759,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/Geolocation/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTGeolocation_hdrs"
@@ -944,18 +796,10 @@ acknowledged_target(
 filegroup(
   name = "RCTImage_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Image/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Image/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -966,8 +810,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/Image/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -978,18 +821,10 @@ filegroup(
 filegroup(
   name = "RCTImage_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Image/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Image/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1032,8 +867,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/Image/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTImage_hdrs"
@@ -1070,18 +904,10 @@ acknowledged_target(
 filegroup(
   name = "RCTNetwork_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Network/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Network/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1092,8 +918,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/Network/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -1104,18 +929,10 @@ filegroup(
 filegroup(
   name = "RCTNetwork_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Network/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Network/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1158,8 +975,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/Network/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTNetwork_hdrs"
@@ -1196,18 +1012,10 @@ acknowledged_target(
 filegroup(
   name = "RCTPushNotification_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/PushNotificationIOS/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/PushNotificationIOS/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1218,8 +1026,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/PushNotificationIOS/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -1230,18 +1037,10 @@ filegroup(
 filegroup(
   name = "RCTPushNotification_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/PushNotificationIOS/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/PushNotificationIOS/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1284,8 +1083,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/PushNotificationIOS/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTPushNotification_hdrs"
@@ -1322,18 +1120,10 @@ acknowledged_target(
 filegroup(
   name = "RCTSettings_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Settings/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Settings/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1344,8 +1134,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/Settings/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -1356,18 +1145,10 @@ filegroup(
 filegroup(
   name = "RCTSettings_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Settings/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Settings/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1410,8 +1191,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/Settings/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTSettings_hdrs"
@@ -1448,18 +1228,10 @@ acknowledged_target(
 filegroup(
   name = "RCTText_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Text/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Text/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1470,8 +1242,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/Text/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -1482,18 +1253,10 @@ filegroup(
 filegroup(
   name = "RCTText_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Text/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Text/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1536,8 +1299,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/Text/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTText_hdrs"
@@ -1574,18 +1336,10 @@ acknowledged_target(
 filegroup(
   name = "RCTVibration_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Vibration/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Vibration/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1596,8 +1350,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/Vibration/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -1608,18 +1361,10 @@ filegroup(
 filegroup(
   name = "RCTVibration_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/Vibration/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/Vibration/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1662,8 +1407,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/Vibration/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTVibration_hdrs"
@@ -1700,18 +1444,10 @@ acknowledged_target(
 filegroup(
   name = "RCTWebSocket_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/WebSocket/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/WebSocket/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1722,8 +1458,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/WebSocket/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -1734,18 +1469,10 @@ filegroup(
 filegroup(
   name = "RCTWebSocket_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/WebSocket/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/WebSocket/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1788,8 +1515,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/WebSocket/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTWebSocket_hdrs"
@@ -1826,18 +1552,10 @@ acknowledged_target(
 filegroup(
   name = "RCTLinkingIOS_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/LinkingIOS/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/LinkingIOS/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1848,8 +1566,7 @@ filegroup(
   srcs = glob(
     [
       "Libraries/LinkingIOS/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -1860,18 +1577,10 @@ filegroup(
 filegroup(
   name = "RCTLinkingIOS_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Libraries/LinkingIOS/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Libraries/LinkingIOS/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1914,8 +1623,7 @@ objc_library(
   srcs = glob(
     [
       "Libraries/LinkingIOS/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":RCTLinkingIOS_hdrs"

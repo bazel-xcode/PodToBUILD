@@ -49,8 +49,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -71,8 +70,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Arc-exception-safe_hdrs",
     ":Core_hdrs"
@@ -154,18 +152,10 @@ acknowledged_target(
 filegroup(
   name = "Core_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -176,8 +166,7 @@ filegroup(
   srcs = glob(
     [
       "Source/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -186,18 +175,10 @@ filegroup(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -240,13 +221,9 @@ objc_library(
     [
       "Source/*.m"
     ],
-    exclude = glob(
-      [
-        "Source/PINDiskCache.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    exclude = [
+      "Source/PINDiskCache.m"
+    ]
   ),
   hdrs = [
     ":Core_hdrs"
@@ -300,8 +277,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -321,8 +297,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -365,8 +340,7 @@ objc_library(
   srcs = glob(
     [
       "Source/PINDiskCache.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Arc-exception-safe_hdrs"

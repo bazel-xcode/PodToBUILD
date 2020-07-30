@@ -48,8 +48,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -69,8 +68,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Login_hdrs"
   ],
@@ -158,12 +156,9 @@ acknowledged_target(
 filegroup(
   name = "Login_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ] + glob(
       [
         "FBSDKLoginKit/FBSDKLoginKit/**/*.h",
         "FBSDKLoginKit/FBSDKLoginKit/*.h"
@@ -172,10 +167,8 @@ filegroup(
         "FBSDKLoginKit/FBSDKLoginKit/include/**/*.h",
         "FBSDKLoginKit/FBSDKLoginKit/include/**/*.hpp",
         "FBSDKLoginKit/FBSDKLoginKit/include/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      ]
+    )
   ),
   visibility = [
     "//visibility:public"
@@ -186,8 +179,7 @@ filegroup(
   srcs = glob(
     [
       "FBSDKLoginKit/FBSDKLoginKit/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -196,12 +188,9 @@ filegroup(
 filegroup(
   name = "Login_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ] + glob(
       [
         "FBSDKLoginKit/FBSDKLoginKit/**/*.h",
         "FBSDKLoginKit/FBSDKLoginKit/*.h"
@@ -210,10 +199,8 @@ filegroup(
         "FBSDKLoginKit/FBSDKLoginKit/include/**/*.h",
         "FBSDKLoginKit/FBSDKLoginKit/include/**/*.hpp",
         "FBSDKLoginKit/FBSDKLoginKit/include/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      ]
+    )
   ),
   visibility = [
     "//visibility:public"
@@ -265,8 +252,7 @@ objc_library(
       "FBSDKLoginKit/FBSDKLoginKit/include/**/*.m",
       "FBSDKLoginKit/FBSDKLoginKit/include/**/*.mm",
       "FBSDKLoginKit/FBSDKLoginKit/include/**/*.s"
-    ],
-    exclude_directories = 1
+    ]
   ),
   module_map = ":FBSDKLoginKit_extended_module_map_module_map_file",
   hdrs = [

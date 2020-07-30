@@ -46,18 +46,10 @@ filegroup(
 filegroup(
   name = "PINOperation_cxx_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/**/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/**/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -68,8 +60,7 @@ filegroup(
   srcs = glob(
     [
       "Source/**/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -78,18 +69,10 @@ filegroup(
 filegroup(
   name = "PINOperation_cxx_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/**/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/**/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -130,13 +113,9 @@ objc_library(
     [
       "Source/**/*.mm"
     ],
-    exclude = glob(
-      [
-        "Source/**/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    exclude = [
+      "Source/**/*.m"
+    ]
   ),
   hdrs = [
     ":PINOperation_cxx_hdrs"
@@ -177,18 +156,10 @@ acknowledged_target(
 filegroup(
   name = "PINOperation_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/**/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/**/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -199,8 +170,7 @@ filegroup(
   srcs = glob(
     [
       "Source/**/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":PINOperation_cxx_public_hdrs"
   ],
@@ -211,18 +181,10 @@ filegroup(
 filegroup(
   name = "PINOperation_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/**/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/**/*.h"
+    ]
   ) + [
     ":PINOperation_cxx_hdrs"
   ],
@@ -256,8 +218,7 @@ objc_library(
   srcs = glob(
     [
       "Source/**/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":PINOperation_hdrs"
