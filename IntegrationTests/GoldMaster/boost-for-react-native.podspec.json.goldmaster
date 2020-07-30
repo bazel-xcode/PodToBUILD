@@ -45,20 +45,12 @@ filegroup(
 filegroup(
   name = "boost-for-react-native_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "boost/**/*.h",
-        "boost/**/*.hpp",
-        "boost/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "boost/**/*.h",
+      "boost/**/*.hpp",
+      "boost/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -74,20 +66,12 @@ filegroup(
 filegroup(
   name = "boost-for-react-native_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "boost/**/*.h",
-        "boost/**/*.hpp",
-        "boost/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "boost/**/*.h",
+      "boost/**/*.hpp",
+      "boost/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -133,8 +117,6 @@ objc_library(
     }
   ) + [
     "-IVendor/boost-for-react-native/pod_support/Headers/Public/boost/"
-  ] + [
-    "-fmodule-name=boost"
   ],
   visibility = [
     "//visibility:public"

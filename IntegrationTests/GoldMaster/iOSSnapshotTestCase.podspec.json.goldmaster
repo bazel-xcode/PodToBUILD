@@ -49,8 +49,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -70,8 +69,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":SwiftSupport_hdrs"
   ],
@@ -128,8 +126,6 @@ objc_library(
     }
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
-  ] + [
-    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"
@@ -143,25 +139,17 @@ acknowledged_target(
 filegroup(
   name = "Core_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "FBSnapshotTestCase/**/*.h",
-        "FBSnapshotTestCase/*.h",
-        "FBSnapshotTestCase/Categories/UIImage+Compare.h",
-        "FBSnapshotTestCase/Categories/UIImage+Diff.h",
-        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h",
-        "FBSnapshotTestCase/FBSnapshotTestCase.h",
-        "FBSnapshotTestCase/FBSnapshotTestCasePlatform.h",
-        "FBSnapshotTestCase/FBSnapshotTestController.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "FBSnapshotTestCase/**/*.h",
+      "FBSnapshotTestCase/*.h",
+      "FBSnapshotTestCase/Categories/UIImage+Compare.h",
+      "FBSnapshotTestCase/Categories/UIImage+Diff.h",
+      "FBSnapshotTestCase/Categories/UIImage+Snapshot.h",
+      "FBSnapshotTestCase/FBSnapshotTestCase.h",
+      "FBSnapshotTestCase/FBSnapshotTestCasePlatform.h",
+      "FBSnapshotTestCase/FBSnapshotTestController.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -179,8 +167,7 @@ filegroup(
       "FBSnapshotTestCase/Categories/UIImage+Compare.h",
       "FBSnapshotTestCase/Categories/UIImage+Diff.h",
       "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -189,25 +176,17 @@ filegroup(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "FBSnapshotTestCase/**/*.h",
-        "FBSnapshotTestCase/*.h",
-        "FBSnapshotTestCase/Categories/UIImage+Compare.h",
-        "FBSnapshotTestCase/Categories/UIImage+Diff.h",
-        "FBSnapshotTestCase/Categories/UIImage+Snapshot.h",
-        "FBSnapshotTestCase/FBSnapshotTestCase.h",
-        "FBSnapshotTestCase/FBSnapshotTestCasePlatform.h",
-        "FBSnapshotTestCase/FBSnapshotTestController.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "FBSnapshotTestCase/**/*.h",
+      "FBSnapshotTestCase/*.h",
+      "FBSnapshotTestCase/Categories/UIImage+Compare.h",
+      "FBSnapshotTestCase/Categories/UIImage+Diff.h",
+      "FBSnapshotTestCase/Categories/UIImage+Snapshot.h",
+      "FBSnapshotTestCase/FBSnapshotTestCase.h",
+      "FBSnapshotTestCase/FBSnapshotTestCasePlatform.h",
+      "FBSnapshotTestCase/FBSnapshotTestController.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -248,8 +227,7 @@ objc_library(
     [
       "FBSnapshotTestCase/**/*.m",
       "FBSnapshotTestCase/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Core_hdrs"
@@ -276,8 +254,6 @@ objc_library(
     }
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
-  ] + [
-    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"
@@ -293,8 +269,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -314,8 +289,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -381,8 +355,6 @@ objc_library(
     }
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
-  ] + [
-    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"

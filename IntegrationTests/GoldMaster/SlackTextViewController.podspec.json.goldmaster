@@ -45,18 +45,10 @@ filegroup(
 filegroup(
   name = "SlackTextViewController_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/**/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/**/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -67,8 +59,7 @@ filegroup(
   srcs = glob(
     [
       "Source/**/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -77,18 +68,10 @@ filegroup(
 filegroup(
   name = "SlackTextViewController_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/**/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/**/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -118,8 +101,7 @@ objc_library(
   srcs = glob(
     [
       "Source/**/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":SlackTextViewController_hdrs"
@@ -140,8 +122,6 @@ objc_library(
     }
   ) + [
     "-IVendor/SlackTextViewController/pod_support/Headers/Public/SlackTextViewController/"
-  ] + [
-    "-fmodule-name=SlackTextViewController"
   ],
   visibility = [
     "//visibility:public"

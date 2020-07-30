@@ -45,18 +45,10 @@ filegroup(
 filegroup(
   name = "ColorCube_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "ColorCube/ColorCube/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "ColorCube/ColorCube/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -67,8 +59,7 @@ filegroup(
   srcs = glob(
     [
       "ColorCube/ColorCube/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -77,18 +68,10 @@ filegroup(
 filegroup(
   name = "ColorCube_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "ColorCube/ColorCube/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "ColorCube/ColorCube/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -118,8 +101,7 @@ objc_library(
   srcs = glob(
     [
       "ColorCube/ColorCube/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":ColorCube_hdrs"
@@ -140,8 +122,6 @@ objc_library(
     }
   ) + [
     "-IVendor/ColorCube/pod_support/Headers/Public/ColorCube/"
-  ] + [
-    "-fmodule-name=ColorCube"
   ],
   visibility = [
     "//visibility:public"

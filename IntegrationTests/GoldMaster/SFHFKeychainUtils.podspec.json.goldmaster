@@ -1,4 +1,3 @@
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "acknowledged_target",
@@ -47,20 +46,12 @@ filegroup(
 filegroup(
   name = "SFHFKeychainUtils_cxx_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "security/**/*.h",
-        "security/**/*.hpp",
-        "security/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -73,8 +64,7 @@ filegroup(
       "security/**/*.h",
       "security/**/*.hpp",
       "security/**/*.hxx"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -83,20 +73,12 @@ filegroup(
 filegroup(
   name = "SFHFKeychainUtils_cxx_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "security/**/*.h",
-        "security/**/*.hpp",
-        "security/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -139,32 +121,24 @@ objc_library(
       "security/**/*.cpp",
       "security/**/*.cxx"
     ],
-    exclude = glob(
-      [
-        "security/**/*.S",
-        "security/**/*.c",
-        "security/**/*.m",
-        "security/**/*.s"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    exclude = [
+      "security/**/*.S",
+      "security/**/*.c",
+      "security/**/*.m",
+      "security/**/*.s"
+    ]
   ),
   non_arc_srcs = glob(
     glob(
       [
         "security/**/*.mm"
       ],
-      exclude = glob(
-        [
-          "security/**/*.S",
-          "security/**/*.c",
-          "security/**/*.m",
-          "security/**/*.s"
-        ],
-        exclude_directories = 1
-      ),
-      exclude_directories = 1
+      exclude = [
+        "security/**/*.S",
+        "security/**/*.c",
+        "security/**/*.m",
+        "security/**/*.s"
+      ]
     ),
     exclude = glob(
       [
@@ -172,20 +146,14 @@ objc_library(
         "security/**/*.cpp",
         "security/**/*.cxx"
       ],
-      exclude = glob(
-        [
-          "security/**/*.S",
-          "security/**/*.c",
-          "security/**/*.m",
-          "security/**/*.s"
-        ],
-        exclude_directories = 1
-      ),
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+      exclude = [
+        "security/**/*.S",
+        "security/**/*.c",
+        "security/**/*.m",
+        "security/**/*.s"
+      ]
+    )
   ),
-  module_map = ":SFHFKeychainUtils_extended_module_map_module_map_file",
   hdrs = [
     ":SFHFKeychainUtils_cxx_hdrs"
   ],
@@ -210,8 +178,6 @@ objc_library(
     }
   ) + [
     "-IVendor/SFHFKeychainUtils/pod_support/Headers/Public/SFHFKeychainUtils/"
-  ] + [
-    "-fmodule-name=SFHFKeychainUtils"
   ],
   visibility = [
     "//visibility:public"
@@ -222,37 +188,15 @@ acknowledged_target(
   deps = [],
   value = "//Vendor/SFHFKeychainUtils/pod_support_buildable:acknowledgement_fragment"
 )
-swift_library(
-  name = "SFHFKeychainUtils_swift",
-  srcs = glob(
-    [
-      "security/**/*.swift"
-    ],
-    exclude_directories = 1
-  ),
-  deps = [],
-  data = [],
-  visibility = [
-    "//visibility:public"
-  ]
-)
 filegroup(
   name = "SFHFKeychainUtils_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "security/**/*.h",
-        "security/**/*.hpp",
-        "security/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -265,8 +209,7 @@ filegroup(
       "security/**/*.h",
       "security/**/*.hpp",
       "security/**/*.hxx"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":SFHFKeychainUtils_cxx_public_hdrs"
   ],
@@ -277,20 +220,12 @@ filegroup(
 filegroup(
   name = "SFHFKeychainUtils_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "security/**/*.h",
-        "security/**/*.hpp",
-        "security/**/*.hxx"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "security/**/*.h",
+      "security/**/*.hpp",
+      "security/**/*.hxx"
+    ]
   ) + [
     ":SFHFKeychainUtils_cxx_hdrs"
   ],
@@ -327,10 +262,8 @@ objc_library(
       "security/**/*.c",
       "security/**/*.m",
       "security/**/*.s"
-    ],
-    exclude_directories = 1
+    ]
   ),
-  module_map = ":SFHFKeychainUtils_extended_module_map_module_map_file",
   hdrs = [
     ":SFHFKeychainUtils_hdrs"
   ],
@@ -340,7 +273,6 @@ objc_library(
   ],
   deps = [
     ":SFHFKeychainUtils_cxx",
-    ":SFHFKeychainUtils_swift",
     ":SFHFKeychainUtils_includes"
   ],
   copts = select(
@@ -355,8 +287,6 @@ objc_library(
     }
   ) + [
     "-IVendor/SFHFKeychainUtils/pod_support/Headers/Public/SFHFKeychainUtils/"
-  ] + [
-    "-fmodule-name=SFHFKeychainUtils"
   ],
   visibility = [
     "//visibility:public"
@@ -366,28 +296,4 @@ acknowledged_target(
   name = "SFHFKeychainUtils_acknowledgement",
   deps = [],
   value = "//Vendor/SFHFKeychainUtils/pod_support_buildable:acknowledgement_fragment"
-)
-gen_module_map(
-  "SFHFKeychainUtils_extended_module_map_module_map_file",
-  "SFHFKeychainUtils_extended_module_map",
-  "SFHFKeychainUtils",
-  [
-    "SFHFKeychainUtils_public_hdrs"
-  ],
-  visibility = [
-    "//visibility:public"
-  ]
-)
-gen_module_map(
-  "SFHFKeychainUtils_module_map_module_map_file",
-  "SFHFKeychainUtils_module_map",
-  "SFHFKeychainUtils",
-  [
-    "SFHFKeychainUtils_extended_module_map_module_map_file",
-    "SFHFKeychainUtils_public_hdrs"
-  ],
-  module_map_name = "SFHFKeychainUtils.modulemap",
-  visibility = [
-    "//visibility:public"
-  ]
 )

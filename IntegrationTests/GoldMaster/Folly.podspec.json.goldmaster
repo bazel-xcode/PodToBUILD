@@ -45,20 +45,12 @@ filegroup(
 filegroup(
   name = "Folly_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "folly/*.h",
-        "folly/detail/*.h",
-        "folly/portability/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "folly/*.h",
+      "folly/detail/*.h",
+      "folly/portability/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -74,20 +66,12 @@ filegroup(
 filegroup(
   name = "Folly_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "folly/*.h",
-        "folly/detail/*.h",
-        "folly/portability/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "folly/*.h",
+      "folly/detail/*.h",
+      "folly/portability/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -131,8 +115,7 @@ objc_library(
       "folly/dynamic.cpp",
       "folly/json.cpp",
       "folly/portability/BitsFunctexcept.cpp"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Folly_hdrs"
@@ -161,9 +144,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-  ) + [
-    "-fmodule-name=folly"
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]

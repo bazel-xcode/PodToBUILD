@@ -48,8 +48,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -69,8 +68,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_hdrs"
   ],
@@ -108,30 +106,6 @@ alias(
 objc_library(
   name = "TestArcPatternsWithExcludes",
   enable_modules = 0,
-  srcs = glob(
-    [
-      "POD_REQUIRES_ARC/*.m"
-    ],
-    exclude = glob(
-      [
-        "POD_REQUIRES_ARC/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
-  ),
-  non_arc_srcs = glob(
-    [
-      "POD_REQUIRES_ARC/*.m"
-    ],
-    exclude = glob(
-      [
-        "POD_REQUIRES_ARC/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
-  ),
   hdrs = [
     ":FBSDKCoreKit_hdrs"
   ],
@@ -152,8 +126,6 @@ objc_library(
     }
   ) + [
     "-IVendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/FBSDKCoreKit/"
-  ] + [
-    "-fmodule-name=FBSDKCoreKit"
   ],
   visibility = [
     "//visibility:public"
@@ -169,74 +141,54 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ] + glob(
           [
             "**/*.h"
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.h",
             "CORE_EXCLUDE_IOS/**/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+          ]
+        )
       ),
       ":osxCase": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ] + glob(
           [
             "**/*.h"
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+          ]
+        )
       ),
       ":tvosCase": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ] + glob(
           [
             "**/*.h"
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.h",
             "CORE_EXCLUDE_TV/**/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+          ]
+        )
       ),
       ":watchosCase": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ] + glob(
           [
             "**/*.h"
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+          ]
+        )
       )
     }
   ),
@@ -249,8 +201,7 @@ filegroup(
   srcs = glob(
     [
       "**/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -261,74 +212,54 @@ filegroup(
   srcs = select(
     {
       "//conditions:default": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ] + glob(
           [
             "**/*.h"
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.h",
             "CORE_EXCLUDE_IOS/**/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+          ]
+        )
       ),
       ":osxCase": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ] + glob(
           [
             "**/*.h"
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+          ]
+        )
       ),
       ":tvosCase": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ] + glob(
           [
             "**/*.h"
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.h",
             "CORE_EXCLUDE_TV/**/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+          ]
+        )
       ),
       ":watchosCase": glob(
-        glob(
-          [
-            "pod_support/Headers/Public/**/*"
-          ],
-          exclude_directories = 1
-        ) + glob(
+        [
+          "pod_support/Headers/Public/**/*"
+        ] + glob(
           [
             "**/*.h"
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.h"
-          ],
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+          ]
+        )
       )
     }
   ),
@@ -384,12 +315,9 @@ objc_library(
             exclude = [
               "CORE_EXCLUDE/**/*.m",
               "CORE_EXCLUDE_IOS/**/*.m"
-            ],
-            exclude_directories = 1
-          ),
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+            ]
+          )
+        )
       ),
       ":osxCase": glob(
         [
@@ -405,12 +333,9 @@ objc_library(
             ],
             exclude = [
               "CORE_EXCLUDE/**/*.m"
-            ],
-            exclude_directories = 1
-          ),
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+            ]
+          )
+        )
       ),
       ":tvosCase": glob(
         [
@@ -427,12 +352,9 @@ objc_library(
             exclude = [
               "CORE_EXCLUDE/**/*.m",
               "CORE_EXCLUDE_TV/**/*.m"
-            ],
-            exclude_directories = 1
-          ),
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+            ]
+          )
+        )
       ),
       ":watchosCase": glob(
         [
@@ -448,12 +370,9 @@ objc_library(
             ],
             exclude = [
               "CORE_EXCLUDE/**/*.m"
-            ],
-            exclude_directories = 1
-          ),
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+            ]
+          )
+        )
       )
     }
   ),
@@ -467,8 +386,7 @@ objc_library(
           exclude = [
             "CORE_EXCLUDE/**/*.m",
             "CORE_EXCLUDE_IOS/**/*.m"
-          ],
-          exclude_directories = 1
+          ]
         ),
         exclude = glob(
           [
@@ -485,14 +403,10 @@ objc_library(
               exclude = [
                 "CORE_EXCLUDE/**/*.m",
                 "CORE_EXCLUDE_IOS/**/*.m"
-              ],
-              exclude_directories = 1
-            ),
-            exclude_directories = 1
-          ),
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+              ]
+            )
+          )
+        )
       ),
       ":osxCase": glob(
         glob(
@@ -501,8 +415,7 @@ objc_library(
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.m"
-          ],
-          exclude_directories = 1
+          ]
         ),
         exclude = glob(
           [
@@ -518,14 +431,10 @@ objc_library(
               ],
               exclude = [
                 "CORE_EXCLUDE/**/*.m"
-              ],
-              exclude_directories = 1
-            ),
-            exclude_directories = 1
-          ),
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+              ]
+            )
+          )
+        )
       ),
       ":tvosCase": glob(
         glob(
@@ -535,8 +444,7 @@ objc_library(
           exclude = [
             "CORE_EXCLUDE/**/*.m",
             "CORE_EXCLUDE_TV/**/*.m"
-          ],
-          exclude_directories = 1
+          ]
         ),
         exclude = glob(
           [
@@ -553,14 +461,10 @@ objc_library(
               exclude = [
                 "CORE_EXCLUDE/**/*.m",
                 "CORE_EXCLUDE_TV/**/*.m"
-              ],
-              exclude_directories = 1
-            ),
-            exclude_directories = 1
-          ),
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+              ]
+            )
+          )
+        )
       ),
       ":watchosCase": glob(
         glob(
@@ -569,8 +473,7 @@ objc_library(
           ],
           exclude = [
             "CORE_EXCLUDE/**/*.m"
-          ],
-          exclude_directories = 1
+          ]
         ),
         exclude = glob(
           [
@@ -586,14 +489,10 @@ objc_library(
               ],
               exclude = [
                 "CORE_EXCLUDE/**/*.m"
-              ],
-              exclude_directories = 1
-            ),
-            exclude_directories = 1
-          ),
-          exclude_directories = 1
-        ),
-        exclude_directories = 1
+              ]
+            )
+          )
+        )
       )
     }
   ),
@@ -616,8 +515,6 @@ objc_library(
     }
   ) + [
     "-IVendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/FBSDKCoreKit/"
-  ] + [
-    "-fmodule-name=FBSDKCoreKit"
   ],
   visibility = [
     "//visibility:public"

@@ -45,20 +45,12 @@ filegroup(
 filegroup(
   name = "FLEX_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Classes/**/*.h",
-        "Classes/**/FLEXManager.h",
-        "Classes/FLEX.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Classes/**/*.h",
+      "Classes/**/FLEXManager.h",
+      "Classes/FLEX.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -70,8 +62,7 @@ filegroup(
     [
       "Classes/**/FLEXManager.h",
       "Classes/FLEX.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -80,20 +71,12 @@ filegroup(
 filegroup(
   name = "FLEX_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Classes/**/*.h",
-        "Classes/**/FLEXManager.h",
-        "Classes/FLEX.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Classes/**/*.h",
+      "Classes/**/FLEXManager.h",
+      "Classes/FLEX.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -123,8 +106,7 @@ objc_library(
   srcs = glob(
     [
       "Classes/**/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":FLEX_hdrs"
@@ -154,8 +136,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FLEX/pod_support/Headers/Public/FLEX/"
-  ] + [
-    "-fmodule-name=FLEX"
   ],
   visibility = [
     "//visibility:public"

@@ -55,8 +55,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -79,8 +78,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":AssetsLibrary_hdrs",
     ":MapKit_hdrs",
@@ -143,8 +141,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -158,27 +154,19 @@ acknowledged_target(
 filegroup(
   name = "Core_cxx_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Base/*.h",
-        "Source/**/*.h",
-        "Source/*.h",
-        "Source/Base/*.h",
-        "Source/Debug/**/*.h",
-        "Source/Details/**/*.h",
-        "Source/Layout/**/*.h",
-        "Source/TextKit/*.h",
-        "Source/TextKit/ASTextKitComponents.h",
-        "Source/TextKit/ASTextNodeTypes.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Base/*.h",
+      "Source/**/*.h",
+      "Source/*.h",
+      "Source/Base/*.h",
+      "Source/Debug/**/*.h",
+      "Source/Details/**/*.h",
+      "Source/Layout/**/*.h",
+      "Source/TextKit/*.h",
+      "Source/TextKit/ASTextKitComponents.h",
+      "Source/TextKit/ASTextNodeTypes.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -195,8 +183,7 @@ filegroup(
       "Source/Layout/**/*.h",
       "Source/TextKit/ASTextKitComponents.h",
       "Source/TextKit/ASTextNodeTypes.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -205,27 +192,19 @@ filegroup(
 filegroup(
   name = "Core_cxx_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Base/*.h",
-        "Source/**/*.h",
-        "Source/*.h",
-        "Source/Base/*.h",
-        "Source/Debug/**/*.h",
-        "Source/Details/**/*.h",
-        "Source/Layout/**/*.h",
-        "Source/TextKit/*.h",
-        "Source/TextKit/ASTextKitComponents.h",
-        "Source/TextKit/ASTextNodeTypes.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Base/*.h",
+      "Source/**/*.h",
+      "Source/*.h",
+      "Source/Base/*.h",
+      "Source/Debug/**/*.h",
+      "Source/Details/**/*.h",
+      "Source/Layout/**/*.h",
+      "Source/TextKit/*.h",
+      "Source/TextKit/ASTextKitComponents.h",
+      "Source/TextKit/ASTextNodeTypes.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -266,14 +245,10 @@ objc_library(
     [
       "Source/**/*.mm"
     ],
-    exclude = glob(
-      [
-        "Base/*.m",
-        "Source/**/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    exclude = [
+      "Base/*.m",
+      "Source/**/*.m"
+    ]
   ),
   hdrs = [
     ":Core_cxx_hdrs"
@@ -302,8 +277,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -317,27 +290,19 @@ acknowledged_target(
 filegroup(
   name = "Core_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Base/*.h",
-        "Source/**/*.h",
-        "Source/*.h",
-        "Source/Base/*.h",
-        "Source/Debug/**/*.h",
-        "Source/Details/**/*.h",
-        "Source/Layout/**/*.h",
-        "Source/TextKit/*.h",
-        "Source/TextKit/ASTextKitComponents.h",
-        "Source/TextKit/ASTextNodeTypes.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Base/*.h",
+      "Source/**/*.h",
+      "Source/*.h",
+      "Source/Base/*.h",
+      "Source/Debug/**/*.h",
+      "Source/Details/**/*.h",
+      "Source/Layout/**/*.h",
+      "Source/TextKit/*.h",
+      "Source/TextKit/ASTextKitComponents.h",
+      "Source/TextKit/ASTextNodeTypes.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -354,8 +319,7 @@ filegroup(
       "Source/Layout/**/*.h",
       "Source/TextKit/ASTextKitComponents.h",
       "Source/TextKit/ASTextNodeTypes.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_cxx_public_hdrs"
   ],
@@ -366,27 +330,19 @@ filegroup(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Base/*.h",
-        "Source/**/*.h",
-        "Source/*.h",
-        "Source/Base/*.h",
-        "Source/Debug/**/*.h",
-        "Source/Details/**/*.h",
-        "Source/Layout/**/*.h",
-        "Source/TextKit/*.h",
-        "Source/TextKit/ASTextKitComponents.h",
-        "Source/TextKit/ASTextNodeTypes.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Base/*.h",
+      "Source/**/*.h",
+      "Source/*.h",
+      "Source/Base/*.h",
+      "Source/Debug/**/*.h",
+      "Source/Details/**/*.h",
+      "Source/Layout/**/*.h",
+      "Source/TextKit/*.h",
+      "Source/TextKit/ASTextKitComponents.h",
+      "Source/TextKit/ASTextNodeTypes.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -430,8 +386,7 @@ objc_library(
     [
       "Base/*.m",
       "Source/**/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Core_hdrs"
@@ -458,8 +413,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -475,8 +428,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -496,8 +448,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -564,8 +515,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -584,8 +533,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -605,8 +553,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -671,8 +618,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -690,8 +635,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -711,8 +655,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -779,8 +722,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -798,8 +739,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -819,8 +759,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -888,8 +827,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -905,8 +842,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -926,8 +862,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -995,8 +930,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -1012,8 +945,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1033,8 +965,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -1102,8 +1033,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"

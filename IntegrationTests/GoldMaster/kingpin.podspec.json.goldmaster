@@ -45,18 +45,10 @@ filegroup(
 filegroup(
   name = "kingpin_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "kingpin/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "kingpin/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -67,8 +59,7 @@ filegroup(
   srcs = glob(
     [
       "kingpin/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -77,18 +68,10 @@ filegroup(
 filegroup(
   name = "kingpin_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "kingpin/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "kingpin/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -118,8 +101,7 @@ objc_library(
   srcs = glob(
     [
       "kingpin/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":kingpin_hdrs"
@@ -144,8 +126,6 @@ objc_library(
     }
   ) + [
     "-IVendor/kingpin/pod_support/Headers/Public/kingpin/"
-  ] + [
-    "-fmodule-name=kingpin"
   ],
   visibility = [
     "//visibility:public"

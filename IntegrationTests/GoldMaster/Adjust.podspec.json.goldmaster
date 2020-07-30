@@ -51,8 +51,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -72,8 +71,7 @@ filegroup(
   srcs = glob(
     [
       "pod_support/Headers/Public/**/*"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_hdrs"
   ],
@@ -138,8 +136,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -153,19 +149,11 @@ acknowledged_target(
 filegroup(
   name = "Core_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Adjust/*.h",
-        "Adjust/ADJAdditions/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Adjust/*.h",
+      "Adjust/ADJAdditions/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -177,8 +165,7 @@ filegroup(
     [
       "Adjust/*.h",
       "Adjust/ADJAdditions/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -187,19 +174,11 @@ filegroup(
 filegroup(
   name = "Core_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Adjust/*.h",
-        "Adjust/ADJAdditions/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Adjust/*.h",
+      "Adjust/ADJAdditions/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -241,23 +220,11 @@ objc_library(
       "Adjust/*.m",
       "Adjust/ADJAdditions/*.m"
     ],
-    exclude = glob(
-      [
-        "plugin/Sociomantic/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Criteo/*.m"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Trademob/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    exclude = [
+      "plugin/Sociomantic/*.m",
+      "plugin/Criteo/*.m",
+      "plugin/Trademob/*.m"
+    ]
   ),
   hdrs = [
     ":Core_hdrs"
@@ -292,8 +259,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -307,18 +272,10 @@ acknowledged_target(
 filegroup(
   name = "Sociomantic_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Sociomantic/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "plugin/Sociomantic/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -329,8 +286,7 @@ filegroup(
   srcs = glob(
     [
       "plugin/Sociomantic/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -341,18 +297,10 @@ filegroup(
 filegroup(
   name = "Sociomantic_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Sociomantic/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "plugin/Sociomantic/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -395,8 +343,7 @@ objc_library(
   srcs = glob(
     [
       "plugin/Sociomantic/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Sociomantic_hdrs"
@@ -432,8 +379,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -447,18 +392,10 @@ acknowledged_target(
 filegroup(
   name = "Criteo_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Criteo/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "plugin/Criteo/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -469,8 +406,7 @@ filegroup(
   srcs = glob(
     [
       "plugin/Criteo/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -481,18 +417,10 @@ filegroup(
 filegroup(
   name = "Criteo_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Criteo/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "plugin/Criteo/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -535,8 +463,7 @@ objc_library(
   srcs = glob(
     [
       "plugin/Criteo/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Criteo_hdrs"
@@ -572,8 +499,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -587,18 +512,10 @@ acknowledged_target(
 filegroup(
   name = "Trademob_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Trademob/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "plugin/Trademob/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -609,8 +526,7 @@ filegroup(
   srcs = glob(
     [
       "plugin/Trademob/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":Core_public_hdrs"
   ],
@@ -621,18 +537,10 @@ filegroup(
 filegroup(
   name = "Trademob_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "plugin/Trademob/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "plugin/Trademob/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -675,8 +583,7 @@ objc_library(
   srcs = glob(
     [
       "plugin/Trademob/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":Trademob_hdrs"
@@ -712,8 +619,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"

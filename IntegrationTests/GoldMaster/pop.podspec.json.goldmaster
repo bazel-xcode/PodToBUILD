@@ -46,33 +46,25 @@ filegroup(
 filegroup(
   name = "pop_cxx_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "pop/**/*.h",
-        "pop/POP.h",
-        "pop/POPAnimatableProperty.h",
-        "pop/POPAnimation.h",
-        "pop/POPAnimationEvent.h",
-        "pop/POPAnimationExtras.h",
-        "pop/POPAnimationTracer.h",
-        "pop/POPAnimator.h",
-        "pop/POPBasicAnimation.h",
-        "pop/POPCustomAnimation.h",
-        "pop/POPDecayAnimation.h",
-        "pop/POPDefines.h",
-        "pop/POPGeometry.h",
-        "pop/POPLayerExtras.h",
-        "pop/POPPropertyAnimation.h",
-        "pop/POPSpringAnimation.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "pop/**/*.h",
+      "pop/POP.h",
+      "pop/POPAnimatableProperty.h",
+      "pop/POPAnimation.h",
+      "pop/POPAnimationEvent.h",
+      "pop/POPAnimationExtras.h",
+      "pop/POPAnimationTracer.h",
+      "pop/POPAnimator.h",
+      "pop/POPBasicAnimation.h",
+      "pop/POPCustomAnimation.h",
+      "pop/POPDecayAnimation.h",
+      "pop/POPDefines.h",
+      "pop/POPGeometry.h",
+      "pop/POPLayerExtras.h",
+      "pop/POPPropertyAnimation.h",
+      "pop/POPSpringAnimation.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -97,8 +89,7 @@ filegroup(
       "pop/POPLayerExtras.h",
       "pop/POPPropertyAnimation.h",
       "pop/POPSpringAnimation.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -107,33 +98,25 @@ filegroup(
 filegroup(
   name = "pop_cxx_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "pop/**/*.h",
-        "pop/POP.h",
-        "pop/POPAnimatableProperty.h",
-        "pop/POPAnimation.h",
-        "pop/POPAnimationEvent.h",
-        "pop/POPAnimationExtras.h",
-        "pop/POPAnimationTracer.h",
-        "pop/POPAnimator.h",
-        "pop/POPBasicAnimation.h",
-        "pop/POPCustomAnimation.h",
-        "pop/POPDecayAnimation.h",
-        "pop/POPDefines.h",
-        "pop/POPGeometry.h",
-        "pop/POPLayerExtras.h",
-        "pop/POPPropertyAnimation.h",
-        "pop/POPSpringAnimation.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "pop/**/*.h",
+      "pop/POP.h",
+      "pop/POPAnimatableProperty.h",
+      "pop/POPAnimation.h",
+      "pop/POPAnimationEvent.h",
+      "pop/POPAnimationExtras.h",
+      "pop/POPAnimationTracer.h",
+      "pop/POPAnimator.h",
+      "pop/POPBasicAnimation.h",
+      "pop/POPCustomAnimation.h",
+      "pop/POPDecayAnimation.h",
+      "pop/POPDefines.h",
+      "pop/POPGeometry.h",
+      "pop/POPLayerExtras.h",
+      "pop/POPPropertyAnimation.h",
+      "pop/POPSpringAnimation.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -175,13 +158,9 @@ objc_library(
       "pop/**/*.cpp",
       "pop/**/*.mm"
     ],
-    exclude = glob(
-      [
-        "pop/**/*.m"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    exclude = [
+      "pop/**/*.m"
+    ]
   ),
   hdrs = [
     ":pop_cxx_hdrs"
@@ -209,8 +188,6 @@ objc_library(
     }
   ) + [
     "-IVendor/pop/pod_support/Headers/Public/pop/"
-  ] + [
-    "-fmodule-name=pop"
   ],
   visibility = [
     "//visibility:public"
@@ -224,33 +201,25 @@ acknowledged_target(
 filegroup(
   name = "pop_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "pop/**/*.h",
-        "pop/POP.h",
-        "pop/POPAnimatableProperty.h",
-        "pop/POPAnimation.h",
-        "pop/POPAnimationEvent.h",
-        "pop/POPAnimationExtras.h",
-        "pop/POPAnimationTracer.h",
-        "pop/POPAnimator.h",
-        "pop/POPBasicAnimation.h",
-        "pop/POPCustomAnimation.h",
-        "pop/POPDecayAnimation.h",
-        "pop/POPDefines.h",
-        "pop/POPGeometry.h",
-        "pop/POPLayerExtras.h",
-        "pop/POPPropertyAnimation.h",
-        "pop/POPSpringAnimation.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "pop/**/*.h",
+      "pop/POP.h",
+      "pop/POPAnimatableProperty.h",
+      "pop/POPAnimation.h",
+      "pop/POPAnimationEvent.h",
+      "pop/POPAnimationExtras.h",
+      "pop/POPAnimationTracer.h",
+      "pop/POPAnimator.h",
+      "pop/POPBasicAnimation.h",
+      "pop/POPCustomAnimation.h",
+      "pop/POPDecayAnimation.h",
+      "pop/POPDefines.h",
+      "pop/POPGeometry.h",
+      "pop/POPLayerExtras.h",
+      "pop/POPPropertyAnimation.h",
+      "pop/POPSpringAnimation.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -275,8 +244,7 @@ filegroup(
       "pop/POPLayerExtras.h",
       "pop/POPPropertyAnimation.h",
       "pop/POPSpringAnimation.h"
-    ],
-    exclude_directories = 1
+    ]
   ) + [
     ":pop_cxx_public_hdrs"
   ],
@@ -287,33 +255,25 @@ filegroup(
 filegroup(
   name = "pop_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "pop/**/*.h",
-        "pop/POP.h",
-        "pop/POPAnimatableProperty.h",
-        "pop/POPAnimation.h",
-        "pop/POPAnimationEvent.h",
-        "pop/POPAnimationExtras.h",
-        "pop/POPAnimationTracer.h",
-        "pop/POPAnimator.h",
-        "pop/POPBasicAnimation.h",
-        "pop/POPCustomAnimation.h",
-        "pop/POPDecayAnimation.h",
-        "pop/POPDefines.h",
-        "pop/POPGeometry.h",
-        "pop/POPLayerExtras.h",
-        "pop/POPPropertyAnimation.h",
-        "pop/POPSpringAnimation.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "pop/**/*.h",
+      "pop/POP.h",
+      "pop/POPAnimatableProperty.h",
+      "pop/POPAnimation.h",
+      "pop/POPAnimationEvent.h",
+      "pop/POPAnimationExtras.h",
+      "pop/POPAnimationTracer.h",
+      "pop/POPAnimator.h",
+      "pop/POPBasicAnimation.h",
+      "pop/POPCustomAnimation.h",
+      "pop/POPDecayAnimation.h",
+      "pop/POPDefines.h",
+      "pop/POPGeometry.h",
+      "pop/POPLayerExtras.h",
+      "pop/POPPropertyAnimation.h",
+      "pop/POPSpringAnimation.h"
+    ]
   ) + [
     ":pop_cxx_hdrs"
   ],
@@ -347,8 +307,7 @@ objc_library(
   srcs = glob(
     [
       "pop/**/*.m"
-    ],
-    exclude_directories = 1
+    ]
   ),
   hdrs = [
     ":pop_hdrs"
@@ -373,8 +332,6 @@ objc_library(
     }
   ) + [
     "-IVendor/pop/pod_support/Headers/Public/pop/"
-  ] + [
-    "-fmodule-name=pop"
   ],
   visibility = [
     "//visibility:public"

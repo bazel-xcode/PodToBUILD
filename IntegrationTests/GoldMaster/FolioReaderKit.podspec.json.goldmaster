@@ -1,4 +1,3 @@
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "acknowledged_target",
@@ -43,54 +42,13 @@ filegroup(
     "//visibility:public"
   ]
 )
-swift_library(
-  name = "FolioReaderKit_swift",
-  srcs = glob(
-    [
-      "Source/**/*.swift",
-      "Source/*.swift",
-      "Vendor/**/*.swift"
-    ],
-    exclude_directories = 1
-  ),
-  deps = [
-    "//Vendor/AEXML:AEXML",
-    "//Vendor/FontBlaster:FontBlaster",
-    "//Vendor/JSQWebViewController:JSQWebViewController",
-    "//Vendor/MenuItemKit:MenuItemKit",
-    "//Vendor/RealmSwift:RealmSwift",
-    "//Vendor/SSZipArchive:SSZipArchive",
-    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition"
-  ],
-  data = glob(
-    [
-      "Source/**/*.css",
-      "Source/**/*.js",
-      "Source/Resources/*.xcassets",
-      "Source/Resources/Fonts/**/*.otf",
-      "Source/Resources/Fonts/**/*.ttf"
-    ],
-    exclude_directories = 1
-  ),
-  visibility = [
-    "//visibility:public"
-  ]
-)
 filegroup(
   name = "FolioReaderKit_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -101,8 +59,7 @@ filegroup(
   srcs = glob(
     [
       "Source/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -111,18 +68,10 @@ filegroup(
 filegroup(
   name = "FolioReaderKit_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "Source/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "Source/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -172,7 +121,6 @@ objc_library(
     "//Vendor/RealmSwift:RealmSwift",
     "//Vendor/SSZipArchive:SSZipArchive",
     "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition",
-    ":FolioReaderKit_swift",
     ":FolioReaderKit_includes"
   ],
   copts = select(
@@ -187,8 +135,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FolioReaderKit/pod_support/Headers/Public/FolioReaderKit/"
-  ] + [
-    "-fmodule-name=FolioReaderKit"
   ],
   data = glob(
     [
@@ -197,8 +143,7 @@ objc_library(
       "Source/Resources/*.xcassets",
       "Source/Resources/Fonts/**/*.otf",
       "Source/Resources/Fonts/**/*.ttf"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"

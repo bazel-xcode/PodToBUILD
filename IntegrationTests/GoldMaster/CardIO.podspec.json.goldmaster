@@ -45,18 +45,10 @@ filegroup(
 filegroup(
   name = "CardIO_direct_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "CardIO/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "CardIO/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -67,8 +59,7 @@ filegroup(
   srcs = glob(
     [
       "CardIO/*.h"
-    ],
-    exclude_directories = 1
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -77,18 +68,10 @@ filegroup(
 filegroup(
   name = "CardIO_hdrs",
   srcs = glob(
-    glob(
-      [
-        "pod_support/Headers/Public/**/*"
-      ],
-      exclude_directories = 1
-    ) + glob(
-      [
-        "CardIO/*.h"
-      ],
-      exclude_directories = 1
-    ),
-    exclude_directories = 1
+    [
+      "pod_support/Headers/Public/**/*",
+      "CardIO/*.h"
+    ]
   ),
   visibility = [
     "//visibility:public"
@@ -150,8 +133,6 @@ objc_library(
     }
   ) + [
     "-IVendor/CardIO/pod_support/Headers/Public/CardIO/"
-  ] + [
-    "-fmodule-name=CardIO"
   ],
   visibility = [
     "//visibility:public"
