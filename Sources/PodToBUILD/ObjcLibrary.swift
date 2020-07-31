@@ -264,18 +264,11 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let options = GetBuildOptions()
         let externalName = getNamePrefix() + (parentSpecs.first?.name ?? spec.name)
 
-        let xcconfigTransformer =
-            XCConfigTransformer.defaultTransformer(externalName: externalName,
-                                                   sourceType: sourceType)
-
-        /// TODO: This operation should operate on the AttrSet
-        let xcconfigFlags =
-            xcconfigTransformer.compilerFlags(forXCConfig: fallbackSpec.attr(\.podTargetXcconfig).basic ?? [:]) +
-            xcconfigTransformer.compilerFlags(forXCConfig: fallbackSpec.attr(\.userTargetXcconfig).basic ?? [:]) +
-            xcconfigTransformer.compilerFlags(forXCConfig: fallbackSpec.attr(\.xcconfig).basic ?? [:])
+        let xcconfigFlags = XCConfigTransformer.defaultTransformer(
+            externalName: externalName, sourceType: sourceType)
+            .compilerFlags(for: fallbackSpec)
 
         let xcconfigCopts = xcconfigFlags.filter { !$0.hasPrefix("-I") }
-
         let moduleName: AttrSet<String> = fallbackSpec.attr(\.moduleName).map {
             $0 ?? ""
         }
@@ -395,8 +388,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         } else {
             extraCopts = AttrSet(basic: ["-fobjc-weak"])
         }
-        copts = extraCopts <> AttrSet(basic: xcconfigCopts.sorted(by: <)) <>
-        fallbackSpec.attr(\.compilerFlags)
+
+        // Note: we need to include the gen dir here, unfortunately.
+        // This is a hack to deal with the swift header not being in the public
+        // interface. Ideally, we have a non cached headermap.
+        copts = AttrSet(basic: [
+                "-I$(GENDIR)/\(getGenfileOutputBaseDir())/"]) <>
+            extraCopts <>
+            AttrSet(basic: xcconfigCopts) <>
+            fallbackSpec.attr(\.compilerFlags)
 
         // Select resources that are not prebuilt bundles
         let resourceFiles = (spec.attr(\.resources).map { (strArr: [String]) -> [String] in
@@ -891,17 +891,21 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             ))
         }
 
-        let buildConfigDependenctCOpts =
-            SkylarkNode.functionCall(name: "select",
-                                     arguments: [
-                                         .basic([
-                                             ":release":
-                                                 ["-DPOD_CONFIGURATION_RELEASE=1", "-DNS_BLOCK_ASSERTIONS=1"],
-                                             "//conditions:default":
-                                                 ["-DPOD_CONFIGURATION_RELEASE=0"],
-                                         ].toSkylark()
-                                         ),
-                                     ])
+        let buildConfigDependenctCOpts: SkylarkNode =
+            .functionCall(name: "select",
+             arguments: [
+                 .basic([
+                     ":release": [
+                         "-DPOD_CONFIGURATION_RELEASE=1",
+                         "-DNS_BLOCK_ASSERTIONS=1"
+                     ],
+                     "//conditions:default": [
+                         "-DDEBUG=1",
+                         "-DPOD_CONFIGURATION_DEBUG=1"
+                     ],
+                 ].toSkylark()
+                 ),
+             ])
         let getPodIQuotes = {
             () -> [String] in
             if options.generateHeaderMap {

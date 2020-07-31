@@ -150,7 +150,23 @@ public struct SwiftLibrary: BazelTarget {
             }
         }
  
-        self.copts = AttrSet.empty
+        let swiftFlags = XCConfigTransformer.defaultTransformer(
+            externalName: externalName, sourceType: .swift)
+            .compilerFlags(for: fallbackSpec)
+
+        let objcFlags = XCConfigTransformer.defaultTransformer(
+            externalName: externalName, sourceType: .objc)
+            .compilerFlags(for: fallbackSpec)
+
+        let includes = objcFlags.filter { $0.hasPrefix("-I") }
+
+        // Insert the clang import flags
+        let clangImporterCopts = (includes + ["-DCOCOAPODS=1"])
+            .reduce([String]()) { $0 + ["-Xcc", $1] }
+        self.copts = AttrSet(basic: [
+            "-DCOCOAPODS",
+        ] + swiftFlags + clangImporterCopts)
+
         self.swiftcInputs = AttrSet.empty
         self.moduleMap = moduleMap
     }
@@ -176,6 +192,7 @@ public struct SwiftLibrary: BazelTarget {
             "-Xcc",
             "-I.",
         ])
+        let deps = self.deps
         if let moduleMap = self.moduleMap {
             copts = copts <> AttrSet(basic: [
                 "-Xcc",
@@ -186,22 +203,41 @@ public struct SwiftLibrary: BazelTarget {
                 "-fmodule-map-file=$(execpath " + moduleMap.name + ")",
                 "-import-underlying-module",
             ])
-
-            swiftcInputs = swiftcInputs <> AttrSet(basic: [moduleMap.name])
+            swiftcInputs = swiftcInputs <> AttrSet(basic: [
+                ":" + moduleMap.name,
+            ])
         }
 
-        let deps = self.deps.map {
+        let depsSkylark = deps.map {
             Set($0).sorted(by: (<))
         }.toSkylark()
+        let buildConfigDependenctCOpts: SkylarkNode =
+            .functionCall(name: "select",
+             arguments: [
+                 .basic([
+                     ":release": [
+                         "-Xcc", "-DPOD_CONFIGURATION_RELEASE=1",
+                      ],
+                     "//conditions:default": [
+                         "-enable-testing",
+                         "-DDEBUG",
+                         "-Xcc", "-DPOD_CONFIGURATION_DEBUG=1",
+                         "-Xcc", "-DDEBUG=1",
+                     ],
+                 ].toSkylark()
+                 ),
+             ])
+
+        let coptsSkylark = buildConfigDependenctCOpts .+. copts.toSkylark()
         return .functionCall(
             name: "swift_library",
             arguments: [
                 .named(name: "name", value: name.toSkylark()),
                 .named(name: "module_name", value: moduleName.toSkylark()),
                 .named(name: "srcs", value: sourceFiles.toSkylark()),
-                .named(name: "deps", value: deps),
+                .named(name: "deps", value: depsSkylark),
                 .named(name: "data", value: data.toSkylark()),
-                .named(name: "copts", value: copts.toSkylark()),
+                .named(name: "copts", value: coptsSkylark),
                 .named(name: "swiftc_inputs", value: swiftcInputs.toSkylark()),
                 .named(name: "generated_header_name", value: (externalName + "-Swift.h").toSkylark()),
                 .named(name: "features", value: ["swift.no_generated_module_map"].toSkylark()),
