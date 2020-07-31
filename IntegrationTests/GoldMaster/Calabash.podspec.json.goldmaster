@@ -290,13 +290,8 @@ objc_library(
     ":Calabash_includes"
   ],
   copts = [
-<<<<<<< HEAD
-    "-fobjc-weak",
-    ""Vendor/Calabash/calabash.framework/calabash"",
-=======
     "-I$(GENDIR)/Vendor/Calabash/",
     "-fobjc-weak",
->>>>>>> Add copts for SwiftLibrary
     "-ObjC",
     "-force_load",
     ""Vendor/Calabash/calabash.framework/calabash""

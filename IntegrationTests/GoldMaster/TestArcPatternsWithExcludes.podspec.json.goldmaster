@@ -116,10 +116,7 @@ objc_library(
     ":TestArcPatternsWithExcludes_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/TestArcPatternsWithExcludes/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -512,10 +509,7 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/TestArcPatternsWithExcludes/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

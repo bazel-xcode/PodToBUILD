@@ -233,10 +233,7 @@ objc_library(
     ":PINOperation_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/PINOperation/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

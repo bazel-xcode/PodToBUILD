@@ -131,10 +131,7 @@ objc_library(
     ":Texture_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Texture/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -410,10 +407,7 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Texture/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-fno-exceptions -fno-objc-arc-exceptions"
   ] + select(
@@ -520,10 +514,7 @@ objc_library(
     ":PINRemoteImage_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Texture/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -630,10 +621,7 @@ objc_library(
     ":IGListKit_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Texture/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -739,10 +727,7 @@ objc_library(
     ":Yoga_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Texture/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DYOGA=1"
   ] + select(
@@ -850,10 +835,7 @@ objc_library(
     ":MapKit_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Texture/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DAS_USE_MAPKIT=1"
   ] + select(
@@ -959,10 +941,7 @@ objc_library(
     ":Photos_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Texture/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DAS_USE_PHOTOS=1"
   ] + select(
@@ -1068,10 +1047,7 @@ objc_library(
     ":AssetsLibrary_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Texture/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DAS_USE_ASSETS_LIBRARY=1"
   ] + select(

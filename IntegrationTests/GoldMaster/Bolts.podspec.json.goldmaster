@@ -114,10 +114,7 @@ objc_library(
     ":Bolts_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Bolts/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -243,10 +240,7 @@ objc_library(
     ":Tasks_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Bolts/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -404,10 +398,7 @@ objc_library(
     ":AppLinks_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/Bolts/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

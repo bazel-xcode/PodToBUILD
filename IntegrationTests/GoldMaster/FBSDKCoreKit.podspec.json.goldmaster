@@ -1126,10 +1126,7 @@ objc_library(
     ":FBSDKCoreKit_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

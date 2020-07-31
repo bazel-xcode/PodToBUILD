@@ -103,10 +103,7 @@ objc_library(
     ":GoogleSymbolUtilities_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/GoogleSymbolUtilities/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

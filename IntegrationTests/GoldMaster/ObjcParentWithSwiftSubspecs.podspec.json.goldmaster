@@ -87,12 +87,8 @@ swift_library(
     "-import-underlying-module"
   ],
   swiftc_inputs = [
-<<<<<<< HEAD
     ":ObjcParentWithSwiftSubspecs_module_map",
     ":ObjcParentWithSwiftSubspecs_umbrella_header"
-=======
-    ":ObjcParentWithSwiftSubspecs_module_map"
->>>>>>> Add copts for SwiftLibrary
   ],
   generated_header_name = "ObjcParentWithSwiftSubspecs-Swift.h",
   features = [
@@ -211,10 +207,7 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/ObjcParentWithSwiftSubspecs/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -339,10 +332,7 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/ObjcParentWithSwiftSubspecs/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -438,10 +428,7 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/ObjcParentWithSwiftSubspecs/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

@@ -564,10 +564,7 @@ objc_library(
     ":youtube-ios-player-helper_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/youtube-ios-player-helper/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

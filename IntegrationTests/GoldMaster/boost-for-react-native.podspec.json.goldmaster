@@ -107,10 +107,7 @@ objc_library(
     ":boost-for-react-native_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/boost-for-react-native/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

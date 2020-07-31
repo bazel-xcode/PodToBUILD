@@ -296,10 +296,7 @@ objc_library(
     ":FBSDKShareKit_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FBSDKShareKit/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
   ] + select(

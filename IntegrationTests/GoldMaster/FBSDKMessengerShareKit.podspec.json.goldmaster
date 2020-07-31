@@ -114,10 +114,7 @@ objc_library(
     ":FBSDKMessengerShareKit_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FBSDKMessengerShareKit/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

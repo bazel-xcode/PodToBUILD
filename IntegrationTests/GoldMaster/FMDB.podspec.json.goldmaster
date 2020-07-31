@@ -114,10 +114,7 @@ objc_library(
     ":FMDB_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FMDB/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -228,10 +225,7 @@ objc_library(
     ":standard_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FMDB/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -341,10 +335,7 @@ objc_library(
     ":FTS_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FMDB/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -437,10 +428,7 @@ objc_library(
     ":standalone_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FMDB/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DFMDB_SQLITE_STANDALONE"
   ] + select(
@@ -551,10 +539,7 @@ objc_library(
     ":standalone_default_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FMDB/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DFMDB_SQLITE_STANDALONE"
   ] + select(
@@ -671,10 +656,7 @@ objc_library(
     ":standalone_FTS_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FMDB/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DFMDB_SQLITE_STANDALONE"
   ] + select(
@@ -787,16 +769,10 @@ objc_library(
     ":SQLCipher_includes"
   ],
   copts = [
-<<<<<<< HEAD
-    "-fobjc-weak",
-    "-DHAVE_USLEEP=1",
-    "-DSQLITE_HAS_CODEC"
-=======
     "-I$(GENDIR)/Vendor/FMDB/",
     "-fobjc-weak",
     "-DSQLITE_HAS_CODEC",
     "-DHAVE_USLEEP=1"
->>>>>>> Add copts for SwiftLibrary
   ] + select(
     {
       "//conditions:default": [

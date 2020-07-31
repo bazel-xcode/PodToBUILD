@@ -127,10 +127,7 @@ objc_library(
     ":PINCache_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/PINCache/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -253,10 +250,7 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/PINCache/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
@@ -375,10 +369,7 @@ objc_library(
     ":Arc-exception-safe_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/PINCache/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-fobjc-arc-exceptions"
   ] + select(

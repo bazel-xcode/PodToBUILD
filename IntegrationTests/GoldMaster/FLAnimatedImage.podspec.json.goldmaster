@@ -118,10 +118,7 @@ objc_library(
     ":FLAnimatedImage_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/FLAnimatedImage/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

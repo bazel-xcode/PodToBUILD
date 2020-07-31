@@ -112,10 +112,7 @@ objc_library(
     ":GoogleAuthUtilities_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/GoogleAuthUtilities/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

@@ -109,10 +109,7 @@ objc_library(
     ":GoogleNetworkingUtilities_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/GoogleNetworkingUtilities/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

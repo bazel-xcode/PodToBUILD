@@ -114,10 +114,7 @@ objc_library(
     ":GoogleAppIndexing_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/GoogleAppIndexing/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

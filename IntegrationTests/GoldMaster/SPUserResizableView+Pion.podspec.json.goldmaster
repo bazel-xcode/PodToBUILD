@@ -112,10 +112,7 @@ objc_library(
     ":SPUserResizableView+Pion_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/SPUserResizableView+Pion/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

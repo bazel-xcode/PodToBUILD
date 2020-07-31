@@ -279,10 +279,7 @@ objc_library(
     ":SFHFKeychainUtils_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/SFHFKeychainUtils/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {

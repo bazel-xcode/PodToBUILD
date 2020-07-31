@@ -248,10 +248,7 @@ objc_library(
     ":UICollectionViewLeftAlignedLayout_includes"
   ],
   copts = [
-<<<<<<< HEAD
-=======
     "-I$(GENDIR)/Vendor/UICollectionViewLeftAlignedLayout/",
->>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
