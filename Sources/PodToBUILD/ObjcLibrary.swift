@@ -392,8 +392,8 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         // Note: we need to include the gen dir here, unfortunately.
         // This is a hack to deal with the swift header not being in the public
         // interface. Ideally, we have a non cached headermap.
-        copts = AttrSet(basic: [
-                "-I$(GENDIR)/\(getGenfileOutputBaseDir())/"]) <>
+        copts = AttrSet(basic: moduleMap != nil ? [
+                "-I$(GENDIR)/\(getGenfileOutputBaseDir())/"] : []) <>
             extraCopts <>
             AttrSet(basic: xcconfigCopts) <>
             fallbackSpec.attr(\.compilerFlags)
