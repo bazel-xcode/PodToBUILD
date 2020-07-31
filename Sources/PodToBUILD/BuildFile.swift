@@ -268,6 +268,21 @@ public struct PodBuildFile: SkylarkConvertible {
         let rootName = computeLibName(parentSpecs: [], spec: rootSpec, podName:
             podName, isSplitDep: false, sourceType: .objc)
 
+        let includes = ObjcLibrary(parentSpecs: parentSpecs, spec:
+            spec).includes
+        let hadModuleMap = includes.reduce(into: false) {
+            accum, next in
+            // Note: for now we replace these module maps. There is a few issues
+            // with accepting use provided module maps with static librares.
+            // Assume that the headers are modular. This isn't gaurenteed,
+            // however, CocoaPods does generate a module map with these headers.
+            let moduleMapPath = "../../" + next + "/module.modulemap"
+            if FileManager.default.fileExists(atPath: moduleMapPath) {
+                try? FileManager.default.removeItem(atPath: moduleMapPath)
+                accum = true
+            }
+        }
+
         let publicHeaders = rootName + "_public_hdrs" 
         // When there is swift and Objc
         // - generate a module map
@@ -292,7 +307,7 @@ public struct PodBuildFile: SkylarkConvertible {
             ]
             extendedModuleMap = moduleMapTargets[0] as! ModuleMap
             moduleMap = moduleMapTargets[1] as! ModuleMap
-        } else if options.generateModuleMap {
+        } else if hadModuleMap || options.generateModuleMap {
             moduleMapTargets = [
                 ModuleMap(
                     name: clangModuleName + "_module_map",

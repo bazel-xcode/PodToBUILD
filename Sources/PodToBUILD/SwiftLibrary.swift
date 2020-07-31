@@ -15,6 +15,7 @@ public struct SwiftLibrary: BazelTarget {
     public let name: String
     public let sourceFiles: AttrSet<GlobNode>
     public let moduleMap: ModuleMap?
+    public let moduleName: String
     public let deps: AttrSet<[String]>
     public let copts: AttrSet<[String]>
     public let swiftcInputs: AttrSet<[String]>
@@ -26,6 +27,7 @@ public struct SwiftLibrary: BazelTarget {
     public init(name: String,
                 sourceFiles: AttrSet<GlobNode>,
                 moduleMap: ModuleMap?,
+                moduleName: String,
                 deps: AttrSet<[String]>,
                 copts: AttrSet<[String]>,
                 swiftcInputs: AttrSet<[String]>,
@@ -35,6 +37,7 @@ public struct SwiftLibrary: BazelTarget {
         self.name = name
         self.sourceFiles = sourceFiles
         self.moduleMap = moduleMap
+        self.moduleName = moduleName
         self.externalName = externalName
 
         self.isTopLevelTarget = isTopLevelTarget
@@ -107,13 +110,28 @@ public struct SwiftLibrary: BazelTarget {
 
         self.sourceFiles = SwiftLibrary.getSources(spec: spec)
 
-        self.externalName = parentSpecs.first?.name ?? spec.name
+        let externalName = getNamePrefix() + (parentSpecs.first?.name ?? spec.name)
+        self.externalName = externalName
 
         let resourceFiles = (spec.attr(\.resources).map { (strArr: [String]) -> [String] in
             strArr.filter { (str: String) -> Bool in
                 !str.hasSuffix(".bundle")
             }
         }).map(extractResources)
+
+        let fallbackSpec = FallbackSpec(specs: [spec] +  parentSpecs)
+        let headerDirectoryName: AttrSet<String?> = fallbackSpec.attr(\.headerDirectory)
+        let moduleName: AttrSet<String> = fallbackSpec.attr(\.moduleName).map {
+            $0 ?? ""
+        }
+
+        let headerName = (moduleName.isEmpty ? nil : moduleName) ??
+            (headerDirectoryName.basic == nil ? nil :
+                headerDirectoryName.denormalize()) ?? AttrSet<String>(value:
+                externalName)
+        let clangModuleName = headerName.basic?.replacingOccurrences(of: "-", with: "_") ?? ""
+        self.moduleName = clangModuleName
+
         self.data = resourceFiles.map { GlobNode(include: Set($0)) }
 
         // Extract deps from the entire podspec
@@ -179,7 +197,7 @@ public struct SwiftLibrary: BazelTarget {
             name: "swift_library",
             arguments: [
                 .named(name: "name", value: name.toSkylark()),
-                .named(name: "module_name", value: externalName.toSkylark()),
+                .named(name: "module_name", value: moduleName.toSkylark()),
                 .named(name: "srcs", value: sourceFiles.toSkylark()),
                 .named(name: "deps", value: deps),
                 .named(name: "data", value: data.toSkylark()),

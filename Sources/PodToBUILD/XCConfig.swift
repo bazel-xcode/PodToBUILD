@@ -43,9 +43,13 @@ public struct XCConfigTransformer {
         let allValues = value.components(separatedBy: CharacterSet.whitespaces)
         return allValues.filter { $0 != "$(inherited)" }
             .compactMap { val in
+                let podDir = getPodBaseDir()
+                let targetDir = getGenfileOutputBaseDir()
                 return transformer.string(forXCConfigValue: val)?
-                    .replacingOccurrences(of: "$(PODS_ROOT)", with: getPodBaseDir())
-                    .replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)", with: getPodBaseDir())
+                    .replacingOccurrences(of: "$(PODS_ROOT)", with: podDir)
+                    .replacingOccurrences(of: "${PODS_ROOT}", with: podDir)
+                    .replacingOccurrences(of: "$(PODS_TARGET_SRCROOT)", with: targetDir)
+                    .replacingOccurrences(of: "${PODS_TARGET_SRCROOT}", with: targetDir)
             }
     }
 
