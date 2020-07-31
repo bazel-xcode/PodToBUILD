@@ -10,7 +10,7 @@ BAZEL=../../tools/bazel
 # TODO: there's an issue with non hermetic headers in the PINRemoteImage example
 REPOSITORY_OVERRIDE=--override_repository=rules_pods=$(RULES_PODS_DIR)
 BAZEL_OPTS=$(REPOSITORY_OVERRIDE) \
-	--disk_cache=$(HOME)/Library/Caches/Bazel --copt='-Ibazel-out/apl-ios_x86_64-fastbuild/bin/Vendor' -s \
+	--disk_cache=$(HOME)/Library/Caches/Bazel \
 	--spawn_strategy=standalone \
 	--apple_platform_type=ios
 
