@@ -89,14 +89,14 @@ release:
 	@ditto bazel-bin/Compiler bin/Compiler
 
 
-TESTED_BAZEL_VERSION=0.25.2
+TESTED_BAZEL_VERSION=3.4.1
 
 # Make a binary archive of PodToBUILD with the official github cli `hub`
 github_release:
 	@which hub || (echo "this command relies on the hub tool. https://github.com/github/hub or 'brew install hub'." && exit 1)
 	@git checkout master
 	@git pull --rebase  origin master
-	@echo "creating release: $(TESTED_BAZEL_VERSION)-($(shell git rev-parse --short HEAD)"
+	@echo "creating release: $(TESTED_BAZEL_VERSION)-$(shell git rev-parse --short HEAD)"
 	$(MAKE) release
 	$(MAKE) archive
 	@hub release create -p -a PodToBUILD.zip \
