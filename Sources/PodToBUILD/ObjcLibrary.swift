@@ -383,7 +383,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         // Adds minimal, non specified Xcode defaults
         let extraCopts: AttrSet<[String]>
-        if case .cpp = sourceType {
+        if .cpp == sourceType {
             extraCopts = AttrSet(basic: ["-std=c++14"])
         } else {
             extraCopts = AttrSet(basic: ["-fobjc-weak"])
