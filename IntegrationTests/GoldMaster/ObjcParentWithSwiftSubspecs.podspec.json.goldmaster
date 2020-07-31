@@ -57,7 +57,25 @@ swift_library(
   ),
   deps = [],
   data = [],
-  copts = [
+  copts = select(
+    {
+      "//conditions:default": [
+        "-enable-testing",
+        "-DDEBUG",
+        "-Xcc",
+        "-DPOD_CONFIGURATION_DEBUG=1",
+        "-Xcc",
+        "-DDEBUG=1"
+      ],
+      ":release": [
+        "-Xcc",
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+  ) + [
+    "-DCOCOAPODS",
+    "-Xcc",
+    "-DCOCOAPODS=1",
     "-Xcc",
     "-I.",
     "-Xcc",
@@ -189,11 +207,13 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = [
+    "-I$(GENDIR)/Vendor/ObjcParentWithSwiftSubspecs/",
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -312,11 +332,13 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = [
+    "-I$(GENDIR)/Vendor/ObjcParentWithSwiftSubspecs/",
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -406,11 +428,13 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = [
+    "-I$(GENDIR)/Vendor/ObjcParentWithSwiftSubspecs/",
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
