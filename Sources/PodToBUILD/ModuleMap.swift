@@ -4,14 +4,17 @@ public struct ModuleMap: BazelTarget {
     public let headers: [String]
     public let swiftHeader: String?
     public let moduleMapName: String?
+    public let umbrellaHeader: String?
 
-    public init(name: String, moduleName: String, headers:
-                [String], swiftHeader: String? = nil, moduleMapName: String? = nil) {
+    public init(name: String, moduleName: String, headers: [String],
+        swiftHeader: String? = nil, moduleMapName: String? = nil,
+        umbrellaHeader: String? = nil) {
         self.name = name
         self.moduleName = moduleName
         self.headers = headers
         self.swiftHeader = swiftHeader
         self.moduleMapName = moduleMapName
+        self.umbrellaHeader = umbrellaHeader
     }
 
     public var acknowledged: Bool {
@@ -28,7 +31,10 @@ public struct ModuleMap: BazelTarget {
             args.append(.named(name: "module_map_name", value: moduleMapName.toSkylark()))
         }
         if let swiftHeader = self.swiftHeader {
-            args.append(.named(name: "swift_header", value: swiftHeader.toSkylark()))
+            args.append(.named(name: "swift_hdr", value: swiftHeader.toSkylark()))
+        }
+        if let umbrellaHeader = self.umbrellaHeader {
+            args.append(.named(name: "umbrella_hdr", value: umbrellaHeader.toSkylark()))
         }
         args.append(.named(name: "visibility", value: ["//visibility:public"].toSkylark()))
         return SkylarkNode.functionCall(

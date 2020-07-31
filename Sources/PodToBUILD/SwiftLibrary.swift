@@ -206,6 +206,12 @@ public struct SwiftLibrary: BazelTarget {
             swiftcInputs = swiftcInputs <> AttrSet(basic: [
                 ":" + moduleMap.name,
             ])
+
+            if let umbrellaHeader = moduleMap.umbrellaHeader {
+                swiftcInputs = swiftcInputs <> AttrSet(basic: [
+                    ":" + umbrellaHeader
+                ])
+            }
         }
 
         let depsSkylark = deps.map {

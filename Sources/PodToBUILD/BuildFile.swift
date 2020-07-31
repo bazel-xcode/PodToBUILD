@@ -66,7 +66,8 @@ public func makePrefixNodes() -> SkylarkNode {
             .basic(.string("acknowledged_target")),
             .basic(.string("gen_module_map")),
             .basic(.string("gen_includes")),
-            .basic(.string("headermap"))]),
+            .basic(.string("headermap")),
+            .basic(.string("umbrella_header"))]),
         makeConfigSettingNodes()
     ]
     return .lines(lineNodes)
@@ -259,9 +260,6 @@ public struct PodBuildFile: SkylarkConvertible {
                 externalName)
         let clangModuleName = headerName.basic?.replacingOccurrences(of: "-", with: "_") ?? ""
         let isTopLevelTarget = parentSpecs.isEmpty
-        let moduleMap: ModuleMap?
-        let moduleMapTargets: [BazelTarget]
-        let extendedModuleMap: ModuleMap?
         let options = GetBuildOptions()
 
         let podName = GetBuildOptions().podName
@@ -270,7 +268,7 @@ public struct PodBuildFile: SkylarkConvertible {
 
         let includes = ObjcLibrary(parentSpecs: parentSpecs, spec:
             spec).includes
-        let hadModuleMap = includes.reduce(into: false) {
+        let hadImportedModuleMap = includes.reduce(into: false) {
             accum, next in
             // Note: for now we replace these module maps. There is a few issues
             // with accepting use provided module maps with static librares.
@@ -284,53 +282,59 @@ public struct PodBuildFile: SkylarkConvertible {
         }
 
         let publicHeaders = rootName + "_public_hdrs" 
-        // When there is swift and Objc
-        // - generate a module map
-        // - extend the module map with the generated swift header
-        if packageSourceTypes.count > 1 && packageSourceTypes.contains(.swift) {
-            moduleMapTargets = [
-                ModuleMap(
-                    name: clangModuleName + "_extended_module_map",
-                    moduleName: clangModuleName,
-                    headers: [publicHeaders],
-                    swiftHeader: "../" + clangModuleName + "-Swift.h"
-                ),
-                ModuleMap(
-                    name: clangModuleName + "_module_map",
-                    moduleName: clangModuleName,
-                    headers: [
-                        clangModuleName + "_extended_module_map",
-                        publicHeaders
-                    ],
-                    moduleMapName: clangModuleName + ".modulemap"
-                )
-            ]
-            extendedModuleMap = moduleMapTargets[0] as! ModuleMap
-            moduleMap = moduleMapTargets[1] as! ModuleMap
-        } else if hadModuleMap || options.generateModuleMap {
-            moduleMapTargets = [
-                ModuleMap(
-                    name: clangModuleName + "_module_map",
-                    moduleName: clangModuleName,
-                    headers: [publicHeaders]
-                )
-            ]
-            moduleMap = moduleMapTargets[0] as! ModuleMap
-            extendedModuleMap = nil
+        // For swift, always use an umbrella import to impliclty load UIKit like
+        // CocoaPods. The empty umbrella will have this
+        // Note: we probably can do without this, but it replicates the behavior
+        // of CocoaPods + Xcode which requires other to merge.
+        // Consider adding a PCH header file into the module map
+        let umbrellaHeader: UmbrellaHeader = {
+            UmbrellaHeader(
+                name: clangModuleName + "_umbrella_header",
+                headers: [publicHeaders]
+            )
+        }()
+
+        let swiftModuleMap: ModuleMap = {
+            ModuleMap(
+                name: clangModuleName + "_module_map",
+                moduleName: clangModuleName,
+                headers: [publicHeaders],
+                moduleMapName: clangModuleName + ".modulemap",
+                umbrellaHeader: umbrellaHeader.name
+            )
+        }()
+
+        let objcModuleMap: ModuleMap?
+        let hasSwift = packageSourceTypes.contains(.swift)
+        if hasSwift {
+            // When there is swift and Objc
+            // - generate a module map
+            // - extend the module map with the generated swift header
+            objcModuleMap = ModuleMap(
+                name: clangModuleName + "_extended_module_map",
+                moduleName: clangModuleName,
+                headers: [publicHeaders],
+                swiftHeader: "../" + clangModuleName + "-Swift.h"
+            )
+        } else if hadImportedModuleMap || options.generateModuleMap {
+            objcModuleMap = ModuleMap(
+                name: clangModuleName + "_module_map",
+                moduleName: clangModuleName,
+                headers: [publicHeaders]
+            )
         } else {
-            extendedModuleMap = nil
-            moduleMap = nil
-            moduleMapTargets = []
+            objcModuleMap = nil
         }
 
+        let moduleMapTargets: [BazelTarget] = 
+            (hasSwift ? [swiftModuleMap, umbrellaHeader] : []) +
+            (objcModuleMap != nil ? [objcModuleMap!] : [])
         // If there is an extended module map, we need a dependency on the
         // swift lib to generate the -Swift header
         let extraDepNames = extraDeps.map { $0.name }
         let extraObjcDepNames = extraDepNames
-            + (extendedModuleMap != nil ? [rootName + "_swift"] : [])
+            + (hasSwift ? [rootName + "_swift"] : [])
 
-        let objcModuleMap = extendedModuleMap ?? moduleMap
-        let swiftModuleMap = sourceTypes.count == 0  ? nil : moduleMap
         if sourceTypes.count == 0 {
             sourceLibs.append(ObjcLibrary(parentSpecs: parentSpecs, spec: spec,
                         extraDeps: extraObjcDepNames, sourceType:

@@ -84,6 +84,53 @@ def acknowledged_target(name,
     )
 
 
+
+def _umbrella_header_impl(ctx):
+    headers_list = _get_module_map_headers(ctx.attr.hdrs)
+    output = ctx.outputs.umbrella_header
+    content = """
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#else
+#ifndef FOUNDATION_EXPORT
+#if defined(__cplusplus)
+#define FOUNDATION_EXPORT extern "C"
+#else
+#define FOUNDATION_EXPORT extern
+#endif
+#endif
+#endif
+
+{hdrs}
+
+FOUNDATION_EXPORT double ParentVersionNumber;
+FOUNDATION_EXPORT const unsigned char ParentVersionString[];
+""".format(hdrs="\n".join(["#import \"" + h.path + "\"" for h in headers_list]))
+    ctx.actions.write(
+      content=content,
+      output=output
+    )
+    objc_provider = apple_common.new_objc_provider(
+        header=depset([output]),
+    )
+
+    return struct(
+        files=depset([output]),
+        providers=[objc_provider],
+        objc=objc_provider,
+        headers=depset([output]),
+    )
+
+umbrella_header = rule(
+    implementation=_umbrella_header_impl,
+    output_to_genfiles=True,
+    attrs={
+        "hdrs": attr.label_list(mandatory=True),
+    },
+    outputs={"umbrella_header": "%{name}.h"}
+ )
+
+
 def _get_module_map_headers(deps):
     headers_list = []
     for provider in deps:
@@ -100,29 +147,40 @@ def _get_module_map_headers(deps):
 def _module_map_impl(ctx):
     module_name = ctx.attr.module_name
     deps = ctx.attr.hdrs
-    swift_header = ctx.attr.swift_header
+    swift_hdr = ctx.attr.swift_hdr
     headers_list = _get_module_map_headers(deps)
 
     # relative from the module_map dir to the compilation root
     # e.g. bazel-out/ios_x86_64-fastbuild/genfiles/external/__Pod__
     module_map = ctx.outputs.module_map
-    relative_path = "".join(["../" for i in range(len(module_map.dirname.split("/")))])
-    system_tag = " [system] "
-    content = "module " + module_name + (system_tag if ctx.attr.is_system else "" ) + " {\n" 
-    content += "    export * \n"
     headers = depset(headers_list).to_list()
-    for hdr in headers:
-        content += "    header \"%s%s\"\n" % (relative_path, hdr.path)
+    relative_path = "".join(["../" for i in range(len(module_map.dirname.split("/")))])
+
+    system_tag = " [system] "
+    system_tag = ""
+    content = "module " + module_name + (system_tag if ctx.attr.is_system else "" ) + " {\n" 
+    umbrella_header_file = None
+    if ctx.attr.umbrella_hdr:
+        # Note: this umbrella header is created internally.
+        umbrella_header_file = ctx.attr.umbrella_hdr[DefaultInfo].files.to_list()[0]
+        content += "    umbrella header \"../%s\"\n" % (umbrella_header_file.basename)
+        content += "    export * \n"
+        content += "    module * { export * } \n"
+    else:
+        content += "    export * \n"
+        for hdr in headers:
+            content += "    header \"%s%s\"\n" % (relative_path, hdr.path)
+
     content += "}\n"
 
-    if swift_header:
+    if swift_hdr:
         content += """
 module {module_name}.Swift {{
     header "{swift_umbrella_header}"
     requires objc
 }}""".format(
             module_name = module_name,
-            swift_umbrella_header = swift_header,
+            swift_umbrella_header = swift_hdr,
             )
 
     ctx.actions.write(
@@ -138,9 +196,12 @@ module {module_name}.Swift {{
         include = depset([ctx.outputs.module_map.dirname])
     else:
         include = depset()
+
+
     objc_provider = apple_common.new_objc_provider(
         module_map=depset([module_map]),
-        include=include
+        include=include,
+        header=depset([umbrella_header_file]) if umbrella_header_file else depset(),
     )
 
     return struct(
@@ -159,7 +220,8 @@ _gen_module_map = rule(
         "module_name": attr.string(mandatory=True),
         "module_map_name": attr.string(mandatory=True),
         "is_system": attr.bool(mandatory=True),
-        "swift_header": attr.string(mandatory=False),
+        "swift_hdr": attr.string(mandatory=False),
+        "umbrella_hdr": attr.label(mandatory=False),
     },
     outputs = { "module_map": "%{name}/%{module_map_name}" }
 )
@@ -170,7 +232,8 @@ def gen_module_map(name,
                    module_map_name="module.modulemap",
                    tags=["xchammer"],
                    is_system=True,
-                   swift_header=None,
+                   swift_hdr=None,
+                   umbrella_hdr=None,
                    visibility=["//visibility:public"]
                    ):
     """
@@ -184,9 +247,11 @@ def gen_module_map(name,
                     hdrs=hdrs,
                     module_map_name=module_map_name,
                     is_system=is_system,
-                    swift_header=swift_header,
+                    swift_hdr=swift_hdr,
+                    umbrella_hdr=umbrella_hdr,
                     visibility=visibility,
                     tags=tags)
+
 
 def _gen_includes_impl(ctx):
     includes = []
