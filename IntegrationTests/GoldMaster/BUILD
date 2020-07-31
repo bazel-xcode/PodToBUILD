@@ -267,7 +267,9 @@ objc_library(
     ":FBSDKCoreKit_cxx",
     ":FBSDKCoreKit_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -1522,7 +1524,9 @@ objc_library(
   deps = [
     ":Basics_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -2931,7 +2935,9 @@ objc_library(
     ":Basics",
     ":Core_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

@@ -129,6 +129,7 @@ objc_library(
     ":ZipArchive_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Dunix"
   ] + select(
     {

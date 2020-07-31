@@ -127,7 +127,9 @@ objc_library(
     ":KakaoS2_VendoredFrameworks",
     ":KakaoOpenSDK_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -221,7 +223,9 @@ objc_library(
     ":KakaoOpenSDK_VendoredFrameworks",
     ":KakaoOpenSDK_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -330,7 +334,9 @@ objc_library(
     ":KakaoNavi_VendoredFrameworks",
     ":KakaoNavi_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -439,7 +445,9 @@ objc_library(
     ":KakaoLink_VendoredFrameworks",
     ":KakaoLink_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -548,7 +556,9 @@ objc_library(
     ":KakaoS2_VendoredFrameworks",
     ":KakaoS2_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

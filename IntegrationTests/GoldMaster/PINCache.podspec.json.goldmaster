@@ -125,7 +125,9 @@ objc_library(
     ":Core",
     ":PINCache_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -244,7 +246,9 @@ objc_library(
     "//Vendor/PINOperation:PINOperation",
     ":Core_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -360,6 +364,7 @@ objc_library(
     ":Arc-exception-safe_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-fobjc-arc-exceptions"
   ] + select(
     {

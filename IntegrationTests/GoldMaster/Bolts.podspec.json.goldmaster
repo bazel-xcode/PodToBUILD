@@ -112,7 +112,9 @@ objc_library(
     ":Tasks",
     ":Bolts_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -234,7 +236,9 @@ objc_library(
   deps = [
     ":Tasks_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -388,7 +392,9 @@ objc_library(
     ":Tasks",
     ":AppLinks_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

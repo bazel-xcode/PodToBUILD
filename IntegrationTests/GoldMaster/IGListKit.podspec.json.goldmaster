@@ -246,7 +246,9 @@ objc_library(
     ":IGListKit_cxx",
     ":IGListKit_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -564,7 +566,9 @@ objc_library(
     ":Diffing_cxx",
     ":Diffing_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -970,7 +974,9 @@ objc_library(
     ":Diffing",
     ":Default_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

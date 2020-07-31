@@ -275,7 +275,9 @@ objc_library(
     ":SFHFKeychainUtils_cxx",
     ":SFHFKeychainUtils_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

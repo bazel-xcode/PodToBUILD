@@ -117,7 +117,9 @@ objc_library(
     ":PINCache",
     ":PINRemoteImage_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -244,7 +246,9 @@ objc_library(
     "//Vendor/PINOperation:PINOperation",
     ":Core_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -344,7 +348,9 @@ objc_library(
     ":Core",
     ":iOS_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -443,7 +449,9 @@ objc_library(
     ":Core",
     ":OSX_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -538,7 +546,9 @@ objc_library(
     ":iOS",
     ":tvOS_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -646,7 +656,9 @@ objc_library(
     ":Core",
     ":FLAnimatedImage_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -746,6 +758,7 @@ objc_library(
     ":WebP_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DPIN_WEBP=1"
   ] + select(
     {
@@ -857,7 +870,9 @@ objc_library(
     ":Core",
     ":PINCache_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

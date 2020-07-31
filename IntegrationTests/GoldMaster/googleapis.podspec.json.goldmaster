@@ -115,6 +115,7 @@ objc_library(
     ":googleapis_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ] + select(
     {
@@ -225,6 +226,7 @@ objc_library(
     ":Messages_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ] + select(
     {
@@ -337,6 +339,7 @@ objc_library(
     ":Services_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ] + select(
     {

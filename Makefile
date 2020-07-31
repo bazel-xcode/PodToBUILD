@@ -53,7 +53,7 @@ build-test: pod_test build archive init-sandbox
 	cd Examples/ArcSplitting && make all
 	cd Examples/React && make all
 	cd Examples/SwiftSubspec && make all
-	# cd Examples/FBSDK && make all
+	cd Examples/FBSDK && make all
 
 build-example: EXAMPLE=Examples/PINCache.podspec.json
 build-example: CONFIG = debug

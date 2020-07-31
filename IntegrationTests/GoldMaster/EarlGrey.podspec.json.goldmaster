@@ -112,6 +112,7 @@ objc_library(
     ":EarlGrey_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-fobjc-arc-exceptions"
   ] + select(
     {

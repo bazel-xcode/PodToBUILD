@@ -253,7 +253,9 @@ objc_library(
     ":React_cxx",
     ":React_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -2756,7 +2758,9 @@ objc_library(
     ":Core_cxx",
     ":Core_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -2988,6 +2992,7 @@ objc_library(
     ":CxxBridge_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -3272,7 +3277,9 @@ objc_library(
     ":RCTWebSocket",
     ":DevSupport_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -3585,6 +3592,7 @@ objc_library(
     ":RCTFabric_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
@@ -3694,7 +3702,9 @@ objc_library(
     ":Core",
     ":tvOS_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -5917,7 +5927,9 @@ objc_library(
     ":Core",
     ":ART_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -6023,7 +6035,9 @@ objc_library(
     ":Core",
     ":RCTActionSheet_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -6137,7 +6151,9 @@ objc_library(
     ":Core",
     ":RCTAnimation_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -6411,7 +6427,9 @@ objc_library(
     ":RCTBlob_cxx",
     ":RCTBlob_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -6521,7 +6539,9 @@ objc_library(
     ":RCTImage",
     ":RCTCameraRoll_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -6627,7 +6647,9 @@ objc_library(
     ":Core",
     ":RCTGeolocation_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -6740,7 +6762,9 @@ objc_library(
     ":RCTNetwork",
     ":RCTImage_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -6968,7 +6992,9 @@ objc_library(
     ":RCTNetwork_cxx",
     ":RCTNetwork_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -7074,7 +7100,9 @@ objc_library(
     ":Core",
     ":RCTPushNotification_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -7180,7 +7208,9 @@ objc_library(
     ":Core",
     ":RCTSettings_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -7286,7 +7316,9 @@ objc_library(
     ":Core",
     ":RCTText_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -7392,7 +7424,9 @@ objc_library(
     ":Core",
     ":RCTVibration_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -7532,7 +7566,9 @@ objc_library(
     ":fishhook",
     ":RCTWebSocket_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -7659,7 +7695,9 @@ objc_library(
   deps = [
     ":fishhook_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -7765,7 +7803,9 @@ objc_library(
     ":Core",
     ":RCTLinkingIOS_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -7874,7 +7914,9 @@ objc_library(
     ":Core",
     ":RCTTest_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -7973,7 +8015,9 @@ objc_library(
     ":CxxBridge",
     ":_ignore_me_subspec_for_linting__includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

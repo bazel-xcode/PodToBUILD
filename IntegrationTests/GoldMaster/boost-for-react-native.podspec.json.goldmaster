@@ -105,7 +105,9 @@ objc_library(
   deps = [
     ":boost-for-react-native_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

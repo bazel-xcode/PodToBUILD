@@ -129,7 +129,9 @@ objc_library(
     ":Login",
     ":FBSDKLoginKit_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -282,7 +284,9 @@ objc_library(
     "//Vendor/FBSDKCoreKit:FBSDKCoreKit",
     ":Login_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

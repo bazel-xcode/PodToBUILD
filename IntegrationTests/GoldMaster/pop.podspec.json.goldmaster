@@ -320,7 +320,9 @@ objc_library(
     ":pop_cxx",
     ":pop_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

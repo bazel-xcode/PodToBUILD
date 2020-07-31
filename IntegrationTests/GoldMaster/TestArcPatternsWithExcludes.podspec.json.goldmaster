@@ -114,7 +114,9 @@ objc_library(
     ":Core",
     ":TestArcPatternsWithExcludes_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -503,7 +505,9 @@ objc_library(
   deps = [
     ":Core_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
