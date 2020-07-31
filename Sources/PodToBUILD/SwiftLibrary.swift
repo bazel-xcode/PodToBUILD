@@ -186,8 +186,15 @@ public struct SwiftLibrary: BazelTarget {
                 "-fmodule-map-file=$(execpath " + moduleMap.name + ")",
                 "-import-underlying-module",
             ])
+            swiftcInputs = swiftcInputs <> AttrSet(basic: [
+                ":" + moduleMap.name,
+            ])
 
-            swiftcInputs = swiftcInputs <> AttrSet(basic: [moduleMap.name])
+            if let umbrellaHeader = moduleMap.umbrellaHeader {
+                swiftcInputs = swiftcInputs <> AttrSet(basic: [
+                    ":" + umbrellaHeader
+                ])
+            }
         }
 
         let deps = self.deps.map {

@@ -4,7 +4,8 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
-  "headermap"
+  "headermap",
+  "umbrella_header"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
@@ -68,7 +69,8 @@ swift_library(
     "-import-underlying-module"
   ],
   swiftc_inputs = [
-    "ObjcParentWithSwiftSubspecs_module_map"
+    ":ObjcParentWithSwiftSubspecs_module_map",
+    ":ObjcParentWithSwiftSubspecs_umbrella_header"
   ],
   generated_header_name = "ObjcParentWithSwiftSubspecs-Swift.h",
   features = [
@@ -211,24 +213,30 @@ acknowledged_target(
   value = "//Vendor/ObjcParentWithSwiftSubspecs/pod_support_buildable:acknowledgement_fragment"
 )
 gen_module_map(
+  name = "ObjcParentWithSwiftSubspecs_module_map",
+  module_name = "ObjcParentWithSwiftSubspecs",
+  hdrs = [
+    "ObjcParentWithSwiftSubspecs_public_hdrs"
+  ],
+  module_map_name = "ObjcParentWithSwiftSubspecs.modulemap",
+  umbrella_hdr = "ObjcParentWithSwiftSubspecs_umbrella_header",
+  visibility = [
+    "//visibility:public"
+  ]
+)
+umbrella_header(
+  name = "ObjcParentWithSwiftSubspecs_umbrella_header",
+  hdrs = [
+    "ObjcParentWithSwiftSubspecs_public_hdrs"
+  ]
+)
+gen_module_map(
   name = "ObjcParentWithSwiftSubspecs_extended_module_map",
   module_name = "ObjcParentWithSwiftSubspecs",
   hdrs = [
     "ObjcParentWithSwiftSubspecs_public_hdrs"
   ],
-  swift_header = "../ObjcParentWithSwiftSubspecs-Swift.h",
-  visibility = [
-    "//visibility:public"
-  ]
-)
-gen_module_map(
-  name = "ObjcParentWithSwiftSubspecs_module_map",
-  module_name = "ObjcParentWithSwiftSubspecs",
-  hdrs = [
-    "ObjcParentWithSwiftSubspecs_extended_module_map",
-    "ObjcParentWithSwiftSubspecs_public_hdrs"
-  ],
-  module_map_name = "ObjcParentWithSwiftSubspecs.modulemap",
+  swift_hdr = "../ObjcParentWithSwiftSubspecs-Swift.h",
   visibility = [
     "//visibility:public"
   ]

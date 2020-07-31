@@ -4,7 +4,8 @@ load(
   "acknowledged_target",
   "gen_module_map",
   "gen_includes",
-  "headermap"
+  "headermap",
+  "umbrella_header"
 )
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
