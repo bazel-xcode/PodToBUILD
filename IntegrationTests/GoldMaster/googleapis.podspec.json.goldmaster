@@ -128,8 +128,6 @@ objc_library(
     }
   ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
-  ] + [
-    "-fmodule-name=googleapis"
   ],
   visibility = [
     "//visibility:public"
@@ -240,8 +238,6 @@ objc_library(
     }
   ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
-  ] + [
-    "-fmodule-name=googleapis"
   ],
   visibility = [
     "//visibility:public"
@@ -354,8 +350,6 @@ objc_library(
     }
   ) + [
     "-IVendor/googleapis/pod_support/Headers/Public/googleapis/"
-  ] + [
-    "-fmodule-name=googleapis"
   ],
   visibility = [
     "//visibility:public"

@@ -1,4 +1,3 @@
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
@@ -307,7 +306,6 @@ objc_library(
       )
     }
   ),
-  module_map = ":youtube_ios_player_helper_extended_module_map_module_map_file",
   hdrs = [
     ":youtube-ios-player-helper_cxx_hdrs"
   ],
@@ -329,8 +327,6 @@ objc_library(
     }
   ) + [
     "-IVendor/youtube-ios-player-helper/pod_support/Headers/Public/youtube-ios-player-helper/"
-  ] + [
-    "-fmodule-name=youtube-ios-player-helper"
   ],
   data = [
     ":youtube-ios-player-helper_Bundle_Assets"
@@ -343,44 +339,6 @@ acknowledged_target(
   name = "youtube-ios-player-helper_cxx_acknowledgement",
   deps = [],
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
-)
-swift_library(
-  name = "youtube-ios-player-helper_swift",
-  srcs = select(
-    {
-      "//conditions:default": glob(
-        [
-          "Classes/**/*.swift"
-        ],
-        exclude = [
-          "Classes/osx/**/*.swift"
-        ]
-      ),
-      ":osxCase": glob(
-        [
-          "Classes/**/*.swift"
-        ],
-        exclude = [
-          "Classes/ios/**/*.swift"
-        ]
-      ),
-      ":tvosCase": glob(
-        [
-          "Classes/**/*.swift"
-        ]
-      ),
-      ":watchosCase": glob(
-        [
-          "Classes/**/*.swift"
-        ]
-      )
-    }
-  ),
-  deps = [],
-  data = [],
-  visibility = [
-    "//visibility:public"
-  ]
 )
 filegroup(
   name = "youtube-ios-player-helper_direct_hdrs",
@@ -594,14 +552,12 @@ objc_library(
       )
     }
   ),
-  module_map = ":youtube_ios_player_helper_extended_module_map_module_map_file",
   hdrs = [
     ":youtube-ios-player-helper_hdrs"
   ],
   pch = "pod_support/Headers/Private/youtube-ios-player-helper-prefix.pch",
   deps = [
     ":youtube-ios-player-helper_cxx",
-    ":youtube-ios-player-helper_swift",
     ":youtube-ios-player-helper_includes"
   ],
   copts = select(
@@ -616,8 +572,6 @@ objc_library(
     }
   ) + [
     "-IVendor/youtube-ios-player-helper/pod_support/Headers/Public/youtube-ios-player-helper/"
-  ] + [
-    "-fmodule-name=youtube-ios-player-helper"
   ],
   data = [
     ":youtube-ios-player-helper_Bundle_Assets"
@@ -630,30 +584,6 @@ acknowledged_target(
   name = "youtube-ios-player-helper_acknowledgement",
   deps = [],
   value = "//Vendor/youtube-ios-player-helper/pod_support_buildable:acknowledgement_fragment"
-)
-gen_module_map(
-  "youtube_ios_player_helper_extended_module_map_module_map_file",
-  "youtube_ios_player_helper_extended_module_map",
-  "youtube_ios_player_helper",
-  [
-    "youtube_ios_player_helper_public_hdrs"
-  ],
-  visibility = [
-    "//visibility:public"
-  ]
-)
-gen_module_map(
-  "youtube_ios_player_helper_module_map_module_map_file",
-  "youtube_ios_player_helper_module_map",
-  "youtube_ios_player_helper",
-  [
-    "youtube_ios_player_helper_extended_module_map_module_map_file",
-    "youtube_ios_player_helper_public_hdrs"
-  ],
-  module_map_name = "youtube_ios_player_helper.modulemap",
-  visibility = [
-    "//visibility:public"
-  ]
 )
 apple_bundle_import(
   name = "youtube-ios-player-helper_Bundle_Assets",

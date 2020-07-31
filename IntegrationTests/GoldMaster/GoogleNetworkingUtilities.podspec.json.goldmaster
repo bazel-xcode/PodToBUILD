@@ -119,8 +119,6 @@ objc_library(
     }
   ) + [
     "-IVendor/GoogleNetworkingUtilities/pod_support/Headers/Public/GoogleNetworkingUtilities/"
-  ] + [
-    "-fmodule-name=GoogleNetworkingUtilities"
   ],
   visibility = [
     "//visibility:public"

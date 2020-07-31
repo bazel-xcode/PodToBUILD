@@ -136,8 +136,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -261,8 +259,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -383,8 +379,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -505,8 +499,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"
@@ -627,8 +619,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Adjust/pod_support/Headers/Public/Adjust/"
-  ] + [
-    "-fmodule-name=Adjust"
   ],
   visibility = [
     "//visibility:public"

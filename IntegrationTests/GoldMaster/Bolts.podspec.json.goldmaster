@@ -124,8 +124,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Bolts/pod_support/Headers/Public/Bolts/"
-  ] + [
-    "-fmodule-name=Bolts"
   ],
   visibility = [
     "//visibility:public"
@@ -248,8 +246,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Bolts/pod_support/Headers/Public/Bolts/"
-  ] + [
-    "-fmodule-name=Bolts"
   ],
   visibility = [
     "//visibility:public"
@@ -404,8 +400,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Bolts/pod_support/Headers/Public/Bolts/"
-  ] + [
-    "-fmodule-name=Bolts"
   ],
   visibility = [
     "//visibility:public"

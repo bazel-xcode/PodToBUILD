@@ -140,8 +140,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
-  ] + [
-    "-fmodule-name=FBSDKLoginKit"
   ],
   visibility = [
     "//visibility:public"

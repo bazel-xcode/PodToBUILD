@@ -141,8 +141,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINOperation/pod_support/Headers/Public/PINOperation/"
-  ] + [
-    "-fmodule-name=PINOperation"
   ],
   visibility = [
     "//visibility:public"
@@ -243,8 +241,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINOperation/pod_support/Headers/Public/PINOperation/"
-  ] + [
-    "-fmodule-name=PINOperation"
   ],
   visibility = [
     "//visibility:public"

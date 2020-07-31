@@ -37,6 +37,7 @@ config_setting(
 filegroup(
   name = "FBSDKCoreKit_package_hdrs",
   srcs = [
+    "FBSDKCoreKit_cxx_direct_hdrs",
     "FBSDKCoreKit_direct_hdrs",
     "Basics_direct_hdrs",
     "Core_direct_hdrs"
@@ -44,6 +45,131 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
+)
+filegroup(
+  name = "FBSDKCoreKit_cxx_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ]
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKCoreKit_cxx_public_hdrs",
+  srcs = [
+    ":Basics_public_hdrs",
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKCoreKit_cxx_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ]
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "FBSDKCoreKit_cxx_union_hdrs",
+  srcs = [
+    "FBSDKCoreKit_cxx_hdrs",
+    "FBSDKCoreKit_hdrs",
+    ":Basics_hdrs",
+    ":Core_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "FBSDKCoreKit_cxx_hmap",
+  namespace = "FBSDKCoreKit",
+  hdrs = [
+    "FBSDKCoreKit_package_hdrs",
+    ":FBSDKCoreKit_cxx_union_hdrs"
+  ],
+  deps = [
+    ":Basics_hmap",
+    ":Core_hmap"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "FBSDKCoreKit_cxx_includes",
+  include = [
+    "Vendor/FBSDKCoreKit/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "FBSDKCoreKit_cxx",
+  enable_modules = 0,
+  hdrs = [
+    ":FBSDKCoreKit_cxx_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/FBSDKCoreKit-prefix.pch",
+  weak_sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "Accounts",
+        "CoreLocation",
+        "Social",
+        "Security",
+        "QuartzCore",
+        "CoreGraphics",
+        "UIKit",
+        "Foundation",
+        "AudioToolbox"
+      ],
+      ":tvosCase": [
+        "CoreLocation",
+        "Security",
+        "QuartzCore",
+        "CoreGraphics",
+        "UIKit",
+        "Foundation",
+        "AudioToolbox"
+      ]
+    }
+  ),
+  deps = [
+    ":Basics",
+    ":Core",
+    ":FBSDKCoreKit_cxx_includes"
+  ],
+  copts = [
+    "-std=c++14"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "FBSDKCoreKit_cxx_acknowledgement",
+  deps = [],
+  value = "//Vendor/FBSDKCoreKit/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
   name = "FBSDKCoreKit_direct_hdrs",
@@ -60,7 +186,8 @@ filegroup(
   name = "FBSDKCoreKit_public_hdrs",
   srcs = [
     ":Basics_public_hdrs",
-    ":Core_public_hdrs"
+    ":Core_public_hdrs",
+    ":FBSDKCoreKit_cxx_public_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -74,7 +201,8 @@ filegroup(
     ]
   ) + [
     ":Basics_hdrs",
-    ":Core_hdrs"
+    ":Core_hdrs",
+    ":FBSDKCoreKit_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -89,7 +217,8 @@ headermap(
   ],
   deps = [
     ":Basics_hmap",
-    ":Core_hmap"
+    ":Core_hmap",
+    ":FBSDKCoreKit_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -135,6 +264,7 @@ objc_library(
   deps = [
     ":Basics",
     ":Core",
+    ":FBSDKCoreKit_cxx",
     ":FBSDKCoreKit_includes"
   ],
   copts = select(
@@ -149,8 +279,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/"
-  ] + [
-    "-fmodule-name=FBSDKCoreKit"
   ],
   visibility = [
     "//visibility:public"
@@ -1406,8 +1534,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/"
-  ] + [
-    "-fmodule-name=FBSDKCoreKit"
   ],
   visibility = [
     "//visibility:public"
@@ -2817,8 +2943,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FBSDKCoreKit/pod_support/Headers/Public/FBSDKCoreKit/"
-  ] + [
-    "-fmodule-name=FBSDKCoreKit"
   ],
   data = [
     ":Core_Bundle_FacebookSDKStrings"

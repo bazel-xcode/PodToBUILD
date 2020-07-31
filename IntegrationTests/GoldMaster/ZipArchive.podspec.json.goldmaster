@@ -142,8 +142,6 @@ objc_library(
     }
   ) + [
     "-IVendor/ZipArchive/pod_support/Headers/Public/ZipArchive/"
-  ] + [
-    "-fmodule-name=ZipArchive"
   ],
   visibility = [
     "//visibility:public"

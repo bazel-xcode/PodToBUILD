@@ -280,6 +280,20 @@ public enum RepoActions {
         }
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions:
             buildOptions, assimilate: true)
+        
+        let getAliasName: (BazelTarget) -> String = {
+            target in
+            let name = target.name
+            let head = buildOptions.podName + "_"
+            if head + "acknowledgement" == target.name {
+                return target.name
+            }
+            if let headIdx = name.range(of: head) {
+                return String(name[headIdx.upperBound...])
+            } else {
+                return name
+            }
+        }
 
         let actualPath = parts[0] + "/" + parts[1]
         let aliases = buildFile.skylarkConvertibles.compactMap {
@@ -291,23 +305,27 @@ public enum RepoActions {
                 return nil
             }
             let name = target.name
-            let head = buildOptions.podName + "_"
-            let getName: () -> String = {
-                if head + "acknowledgement" == target.name {
-                    return target.name
-                }
-                if let headIdx = name.range(of: head) {
-                    return String(name[headIdx.upperBound...])
-                } else {
-                    return name
-                }
-            }
-            let alias = Alias(name: getName(),
+            let alias = Alias(name: getAliasName(target),
                 actual: "//" + actualPath + ":" + name)
             return alias.toSkylark()
         }
 
-        let lines = [visibility] + aliases
+        // Note: we currently have to alias here because header map isn't a
+        // BazelTarget
+        // TODO: Move ad-hoc bazel targets from ObjcLibrary to BuildFile
+        let hmapAliases = buildFile.skylarkConvertibles.compactMap {
+            convertible -> SkylarkNode? in
+            guard buildOptions.generateHeaderMap,
+                let target = convertible as? ObjcLibrary else {
+                return nil
+            }
+            let name = target.name
+            let alias = Alias(name: getAliasName(target) + "_hmap",
+                actual: "//" + actualPath + ":" + name + "_hmap")
+            return alias.toSkylark()
+        }
+
+        let lines = [visibility] + aliases + hmapAliases
         let compiler = SkylarkCompiler(lines)
         shell.write(value: compiler.run(), toPath:
             BazelConstants.buildFileURL())

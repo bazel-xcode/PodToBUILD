@@ -141,8 +141,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
-  ] + [
-    "-fmodule-name=FBSDKLoginKit"
   ],
   visibility = [
     "//visibility:public"
@@ -254,7 +252,6 @@ objc_library(
       "FBSDKLoginKit/FBSDKLoginKit/include/**/*.s"
     ]
   ),
-  module_map = ":FBSDKLoginKit_extended_module_map_module_map_file",
   hdrs = [
     ":Login_hdrs"
   ],
@@ -297,8 +294,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FBSDKLoginKit/pod_support/Headers/Public/FBSDKLoginKit/"
-  ] + [
-    "-fmodule-name=FBSDKLoginKit"
   ],
   visibility = [
     "//visibility:public"

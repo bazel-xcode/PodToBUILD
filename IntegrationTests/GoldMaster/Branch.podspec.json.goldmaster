@@ -124,8 +124,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Branch/pod_support/Headers/Public/Branch/"
-  ] + [
-    "-fmodule-name=Branch"
   ],
   visibility = [
     "//visibility:public"
@@ -241,8 +239,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Branch/pod_support/Headers/Public/Branch/"
-  ] + [
-    "-fmodule-name=Branch"
   ],
   visibility = [
     "//visibility:public"
@@ -357,8 +353,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Branch/pod_support/Headers/Public/Branch/"
-  ] + [
-    "-fmodule-name=Branch"
   ],
   visibility = [
     "//visibility:public"

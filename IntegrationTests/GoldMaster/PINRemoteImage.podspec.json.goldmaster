@@ -129,8 +129,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
-  ] + [
-    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -258,8 +256,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
-  ] + [
-    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -360,8 +356,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
-  ] + [
-    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -461,8 +455,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
-  ] + [
-    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -558,8 +550,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
-  ] + [
-    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -668,8 +658,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
-  ] + [
-    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -771,8 +759,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
-  ] + [
-    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"
@@ -883,8 +869,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINRemoteImage/pod_support/Headers/Public/PINRemoteImage/"
-  ] + [
-    "-fmodule-name=PINRemoteImage"
   ],
   visibility = [
     "//visibility:public"

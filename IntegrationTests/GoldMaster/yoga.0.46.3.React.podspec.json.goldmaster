@@ -130,8 +130,6 @@ objc_library(
     }
   ) + [
     "-IVendor/yoga/pod_support/Headers/Public/yoga/"
-  ] + [
-    "-fmodule-name=yoga"
   ],
   visibility = [
     "//visibility:public"

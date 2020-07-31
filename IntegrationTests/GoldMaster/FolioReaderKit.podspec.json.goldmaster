@@ -1,4 +1,3 @@
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "acknowledged_target",
@@ -39,37 +38,6 @@ filegroup(
   srcs = [
     "FolioReaderKit_direct_hdrs"
   ],
-  visibility = [
-    "//visibility:public"
-  ]
-)
-swift_library(
-  name = "FolioReaderKit_swift",
-  srcs = glob(
-    [
-      "Source/**/*.swift",
-      "Source/*.swift",
-      "Vendor/**/*.swift"
-    ]
-  ),
-  deps = [
-    "//Vendor/AEXML:AEXML",
-    "//Vendor/FontBlaster:FontBlaster",
-    "//Vendor/JSQWebViewController:JSQWebViewController",
-    "//Vendor/MenuItemKit:MenuItemKit",
-    "//Vendor/RealmSwift:RealmSwift",
-    "//Vendor/SSZipArchive:SSZipArchive",
-    "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition"
-  ],
-  data = glob(
-    [
-      "Source/**/*.css",
-      "Source/**/*.js",
-      "Source/Resources/*.xcassets",
-      "Source/Resources/Fonts/**/*.otf",
-      "Source/Resources/Fonts/**/*.ttf"
-    ]
-  ),
   visibility = [
     "//visibility:public"
   ]
@@ -153,7 +121,6 @@ objc_library(
     "//Vendor/RealmSwift:RealmSwift",
     "//Vendor/SSZipArchive:SSZipArchive",
     "//Vendor/ZFDragableModalTransition:ZFDragableModalTransition",
-    ":FolioReaderKit_swift",
     ":FolioReaderKit_includes"
   ],
   copts = select(
@@ -168,8 +135,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FolioReaderKit/pod_support/Headers/Public/FolioReaderKit/"
-  ] + [
-    "-fmodule-name=FolioReaderKit"
   ],
   data = glob(
     [

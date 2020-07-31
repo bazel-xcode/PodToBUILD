@@ -117,8 +117,6 @@ objc_library(
     }
   ) + [
     "-IVendor/boost-for-react-native/pod_support/Headers/Public/boost/"
-  ] + [
-    "-fmodule-name=boost"
   ],
   visibility = [
     "//visibility:public"

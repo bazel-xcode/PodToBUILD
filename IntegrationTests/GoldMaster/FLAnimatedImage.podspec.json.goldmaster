@@ -128,8 +128,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FLAnimatedImage/pod_support/Headers/Public/FLAnimatedImage/"
-  ] + [
-    "-fmodule-name=FLAnimatedImage"
   ],
   visibility = [
     "//visibility:public"

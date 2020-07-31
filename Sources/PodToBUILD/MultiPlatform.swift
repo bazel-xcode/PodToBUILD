@@ -229,6 +229,23 @@ public struct AttrSet<T: AttrSetConstraint>: Monoid, SkylarkConvertible, EmptyAw
         }
     }
 }
+
+extension AttrSet {
+    ///  Sequences a list of `AttrSet`s to a list of each input's value
+    public func sequence(_ input: [AttrSet<T>]) -> AttrSet<[T]> {
+        return ([self] + input).reduce(AttrSet<[T]>.empty) {
+            accum, next -> AttrSet<[T]> in
+            return accum.zip(next).map { zip in
+                let first = zip.first ?? []
+                guard let second = zip.second else {
+                    return first
+                }
+                return first + [second]
+            }
+        }
+    }
+}
+
 extension MultiPlatform where T == Optional<String> {
     public func denormalize() -> MultiPlatform<String> {
         return self.map { $0.denormalize() }

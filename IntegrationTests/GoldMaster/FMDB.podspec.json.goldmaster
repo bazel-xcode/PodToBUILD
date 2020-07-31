@@ -124,8 +124,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
-  ] + [
-    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -233,8 +231,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
-  ] + [
-    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -341,8 +337,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
-  ] + [
-    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -434,8 +428,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
-  ] + [
-    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -544,8 +536,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
-  ] + [
-    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -660,8 +650,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
-  ] + [
-    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"
@@ -773,8 +761,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FMDB/pod_support/Headers/Public/FMDB/"
-  ] + [
-    "-fmodule-name=FMDB"
   ],
   visibility = [
     "//visibility:public"

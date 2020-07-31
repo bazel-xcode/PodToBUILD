@@ -128,8 +128,6 @@ objc_library(
     }
   ) + [
     "-IVendor/GoogleSignIn/pod_support/Headers/Public/GoogleSignIn/"
-  ] + [
-    "-fmodule-name=GoogleSignIn"
   ],
   data = [
     ":GoogleSignIn_Bundle_GoogleSignIn"

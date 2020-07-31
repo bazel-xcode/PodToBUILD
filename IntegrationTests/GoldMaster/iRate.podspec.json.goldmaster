@@ -123,8 +123,6 @@ objc_library(
     }
   ) + [
     "-IVendor/iRate/pod_support/Headers/Public/iRate/"
-  ] + [
-    "-fmodule-name=iRate"
   ],
   data = [
     ":iRate_Bundle_iRate"

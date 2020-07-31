@@ -122,8 +122,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PaymentKit/pod_support/Headers/Public/PaymentKit/"
-  ] + [
-    "-fmodule-name=PaymentKit"
   ],
   data = glob(
     [

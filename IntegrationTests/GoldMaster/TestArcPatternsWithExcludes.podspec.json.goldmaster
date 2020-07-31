@@ -126,8 +126,6 @@ objc_library(
     }
   ) + [
     "-IVendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/FBSDKCoreKit/"
-  ] + [
-    "-fmodule-name=FBSDKCoreKit"
   ],
   visibility = [
     "//visibility:public"
@@ -517,8 +515,6 @@ objc_library(
     }
   ) + [
     "-IVendor/TestArcPatternsWithExcludes/pod_support/Headers/Public/FBSDKCoreKit/"
-  ] + [
-    "-fmodule-name=FBSDKCoreKit"
   ],
   visibility = [
     "//visibility:public"

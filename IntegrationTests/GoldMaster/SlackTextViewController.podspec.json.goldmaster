@@ -122,8 +122,6 @@ objc_library(
     }
   ) + [
     "-IVendor/SlackTextViewController/pod_support/Headers/Public/SlackTextViewController/"
-  ] + [
-    "-fmodule-name=SlackTextViewController"
   ],
   visibility = [
     "//visibility:public"

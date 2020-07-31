@@ -141,8 +141,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -279,8 +277,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -417,8 +413,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -521,8 +515,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -626,8 +618,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -732,8 +722,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -839,8 +827,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -944,8 +930,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"
@@ -1049,8 +1033,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Texture/pod_support/Headers/Public/AsyncDisplayKit/"
-  ] + [
-    "-fmodule-name=AsyncDisplayKit"
   ],
   visibility = [
     "//visibility:public"

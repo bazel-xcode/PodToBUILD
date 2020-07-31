@@ -123,8 +123,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Smartling/pod_support/Headers/Public/Smartling/"
-  ] + [
-    "-fmodule-name=Smartling"
   ],
   visibility = [
     "//visibility:public"

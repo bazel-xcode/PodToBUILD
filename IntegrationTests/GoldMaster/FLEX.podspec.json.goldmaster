@@ -136,8 +136,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FLEX/pod_support/Headers/Public/FLEX/"
-  ] + [
-    "-fmodule-name=FLEX"
   ],
   visibility = [
     "//visibility:public"

@@ -132,8 +132,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Stripe/pod_support/Headers/Public/Stripe/"
-  ] + [
-    "-fmodule-name=Stripe"
   ],
   data = select(
     {

@@ -122,8 +122,6 @@ objc_library(
     }
   ) + [
     "-IVendor/SPUserResizableView+Pion/pod_support/Headers/Public/SPUserResizableView+Pion/"
-  ] + [
-    "-fmodule-name=SPUserResizableView+Pion"
   ],
   visibility = [
     "//visibility:public"

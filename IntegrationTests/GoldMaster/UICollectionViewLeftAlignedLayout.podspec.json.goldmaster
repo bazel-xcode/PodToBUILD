@@ -1,4 +1,3 @@
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "acknowledged_target",
@@ -130,7 +129,6 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.s"
     ]
   ),
-  module_map = ":UICollectionViewLeftAlignedLayout_extended_module_map_module_map_file",
   hdrs = [
     ":UICollectionViewLeftAlignedLayout_cxx_hdrs"
   ],
@@ -152,8 +150,6 @@ objc_library(
     }
   ) + [
     "-IVendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/"
-  ] + [
-    "-fmodule-name=UICollectionViewLeftAlignedLayout"
   ],
   visibility = [
     "//visibility:public"
@@ -163,19 +159,6 @@ acknowledged_target(
   name = "UICollectionViewLeftAlignedLayout_cxx_acknowledgement",
   deps = [],
   value = "//Vendor/UICollectionViewLeftAlignedLayout/pod_support_buildable:acknowledgement_fragment"
-)
-swift_library(
-  name = "UICollectionViewLeftAlignedLayout_swift",
-  srcs = glob(
-    [
-      "UICollectionViewLeftAlignedLayout/**/*.swift"
-    ]
-  ),
-  deps = [],
-  data = [],
-  visibility = [
-    "//visibility:public"
-  ]
 )
 filegroup(
   name = "UICollectionViewLeftAlignedLayout_direct_hdrs",
@@ -253,14 +236,12 @@ objc_library(
       "UICollectionViewLeftAlignedLayout/**/*.s"
     ]
   ),
-  module_map = ":UICollectionViewLeftAlignedLayout_extended_module_map_module_map_file",
   hdrs = [
     ":UICollectionViewLeftAlignedLayout_hdrs"
   ],
   pch = "pod_support/Headers/Private/UICollectionViewLeftAlignedLayout-prefix.pch",
   deps = [
     ":UICollectionViewLeftAlignedLayout_cxx",
-    ":UICollectionViewLeftAlignedLayout_swift",
     ":UICollectionViewLeftAlignedLayout_includes"
   ],
   copts = select(
@@ -275,8 +256,6 @@ objc_library(
     }
   ) + [
     "-IVendor/UICollectionViewLeftAlignedLayout/pod_support/Headers/Public/UICollectionViewLeftAlignedLayout/"
-  ] + [
-    "-fmodule-name=UICollectionViewLeftAlignedLayout"
   ],
   visibility = [
     "//visibility:public"
@@ -286,28 +265,4 @@ acknowledged_target(
   name = "UICollectionViewLeftAlignedLayout_acknowledgement",
   deps = [],
   value = "//Vendor/UICollectionViewLeftAlignedLayout/pod_support_buildable:acknowledgement_fragment"
-)
-gen_module_map(
-  "UICollectionViewLeftAlignedLayout_extended_module_map_module_map_file",
-  "UICollectionViewLeftAlignedLayout_extended_module_map",
-  "UICollectionViewLeftAlignedLayout",
-  [
-    "UICollectionViewLeftAlignedLayout_public_hdrs"
-  ],
-  visibility = [
-    "//visibility:public"
-  ]
-)
-gen_module_map(
-  "UICollectionViewLeftAlignedLayout_module_map_module_map_file",
-  "UICollectionViewLeftAlignedLayout_module_map",
-  "UICollectionViewLeftAlignedLayout",
-  [
-    "UICollectionViewLeftAlignedLayout_extended_module_map_module_map_file",
-    "UICollectionViewLeftAlignedLayout_public_hdrs"
-  ],
-  module_map_name = "UICollectionViewLeftAlignedLayout.modulemap",
-  visibility = [
-    "//visibility:public"
-  ]
 )

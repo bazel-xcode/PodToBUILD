@@ -188,8 +188,6 @@ objc_library(
     }
   ) + [
     "-IVendor/pop/pod_support/Headers/Public/pop/"
-  ] + [
-    "-fmodule-name=pop"
   ],
   visibility = [
     "//visibility:public"
@@ -334,8 +332,6 @@ objc_library(
     }
   ) + [
     "-IVendor/pop/pod_support/Headers/Public/pop/"
-  ] + [
-    "-fmodule-name=pop"
   ],
   visibility = [
     "//visibility:public"

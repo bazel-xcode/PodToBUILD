@@ -116,8 +116,6 @@ objc_library(
     }
   ) + [
     "-IVendor/GoogleAppUtilities/pod_support/Headers/Public/GoogleAppUtilities/"
-  ] + [
-    "-fmodule-name=GoogleAppUtilities"
   ],
   visibility = [
     "//visibility:public"

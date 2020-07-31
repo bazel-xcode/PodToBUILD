@@ -1,4 +1,3 @@
-load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "acknowledged_target",
@@ -39,22 +38,6 @@ filegroup(
   srcs = [
     "SevenSwitch_direct_hdrs"
   ],
-  visibility = [
-    "//visibility:public"
-  ]
-)
-swift_library(
-  name = "SevenSwitch_swift",
-  srcs = glob(
-    [
-      "SevenSwitch.swift"
-    ],
-    exclude = [
-      "Classes/Exclude/**/*.swift"
-    ]
-  ),
-  deps = [],
-  data = [],
   visibility = [
     "//visibility:public"
   ]
@@ -118,7 +101,6 @@ objc_library(
     "QuartzCore"
   ],
   deps = [
-    ":SevenSwitch_swift",
     ":SevenSwitch_includes"
   ],
   copts = select(
@@ -133,8 +115,6 @@ objc_library(
     }
   ) + [
     "-IVendor/SevenSwitch/pod_support/Headers/Public/SevenSwitch/"
-  ] + [
-    "-fmodule-name=SevenSwitch"
   ],
   visibility = [
     "//visibility:public"

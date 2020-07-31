@@ -1,3 +1,4 @@
+load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')
 load(
   "//Vendor/rules_pods/BazelExtensions:extensions.bzl",
   "acknowledged_target",
@@ -39,6 +40,39 @@ filegroup(
     "ObjcParentWithSwiftSubspecs_direct_hdrs",
     "Default_direct_hdrs",
     "Subspec_direct_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+swift_library(
+  name = "ObjcParentWithSwiftSubspecs_swift",
+  module_name = "ObjcParentWithSwiftSubspecs",
+  srcs = glob(
+    [
+      "Sources/**/*.swift",
+      "**/*.swift"
+    ]
+  ),
+  deps = [],
+  data = [],
+  copts = [
+    "-Xcc",
+    "-I.",
+    "-Xcc",
+    "-D__SWIFTC__",
+    "-Xfrontend",
+    "-no-clang-module-breadcrumbs",
+    "-Xcc",
+    "-fmodule-map-file=$(execpath ObjcParentWithSwiftSubspecs_module_map)",
+    "-import-underlying-module"
+  ],
+  swiftc_inputs = [
+    "ObjcParentWithSwiftSubspecs_module_map"
+  ],
+  generated_header_name = "ObjcParentWithSwiftSubspecs-Swift.h",
+  features = [
+    "swift.no_generated_module_map"
   ],
   visibility = [
     "//visibility:public"
@@ -140,14 +174,17 @@ objc_library(
       "Classes/Exclude/**/*.s"
     ]
   ),
+  module_map = ":ObjcParentWithSwiftSubspecs_extended_module_map",
   hdrs = [
     ":ObjcParentWithSwiftSubspecs_hdrs"
   ],
   pch = "pod_support/Headers/Private/ObjcParentWithSwiftSubspecs-prefix.pch",
   deps = [
     ":Default",
+    ":ObjcParentWithSwiftSubspecs_swift",
     ":Subspec",
-    ":ObjcParentWithSwiftSubspecs_includes"
+    ":ObjcParentWithSwiftSubspecs_includes",
+    ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = select(
     {
@@ -161,8 +198,6 @@ objc_library(
     }
   ) + [
     "-IVendor/ObjcParentWithSwiftSubspecs/pod_support/Headers/Public/ObjcParentWithSwiftSubspecs/"
-  ] + [
-    "-fmodule-name=ObjcParentWithSwiftSubspecs"
   ],
   visibility = [
     "//visibility:public"
@@ -172,6 +207,29 @@ acknowledged_target(
   name = "ObjcParentWithSwiftSubspecs_acknowledgement",
   deps = [],
   value = "//Vendor/ObjcParentWithSwiftSubspecs/pod_support_buildable:acknowledgement_fragment"
+)
+gen_module_map(
+  name = "ObjcParentWithSwiftSubspecs_extended_module_map",
+  module_name = "ObjcParentWithSwiftSubspecs",
+  hdrs = [
+    "ObjcParentWithSwiftSubspecs_public_hdrs"
+  ],
+  swift_header = "../ObjcParentWithSwiftSubspecs-Swift.h",
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_module_map(
+  name = "ObjcParentWithSwiftSubspecs_module_map",
+  module_name = "ObjcParentWithSwiftSubspecs",
+  hdrs = [
+    "ObjcParentWithSwiftSubspecs_extended_module_map",
+    "ObjcParentWithSwiftSubspecs_public_hdrs"
+  ],
+  module_map_name = "ObjcParentWithSwiftSubspecs.modulemap",
+  visibility = [
+    "//visibility:public"
+  ]
 )
 filegroup(
   name = "Default_direct_hdrs",
@@ -233,12 +291,15 @@ gen_includes(
 objc_library(
   name = "Default",
   enable_modules = 0,
+  module_map = ":ObjcParentWithSwiftSubspecs_extended_module_map",
   hdrs = [
     ":Default_hdrs"
   ],
   pch = "pod_support/Headers/Private/ObjcParentWithSwiftSubspecs-prefix.pch",
   deps = [
-    ":Default_includes"
+    ":ObjcParentWithSwiftSubspecs_swift",
+    ":Default_includes",
+    ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = select(
     {
@@ -252,8 +313,6 @@ objc_library(
     }
   ) + [
     "-IVendor/ObjcParentWithSwiftSubspecs/pod_support/Headers/Public/ObjcParentWithSwiftSubspecs/"
-  ] + [
-    "-fmodule-name=ObjcParentWithSwiftSubspecs"
   ],
   visibility = [
     "//visibility:public"
@@ -324,12 +383,15 @@ gen_includes(
 objc_library(
   name = "Subspec",
   enable_modules = 0,
+  module_map = ":ObjcParentWithSwiftSubspecs_extended_module_map",
   hdrs = [
     ":Subspec_hdrs"
   ],
   pch = "pod_support/Headers/Private/ObjcParentWithSwiftSubspecs-prefix.pch",
   deps = [
-    ":Subspec_includes"
+    ":ObjcParentWithSwiftSubspecs_swift",
+    ":Subspec_includes",
+    ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = select(
     {
@@ -343,8 +405,6 @@ objc_library(
     }
   ) + [
     "-IVendor/ObjcParentWithSwiftSubspecs/pod_support/Headers/Public/ObjcParentWithSwiftSubspecs/"
-  ] + [
-    "-fmodule-name=ObjcParentWithSwiftSubspecs"
   ],
   visibility = [
     "//visibility:public"

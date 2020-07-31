@@ -144,9 +144,7 @@ objc_library(
         "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
-  ) + [
-    "-fmodule-name=folly"
-  ],
+  ),
   visibility = [
     "//visibility:public"
   ]

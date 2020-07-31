@@ -137,8 +137,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINCache/pod_support/Headers/Public/PINCache/"
-  ] + [
-    "-fmodule-name=PINCache"
   ],
   visibility = [
     "//visibility:public"
@@ -258,8 +256,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINCache/pod_support/Headers/Public/PINCache/"
-  ] + [
-    "-fmodule-name=PINCache"
   ],
   visibility = [
     "//visibility:public"
@@ -377,8 +373,6 @@ objc_library(
     }
   ) + [
     "-IVendor/PINCache/pod_support/Headers/Public/PINCache/"
-  ] + [
-    "-fmodule-name=PINCache"
   ],
   visibility = [
     "//visibility:public"

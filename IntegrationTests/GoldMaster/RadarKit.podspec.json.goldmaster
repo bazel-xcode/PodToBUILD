@@ -126,8 +126,6 @@ objc_library(
     }
   ) + [
     "-IVendor/RadarKit/pod_support/Headers/Public/RadarKit/"
-  ] + [
-    "-fmodule-name=RadarKit"
   ],
   visibility = [
     "//visibility:public"

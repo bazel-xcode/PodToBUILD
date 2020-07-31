@@ -125,8 +125,6 @@ objc_library(
     }
   ) + [
     "-IVendor/EarlGrey/pod_support/Headers/Public/EarlGrey/"
-  ] + [
-    "-fmodule-name=EarlGrey"
   ],
   visibility = [
     "//visibility:public"

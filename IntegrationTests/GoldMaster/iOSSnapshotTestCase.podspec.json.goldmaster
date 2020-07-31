@@ -126,8 +126,6 @@ objc_library(
     }
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
-  ] + [
-    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"
@@ -256,8 +254,6 @@ objc_library(
     }
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
-  ] + [
-    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"
@@ -359,8 +355,6 @@ objc_library(
     }
   ) + [
     "-IVendor/iOSSnapshotTestCase/pod_support/Headers/Public/FBSnapshotTestCase/"
-  ] + [
-    "-fmodule-name=FBSnapshotTestCase"
   ],
   visibility = [
     "//visibility:public"

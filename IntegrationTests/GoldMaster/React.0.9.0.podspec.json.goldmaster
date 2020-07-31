@@ -161,8 +161,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -349,8 +347,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -457,8 +453,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -565,8 +559,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -673,8 +665,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -781,8 +771,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -889,8 +877,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -997,8 +983,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1105,8 +1089,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1213,8 +1195,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1321,8 +1301,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1429,8 +1407,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1537,8 +1513,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1645,8 +1619,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"

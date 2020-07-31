@@ -36,6 +36,7 @@ config_setting(
 filegroup(
   name = "React_package_hdrs",
   srcs = [
+    "React_cxx_direct_hdrs",
     "React_direct_hdrs",
     "Core_cxx_direct_hdrs",
     "Core_direct_hdrs",
@@ -87,6 +88,104 @@ filegroup(
   ]
 )
 filegroup(
+  name = "React_cxx_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ]
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "React_cxx_public_hdrs",
+  srcs = [
+    ":Core_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "React_cxx_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ]
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "React_cxx_union_hdrs",
+  srcs = [
+    "React_cxx_hdrs",
+    "React_hdrs",
+    ":Core_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "React_cxx_hmap",
+  namespace = "React",
+  hdrs = [
+    "React_package_hdrs",
+    ":React_cxx_union_hdrs"
+  ],
+  deps = [
+    ":Core_hmap"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "React_cxx_includes",
+  include = [
+    "Vendor/React/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "React_cxx",
+  enable_modules = 0,
+  hdrs = [
+    ":React_cxx_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/React-prefix.pch",
+  deps = [
+    ":Core",
+    ":React_cxx_includes"
+  ],
+  copts = [
+    "-std=c++14",
+    "-std=c++14"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/React/pod_support/Headers/Public/React/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "React_cxx_acknowledgement",
+  deps = [],
+  value = "//Vendor/React/pod_support_buildable:acknowledgement_fragment"
+)
+filegroup(
   name = "React_direct_hdrs",
   srcs = glob(
     [
@@ -100,7 +199,8 @@ filegroup(
 filegroup(
   name = "React_public_hdrs",
   srcs = [
-    ":Core_public_hdrs"
+    ":Core_public_hdrs",
+    ":React_cxx_public_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -113,7 +213,8 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ]
   ) + [
-    ":Core_hdrs"
+    ":Core_hdrs",
+    ":React_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -127,7 +228,8 @@ headermap(
     ":React_hdrs"
   ],
   deps = [
-    ":Core_hmap"
+    ":Core_hmap",
+    ":React_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -148,6 +250,7 @@ objc_library(
   pch = "pod_support/Headers/Private/React-prefix.pch",
   deps = [
     ":Core",
+    ":React_cxx",
     ":React_includes"
   ],
   copts = select(
@@ -162,8 +265,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -1579,8 +1680,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -2669,8 +2768,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -2788,8 +2885,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -2906,8 +3001,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -3031,7 +3124,6 @@ objc_library(
       "React/Inspector/*.s"
     ]
   ),
-  module_map = ":React_extended_module_map_module_map_file",
   hdrs = [
     ":DevSupport_cxx_hdrs"
   ],
@@ -3056,8 +3148,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -3172,7 +3262,6 @@ objc_library(
       "React/Inspector/*.s"
     ]
   ),
-  module_map = ":React_extended_module_map_module_map_file",
   hdrs = [
     ":DevSupport_hdrs"
   ],
@@ -3195,8 +3284,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -3359,8 +3446,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -3513,8 +3598,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -3623,8 +3706,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -3757,8 +3838,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -3881,8 +3960,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -4005,8 +4082,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -4153,8 +4228,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -4235,7 +4308,10 @@ objc_library(
   deps = [
     ":fabric_includes"
   ],
-  copts = select(
+  copts = [
+    "-std=c++14",
+    "-std=c++14"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -4247,8 +4323,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -4383,8 +4457,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/activityindicator/"
-  ] + [
-    "-fmodule-name=fabric/activityindicator"
   ],
   visibility = [
     "//visibility:public"
@@ -4521,8 +4593,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/attributedstring/"
-  ] + [
-    "-fmodule-name=fabric/attributedstring"
   ],
   visibility = [
     "//visibility:public"
@@ -4659,8 +4729,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/core/"
-  ] + [
-    "-fmodule-name=fabric/core"
   ],
   visibility = [
     "//visibility:public"
@@ -4797,8 +4865,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/debug/"
-  ] + [
-    "-fmodule-name=fabric/debug"
   ],
   visibility = [
     "//visibility:public"
@@ -4935,8 +5001,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/graphics/"
-  ] + [
-    "-fmodule-name=fabric/graphics"
   ],
   visibility = [
     "//visibility:public"
@@ -5073,8 +5137,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/scrollview/"
-  ] + [
-    "-fmodule-name=fabric/scrollview"
   ],
   visibility = [
     "//visibility:public"
@@ -5211,8 +5273,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/text/"
-  ] + [
-    "-fmodule-name=fabric/text"
   ],
   visibility = [
     "//visibility:public"
@@ -5350,8 +5410,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/textlayoutmanager/"
-  ] + [
-    "-fmodule-name=fabric/textlayoutmanager"
   ],
   visibility = [
     "//visibility:public"
@@ -5488,8 +5546,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/uimanager/"
-  ] + [
-    "-fmodule-name=fabric/uimanager"
   ],
   visibility = [
     "//visibility:public"
@@ -5628,8 +5684,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/view/"
-  ] + [
-    "-fmodule-name=fabric/view"
   ],
   visibility = [
     "//visibility:public"
@@ -5767,8 +5821,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fabric/sample/"
-  ] + [
-    "-fmodule-name=fabric/sample"
   ],
   visibility = [
     "//visibility:public"
@@ -5877,8 +5929,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -5985,8 +6035,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -6101,8 +6149,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/RCTAnimation/"
-  ] + [
-    "-fmodule-name=RCTAnimation"
   ],
   visibility = [
     "//visibility:public"
@@ -6240,8 +6286,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -6379,8 +6423,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -6491,8 +6533,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -6599,8 +6639,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -6714,8 +6752,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -6830,8 +6866,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -6946,8 +6980,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -7054,8 +7086,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -7162,8 +7192,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -7270,8 +7298,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -7378,8 +7404,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -7520,8 +7544,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -7649,8 +7671,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/fishhook/"
-  ] + [
-    "-fmodule-name=fishhook"
   ],
   visibility = [
     "//visibility:public"
@@ -7757,8 +7777,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -7868,8 +7886,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"
@@ -7969,8 +7985,6 @@ objc_library(
     }
   ) + [
     "-IVendor/React/pod_support/Headers/Public/React/"
-  ] + [
-    "-fmodule-name=React"
   ],
   visibility = [
     "//visibility:public"

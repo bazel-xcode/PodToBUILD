@@ -36,6 +36,7 @@ config_setting(
 filegroup(
   name = "IGListKit_package_hdrs",
   srcs = [
+    "IGListKit_cxx_direct_hdrs",
     "IGListKit_direct_hdrs",
     "Diffing_cxx_direct_hdrs",
     "Diffing_direct_hdrs",
@@ -45,6 +46,121 @@ filegroup(
   visibility = [
     "//visibility:public"
   ]
+)
+filegroup(
+  name = "IGListKit_cxx_direct_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ]
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "IGListKit_cxx_public_hdrs",
+  srcs = [
+    ":Default_public_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "IGListKit_cxx_hdrs",
+  srcs = glob(
+    [
+      "pod_support/Headers/Public/**/*"
+    ]
+  ),
+  visibility = [
+    "//visibility:public"
+  ]
+)
+filegroup(
+  name = "IGListKit_cxx_union_hdrs",
+  srcs = [
+    "IGListKit_cxx_hdrs",
+    "IGListKit_hdrs",
+    ":Default_hdrs"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+headermap(
+  name = "IGListKit_cxx_hmap",
+  namespace = "IGListKit",
+  hdrs = [
+    "IGListKit_package_hdrs",
+    ":IGListKit_cxx_union_hdrs"
+  ],
+  deps = [
+    ":Default_hmap"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+gen_includes(
+  name = "IGListKit_cxx_includes",
+  include = [
+    "Vendor/IGListKit/pod_support/Headers/Public/"
+  ]
+)
+objc_library(
+  name = "IGListKit_cxx",
+  enable_modules = 0,
+  hdrs = [
+    ":IGListKit_cxx_hdrs"
+  ],
+  pch = "pod_support/Headers/Private/IGListKit-prefix.pch",
+  sdk_frameworks = select(
+    {
+      "//conditions:default": [
+        "UIKit"
+      ],
+      ":osxCase": [
+        "Cocoa"
+      ],
+      ":tvosCase": [
+        "UIKit"
+      ]
+    }
+  ),
+  sdk_dylibs = [
+    "c++"
+  ],
+  deps = [
+    ":Default",
+    ":IGListKit_cxx_includes"
+  ],
+  copts = [
+    "-std=c++14",
+    "-std=c++11",
+    "-stdlib=libc++"
+  ] + select(
+    {
+      "//conditions:default": [
+        "-DPOD_CONFIGURATION_RELEASE=0"
+      ],
+      ":release": [
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
+      ]
+    }
+  ) + [
+    "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
+  ],
+  visibility = [
+    "//visibility:public"
+  ]
+)
+acknowledged_target(
+  name = "IGListKit_cxx_acknowledgement",
+  deps = [],
+  value = "//Vendor/IGListKit/pod_support_buildable:acknowledgement_fragment"
 )
 filegroup(
   name = "IGListKit_direct_hdrs",
@@ -60,7 +176,8 @@ filegroup(
 filegroup(
   name = "IGListKit_public_hdrs",
   srcs = [
-    ":Default_public_hdrs"
+    ":Default_public_hdrs",
+    ":IGListKit_cxx_public_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -73,7 +190,8 @@ filegroup(
       "pod_support/Headers/Public/**/*"
     ]
   ) + [
-    ":Default_hdrs"
+    ":Default_hdrs",
+    ":IGListKit_cxx_hdrs"
   ],
   visibility = [
     "//visibility:public"
@@ -87,7 +205,8 @@ headermap(
     ":IGListKit_hdrs"
   ],
   deps = [
-    ":Default_hmap"
+    ":Default_hmap",
+    ":IGListKit_cxx_hmap"
   ],
   visibility = [
     "//visibility:public"
@@ -124,6 +243,7 @@ objc_library(
   ],
   deps = [
     ":Default",
+    ":IGListKit_cxx",
     ":IGListKit_includes"
   ],
   copts = select(
@@ -138,8 +258,6 @@ objc_library(
     }
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
-  ] + [
-    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"
@@ -302,8 +420,6 @@ objc_library(
     }
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
-  ] + [
-    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"
@@ -460,8 +576,6 @@ objc_library(
     }
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
-  ] + [
-    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"
@@ -668,8 +782,6 @@ objc_library(
     }
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
-  ] + [
-    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"
@@ -870,8 +982,6 @@ objc_library(
     }
   ) + [
     "-IVendor/IGListKit/pod_support/Headers/Public/IGListKit/"
-  ] + [
-    "-fmodule-name=IGListKit"
   ],
   visibility = [
     "//visibility:public"

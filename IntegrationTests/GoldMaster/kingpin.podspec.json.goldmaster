@@ -126,8 +126,6 @@ objc_library(
     }
   ) + [
     "-IVendor/kingpin/pod_support/Headers/Public/kingpin/"
-  ] + [
-    "-fmodule-name=kingpin"
   ],
   visibility = [
     "//visibility:public"

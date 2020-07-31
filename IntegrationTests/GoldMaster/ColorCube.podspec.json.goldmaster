@@ -122,8 +122,6 @@ objc_library(
     }
   ) + [
     "-IVendor/ColorCube/pod_support/Headers/Public/ColorCube/"
-  ] + [
-    "-fmodule-name=ColorCube"
   ],
   visibility = [
     "//visibility:public"

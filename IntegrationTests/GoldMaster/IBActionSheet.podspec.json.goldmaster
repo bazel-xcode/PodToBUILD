@@ -125,8 +125,6 @@ objc_library(
     }
   ) + [
     "-IVendor/IBActionSheet/pod_support/Headers/Public/IBActionSheet/"
-  ] + [
-    "-fmodule-name=IBActionSheet"
   ],
   visibility = [
     "//visibility:public"

@@ -122,8 +122,6 @@ objc_library(
     }
   ) + [
     "-IVendor/KVOController/pod_support/Headers/Public/KVOController/"
-  ] + [
-    "-fmodule-name=KVOController"
   ],
   visibility = [
     "//visibility:public"

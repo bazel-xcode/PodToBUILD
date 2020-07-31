@@ -113,8 +113,6 @@ objc_library(
     }
   ) + [
     "-IVendor/GoogleSymbolUtilities/pod_support/Headers/Public/GoogleSymbolUtilities/"
-  ] + [
-    "-fmodule-name=GoogleSymbolUtilities"
   ],
   visibility = [
     "//visibility:public"

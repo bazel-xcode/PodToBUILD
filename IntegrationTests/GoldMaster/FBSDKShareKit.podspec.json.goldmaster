@@ -308,8 +308,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FBSDKShareKit/pod_support/Headers/Public/FBSDKShareKit/"
-  ] + [
-    "-fmodule-name=FBSDKShareKit"
   ],
   visibility = [
     "//visibility:public"

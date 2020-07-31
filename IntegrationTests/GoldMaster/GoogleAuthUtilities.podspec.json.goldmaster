@@ -122,8 +122,6 @@ objc_library(
     }
   ) + [
     "-IVendor/GoogleAuthUtilities/pod_support/Headers/Public/GoogleAuthUtilities/"
-  ] + [
-    "-fmodule-name=GoogleAuthUtilities"
   ],
   data = glob(
     [

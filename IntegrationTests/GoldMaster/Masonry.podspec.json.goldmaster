@@ -138,8 +138,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Masonry/pod_support/Headers/Public/Masonry/"
-  ] + [
-    "-fmodule-name=Masonry"
   ],
   visibility = [
     "//visibility:public"

@@ -145,8 +145,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -269,8 +267,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -384,8 +380,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -501,8 +495,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -614,8 +606,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -741,8 +731,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -857,8 +845,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -1002,8 +988,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   data = [
     ":UI_Bundle_Braintree-Drop-In-Localization",
@@ -1125,8 +1109,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -1257,8 +1239,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   data = [
     ":3D-Secure_Bundle_Braintree-3D-Secure-Localization"
@@ -1391,8 +1371,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -1521,8 +1499,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"
@@ -1649,8 +1625,6 @@ objc_library(
     }
   ) + [
     "-IVendor/Braintree/pod_support/Headers/Public/Braintree/"
-  ] + [
-    "-fmodule-name=Braintree"
   ],
   visibility = [
     "//visibility:public"

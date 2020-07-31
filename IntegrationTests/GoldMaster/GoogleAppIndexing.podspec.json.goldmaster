@@ -124,8 +124,6 @@ objc_library(
     }
   ) + [
     "-IVendor/GoogleAppIndexing/pod_support/Headers/Public/GoogleAppIndexing/"
-  ] + [
-    "-fmodule-name=GoogleAppIndexing"
   ],
   data = [
     ":GoogleAppIndexing_Bundle_GoogleAppIndexingResources"

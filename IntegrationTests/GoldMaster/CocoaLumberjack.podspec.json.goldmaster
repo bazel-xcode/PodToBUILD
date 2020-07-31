@@ -127,8 +127,6 @@ objc_library(
     }
   ) + [
     "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
-  ] + [
-    "-fmodule-name=CocoaLumberjack"
   ],
   visibility = [
     "//visibility:public"
@@ -235,8 +233,6 @@ objc_library(
     }
   ) + [
     "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
-  ] + [
-    "-fmodule-name=CocoaLumberjack"
   ],
   visibility = [
     "//visibility:public"
@@ -337,8 +333,6 @@ objc_library(
     }
   ) + [
     "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
-  ] + [
-    "-fmodule-name=CocoaLumberjack"
   ],
   visibility = [
     "//visibility:public"
@@ -445,8 +439,6 @@ objc_library(
     }
   ) + [
     "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
-  ] + [
-    "-fmodule-name=CocoaLumberjack"
   ],
   visibility = [
     "//visibility:public"
@@ -623,8 +615,6 @@ objc_library(
     }
   ) + [
     "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
-  ] + [
-    "-fmodule-name=CocoaLumberjack"
   ],
   visibility = [
     "//visibility:public"
@@ -720,8 +710,6 @@ objc_library(
     }
   ) + [
     "-IVendor/CocoaLumberjack/pod_support/Headers/Public/CocoaLumberjack/"
-  ] + [
-    "-fmodule-name=CocoaLumberjack"
   ],
   visibility = [
     "//visibility:public"

@@ -124,8 +124,6 @@ objc_library(
     }
   ) + [
     "-IVendor/FBSDKMessengerShareKit/pod_support/Headers/Public/FBSDKMessengerShareKit/"
-  ] + [
-    "-fmodule-name=FBSDKMessengerShareKit"
   ],
   visibility = [
     "//visibility:public"
