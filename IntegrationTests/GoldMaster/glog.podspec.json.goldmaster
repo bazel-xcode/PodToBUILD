@@ -151,7 +151,6 @@ objc_library(
     ":glog_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/glog/",
     "-std=c++14"
   ] + select(
     {

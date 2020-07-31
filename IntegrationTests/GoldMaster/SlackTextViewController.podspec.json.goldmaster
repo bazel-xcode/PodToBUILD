@@ -112,7 +112,6 @@ objc_library(
     ":SlackTextViewController_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/SlackTextViewController/",
     "-fobjc-weak"
   ] + select(
     {

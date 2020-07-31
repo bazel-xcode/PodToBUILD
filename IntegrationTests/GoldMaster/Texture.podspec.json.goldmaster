@@ -131,7 +131,6 @@ objc_library(
     ":Texture_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Texture/",
     "-fobjc-weak"
   ] + select(
     {
@@ -266,7 +265,6 @@ objc_library(
     ":Core_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Texture/",
     "-std=c++14",
     "-std=c++11",
     "-stdlib=libc++",
@@ -407,7 +405,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Texture/",
     "-fobjc-weak",
     "-fno-exceptions -fno-objc-arc-exceptions"
   ] + select(
@@ -514,7 +511,6 @@ objc_library(
     ":PINRemoteImage_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Texture/",
     "-fobjc-weak"
   ] + select(
     {
@@ -621,7 +617,6 @@ objc_library(
     ":IGListKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Texture/",
     "-fobjc-weak"
   ] + select(
     {
@@ -727,7 +722,6 @@ objc_library(
     ":Yoga_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Texture/",
     "-fobjc-weak",
     "-DYOGA=1"
   ] + select(
@@ -835,7 +829,6 @@ objc_library(
     ":MapKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Texture/",
     "-fobjc-weak",
     "-DAS_USE_MAPKIT=1"
   ] + select(
@@ -941,7 +934,6 @@ objc_library(
     ":Photos_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Texture/",
     "-fobjc-weak",
     "-DAS_USE_PHOTOS=1"
   ] + select(
@@ -1047,7 +1039,6 @@ objc_library(
     ":AssetsLibrary_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Texture/",
     "-fobjc-weak",
     "-DAS_USE_ASSETS_LIBRARY=1"
   ] + select(

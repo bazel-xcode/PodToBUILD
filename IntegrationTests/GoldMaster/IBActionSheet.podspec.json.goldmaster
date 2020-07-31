@@ -115,7 +115,6 @@ objc_library(
     ":IBActionSheet_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/IBActionSheet/",
     "-fobjc-weak"
   ] + select(
     {

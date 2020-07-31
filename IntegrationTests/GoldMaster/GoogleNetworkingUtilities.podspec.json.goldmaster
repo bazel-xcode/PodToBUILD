@@ -109,7 +109,6 @@ objc_library(
     ":GoogleNetworkingUtilities_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/GoogleNetworkingUtilities/",
     "-fobjc-weak"
   ] + select(
     {

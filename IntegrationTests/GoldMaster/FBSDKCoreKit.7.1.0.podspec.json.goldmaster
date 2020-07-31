@@ -154,7 +154,6 @@ objc_library(
     ":FBSDKCoreKit_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
     "-std=c++14",
     "-DFBSDKCOCOAPODS=1",
     "-DFBSDKCOCOAPODS=1"
@@ -282,7 +281,6 @@ objc_library(
     ":FBSDKCoreKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
     "-fobjc-weak",
     "-DFBSDKCOCOAPODS=1",
     "-DFBSDKCOCOAPODS=1"
@@ -791,7 +789,6 @@ objc_library(
     ":Basics_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
     "-fobjc-weak",
     "-DFBSDKCOCOAPODS=1",
     "-DFBSDKCOCOAPODS=1"
@@ -1337,7 +1334,6 @@ objc_library(
     ":Core_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
     "-std=c++14",
     "-DFBSDKCOCOAPODS=1",
     "-DFBSDKCOCOAPODS=1"
@@ -1808,7 +1804,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
     "-fobjc-weak",
     "-DFBSDKCOCOAPODS=1",
     "-DFBSDKCOCOAPODS=1"

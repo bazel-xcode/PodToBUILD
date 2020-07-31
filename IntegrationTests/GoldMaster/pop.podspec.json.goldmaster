@@ -174,7 +174,6 @@ objc_library(
     ":pop_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/pop/",
     "-std=c++14",
     "-std=c++11",
     "-stdlib=libc++"
@@ -324,7 +323,6 @@ objc_library(
     ":pop_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/pop/",
     "-fobjc-weak"
   ] + select(
     {

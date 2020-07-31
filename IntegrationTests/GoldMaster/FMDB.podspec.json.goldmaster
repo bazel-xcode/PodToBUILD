@@ -114,7 +114,6 @@ objc_library(
     ":FMDB_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FMDB/",
     "-fobjc-weak"
   ] + select(
     {
@@ -225,7 +224,6 @@ objc_library(
     ":standard_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FMDB/",
     "-fobjc-weak"
   ] + select(
     {
@@ -335,7 +333,6 @@ objc_library(
     ":FTS_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FMDB/",
     "-fobjc-weak"
   ] + select(
     {
@@ -428,7 +425,6 @@ objc_library(
     ":standalone_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FMDB/",
     "-fobjc-weak",
     "-DFMDB_SQLITE_STANDALONE"
   ] + select(
@@ -539,7 +535,6 @@ objc_library(
     ":standalone_default_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FMDB/",
     "-fobjc-weak",
     "-DFMDB_SQLITE_STANDALONE"
   ] + select(
@@ -656,7 +651,6 @@ objc_library(
     ":standalone_FTS_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FMDB/",
     "-fobjc-weak",
     "-DFMDB_SQLITE_STANDALONE"
   ] + select(
@@ -769,7 +763,6 @@ objc_library(
     ":SQLCipher_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FMDB/",
     "-fobjc-weak",
     "-DSQLITE_HAS_CODEC",
     "-DHAVE_USLEEP=1"

@@ -138,7 +138,6 @@ objc_library(
     ":IGListKit_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/IGListKit/",
     "-std=c++14",
     "-std=c++11",
     "-stdlib=libc++"
@@ -250,7 +249,6 @@ objc_library(
     ":IGListKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/IGListKit/",
     "-fobjc-weak"
   ] + select(
     {
@@ -412,7 +410,6 @@ objc_library(
     ":Diffing_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/IGListKit/",
     "-std=c++14",
     "-std=c++11",
     "-stdlib=libc++"
@@ -574,7 +571,6 @@ objc_library(
     ":Diffing_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/IGListKit/",
     "-fobjc-weak"
   ] + select(
     {
@@ -780,7 +776,6 @@ objc_library(
     ":Default_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/IGListKit/",
     "-std=c++14",
     "-std=c++11",
     "-stdlib=libc++"
@@ -986,7 +981,6 @@ objc_library(
     ":Default_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/IGListKit/",
     "-fobjc-weak"
   ] + select(
     {

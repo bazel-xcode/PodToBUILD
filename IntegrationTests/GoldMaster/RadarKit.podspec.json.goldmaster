@@ -116,7 +116,6 @@ objc_library(
     ":RadarKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/RadarKit/",
     "-fobjc-weak"
   ] + select(
     {

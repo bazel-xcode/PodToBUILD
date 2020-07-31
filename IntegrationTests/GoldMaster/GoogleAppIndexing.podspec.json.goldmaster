@@ -114,7 +114,6 @@ objc_library(
     ":GoogleAppIndexing_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/GoogleAppIndexing/",
     "-fobjc-weak"
   ] + select(
     {

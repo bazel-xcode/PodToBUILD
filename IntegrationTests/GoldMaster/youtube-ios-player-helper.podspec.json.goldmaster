@@ -315,7 +315,6 @@ objc_library(
     ":youtube-ios-player-helper_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/youtube-ios-player-helper/",
     "-std=c++14"
   ] + select(
     {
@@ -564,7 +563,6 @@ objc_library(
     ":youtube-ios-player-helper_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/youtube-ios-player-helper/",
     "-fobjc-weak"
   ] + select(
     {

@@ -114,7 +114,6 @@ objc_library(
     ":Branch_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Branch/",
     "-fobjc-weak"
   ] + select(
     {
@@ -233,7 +232,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Branch/",
     "-fobjc-weak"
   ] + select(
     {
@@ -351,7 +349,6 @@ objc_library(
     ":without-IDFA_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Branch/",
     "-fobjc-weak"
   ] + select(
     {

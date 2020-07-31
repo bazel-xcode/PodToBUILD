@@ -112,7 +112,6 @@ objc_library(
     ":yoga_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/yoga/",
     "-std=c++14",
     "-fno-omit-frame-pointer",
     "-fexceptions",

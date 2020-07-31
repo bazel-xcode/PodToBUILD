@@ -125,7 +125,6 @@ objc_library(
     ":FolioReaderKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FolioReaderKit/",
     "-fobjc-weak"
   ] + select(
     {

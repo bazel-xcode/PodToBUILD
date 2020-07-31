@@ -123,7 +123,6 @@ objc_library(
     ":CardIO_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/CardIO/",
     "-fobjc-weak"
   ] + select(
     {

@@ -296,7 +296,6 @@ objc_library(
     ":FBSDKShareKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKShareKit/",
     "-fobjc-weak",
     "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
   ] + select(

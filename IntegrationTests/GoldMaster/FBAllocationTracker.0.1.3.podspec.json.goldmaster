@@ -213,7 +213,6 @@ objc_library(
     ":FBAllocationTracker_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBAllocationTracker/",
     "-std=c++14"
   ] + select(
     {
@@ -383,7 +382,6 @@ objc_library(
     ":FBAllocationTracker_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBAllocationTracker/",
     "-fobjc-weak"
   ] + select(
     {

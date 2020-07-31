@@ -118,7 +118,6 @@ objc_library(
     ":GoogleSignIn_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/GoogleSignIn/",
     "-fobjc-weak"
   ] + select(
     {

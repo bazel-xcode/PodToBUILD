@@ -107,7 +107,6 @@ objc_library(
     ":boost-for-react-native_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/boost-for-react-native/",
     "-fobjc-weak"
   ] + select(
     {

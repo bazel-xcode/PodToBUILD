@@ -162,7 +162,6 @@ objc_library(
     ":React_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-std=c++14"
   ] + select(
@@ -257,7 +256,6 @@ objc_library(
     ":React_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -1674,7 +1672,6 @@ objc_library(
     ":Core_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14"
   ] + select(
     {
@@ -2766,7 +2763,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -2883,7 +2879,6 @@ objc_library(
     ":CxxBridge_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
@@ -3003,7 +2998,6 @@ objc_library(
     ":CxxBridge_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -3152,7 +3146,6 @@ objc_library(
     ":DevSupport_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-std=c++14"
   ] + select(
@@ -3293,7 +3286,6 @@ objc_library(
     ":DevSupport_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -3456,7 +3448,6 @@ objc_library(
     ":RCTFabric_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -3611,7 +3602,6 @@ objc_library(
     ":RCTFabric_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -3724,7 +3714,6 @@ objc_library(
     ":tvOS_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -3857,7 +3846,6 @@ objc_library(
     ":jschelpers_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -3982,7 +3970,6 @@ objc_library(
     ":jsinspector_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14"
   ] + select(
     {
@@ -4106,7 +4093,6 @@ objc_library(
     ":PrivateDatabase_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14"
   ] + select(
     {
@@ -4253,7 +4239,6 @@ objc_library(
     ":cxxreact_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -4350,7 +4335,6 @@ objc_library(
     ":fabric_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-std=c++14"
   ] + select(
@@ -4486,7 +4470,6 @@ objc_library(
     ":fabric_activityindicator_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -4624,7 +4607,6 @@ objc_library(
     ":fabric_attributedstring_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -4762,7 +4744,6 @@ objc_library(
     ":fabric_core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -4900,7 +4881,6 @@ objc_library(
     ":fabric_debug_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -5038,7 +5018,6 @@ objc_library(
     ":fabric_graphics_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -5176,7 +5155,6 @@ objc_library(
     ":fabric_scrollview_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -5314,7 +5292,6 @@ objc_library(
     ":fabric_text_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -5453,7 +5430,6 @@ objc_library(
     ":fabric_textlayoutmanager_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -5591,7 +5567,6 @@ objc_library(
     ":fabric_uimanager_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -5731,7 +5706,6 @@ objc_library(
     ":fabric_view_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -5870,7 +5844,6 @@ objc_library(
     ":RCTFabricSample_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
@@ -5983,7 +5956,6 @@ objc_library(
     ":ART_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -6093,7 +6065,6 @@ objc_library(
     ":RCTActionSheet_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -6211,7 +6182,6 @@ objc_library(
     ":RCTAnimation_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -6349,7 +6319,6 @@ objc_library(
     ":RCTBlob_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-std=c++14"
   ] + select(
@@ -6491,7 +6460,6 @@ objc_library(
     ":RCTBlob_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -6605,7 +6573,6 @@ objc_library(
     ":RCTCameraRoll_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -6715,7 +6682,6 @@ objc_library(
     ":RCTGeolocation_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -6832,7 +6798,6 @@ objc_library(
     ":RCTImage_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -6947,7 +6912,6 @@ objc_library(
     ":RCTNetwork_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-std=c++14",
     "-std=c++14"
   ] + select(
@@ -7066,7 +7030,6 @@ objc_library(
     ":RCTNetwork_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -7176,7 +7139,6 @@ objc_library(
     ":RCTPushNotification_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -7286,7 +7248,6 @@ objc_library(
     ":RCTSettings_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -7396,7 +7357,6 @@ objc_library(
     ":RCTText_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -7506,7 +7466,6 @@ objc_library(
     ":RCTVibration_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -7650,7 +7609,6 @@ objc_library(
     ":RCTWebSocket_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -7781,7 +7739,6 @@ objc_library(
     ":fishhook_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -7891,7 +7848,6 @@ objc_library(
     ":RCTLinkingIOS_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -8004,7 +7960,6 @@ objc_library(
     ":RCTTest_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -8107,7 +8062,6 @@ objc_library(
     ":_ignore_me_subspec_for_linting__includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {

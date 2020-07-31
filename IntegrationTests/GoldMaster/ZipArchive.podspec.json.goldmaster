@@ -130,7 +130,6 @@ objc_library(
     ":ZipArchive_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/ZipArchive/",
     "-fobjc-weak",
     "-Dunix"
   ] + select(

@@ -112,7 +112,6 @@ objc_library(
     ":ColorCube_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/ColorCube/",
     "-fobjc-weak"
   ] + select(
     {

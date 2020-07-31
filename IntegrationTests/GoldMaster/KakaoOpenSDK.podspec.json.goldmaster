@@ -129,7 +129,6 @@ objc_library(
     ":KakaoOpenSDK_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/KakaoOpenSDK/",
     "-fobjc-weak"
   ] + select(
     {
@@ -227,7 +226,6 @@ objc_library(
     ":KakaoOpenSDK_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/KakaoOpenSDK/",
     "-fobjc-weak"
   ] + select(
     {
@@ -340,7 +338,6 @@ objc_library(
     ":KakaoNavi_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/KakaoOpenSDK/",
     "-fobjc-weak"
   ] + select(
     {
@@ -453,7 +450,6 @@ objc_library(
     ":KakaoLink_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/KakaoOpenSDK/",
     "-fobjc-weak"
   ] + select(
     {
@@ -566,7 +562,6 @@ objc_library(
     ":KakaoS2_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/KakaoOpenSDK/",
     "-fobjc-weak"
   ] + select(
     {

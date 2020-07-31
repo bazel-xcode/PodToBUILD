@@ -116,7 +116,6 @@ objc_library(
     ":iOSSnapshotTestCase_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/iOSSnapshotTestCase/",
     "-fobjc-weak"
   ] + select(
     {
@@ -248,7 +247,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/iOSSnapshotTestCase/",
     "-fobjc-weak"
   ] + select(
     {
@@ -353,7 +351,6 @@ objc_library(
     ":SwiftSupport_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/iOSSnapshotTestCase/",
     "-fobjc-weak"
   ] + select(
     {

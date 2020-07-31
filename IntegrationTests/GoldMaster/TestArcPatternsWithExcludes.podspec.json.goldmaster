@@ -116,7 +116,6 @@ objc_library(
     ":TestArcPatternsWithExcludes_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/TestArcPatternsWithExcludes/",
     "-fobjc-weak"
   ] + select(
     {
@@ -509,7 +508,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/TestArcPatternsWithExcludes/",
     "-fobjc-weak"
   ] + select(
     {

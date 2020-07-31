@@ -118,7 +118,6 @@ objc_library(
     ":FLAnimatedImage_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FLAnimatedImage/",
     "-fobjc-weak"
   ] + select(
     {

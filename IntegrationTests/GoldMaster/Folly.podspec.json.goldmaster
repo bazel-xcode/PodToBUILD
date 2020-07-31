@@ -132,7 +132,6 @@ objc_library(
     ":Folly_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Folly/",
     "-std=c++14",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"

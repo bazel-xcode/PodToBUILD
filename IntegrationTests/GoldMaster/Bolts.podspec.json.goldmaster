@@ -114,7 +114,6 @@ objc_library(
     ":Bolts_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Bolts/",
     "-fobjc-weak"
   ] + select(
     {
@@ -240,7 +239,6 @@ objc_library(
     ":Tasks_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Bolts/",
     "-fobjc-weak"
   ] + select(
     {
@@ -398,7 +396,6 @@ objc_library(
     ":AppLinks_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Bolts/",
     "-fobjc-weak"
   ] + select(
     {

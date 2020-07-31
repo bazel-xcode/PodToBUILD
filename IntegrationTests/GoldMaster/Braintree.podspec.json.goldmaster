@@ -133,7 +133,6 @@ objc_library(
     ":Braintree_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -258,7 +257,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -374,7 +372,6 @@ objc_library(
     ":Apple-Pay_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -492,7 +489,6 @@ objc_library(
     ":Card_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -606,7 +602,6 @@ objc_library(
     ":DataCollector_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -734,7 +729,6 @@ objc_library(
     ":PayPal_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -851,7 +845,6 @@ objc_library(
     ":Venmo_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -997,7 +990,6 @@ objc_library(
     ":UI_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -1121,7 +1113,6 @@ objc_library(
     ":UnionPay_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -1254,7 +1245,6 @@ objc_library(
     ":3D-Secure_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -1387,7 +1377,6 @@ objc_library(
     ":PayPalOneTouch_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-ObjC",
     "-lc++",
@@ -1520,7 +1509,6 @@ objc_library(
     ":PayPalDataCollector_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
@@ -1649,7 +1637,6 @@ objc_library(
     ":PayPalUtils_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Braintree/",
     "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(

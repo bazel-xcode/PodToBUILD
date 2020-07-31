@@ -129,7 +129,6 @@ objc_library(
     ":PINOperation_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/PINOperation/",
     "-std=c++14"
   ] + select(
     {
@@ -233,7 +232,6 @@ objc_library(
     ":PINOperation_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/PINOperation/",
     "-fobjc-weak"
   ] + select(
     {

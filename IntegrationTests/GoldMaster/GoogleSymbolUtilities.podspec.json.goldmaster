@@ -103,7 +103,6 @@ objc_library(
     ":GoogleSymbolUtilities_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/GoogleSymbolUtilities/",
     "-fobjc-weak"
   ] + select(
     {

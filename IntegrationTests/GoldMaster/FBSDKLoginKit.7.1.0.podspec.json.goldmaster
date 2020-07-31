@@ -131,7 +131,6 @@ objc_library(
     ":FBSDKLoginKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKLoginKit/",
     "-fobjc-weak"
   ] + select(
     {
@@ -288,7 +287,6 @@ objc_library(
     ":Login_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKLoginKit/",
     "-fobjc-weak"
   ] + select(
     {

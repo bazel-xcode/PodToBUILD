@@ -128,7 +128,6 @@ objc_library(
     ":FBSDKLoginKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKLoginKit/",
     "-fobjc-weak",
     "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
   ] + select(

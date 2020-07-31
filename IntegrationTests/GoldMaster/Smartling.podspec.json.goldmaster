@@ -113,7 +113,6 @@ objc_library(
     ":Smartling_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Smartling/",
     "-fobjc-weak"
   ] + select(
     {

@@ -106,7 +106,6 @@ objc_library(
     ":GoogleAppUtilities_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/GoogleAppUtilities/",
     "-fobjc-weak"
   ] + select(
     {

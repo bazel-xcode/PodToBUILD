@@ -113,7 +113,6 @@ objc_library(
     ":iRate_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/iRate/",
     "-fobjc-weak"
   ] + select(
     {

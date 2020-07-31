@@ -126,7 +126,6 @@ objc_library(
     ":Adjust_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Adjust/",
     "-fobjc-weak"
   ] + select(
     {
@@ -253,7 +252,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Adjust/",
     "-fobjc-weak"
   ] + select(
     {
@@ -377,7 +375,6 @@ objc_library(
     ":Sociomantic_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Adjust/",
     "-fobjc-weak"
   ] + select(
     {
@@ -501,7 +498,6 @@ objc_library(
     ":Criteo_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Adjust/",
     "-fobjc-weak"
   ] + select(
     {
@@ -625,7 +621,6 @@ objc_library(
     ":Trademob_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Adjust/",
     "-fobjc-weak"
   ] + select(
     {

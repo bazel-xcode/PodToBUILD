@@ -105,7 +105,6 @@ objc_library(
     ":SevenSwitch_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/SevenSwitch/",
     "-fobjc-weak"
   ] + select(
     {

@@ -170,7 +170,6 @@ objc_library(
     ":Calabash_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Calabash/",
     "-std=c++14",
     "-ObjC",
     "-force_load",
@@ -290,7 +289,6 @@ objc_library(
     ":Calabash_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Calabash/",
     "-fobjc-weak",
     "-ObjC",
     "-force_load",

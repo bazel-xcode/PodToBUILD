@@ -126,7 +126,6 @@ objc_library(
     ":FLEX_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FLEX/",
     "-fobjc-weak"
   ] + select(
     {

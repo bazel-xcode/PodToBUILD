@@ -112,7 +112,6 @@ objc_library(
     ":GoogleAuthUtilities_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/GoogleAuthUtilities/",
     "-fobjc-weak"
   ] + select(
     {

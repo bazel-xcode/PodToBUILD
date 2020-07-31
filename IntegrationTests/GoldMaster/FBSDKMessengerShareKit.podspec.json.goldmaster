@@ -114,7 +114,6 @@ objc_library(
     ":FBSDKMessengerShareKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/FBSDKMessengerShareKit/",
     "-fobjc-weak"
   ] + select(
     {

@@ -112,7 +112,6 @@ objc_library(
     ":PaymentKit_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/PaymentKit/",
     "-fobjc-weak"
   ] + select(
     {

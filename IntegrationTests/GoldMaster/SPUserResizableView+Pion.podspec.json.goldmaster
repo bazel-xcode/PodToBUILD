@@ -112,7 +112,6 @@ objc_library(
     ":SPUserResizableView+Pion_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/SPUserResizableView+Pion/",
     "-fobjc-weak"
   ] + select(
     {

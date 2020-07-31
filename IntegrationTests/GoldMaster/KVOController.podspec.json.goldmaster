@@ -112,7 +112,6 @@ objc_library(
     ":KVOController_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/KVOController/",
     "-fobjc-weak"
   ] + select(
     {

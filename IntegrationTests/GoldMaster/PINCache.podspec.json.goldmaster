@@ -127,7 +127,6 @@ objc_library(
     ":PINCache_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/PINCache/",
     "-fobjc-weak"
   ] + select(
     {
@@ -250,7 +249,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/PINCache/",
     "-fobjc-weak"
   ] + select(
     {
@@ -369,7 +367,6 @@ objc_library(
     ":Arc-exception-safe_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/PINCache/",
     "-fobjc-weak",
     "-fobjc-arc-exceptions"
   ] + select(

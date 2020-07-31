@@ -116,7 +116,6 @@ objc_library(
     ":kingpin_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/kingpin/",
     "-fobjc-weak"
   ] + select(
     {

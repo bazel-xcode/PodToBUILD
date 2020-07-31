@@ -113,7 +113,6 @@ objc_library(
     ":EarlGrey_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/EarlGrey/",
     "-fobjc-weak",
     "-fobjc-arc-exceptions"
   ] + select(

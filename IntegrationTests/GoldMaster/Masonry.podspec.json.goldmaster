@@ -128,7 +128,6 @@ objc_library(
     ":Masonry_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Masonry/",
     "-fobjc-weak"
   ] + select(
     {

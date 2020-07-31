@@ -122,7 +122,6 @@ objc_library(
     ":Stripe_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/Stripe/",
     "-fobjc-weak"
   ] + select(
     {

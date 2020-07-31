@@ -166,7 +166,6 @@ objc_library(
     ":SFHFKeychainUtils_cxx_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/SFHFKeychainUtils/",
     "-std=c++14"
   ] + select(
     {
@@ -279,7 +278,6 @@ objc_library(
     ":SFHFKeychainUtils_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/SFHFKeychainUtils/",
     "-fobjc-weak"
   ] + select(
     {

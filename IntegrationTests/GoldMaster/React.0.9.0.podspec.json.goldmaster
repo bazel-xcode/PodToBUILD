@@ -151,7 +151,6 @@ objc_library(
     ":React_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -341,7 +340,6 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -451,7 +449,6 @@ objc_library(
     ":ART_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -561,7 +558,6 @@ objc_library(
     ":RCTActionSheet_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -671,7 +667,6 @@ objc_library(
     ":RCTAdSupport_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -781,7 +776,6 @@ objc_library(
     ":RCTGeolocation_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -891,7 +885,6 @@ objc_library(
     ":RCTImage_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -1001,7 +994,6 @@ objc_library(
     ":RCTNetwork_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -1111,7 +1103,6 @@ objc_library(
     ":RCTPushNotification_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -1221,7 +1212,6 @@ objc_library(
     ":RCTSettings_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -1331,7 +1321,6 @@ objc_library(
     ":RCTText_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -1441,7 +1430,6 @@ objc_library(
     ":RCTVibration_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -1551,7 +1539,6 @@ objc_library(
     ":RCTWebSocket_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
@@ -1661,7 +1648,6 @@ objc_library(
     ":RCTLinkingIOS_includes"
   ],
   copts = [
-    "-I$(GENDIR)/Vendor/React/",
     "-fobjc-weak"
   ] + select(
     {
