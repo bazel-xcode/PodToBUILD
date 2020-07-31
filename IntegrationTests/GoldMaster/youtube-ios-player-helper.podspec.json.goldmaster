@@ -560,7 +560,9 @@ objc_library(
     ":youtube-ios-player-helper_cxx",
     ":youtube-ios-player-helper_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

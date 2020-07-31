@@ -127,6 +127,7 @@ objc_library(
     ":FBSDKLoginKit_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wno-non-modular-include-in-framework-module -Wno-error=noon-modular-include-in-framework-module"
   ] + select(
     {

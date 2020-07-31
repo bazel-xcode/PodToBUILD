@@ -112,7 +112,9 @@ objc_library(
     ":standard",
     ":FMDB_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -219,7 +221,9 @@ objc_library(
   deps = [
     ":standard_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -325,7 +329,9 @@ objc_library(
     ":standard",
     ":FTS_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -415,6 +421,7 @@ objc_library(
     ":standalone_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DFMDB_SQLITE_STANDALONE"
   ] + select(
     {
@@ -523,6 +530,7 @@ objc_library(
     ":standalone_default_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DFMDB_SQLITE_STANDALONE"
   ] + select(
     {
@@ -637,6 +645,7 @@ objc_library(
     ":standalone_FTS_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DFMDB_SQLITE_STANDALONE"
   ] + select(
     {
@@ -747,6 +756,7 @@ objc_library(
     ":SQLCipher_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DHAVE_USLEEP=1",
     "-DSQLITE_HAS_CODEC"
   ] + select(

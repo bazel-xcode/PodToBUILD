@@ -132,6 +132,7 @@ objc_library(
     ":Braintree_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -254,6 +255,7 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -367,6 +369,7 @@ objc_library(
     ":Apple-Pay_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -482,6 +485,7 @@ objc_library(
     ":Card_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -593,6 +597,7 @@ objc_library(
     ":DataCollector_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -718,6 +723,7 @@ objc_library(
     ":PayPal_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -832,6 +838,7 @@ objc_library(
     ":Venmo_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -975,6 +982,7 @@ objc_library(
     ":UI_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -1096,6 +1104,7 @@ objc_library(
     ":UnionPay_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -1226,6 +1235,7 @@ objc_library(
     ":3D-Secure_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -1356,6 +1366,7 @@ objc_library(
     ":PayPalOneTouch_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-ObjC",
     "-lc++",
     "-Wall -Werror -Wextra"
@@ -1486,6 +1497,7 @@ objc_library(
     ":PayPalDataCollector_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {
@@ -1612,6 +1624,7 @@ objc_library(
     ":PayPalUtils_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-Wall -Werror -Wextra"
   ] + select(
     {

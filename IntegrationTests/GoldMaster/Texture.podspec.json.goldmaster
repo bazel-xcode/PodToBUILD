@@ -129,7 +129,9 @@ objc_library(
     ":Photos",
     ":Texture_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -400,6 +402,7 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-fno-exceptions -fno-objc-arc-exceptions"
   ] + select(
     {
@@ -503,7 +506,9 @@ objc_library(
     ":Core",
     ":PINRemoteImage_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -606,7 +611,9 @@ objc_library(
     ":Core",
     ":IGListKit_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -709,6 +716,7 @@ objc_library(
     ":Yoga_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DYOGA=1"
   ] + select(
     {
@@ -814,6 +822,7 @@ objc_library(
     ":MapKit_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DAS_USE_MAPKIT=1"
   ] + select(
     {
@@ -917,6 +926,7 @@ objc_library(
     ":Photos_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DAS_USE_PHOTOS=1"
   ] + select(
     {
@@ -1020,6 +1030,7 @@ objc_library(
     ":AssetsLibrary_includes"
   ],
   copts = [
+    "-fobjc-weak",
     "-DAS_USE_ASSETS_LIBRARY=1"
   ] + select(
     {

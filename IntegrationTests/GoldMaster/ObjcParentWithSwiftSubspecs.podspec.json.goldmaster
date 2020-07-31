@@ -186,7 +186,9 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_includes",
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -301,7 +303,9 @@ objc_library(
     ":Default_includes",
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
@@ -393,7 +397,9 @@ objc_library(
     ":Subspec_includes",
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"

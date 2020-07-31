@@ -111,7 +111,9 @@ objc_library(
     ":GoogleUtilities_VendoredFrameworks",
     ":GoogleUtilities_includes"
   ],
-  copts = select(
+  copts = [
+    "-fobjc-weak"
+  ] + select(
     {
       "//conditions:default": [
         "-DPOD_CONFIGURATION_RELEASE=0"
