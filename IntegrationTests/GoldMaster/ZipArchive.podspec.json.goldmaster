@@ -130,12 +130,17 @@ objc_library(
     ":ZipArchive_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/ZipArchive/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-Dunix"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",

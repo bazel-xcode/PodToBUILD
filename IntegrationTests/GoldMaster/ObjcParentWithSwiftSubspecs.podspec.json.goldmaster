@@ -57,7 +57,25 @@ swift_library(
   ),
   deps = [],
   data = [],
-  copts = [
+  copts = select(
+    {
+      "//conditions:default": [
+        "-enable-testing",
+        "-DDEBUG",
+        "-Xcc",
+        "-DPOD_CONFIGURATION_DEBUG=1",
+        "-Xcc",
+        "-DDEBUG=1"
+      ],
+      ":release": [
+        "-Xcc",
+        "-DPOD_CONFIGURATION_RELEASE=1"
+      ]
+    }
+  ) + [
+    "-DCOCOAPODS",
+    "-Xcc",
+    "-DCOCOAPODS=1",
     "-Xcc",
     "-I.",
     "-Xcc",
@@ -69,8 +87,12 @@ swift_library(
     "-import-underlying-module"
   ],
   swiftc_inputs = [
+<<<<<<< HEAD
     ":ObjcParentWithSwiftSubspecs_module_map",
     ":ObjcParentWithSwiftSubspecs_umbrella_header"
+=======
+    ":ObjcParentWithSwiftSubspecs_module_map"
+>>>>>>> Add copts for SwiftLibrary
   ],
   generated_header_name = "ObjcParentWithSwiftSubspecs-Swift.h",
   features = [
@@ -189,11 +211,16 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/ObjcParentWithSwiftSubspecs/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -312,11 +339,16 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/ObjcParentWithSwiftSubspecs/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -406,11 +438,16 @@ objc_library(
     ":ObjcParentWithSwiftSubspecs_extended_module_map"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/ObjcParentWithSwiftSubspecs/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",

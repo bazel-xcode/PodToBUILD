@@ -132,13 +132,15 @@ objc_library(
     ":Folly_includes"
   ],
   copts = [
+    "-I$(GENDIR)/Vendor/Folly/",
     "-std=c++14",
     "-std=c++14",
     "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",

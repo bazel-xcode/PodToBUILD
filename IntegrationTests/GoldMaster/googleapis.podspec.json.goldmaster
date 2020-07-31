@@ -116,12 +116,17 @@ objc_library(
     ":googleapis_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/googleapis/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -227,12 +232,17 @@ objc_library(
     ":Messages_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/googleapis/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -340,12 +350,17 @@ objc_library(
     ":Services_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/googleapis/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DGPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",

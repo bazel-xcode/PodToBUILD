@@ -149,11 +149,13 @@ objc_library(
     ":FBSDKCoreKit_cxx_includes"
   ],
   copts = [
+    "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
     "-std=c++14"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -269,11 +271,16 @@ objc_library(
     ":FBSDKCoreKit_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -1526,11 +1533,16 @@ objc_library(
     ":Basics_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -2937,11 +2949,16 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/FBSDKCoreKit/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",

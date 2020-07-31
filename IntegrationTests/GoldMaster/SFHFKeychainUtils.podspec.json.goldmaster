@@ -166,11 +166,13 @@ objc_library(
     ":SFHFKeychainUtils_cxx_includes"
   ],
   copts = [
+    "-I$(GENDIR)/Vendor/SFHFKeychainUtils/",
     "-std=c++14"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -277,11 +279,16 @@ objc_library(
     ":SFHFKeychainUtils_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/SFHFKeychainUtils/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",

@@ -131,11 +131,16 @@ objc_library(
     ":Texture_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/Texture/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -264,6 +269,7 @@ objc_library(
     ":Core_cxx_includes"
   ],
   copts = [
+    "-I$(GENDIR)/Vendor/Texture/",
     "-std=c++14",
     "-std=c++11",
     "-stdlib=libc++",
@@ -271,7 +277,8 @@ objc_library(
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -403,12 +410,17 @@ objc_library(
     ":Core_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/Texture/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-fno-exceptions -fno-objc-arc-exceptions"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -508,11 +520,16 @@ objc_library(
     ":PINRemoteImage_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/Texture/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -613,11 +630,16 @@ objc_library(
     ":IGListKit_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/Texture/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -717,12 +739,17 @@ objc_library(
     ":Yoga_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/Texture/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DYOGA=1"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -823,12 +850,17 @@ objc_library(
     ":MapKit_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/Texture/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DAS_USE_MAPKIT=1"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -927,12 +959,17 @@ objc_library(
     ":Photos_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/Texture/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DAS_USE_PHOTOS=1"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -1031,12 +1068,17 @@ objc_library(
     ":AssetsLibrary_includes"
   ],
   copts = [
+<<<<<<< HEAD
+=======
+    "-I$(GENDIR)/Vendor/Texture/",
+>>>>>>> Add copts for SwiftLibrary
     "-fobjc-weak",
     "-DAS_USE_ASSETS_LIBRARY=1"
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",

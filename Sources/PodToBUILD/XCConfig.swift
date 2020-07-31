@@ -54,6 +54,11 @@ public struct XCConfigTransformer {
     }
 
     public static func defaultTransformer(externalName: String, sourceType: BazelSourceLibType) -> XCConfigTransformer {
+        if sourceType == .swift {
+            return XCConfigTransformer(transformers: [
+                SwiftApplicationExtensionAPIOnlyTransformer()
+            ])
+        }
         return XCConfigTransformer(transformers: [
             PassthroughTransformer(xcconfigKey: "OTHER_CFLAGS"),
             PassthroughTransformer(xcconfigKey: "OTHER_LDFLAGS"),
@@ -63,13 +68,22 @@ public struct XCConfigTransformer {
             CXXLanguageStandardTransformer(enabled: sourceType == .cpp),
             PreprocessorDefinesTransformer(),
             AllowNonModularIncludesInFrameworkModulesTransformer(),
+            ApplicationExtensionAPIOnlyTransformer(),
             PreCompilePrefixHeaderTransformer(),
         ])
     }
 
     public func compilerFlags(forXCConfig xcconfig: [String: String]?) -> [String] {
         if let xcconfig = xcconfig {
-            return xcconfig.compactMap { try? compilerFlag(forXCConfigKey: $0, XCConfigValue: $1) }
+            return xcconfig.keys
+                .sorted(by: <)
+                .compactMap {
+                    key -> [String]? in
+                    guard let value = xcconfig[key] else {
+                        return nil
+                    }
+                    return try? compilerFlag(forXCConfigKey: key, XCConfigValue: value)
+                }
                 .flatMap { $0 }
         }
         return [String]()
@@ -142,6 +156,26 @@ public struct AllowNonModularIncludesInFrameworkModulesTransformer: XCConfigValu
     }
 }
 
+public struct SwiftApplicationExtensionAPIOnlyTransformer: XCConfigValueTransformer {
+    public var xcconfigKey: String {
+        return "APPLICATION_EXTENSION_API_ONLY" 
+    }
+
+    public func string(forXCConfigValue value: String) -> String? {
+        return value == "YES" || value == "yes" ? "-application-extension" : nil
+    }
+}
+
+public struct ApplicationExtensionAPIOnlyTransformer: XCConfigValueTransformer {
+    public var xcconfigKey: String {
+        return "APPLICATION_EXTENSION_API_ONLY" 
+    }
+
+    public func string(forXCConfigValue value: String) -> String? {
+        return value == "YES" || value == "yes" ? "-fapplication-extension" : nil
+    }
+}
+
 /// MARK - CXX specific settings
 /// Don't enable CXX specific settings for C/ObjC libs.
 /// It is possible that a user may create such a Podspec.
@@ -180,6 +214,18 @@ public struct CXXLibraryTransformer: XCConfigValueTransformer {
             return nil
         }
         return "-stdlib=\(value)"
+    }
+}
+
+extension XCConfigTransformer {
+    func compilerFlags(for spec: FallbackSpec) -> [String] {
+        /// TODO: This operation should operate on the AttrSet
+        return self.compilerFlags(forXCConfig:
+                spec.attr(\.podTargetXcconfig).basic ?? [:]) +
+            self.compilerFlags(forXCConfig:
+                spec.attr(\.userTargetXcconfig).basic ?? [:]) +
+            self.compilerFlags(forXCConfig:
+                spec.attr(\.xcconfig).basic ?? [:])
     }
 }
 

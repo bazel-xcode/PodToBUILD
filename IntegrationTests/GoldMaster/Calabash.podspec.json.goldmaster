@@ -170,14 +170,16 @@ objc_library(
     ":Calabash_cxx_includes"
   ],
   copts = [
+    "-I$(GENDIR)/Vendor/Calabash/",
     "-std=c++14",
-    ""Vendor/Calabash/calabash.framework/calabash"",
     "-ObjC",
-    "-force_load"
+    "-force_load",
+    ""Vendor/Calabash/calabash.framework/calabash""
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
@@ -288,14 +290,21 @@ objc_library(
     ":Calabash_includes"
   ],
   copts = [
+<<<<<<< HEAD
     "-fobjc-weak",
     ""Vendor/Calabash/calabash.framework/calabash"",
+=======
+    "-I$(GENDIR)/Vendor/Calabash/",
+    "-fobjc-weak",
+>>>>>>> Add copts for SwiftLibrary
     "-ObjC",
-    "-force_load"
+    "-force_load",
+    ""Vendor/Calabash/calabash.framework/calabash""
   ] + select(
     {
       "//conditions:default": [
-        "-DPOD_CONFIGURATION_RELEASE=0"
+        "-DDEBUG=1",
+        "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
         "-DPOD_CONFIGURATION_RELEASE=1",
