@@ -388,11 +388,12 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         let extraDepNames = extraDeps.map { bazelLabel(fromString: ":\($0)") }
         deps = AttrSet(basic: extraDepNames) <> mpPodSpecDeps
 
+        // Adds minimal, non specified Xcode defaults
         let extraCopts: AttrSet<[String]>
         if case .cpp = sourceType {
             extraCopts = AttrSet(basic: ["-std=c++14"])
         } else {
-            extraCopts = AttrSet.empty
+            extraCopts = AttrSet(basic: ["-fobjc-weak"])
         }
         copts = extraCopts <> AttrSet(basic: xcconfigCopts.sorted(by: <)) <>
         fallbackSpec.attr(\.compilerFlags)
