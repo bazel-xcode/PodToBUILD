@@ -1,0 +1,7 @@
+project 'PodsHost/PodsHost.xcodeproj'
+
+# Note, that this will not current work with CocoaPods as a static library
+target 'ios-app' do
+   pod "PromisesSwift"
+end
+
