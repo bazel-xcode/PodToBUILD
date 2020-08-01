@@ -157,7 +157,6 @@ def _module_map_impl(ctx):
     relative_path = "".join(["../" for i in range(len(module_map.dirname.split("/")))])
 
     system_tag = " [system] "
-    system_tag = ""
     content = "module " + module_name + (system_tag if ctx.attr.is_system else "" ) + " {\n" 
     umbrella_header_file = None
     if ctx.attr.umbrella_hdr:
