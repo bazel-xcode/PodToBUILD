@@ -196,7 +196,7 @@ public struct SwiftLibrary: BazelTarget {
             "-Xcc",
             "-I.",
         ])
-        let deps = self.deps
+        var deps = self.deps
         if let moduleMap = self.moduleMap {
             copts = copts <> AttrSet(basic: [
                 "-Xcc",
@@ -207,13 +207,17 @@ public struct SwiftLibrary: BazelTarget {
                 "-fmodule-map-file=$(execpath " + moduleMap.name + ")",
                 "-import-underlying-module",
             ])
-            swiftcInputs = swiftcInputs <> AttrSet(basic: [
-                ":" + moduleMap.name,
-            ])
+
+            let moduleMapDep = AttrSet(basic: [ ":" + moduleMap.name ])
+            swiftcInputs = swiftcInputs <> moduleMapDep
+            deps = deps <> moduleMapDep
+
             if let umbrellaHeader = moduleMap.umbrellaHeader {
-                swiftcInputs = swiftcInputs <> AttrSet(basic: [
+                let umbrellaDep = AttrSet(basic: [
                     ":" + umbrellaHeader
                 ])
+                swiftcInputs = swiftcInputs <> umbrellaDep
+                deps = deps <> umbrellaDep
             }
         }
 

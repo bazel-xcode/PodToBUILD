@@ -192,16 +192,18 @@ module {module_name}.Swift {{
     # automatically and add a _single_ include to this module map. Ideally there
     # would be an API to invoke clang with -fmodule-map= 
     if ctx.attr.module_map_name == "module.modulemap":
-        include = depset([ctx.outputs.module_map.dirname])
+        provider_hdr = [module_map] + ([umbrella_header_file] if umbrella_header_file else [])
+        objc_provider = apple_common.new_objc_provider(
+            module_map=depset([module_map]),
+            include=depset([ctx.outputs.module_map.dirname]),
+            header=depset(provider_hdr)
+        )
     else:
-        include = depset()
-
-
-    objc_provider = apple_common.new_objc_provider(
-        module_map=depset([module_map]),
-        include=include,
-        header=depset([umbrella_header_file]) if umbrella_header_file else depset(),
-    )
+        # This is an explicit module map. Currently, we use these for swift only
+        provider_hdr = [module_map] + ([umbrella_header_file] if umbrella_header_file else [])
+        objc_provider = apple_common.new_objc_provider(
+            header=depset(provider_hdr + [module_map])
+        )
 
     return struct(
         files=depset([module_map]),
