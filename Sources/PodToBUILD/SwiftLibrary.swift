@@ -182,10 +182,13 @@ public struct SwiftLibrary: BazelTarget {
         // Note: we don't expose this module map upwards.
         // Dependent top level objc libraries will expose an extended module map
         let headerMapName = self.name.replacingOccurrences(of: "_swift", with: "")
+        var deps = self.deps
         if options.generateHeaderMap {
-            swiftcInputs = swiftcInputs <> AttrSet(basic: [
+            let hmapDep = AttrSet(basic: [
                 ":" + headerMapName + "_hmap",
             ])
+            swiftcInputs = swiftcInputs <> hmapDep
+            deps = deps <> hmapDep
             copts = copts <> AttrSet(basic: [
                 "-Xcc",
                 "-I$(execpath " + headerMapName + "_hmap)",
@@ -196,7 +199,6 @@ public struct SwiftLibrary: BazelTarget {
             "-Xcc",
             "-I.",
         ])
-        var deps = self.deps
         if let moduleMap = self.moduleMap {
             copts = copts <> AttrSet(basic: [
                 "-Xcc",
