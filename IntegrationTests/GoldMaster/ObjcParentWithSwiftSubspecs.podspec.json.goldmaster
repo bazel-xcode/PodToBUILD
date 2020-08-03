@@ -55,7 +55,10 @@ swift_library(
       "**/*.swift"
     ]
   ),
-  deps = [],
+  deps = [
+    ":ObjcParentWithSwiftSubspecs_module_map",
+    ":ObjcParentWithSwiftSubspecs_umbrella_header"
+  ],
   data = [],
   copts = select(
     {
