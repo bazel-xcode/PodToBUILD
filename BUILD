@@ -81,3 +81,16 @@ macos_unit_test(
     minimum_os_version = "10.13",
 )
 
+swift_library(
+    name = "XcodeToBUILDLib",
+    srcs = glob(["Sources/XcodeToBUILD/*.swift"]),
+    deps = [":PodToBUILD", "@podtobuild-XcodeProj//:XcodeProj"],
+    copts = ["-swift-version", "5"],
+)
+
+macos_command_line_application(
+    name = "XcodeToBUILD",
+    minimum_os_version = "10.13",
+    deps = [":XcodeToBUILDLib"],
+)
+

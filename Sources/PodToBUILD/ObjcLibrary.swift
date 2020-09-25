@@ -18,17 +18,25 @@ public let PodSupportBuidableDir = "pod_support_buildable/"
 /// it must follow all of Bazel's rules including visibility, which adds too
 /// much complexity.
 public let PodSupportDir = "pod_support/"
+//public let PodSupportDir = "Pods/"
 
 /// Pod Support System Public Header Dir is a directory which contains Public
 /// headers for a given target. The convention is __Target__/Header.h, which
 /// makes it easy to handle angle includes in clang. In the repository
 /// initialization phase, all Public headers are symlinked into this directory.
+// TODO: XcodeToBUILD - we don't want to add this
 public let PodSupportSystemPublicHeaderDir = "pod_support/Headers/Public/"
 
 // https://github.com/bazelbuild/rules_apple/blob/master/doc/rules-resources.md#apple_bundle_import
 public struct AppleBundleImport: BazelTarget {
     public let name: String
     let bundleImports: AttrSet<[String]>
+
+
+    public init(name: String, bundleImports: AttrSet<[String]>) {
+        self.name = name
+        self.bundleImports = bundleImports
+    }
 
     public var acknowledged: Bool {
         return true
@@ -57,6 +65,11 @@ public struct AppleBundleImport: BazelTarget {
 public struct AppleResourceBundle: BazelTarget {
     public let name: String
     let resources: AttrSet<[String]>
+
+    public init(name: String, resources: AttrSet<[String]>) {
+        self.name = name
+        self.resources = resources
+    }
 
     public var acknowledged: Bool {
         return true
@@ -93,6 +106,11 @@ public struct AppleStaticFrameworkImport: BazelTarget {
     public let name: String // A unique name for this rule.
     public let frameworkImports: AttrSet<[String]> // The list of files under a .framework directory which are provided to Objective-C targets that depend on this target.
 
+    public init(name: String, frameworkImports: AttrSet<[String]>) {
+        self.name = name
+        self.frameworkImports = frameworkImports
+    }
+
     public var acknowledged: Bool {
         return true
     }
@@ -127,6 +145,11 @@ public struct AppleStaticFrameworkImport: BazelTarget {
 public struct ObjcImport: BazelTarget {
     public let name: String // A unique name for this rule.
     let archives: AttrSet<[String]> // The list of .a files provided to Objective-C targets that depend on this target.
+
+    public init(name: String, archives: AttrSet<[String]>) {
+        self.name = name
+        self.archives = archives
+    }
 
     public var acknowledged: Bool {
         return true
@@ -664,8 +687,11 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         libArguments.append(nameArgument)
         
+        // FIXME: XcodeToBUILD - we want this
+        //let enableModulesSkylark = SkylarkFunctionArgument.named(name: "enable_modules",
+        //                                                  value: enableModules ? .int(1) : .int(0))
         let enableModulesSkylark = SkylarkFunctionArgument.named(name: "enable_modules",
-                                                          value: enableModules ? .int(1) : .int(0))
+                                                          value: .int(0))
         libArguments.append(enableModulesSkylark)
 
         let moduleName = bazelModuleName()

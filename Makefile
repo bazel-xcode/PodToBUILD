@@ -2,10 +2,10 @@
 build:
 	@tools/bazel build \
 		--disk_cache=$(HOME)/Library/Caches/Bazel \
-		--spawn_strategy=standalone \
 		:RepoTools :Compiler
 	@ditto bazel-bin/RepoTools bin/RepoTools
 	@ditto bazel-bin/Compiler bin/Compiler
+
 
 
 # There are a few issues with SwiftPackageManager and incremental builds
@@ -124,4 +124,16 @@ archive:
 		WORKSPACE \
 		BUILD \
 		LICENSE
+
+# XcodeToBUILD
+
+xc2b_build:
+	@tools/bazel build \
+		--disk_cache=$(HOME)/Library/Caches/Bazel \
+		:XcodeToBUILD
+
+xc2b_example: xc2b_build
+	cd Examples/React/ && \
+	    $(PWD)/bazel-bin/XcodeToBUILD Pods/Pods.xcodeproj/ > Pods/BUILD.bazel
+	less Examples/React/Pods/BUILD.bazel
 
