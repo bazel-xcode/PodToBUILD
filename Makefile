@@ -3,7 +3,7 @@ build:
 	@tools/bazel build \
 		--disk_cache=$(HOME)/Library/Caches/Bazel \
 		--spawn_strategy=local \
-		:RepoTools :Compiler
+		:RepoTools
 	@ditto bazel-bin/RepoTools bin/RepoTools
 	@ditto bazel-bin/Compiler bin/Compiler
 
@@ -82,7 +82,7 @@ ci: clean
 release:
 	@tools/bazel build \
 		--disk_cache=$(HOME)/Library/Caches/Bazel \
-		--spawn_strategy=standalone \
+		--spawn_strategy=local \
 		-c opt \
 		--swiftcopt=-whole-module-optimization :RepoTools :Compiler
 	@ditto bazel-bin/RepoTools bin/RepoTools

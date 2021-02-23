@@ -14,13 +14,6 @@ load(
 apple_rules_dependencies()
 
 load(
-    "@build_bazel_apple_support//lib:repositories.bzl",
-    "apple_support_dependencies",
-)
-
-apple_support_dependencies()
-
-load(
     "@build_bazel_rules_swift//swift:repositories.bzl",
     "swift_rules_dependencies",
 )
@@ -37,4 +30,3 @@ protobuf_deps()
 load("//third_party:repositories.bzl", "podtobuild_dependencies")
 
 podtobuild_dependencies()
-

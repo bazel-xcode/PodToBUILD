@@ -11,7 +11,7 @@ BAZEL=../../tools/bazel
 REPOSITORY_OVERRIDE=--override_repository=rules_pods=$(RULES_PODS_DIR)
 BAZEL_OPTS=$(REPOSITORY_OVERRIDE) \
 	--disk_cache=$(HOME)/Library/Caches/Bazel \
-	--spawn_strategy=standalone \
+	--spawn_strategy=local \
 	--apple_platform_type=ios
 
 all: bootstrap pod_test fetch build
@@ -25,10 +25,10 @@ pod_test:
 
 # Build everything in this workspace
 .PHONY: build
-build: info 
+build: info
 	$(BAZEL) build :* $(BAZEL_OPTS)
 
-test: info 
+test: info
 	$(BAZEL) test :* $(BAZEL_OPTS)
 
 # Fetch vendored pods if there's a Pods.WORKSPACE. In normal operation it isn't
@@ -42,7 +42,7 @@ vendorize:
 	# however, `rules_pods` is overriden
 	ditto $(RULES_PODS_DIR)/BazelExtensions Vendor/rules_pods/BazelExtensions
 
-fetch: info 
+fetch: info
 	[[ ! -f Pods.WORKSPACE ]] || $(MAKE) vendorize
 	$(BAZEL) fetch :* $(REPOSITORY_OVERRIDE)
 
