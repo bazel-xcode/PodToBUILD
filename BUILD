@@ -1,5 +1,6 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:macos.bzl", "macos_command_line_application", "macos_unit_test")
+load("@rules_cc//cc:defs.bzl", "objc_library")
 
 objc_library(
     name = "ObjcSupport",

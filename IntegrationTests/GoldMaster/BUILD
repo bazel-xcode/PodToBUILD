@@ -7,6 +7,7 @@ load(
   "headermap",
   "umbrella_header"
 )
+load("@rules_cc//cc:defs.bzl", "objc_library")
 # Add a config setting release for compilation mode
 # Assume that people are using `opt` for release mode
 # see the bazel user manual for more information
