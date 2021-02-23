@@ -348,7 +348,7 @@ def new_pod_repository(name,
             podspec_url = None,
             strip_prefix = "",
             user_options = [],
-            install_script = None, 
+            install_script = None,
             inhibit_warnings = True,
             trace = False,
             enable_modules = True,
@@ -363,7 +363,7 @@ def new_pod_repository(name,
          url: the url of this repo.
             The url may either:
             - A http url pointing to a zip or tar archive, i.e:
-              https://github.com/pinterest/PINOperation/archive/1.1.zip
+              https://github.com/pinterest/PINOperation/archive/1.2.1.zip
 
             - an absolute path ( used for local development ). Note: We symlink the
               entire contents into /Vendor/__name__.

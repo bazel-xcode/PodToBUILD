@@ -1,6 +1,6 @@
 {
   "name": "PINRemoteImage",
-  "version": "3.0.0-beta.9",
+  "version": "3.0.3",
   "summary": "A thread safe, performant, feature rich image fetcher",
   "homepage": "https://github.com/pinterest/PINRemoteImage",
   "license": "Apache 2.0",
@@ -9,11 +9,11 @@
   },
   "source": {
     "git": "https://github.com/pinterest/PINRemoteImage.git",
-    "tag": "3.0.0-beta.9"
+    "tag": "3.0.3"
   },
   "social_media_url": "https://twitter.com/garrettmoon",
   "platforms": {
-    "ios": "7.0",
+    "ios": "8.0",
     "tvos": "9.0"
   },
   "requires_arc": true,
@@ -30,9 +30,9 @@
         ]
       },
       "platforms": {
-        "ios": "7.0",
+        "ios": "8.0",
         "tvos": "9.0",
-        "osx": "10.9"
+        "osx": "10.11"
       },
       "source_files": "Source/Classes/**/*.{h,m}",
       "public_header_files": "Source/Classes/**/*.h",
@@ -49,7 +49,7 @@
     {
       "name": "iOS",
       "platforms": {
-        "ios": "7.0",
+        "ios": "8.0",
         "tvos": "9.0"
       },
       "dependencies": {
@@ -62,7 +62,7 @@
     {
       "name": "OSX",
       "platforms": {
-        "osx": "10.9"
+        "osx": "10.11"
       },
       "dependencies": {
         "PINRemoteImage/Core": [
@@ -122,7 +122,7 @@
 
         ],
         "PINCache": [
-          "=3.0.1-beta.4"
+          "=3.0.3"
         ]
       },
       "source_files": "Source/Classes/PINCache/*.{h,m}"

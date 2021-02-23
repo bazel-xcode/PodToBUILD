@@ -26,7 +26,7 @@ load("@rules_pods//BazelExtensions:workspace.bzl", "new_pod_repository")
 
 new_pod_repository(
   name = "PINOperation",
-  url = "https://github.com/pinterest/PINOperation/archive/1.0.3.zip",
+  url = "https://github.com/pinterest/PINOperation/archive/1.2.1.zip",
 )
 ```
 
@@ -51,7 +51,7 @@ service.
 
 As a solution, it supports `vendoring` aka out of band, in tree dependency
 installation. Similar to `CocoaPods`, it can download and initialize Pods
-relative to the project, in the `Vendor` directory. 
+relative to the project, in the `Vendor` directory.
 
 The program, `bin/update_pods`, installs Pods into `Vendor/__POD_NAME__`.  This
 notion is similar to `pod install`.
@@ -121,7 +121,7 @@ ones.
 Instead of using a `url` that points to the remote repository, use a `url` that
 points to the local repository.
 
-For example, if we wanted to depend on a local version of `PINOperation`: 
+For example, if we wanted to depend on a local version of `PINOperation`:
 ```
 new_pod_repository(
   name = "PINOperation",
@@ -157,7 +157,7 @@ warnings just for `PINOperation//:PINOperation`
 ```
 new_pod_repository(
   name = "PINOperation",
-  url = "https://github.com/pinterest/PINOperation/archive/1.0.3.zip",
+  url = "https://github.com/pinterest/PINOperation/archive/1.2.1.zip",
   user_options = ["PINOperation.copts += -pedantic"],
 )
 ```
