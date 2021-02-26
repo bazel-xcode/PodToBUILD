@@ -5,6 +5,8 @@ http_archive(
     urls = ["https://note-this-is-overridden"],
 )
 
+load("@rules_pods//BazelExtensions:workspace.bzl", "new_pod_repository")
+
 http_archive(
     name = "build_bazel_rules_apple",
     sha256 = "a41a75c291c69676b9974458ceee09aea60cee0e1ee282e27cdc90b679dfd30f",

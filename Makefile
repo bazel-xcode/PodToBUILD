@@ -84,13 +84,14 @@ release:
 	@tools/bazel build \
 		--disk_cache=$(HOME)/Library/Caches/Bazel \
 		--spawn_strategy=local \
+		--use_top_level_targets_for_symlinks \
 		-c opt \
 		--swiftcopt=-whole-module-optimization :RepoTools :Compiler
 	@ditto bazel-bin/RepoTools bin/RepoTools
 	@ditto bazel-bin/Compiler bin/Compiler
 
 
-TESTED_BAZEL_VERSION=3.4.1
+TESTED_BAZEL_VERSION=4.0.0
 
 # Make a binary archive of PodToBUILD with the official github cli `hub`
 github_release:
