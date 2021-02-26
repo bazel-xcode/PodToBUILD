@@ -10,7 +10,7 @@ import Foundation
 
 
 /// Pod Support Buildable Dir is a directory which is recognized by the build system.
-/// it may contain BUILD files, Skylark Extensions, etc.
+/// it may contain BUILD files, Starlark Extensions, etc.
 public let PodSupportBuidableDir = "pod_support_buildable/"
 
 /// Pod Support Dir is the root directory for supporting Pod files
@@ -472,10 +472,10 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     ///
     /// consumer is in a different repo
     //// github.com/CocoaPods/Core/blob/master/lib/cocoapods-core/specification/consumer.rb
-    /// 
+    ///
     /// requires_arc ends up getting the excludes applied _before the union with
     /// source fies.
-    /// 
+    ///
     ///
     /// The & operator is a union in ruby means:
     /// [1,2] & [1] = [1]
@@ -486,12 +486,12 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     /// In other words
     /// We can take
     /// Total = Left + Right
-    /// 
+    ///
     /// Glob(include, exclude)
     /// a = 1, 2, 3
     /// b = 2, 4, 6
     /// we'd want 2
-    /// 
+    ///
     /// We can implement this operator in Bazel as
     /// a - ( a - b )
     /// Or Glob(include: a, exclude(Glob(include: a, exclude: Glob(b) ) ))
@@ -572,7 +572,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 }, exclude: arcSources.exclude)
             case let .right(patternsValue):
                 // In cocoapods this is:
-                // As we don't have the union in skylark, this implements the
+                // As we don't have the union in Starlark, this implements the
                 // union operator with glob ( see above comment )
                 // ruby: paths_for_attribute(:requires_arc) & source_files
                 return GlobNode(include: .left(Set(patternsValue)),
@@ -650,7 +650,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         }
         return externalName
     }
-    
+
     public func toSkylark() -> SkylarkNode {
         let options = GetBuildOptions()
 
@@ -663,7 +663,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         var libArguments = [SkylarkFunctionArgument]()
 
         libArguments.append(nameArgument)
-        
+
         let enableModulesSkylark = SkylarkFunctionArgument.named(name: "enable_modules",
                                                           value: enableModules ? .int(1) : .int(0))
         libArguments.append(enableModulesSkylark)
@@ -744,7 +744,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                     .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
                     ]
                 ))
-            
+
         } else {
             inlineSkylark.append(.functionCall(
                 name: "filegroup",
@@ -816,7 +816,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                              lib.name))
              }
         }
-        
+
         if !lib.sourceFiles.isEmpty {
             libArguments.append(.named(
                 name: "srcs",
@@ -871,7 +871,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
 
         var allDeps: SkylarkNode = SkylarkNode.empty
         if !lib.deps.isEmpty {
-            allDeps = lib.deps.map { Set($0).sorted(by: (<)) } .toSkylark() 
+            allDeps = lib.deps.map { Set($0).sorted(by: (<)) } .toSkylark()
         }
         if lib.includes.count > 0 {
             allDeps = allDeps .+. [":\(name)_includes"].toSkylark()
@@ -884,7 +884,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             allDeps = allDeps .+. [":" + moduleMap.name ].toSkylark()
         }
 
-        if allDeps.isEmpty == false { 
+        if allDeps.isEmpty == false {
             libArguments.append(.named(
                 name: "deps",
                 value: allDeps

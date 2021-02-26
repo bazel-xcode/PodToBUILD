@@ -3,7 +3,8 @@ build:
 	@tools/bazel build \
 		--disk_cache=$(HOME)/Library/Caches/Bazel \
 		--spawn_strategy=local \
-		:RepoTools
+		--use_top_level_targets_for_symlinks \
+		:RepoTools :Compiler
 	@ditto bazel-bin/RepoTools bin/RepoTools
 	@ditto bazel-bin/Compiler bin/Compiler
 
