@@ -1,5 +1,5 @@
 # This file is part of PodSpecToBUILD
-# Warning: this file is not accounted for as an explict imput into the build.
+# Warning: this file is not accounted for as an explicit input into the build.
 # Therefore, bin/RepoTools must be updated when this changes.
 
 # Acknowledgements
@@ -157,7 +157,7 @@ def _module_map_impl(ctx):
     relative_path = "".join(["../" for i in range(len(module_map.dirname.split("/")))])
 
     system_tag = " [system] "
-    content = "module " + module_name + (system_tag if ctx.attr.is_system else "" ) + " {\n" 
+    content = "module " + module_name + (system_tag if ctx.attr.is_system else "" ) + " {\n"
     umbrella_header_file = None
     if ctx.attr.umbrella_hdr:
         # Note: this umbrella header is created internally.
@@ -190,12 +190,13 @@ module {module_name}.Swift {{
     # If the name is `module.modulemap` we propagate this as an include. If a
     # module map is added to `objc_library` as a dep, bazel will add these
     # automatically and add a _single_ include to this module map. Ideally there
-    # would be an API to invoke clang with -fmodule-map= 
+    # would be an API to invoke clang with -fmodule-map=
     if ctx.attr.module_map_name == "module.modulemap":
         provider_hdr = [module_map] + ([umbrella_header_file] if umbrella_header_file else [])
         objc_provider = apple_common.new_objc_provider(
             module_map=depset([module_map]),
-            include=depset([ctx.outputs.module_map.dirname]),
+            # TODO Error in new_objc_provider: Key 'include' no longer supported in ObjcProvider (use CcInfo instead).
+            # include=depset([ctx.outputs.module_map.dirname]),
             header=depset(provider_hdr)
         )
     else:
@@ -261,8 +262,9 @@ def _gen_includes_impl(ctx):
         for f in target.files.to_list():
             includes.append(f.path)
 
-    return apple_common.new_objc_provider(
-            include=depset(includes))
+    return apple_common.new_objc_provider()
+    # TODO Error in new_objc_provider: Key 'include' no longer supported in ObjcProvider (use CcInfo instead).
+    # include=depset(includes))
 
 _gen_includes = rule(
     implementation=_gen_includes_impl,
@@ -313,7 +315,7 @@ def _make_headermap_impl(ctx):
         if not hasattr(hdr_provider, "objc"):
             continue
 
-        hdrs = hdr_provider.objc.header.to_list()
+        hdrs = hdr_provider.objc.direct_headers
         for hdr in hdrs:
             if hdr.path.endswith(".hmap"):
                 # Add headermaps
