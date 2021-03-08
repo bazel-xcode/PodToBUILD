@@ -268,12 +268,9 @@ def _gen_includes_impl(ctx):
 
     providers = []
 
-    providers.append(CcInfo(
-        compilation_context=compilation_context,
-        linking_context=None,
-        debug_context=None))
+    providers.append(CcInfo(compilation_context=compilation_context))
 
-    # objc_library deps requires a ObjcProvider
+    # objc_library deps requires an ObjcProvider
     providers.append(apple_common.new_objc_provider())
 
     return providers
