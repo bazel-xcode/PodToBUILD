@@ -7,14 +7,12 @@ new_pod_repository(
   generate_module_map = False,
 )
 
-
 new_pod_repository(
   name = "PINRemoteImage",
   url = "https://github.com/pinterest/PINRemoteImage/archive/3.0.3.zip",
   # PINRemoteImage_Core conditionally compiles in PINCache based on these
   # headers
   user_options = ["Core.deps += //Vendor/PINCache:PINCache"],
-
   generate_module_map = False,
   generate_header_map = True,
 )

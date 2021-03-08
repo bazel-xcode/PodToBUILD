@@ -258,13 +258,25 @@ def gen_module_map(name,
 def _gen_includes_impl(ctx):
     includes = []
     includes.extend(ctx.attr.include)
+
     for target in ctx.attr.include_files:
         for f in target.files.to_list():
             includes.append(f.path)
 
-    return apple_common.new_objc_provider()
-    # TODO Error in new_objc_provider: Key 'include' no longer supported in ObjcProvider (use CcInfo instead).
-    # include=depset(includes))
+    compilation_context = cc_common.create_compilation_context(
+            includes=depset(includes))
+
+    providers = []
+
+    providers.append(CcInfo(
+        compilation_context=compilation_context,
+        linking_context=None,
+        debug_context=None))
+
+    # objc_library deps requires a ObjcProvider
+    providers.append(apple_common.new_objc_provider())
+
+    return providers
 
 _gen_includes = rule(
     implementation=_gen_includes_impl,
@@ -316,6 +328,7 @@ def _make_headermap_impl(ctx):
             continue
 
         hdrs = hdr_provider.objc.direct_headers
+
         for hdr in hdrs:
             if hdr.path.endswith(".hmap"):
                 # Add headermaps
