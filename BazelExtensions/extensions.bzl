@@ -191,14 +191,18 @@ module {module_name}.Swift {{
     # module map is added to `objc_library` as a dep, bazel will add these
     # automatically and add a _single_ include to this module map. Ideally there
     # would be an API to invoke clang with -fmodule-map=
+    providers = []
     if ctx.attr.module_map_name == "module.modulemap":
         provider_hdr = [module_map] + ([umbrella_header_file] if umbrella_header_file else [])
         objc_provider = apple_common.new_objc_provider(
             module_map=depset([module_map]),
-            # TODO Error in new_objc_provider: Key 'include' no longer supported in ObjcProvider (use CcInfo instead).
-            # include=depset([ctx.outputs.module_map.dirname]),
             header=depset(provider_hdr)
         )
+
+        compilation_context = cc_common.create_compilation_context(
+            includes=depset([ctx.outputs.module_map.dirname]))
+
+        providers.append(CcInfo(compilation_context=compilation_context))
     else:
         # This is an explicit module map. Currently, we use these for swift only
         provider_hdr = [module_map] + ([umbrella_header_file] if umbrella_header_file else [])
@@ -206,9 +210,11 @@ module {module_name}.Swift {{
             header=depset(provider_hdr + [module_map])
         )
 
+    providers.append(objc_provider)
+
     return struct(
         files=depset([module_map]),
-        providers=[objc_provider],
+        providers=providers,
         objc=objc_provider,
         headers=depset([module_map]),
     )
