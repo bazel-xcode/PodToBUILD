@@ -272,14 +272,11 @@ def _gen_includes_impl(ctx):
     compilation_context = cc_common.create_compilation_context(
             includes=depset(includes))
 
-    providers = []
-
-    providers.append(CcInfo(compilation_context=compilation_context))
-
-    # objc_library deps requires an ObjcProvider
-    providers.append(apple_common.new_objc_provider())
-
-    return providers
+    return [
+        CcInfo(compilation_context=compilation_context),
+        # objc_library deps requires an ObjcProvider
+        apple_common.new_objc_provider()
+    ]
 
 _gen_includes = rule(
     implementation=_gen_includes_impl,
