@@ -324,10 +324,13 @@ def _make_headermap_impl(ctx):
 
     # Extract propagated headermaps
     for hdr_provider in ctx.attr.deps:
-        if not hasattr(hdr_provider, "objc"):
-            continue
+        hdrs = []
 
-        hdrs = hdr_provider.objc.direct_headers
+        if CcInfo in hdr_provider:
+            hdrs.extend(hdr_provider[CcInfo].compilation_context.headers.to_list())
+
+        if hasattr(hdr_provider, "objc"):
+            hdrs.extend(hdr_provider.objc.direct_headers)
 
         for hdr in hdrs:
             if hdr.path.endswith(".hmap"):
