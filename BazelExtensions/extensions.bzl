@@ -327,7 +327,8 @@ def _make_headermap_impl(ctx):
         hdrs = []
 
         if CcInfo in hdr_provider:
-            hdrs.extend(hdr_provider[CcInfo].compilation_context.headers.to_list())
+            compilation_context = hdr_provider[CcInfo].compilation_context
+            hdrs.extend(compilation_context.headers.to_list())
 
         if hasattr(hdr_provider, "objc"):
             hdrs.extend(hdr_provider.objc.direct_headers)

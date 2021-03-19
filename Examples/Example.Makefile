@@ -28,6 +28,10 @@ pod_test:
 build: info
 	$(BAZEL) build :* $(BAZEL_OPTS)
 
+.PHONY: app
+app: info
+	$(BAZEL) build :ReactNativeApp $(BAZEL_OPTS)
+
 test: info
 	$(BAZEL) test :* $(BAZEL_OPTS)
 
