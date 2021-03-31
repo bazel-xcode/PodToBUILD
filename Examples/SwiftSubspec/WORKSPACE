@@ -1,4 +1,3 @@
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
@@ -6,18 +5,11 @@ http_archive(
     urls = ["https://note-this-is-overridden"],
 )
 
-git_repository(
-    name = "build_bazel_rules_ios",
-    remote = "https://github.com/bazel-ios/rules_ios.git",
-    branch = "master",
+http_archive(
+    name = "build_bazel_rules_apple",
+    sha256 = "a41a75c291c69676b9974458ceee09aea60cee0e1ee282e27cdc90b679dfd30f",
+    url = "https://github.com/bazelbuild/rules_apple/releases/download/0.21.2/rules_apple.0.21.2.tar.gz",
 )
-
-load(
-    "@build_bazel_rules_ios//rules:repositories.bzl",
-    "rules_ios_dependencies"
-)
-
-rules_ios_dependencies()
 
 load(
     "@build_bazel_rules_apple//apple:repositories.bzl",
@@ -27,27 +19,18 @@ load(
 apple_rules_dependencies()
 
 load(
-    "@build_bazel_rules_swift//swift:repositories.bzl",
-    "swift_rules_dependencies",
-)
-
-swift_rules_dependencies()
-
-load(
     "@build_bazel_apple_support//lib:repositories.bzl",
     "apple_support_dependencies",
 )
 
 apple_support_dependencies()
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-http_archive(
-    name = "rules_python",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.0.2/rules_python-0.0.2.tar.gz",
-    strip_prefix = "rules_python-0.0.2",
-    sha256 = "b5668cde8bb6e3515057ef465a35ad712214962f0b3a314e551204266c7be90c",
+load(
+    "@build_bazel_rules_swift//swift:repositories.bzl",
+    "swift_rules_dependencies",
 )
 
+swift_rules_dependencies()
 
 load(
     "@com_google_protobuf//:protobuf_deps.bzl",
@@ -56,3 +39,9 @@ load(
 
 protobuf_deps()
 
+http_archive(
+    name = "rules_python",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.0.2/rules_python-0.0.2.tar.gz",
+    strip_prefix = "rules_python-0.0.2",
+    sha256 = "b5668cde8bb6e3515057ef465a35ad712214962f0b3a314e551204266c7be90c",
+)

@@ -1,11 +1,11 @@
 # A few settings for XCHammer's .bazelrc
 # Debugging: Use the remapping feature of rules_swift.
 build \
- --spawn_strategy=standalone \
+ --spawn_strategy=local \
  --strategy=SwiftCompile=worker \
  --swiftcopt=-Xwrapped-swift=-debug-prefix-pwd-is-dot \
  --experimental_strict_action_env=true
 
 test \
- --spawn_strategy=standalone \
+ --spawn_strategy=local \
 

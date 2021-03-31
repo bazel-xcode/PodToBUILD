@@ -1,8 +1,9 @@
-.PHONY: build 
+.PHONY: build
 build:
 	@tools/bazel build \
 		--disk_cache=$(HOME)/Library/Caches/Bazel \
-		--spawn_strategy=standalone \
+		--spawn_strategy=local \
+		--use_top_level_targets_for_symlinks \
 		:RepoTools :Compiler
 	@ditto bazel-bin/RepoTools bin/RepoTools
 	@ditto bazel-bin/Compiler bin/Compiler
@@ -21,7 +22,7 @@ repo-tools: release
 goldmaster: build
 	@./MakeGoldMaster.sh
 
-unit-test: 
+unit-test:
 	tools/bazel test :PodToBUILDTests --test_strategy=standalone
 
 
@@ -45,7 +46,7 @@ pod_test:
 # - copy it to tmp so the examples can load it
 # - run Bazel for all the examples
 .PHONY: build-test
-build-test: pod_test build archive init-sandbox 
+build-test: pod_test build archive init-sandbox
 	cd Examples/BasiciOS && make all
 	cd Examples/PINRemoteImage && make all
 	cd Examples/Texture && make all
@@ -82,14 +83,15 @@ ci: clean
 release:
 	@tools/bazel build \
 		--disk_cache=$(HOME)/Library/Caches/Bazel \
-		--spawn_strategy=standalone \
+		--spawn_strategy=local \
+		--use_top_level_targets_for_symlinks \
 		-c opt \
 		--swiftcopt=-whole-module-optimization :RepoTools :Compiler
 	@ditto bazel-bin/RepoTools bin/RepoTools
 	@ditto bazel-bin/Compiler bin/Compiler
 
 
-TESTED_BAZEL_VERSION=3.4.1
+TESTED_BAZEL_VERSION=4.0.0
 
 # Make a binary archive of PodToBUILD with the official github cli `hub`
 github_release:

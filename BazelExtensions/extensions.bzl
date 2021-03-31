@@ -1,5 +1,5 @@
 # This file is part of PodSpecToBUILD
-# Warning: this file is not accounted for as an explict imput into the build.
+# Warning: this file is not accounted for as an explicit input into the build.
 # Therefore, bin/RepoTools must be updated when this changes.
 
 # Acknowledgements
@@ -157,7 +157,7 @@ def _module_map_impl(ctx):
     relative_path = "".join(["../" for i in range(len(module_map.dirname.split("/")))])
 
     system_tag = " [system] "
-    content = "module " + module_name + (system_tag if ctx.attr.is_system else "" ) + " {\n" 
+    content = "module " + module_name + (system_tag if ctx.attr.is_system else "" ) + " {\n"
     umbrella_header_file = None
     if ctx.attr.umbrella_hdr:
         # Note: this umbrella header is created internally.
@@ -190,14 +190,19 @@ module {module_name}.Swift {{
     # If the name is `module.modulemap` we propagate this as an include. If a
     # module map is added to `objc_library` as a dep, bazel will add these
     # automatically and add a _single_ include to this module map. Ideally there
-    # would be an API to invoke clang with -fmodule-map= 
+    # would be an API to invoke clang with -fmodule-map=
+    providers = []
     if ctx.attr.module_map_name == "module.modulemap":
         provider_hdr = [module_map] + ([umbrella_header_file] if umbrella_header_file else [])
         objc_provider = apple_common.new_objc_provider(
             module_map=depset([module_map]),
-            include=depset([ctx.outputs.module_map.dirname]),
             header=depset(provider_hdr)
         )
+
+        compilation_context = cc_common.create_compilation_context(
+            includes=depset([ctx.outputs.module_map.dirname]))
+
+        providers.append(CcInfo(compilation_context=compilation_context))
     else:
         # This is an explicit module map. Currently, we use these for swift only
         provider_hdr = [module_map] + ([umbrella_header_file] if umbrella_header_file else [])
@@ -205,9 +210,11 @@ module {module_name}.Swift {{
             header=depset(provider_hdr + [module_map])
         )
 
+    providers.append(objc_provider)
+
     return struct(
         files=depset([module_map]),
-        providers=[objc_provider],
+        providers=providers,
         objc=objc_provider,
         headers=depset([module_map]),
     )
@@ -257,12 +264,19 @@ def gen_module_map(name,
 def _gen_includes_impl(ctx):
     includes = []
     includes.extend(ctx.attr.include)
+
     for target in ctx.attr.include_files:
         for f in target.files.to_list():
             includes.append(f.path)
 
-    return apple_common.new_objc_provider(
-            include=depset(includes))
+    compilation_context = cc_common.create_compilation_context(
+            includes=depset(includes))
+
+    return [
+        CcInfo(compilation_context=compilation_context),
+        # objc_library deps requires an ObjcProvider
+        apple_common.new_objc_provider()
+    ]
 
 _gen_includes = rule(
     implementation=_gen_includes_impl,
@@ -310,10 +324,15 @@ def _make_headermap_impl(ctx):
 
     # Extract propagated headermaps
     for hdr_provider in ctx.attr.deps:
-        if not hasattr(hdr_provider, "objc"):
-            continue
+        hdrs = []
 
-        hdrs = hdr_provider.objc.header.to_list()
+        if CcInfo in hdr_provider:
+            compilation_context = hdr_provider[CcInfo].compilation_context
+            hdrs.extend(compilation_context.headers.to_list())
+
+        if hasattr(hdr_provider, "objc"):
+            hdrs.extend(hdr_provider.objc.direct_headers)
+
         for hdr in hdrs:
             if hdr.path.endswith(".hmap"):
                 # Add headermaps

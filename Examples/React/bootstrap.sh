@@ -4,7 +4,7 @@ set -x
 # Note: on this release, there's an issue with this commit.
 # this should be patched on somehow
 # https://github.com/facebook/react-native/pull/28946
-VERSION="0.63.1"
+VERSION="0.63.3"
 
 cleanup() {
     rm -rf react-native-${VERSION}.*

@@ -1,12 +1,15 @@
 new_pod_repository(
   name = "Folly",
-  url = "https://github.com/facebook/folly/archive/v2016.09.26.00.zip",
+  url = "https://github.com/facebook/folly/archive/v2020.01.13.00.zip",
   podspec_url = "Vendor/React/third-party-podspecs/Folly.podspec",
 
   install_script = """
     __INIT_REPO__
     # This isn't actually necessary but nice.
     rm -rf pod_support/Headers/Public/*
+
+    # __has_include erroneously returns true for damangle.h, which later causes an link error
+    sed -i '' 's/__has_include(<demangle.h>)/false/g' folly/detail/Demangle.h
   """,
   generate_header_map = False
 )

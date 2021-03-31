@@ -1,5 +1,6 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:macos.bzl", "macos_command_line_application", "macos_unit_test")
+load("@rules_cc//cc:defs.bzl", "objc_library")
 
 objc_library(
     name = "ObjcSupport",
@@ -8,7 +9,7 @@ objc_library(
     includes = ["Sources/ObjcSupport/include"]
 )
 
-# PodToBUILD is a core library enabling Skylark code generation
+# PodToBUILD is a core library enabling Starlark code generation
 swift_library(
     name = "PodToBUILD",
     srcs = glob(["Sources/PodToBUILD/*.swift"]),
@@ -53,7 +54,7 @@ swift_library(
 
 alias(name = "update_pods", actual = "//bin:update_pods")
 
-# This tests RepoToolsCore and Skylark logic
+# This tests RepoToolsCore and Starlark logic
 swift_library(
     name = "PodToBUILDTestsLib",
     srcs = glob(["Tests/PodToBUILDTests/*.swift"]),
@@ -68,13 +69,13 @@ macos_unit_test(
 )
 
 swift_library(
-    name = "BuildTestsLib", 
+    name = "BuildTestsLib",
     srcs = glob(["Tests/BuildTests/*.swift"]),
     deps = [":RepoToolsCore", "@podtobuild-SwiftCheck//:SwiftCheck"],
     data = glob(["Examples/**/*.podspec.json"])
 )
 
-# This tests RepoToolsCore and Skylark logic
+# This tests RepoToolsCore and Starlark logic
 macos_unit_test(
     name = "BuildTests",
     deps = [":BuildTestsLib"],
