@@ -3,8 +3,6 @@
 An easy way to build CocoaPods with Bazel - it integrates pods end to end with
 an easy to use macro.
 
-[![Build Status](https://travis-ci.org/pinterest/PodToBUILD.svg?branch=master)](https://travis-ci.org/pinterest/PodToBUILD)
-
 ### Quickstart Instructions:
 
 In the root directory, add `rules_pods` to the Bazel `WORKSPACE`.
