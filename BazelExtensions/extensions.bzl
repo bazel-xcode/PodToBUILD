@@ -200,7 +200,9 @@ module {module_name}.Swift {{
         )
 
         compilation_context = cc_common.create_compilation_context(
-            includes=depset([ctx.outputs.module_map.dirname]))
+            headers=depset(provider_hdr),
+            includes=depset([ctx.outputs.module_map.dirname]),
+        )
 
         providers.append(CcInfo(compilation_context=compilation_context))
     else:
@@ -346,12 +348,18 @@ def _make_headermap_impl(ctx):
         outputs=[ctx.outputs.headermap]
     )
 
+    compilation_context = cc_common.create_compilation_context(
+        headers=depset([ctx.outputs.headermap]))
     objc_provider = apple_common.new_objc_provider(
         header=depset([ctx.outputs.headermap]),
     )
+
     return struct(
         files=depset([ctx.outputs.headermap]),
-        providers=[objc_provider],
+        providers=[
+            CcInfo(compilation_context=compilation_context),
+            objc_provider,
+        ],
         objc=objc_provider,
         headers=depset([ctx.outputs.headermap]),
     )
