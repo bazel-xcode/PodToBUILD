@@ -1,6 +1,6 @@
 new_pod_repository(
   name = "boost-for-react-native",
-  url = "https://github.com/react-native-community/boost-for-react-native/archive/v1.63.0-0.zip",
+  url = "https://github.com/react-native-community/boost-for-react-native/archive/v1.63.0-1.zip",
   podspec_url = "Vendor/Podspecs/boost-for-react-native.podspec.json",
   generate_header_map = 1
 )
