@@ -1,10 +1,16 @@
-name: Main workflow 
+name: CI
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   Lint:
-    name: Run Unit and Integration Tests (macOS)
+    name: Tests
     runs-on: macOS-latest
     steps:
     - name: Checkout the Git repository
