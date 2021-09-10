@@ -896,8 +896,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
              arguments: [
                  .basic([
                      ":release": [
-                         "-DPOD_CONFIGURATION_RELEASE=1",
-                         "-DNS_BLOCK_ASSERTIONS=1"
+                         "-DPOD_CONFIGURATION_RELEASE=1"
                      ],
                      "//conditions:default": [
                          "-DDEBUG=1",
