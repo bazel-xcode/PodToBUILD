@@ -161,7 +161,7 @@ new_pod_repository(
 ```
 
 On `objc_library`, the following fields are supported: `copts`, `deps`,
-`sdkFrameworks`
+`sdk_frameworks`
 
 ### Acknowledgements Plist and Settings.bundle
 
@@ -218,7 +218,7 @@ Supported operators:
 PlusEquals ( += ). Add an item to an array
 
 Implemented for:
-`objc_library`. Supported fields: `copts`, `deps`, `sdkFrameworks`
+`objc_library`. Supported fields: `copts`, `deps`, `sdk_frameworks`
 
 Example usage: add a custom define to the target, Texture's `copts`
 field

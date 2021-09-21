@@ -256,7 +256,7 @@ def new_pod_repository(name,
          PlusEquals ( += ). Add an item to an array
 
          Implemented for:
-         `objc_library` [ `copts`, `deps`, `sdkFrameworks` ]
+         `objc_library` [ `copts`, `deps`, `sdk_frameworks` ]
 
          Example usage: add a custom define to the target, Texture's `copts`
          field
