@@ -216,7 +216,7 @@ Supported operators:
 PlusEquals ( += ). Add an item to an array
 
 Implemented for:
-`objc_library`. Supported fields: `copts`, `deps`, `sdk_frameworks`
+`objc_library`. Supported fields: `copts`, `deps`, `features`, `sdk_frameworks`
 
 Example usage: add a custom define to the target, Texture's `copts`
 field

@@ -91,8 +91,8 @@ struct EmptyDepPruneTransform : SkylarkConvertibleTransform {
                                 lib.prefixHeader, includes: lib.includes,
                                 sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
                                 lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
-                                prunedDeps, copts: lib.copts, bundles: lib.bundles, resources:
-                                lib.resources, publicHeaders: lib.publicHeaders,
+                                prunedDeps, copts: lib.copts, features: lib.features, bundles:
+                                lib.bundles, resources: lib.resources, publicHeaders: lib.publicHeaders,
                                 nonArcSrcs: lib.nonArcSrcs, requiresArc:
                                 lib.requiresArc, isTopLevelTarget: lib.isTopLevelTarget)
 
