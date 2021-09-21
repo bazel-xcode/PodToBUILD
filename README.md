@@ -7,7 +7,7 @@ an easy to use macro.
 
 In the root directory, add `rules_pods` to the Bazel `WORKSPACE`.
 
-```
+```bazel
 http_archive(
     name = "rules_pods",
     urls = ["https://github.com/pinterest/PodToBUILD/releases/download/0.25.2-8a5efa0/PodToBUILD.zip"],
@@ -18,7 +18,7 @@ http_archive(
 
 Pods are defined in the `WORKSPACE` file with the macro, `new_pod_repository`.
 
-```
+```bazel
 # Load the new_pod_repository macro - needed for `WORKSPACE` usage
 load("@rules_pods//BazelExtensions:workspace.bzl", "new_pod_repository")
 
@@ -34,9 +34,9 @@ are combined to form the label `@PINOperation//:PINOperation`.
 
 Thats all! Bazel will automatically setup pods along with the build.
 
-_See the [examples](https://github.com/pinterest/PodToBUILD/tree/master/Examples) for end to end usage_.
+_See the [examples](Examples) for end to end usage_.
 
-### Vendoring Pods via Pods.WORKSPACE
+### Vendoring Pods via `Pods.WORKSPACE`
 
 By default, `rules_pods` supports Bazel's [conventional dependency management
 system](https://docs.bazel.build/versions/master/external.html) via the
@@ -62,7 +62,7 @@ Create the file `Pods.WORKSPACE` and add `new_pod_repository`s' there -
 Anytime `Pods.WORKSPACE` is changed, `update_pods` must be ran to ensure all
 pods are updated.
 
-```
+```sh
 # src_root is the root workspace directory
 bazel run @rules_pods//:update_pods -- --src_root $PWD
 ```
@@ -72,11 +72,9 @@ In addition to out of band updating, labels are formed via the convention
 is identical across `WORKSPACE` and `Pods.WORKSPACE`, the only difference is
 that the `load` statement isn't required in `Pods.WORKSPACE`.
 
-_See the
-[Texture](https://github.com/pinterest/PodToBUILD/tree/master/Examples/Texture)
-example for a comprehensive example._
+_See the [Texture](Examples/Texture) example for a comprehensive example._
 
-## new_pod_repository
+## `new_pod_repository`
 
 This macro is the main point of integration for pod dependencies.
 
@@ -120,7 +118,7 @@ Instead of using a `url` that points to the remote repository, use a `url` that
 points to the local repository.
 
 For example, if we wanted to depend on a local version of `PINOperation`:
-```
+```bazel
 new_pod_repository(
   name = "PINOperation",
   url = "/Path/To/PINOperation",
@@ -152,7 +150,7 @@ compiler supports customizing attributes of generated targets.
 For example, to add a custom `copt` to `PINOperation` we could turn on pedantic
 warnings just for `PINOperation//:PINOperation`
 
-```
+```bazel
 new_pod_repository(
   name = "PINOperation",
   url = "https://github.com/pinterest/PINOperation/archive/1.2.1.zip",
@@ -163,7 +161,7 @@ new_pod_repository(
 On `objc_library`, the following fields are supported: `copts`, `deps`,
 `sdk_frameworks`
 
-### Acknowledgements Plist and Settings.bundle
+### Acknowledgements Plist and `Settings.bundle`
 
 Acknowledgments metadata from a Pod is supported.
 
@@ -173,7 +171,7 @@ generated. Acknowledgment targets have the label of the form
 
 Merge all of the dependencies into `Settings.bundle`
 
-```
+```bazel
 load("@rules_pods//BazelExtensions:extensions.bzl", "acknowledgments_plist")
 
 # Example `Settings`.bundle target
@@ -223,7 +221,7 @@ Implemented for:
 Example usage: add a custom define to the target, Texture's `copts`
 field
 
-```
+```bazel
 user_options = [ "Texture.copts += -DTEXTURE_DEBUG " ]
 ```
 
@@ -259,10 +257,10 @@ Apple File systems support different characters than Linux ones do. Bazel uses
 the least common denominator, the Linux convention. For now, use an
 `install_script` to resolve differences.
 
-### __has_include directive
+### `__has_include directive`
 
-Some code, like [Texture](https://github.com/pinterest/PodToBUILD/tree/master/Examples/Texture), uses
-`__has_include` to conditionally include code.
+Some code, like [Texture](Examples/Texture), uses `__has_include` to
+conditionally include code.
 
 In Bazel, if that include is not explicitly added, then this feature will not
 work. In this case, use a `user_option` to add dependencies available on the
@@ -278,7 +276,7 @@ replaced in the podspec file before the `BUILD` file is generated.
 
 For example `SPUserResizableView+Pion` exbibits this issue.
 
-```
+```bazel
 new_pod_repository(
     name = "SPUserResizableView_Pion",
     url = "https://github.com/keleixu/SPUserResizableView/archive/b263fc4e8101c6c5ac352806fb5c31aa69e32025.zip",
@@ -327,7 +325,7 @@ CocoaPods. _Please do file issues and PRs for pods that don't work._
 The short answer is yes, but probably not. Swift support in `rules_pods`, and
 Bazel ( `swift_library` / `rules_swift` ) is still under development.
 
-### Should I do source builds of rules_pods?
+### Should I do source builds of `rules_pods`?
 
 The short answer is probably not. Consider that building `rules_pods` along with
 an iOS application ties the build environment of `rules_pods` to that of the iOS
@@ -339,10 +337,9 @@ Bazel if it is checked out as such. Simply use `git_repository` instead of
 `http_archive` as mentioned in the quickstart guide. `building` with Bazel isn't
 well supported in `repository_rules`, and isn't supported at the moment.
 
-### How do I update rules_pods?
+### How do I update `rules_pods`?
 
-See the [quickstart
-instructions](https://github.com/pinterest/PodToBUILD/tree/master#quickstart-instructions).
+See the [quickstart instructions](#quickstart-instructions).
 
 ### How can I generate an Xcode project for Bazel built pods?
 
@@ -355,12 +352,12 @@ The documentation of building an iOS application resides in the [Bazel
 documentation](https://docs.bazel.build/versions/master/tutorial/ios-app.html).
 This README and examples are intended to cover the rest.
 
-### How can I develop rules_pods?
+### How can I develop `rules_pods`?
 
 `make` is the canonical build system of `rules_pods` - see the `Makefile` for up
 to date development workflows.
 
-The [examples](https://github.com/pinterest/PodToBUILD/tree/master/Examples) are intended to be tested, minimal, end to end, use cases of
+The [examples](Examples) are intended to be tested, minimal, end to end, use cases of
 `rules_pods`. The examples do a source build of `rules_pods`, and setup pods.
 Simply cd into an example, and run `make`.
 
