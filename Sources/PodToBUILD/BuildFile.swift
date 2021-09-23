@@ -44,12 +44,15 @@ public func makeLoadNodes(forConvertibles skylarkConvertibles: [SkylarkConvertib
     let hasSwift = skylarkConvertibles.first(where: { $0 is SwiftLibrary }) != nil
     let hasAppleBundleImport = skylarkConvertibles.first(where: { $0 is AppleBundleImport }) != nil
     let hasAppleResourceBundle = skylarkConvertibles.first(where: { $0 is AppleResourceBundle }) != nil
-    let hasAppleStaticFrameworkImport = skylarkConvertibles.first(where: { $0 is AppleStaticFrameworkImport }) != nil
+    let hasAppleFrameworkImport = skylarkConvertibles.first(where: { $0 is AppleFrameworkImport }) != nil
+    let isDynamicFramwork = GetBuildOptions().isDynamicFramwork
+    
     return .lines( [
         hasSwift ?  SkylarkNode.skylark("load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')") : nil,
         hasAppleBundleImport ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')") : nil,
         hasAppleResourceBundle ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_resource_bundle')") : nil,
-        hasAppleStaticFrameworkImport ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:apple.bzl', 'apple_static_framework_import')") : nil,
+        hasAppleFrameworkImport && isDynamicFramwork ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:apple.bzl', 'apple_dynamic_framework_import')") : nil,
+        hasAppleFrameworkImport && !isDynamicFramwork ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:apple.bzl', 'apple_static_framework_import')") : nil,
         ].compactMap { $0 }
     )
 }
@@ -193,7 +196,7 @@ public struct PodBuildFile: SkylarkConvertible {
 
     private static func vendoredFrameworks(withPodspec spec: PodSpec) -> [BazelTarget] {
         let frameworks = spec.attr(\.vendoredFrameworks)
-        return frameworks.isEmpty ? [] : [AppleStaticFrameworkImport(name: "\(spec.moduleName ?? spec.name)_VendoredFrameworks", frameworkImports: frameworks)]
+        return frameworks.isEmpty ? [] : [AppleFrameworkImport(name: "\(spec.moduleName ?? spec.name)_VendoredFrameworks", frameworkImports: frameworks)]
     }
 
     private static func vendoredLibraries(withPodspec spec: PodSpec) -> [BazelTarget] {

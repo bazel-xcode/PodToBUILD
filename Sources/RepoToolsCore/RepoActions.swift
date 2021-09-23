@@ -106,6 +106,7 @@ public enum SerializedRepoToolsAction {
             "--vendorize": .bool,
             "--header_visibility": .string,
             "--child_path": .stringList,
+            "--is_dynamic_framework": .bool,
         ]
 
         var idx = 0
@@ -164,7 +165,8 @@ public enum SerializedRepoToolsAction {
                                  headerVisibility: parsed["--header_visibility"]?.first as? String ?? "",
                                  alwaysSplitRules: false,
                                  vendorize: parsed["--vendorize"]?.first as? Bool ?? true,
-                                 childPaths: parsed["--child_path"] as? [String] ?? []
+                                 childPaths: parsed["--child_path"] as? [String] ?? [],
+                                 isDynamicFramework: parsed["--BasicBuildOptionsBasicBuildOptions"]?.first as? Bool ?? false
         )
     }
 }

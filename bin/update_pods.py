@@ -97,6 +97,7 @@ class PodRepositoryContext(object):
             generate_module_map = False,
             generate_header_map = True,
             header_visibility = "pod_support",
+            is_dynamic_framework = False,
             src_root = None):
         self.target_name = target_name
         self.url = url
@@ -110,6 +111,7 @@ class PodRepositoryContext(object):
         self.generate_module_map = generate_module_map
         self.generate_header_map = generate_header_map
         self.header_visibility = header_visibility
+        self.is_dynamic_framework = is_dynamic_framework
         self.src_root = src_root
 
     def GetPodRootDir(self):
@@ -298,7 +300,9 @@ def _update_repo_impl(invocation_info):
                 "--generate_module_map",
                 _cli_bool(repository_ctx.generate_module_map),
                 "--generate_header_map",
-                _cli_bool(repository_ctx.generate_header_map)
+                _cli_bool(repository_ctx.generate_header_map),
+                "--is_dynamic_framework",
+                _cli_bool(repository_ctx.is_dynamic_framework)
             ])
 
             for child_pod in invocation_info.child_pods:
