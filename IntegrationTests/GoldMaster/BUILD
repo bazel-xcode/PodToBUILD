@@ -157,7 +157,8 @@ objc_library(
         "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
-        "-DPOD_CONFIGURATION_RELEASE=1"
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
   ) + [
@@ -277,7 +278,8 @@ objc_library(
         "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
-        "-DPOD_CONFIGURATION_RELEASE=1"
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
   ) + [
@@ -1534,7 +1536,8 @@ objc_library(
         "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
-        "-DPOD_CONFIGURATION_RELEASE=1"
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
   ) + [
@@ -2945,7 +2948,8 @@ objc_library(
         "-DPOD_CONFIGURATION_DEBUG=1"
       ],
       ":release": [
-        "-DPOD_CONFIGURATION_RELEASE=1"
+        "-DPOD_CONFIGURATION_RELEASE=1",
+        "-DNS_BLOCK_ASSERTIONS=1"
       ]
     }
   ) + [
