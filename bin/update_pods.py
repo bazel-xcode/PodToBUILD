@@ -359,7 +359,8 @@ def new_pod_repository(name,
             generate_module_map = False,
             generate_header_map = False,
             owner = "", # This is a Noop
-            header_visibility = "pod_support"):
+            header_visibility = "pod_support",
+            is_dynamic_framework = False):
     """Declare a repository for a Pod
     Args:
          name: the name of this repo
@@ -420,6 +421,8 @@ def new_pod_repository(name,
 
          header_visibility: DEPRECATED: This is replaced by headermaps:
          https://github.com/bazelbuild/bazel/pull/3712
+
+         is_dynamic_framework: set to True if the pod uses prebuilt dynamic framework(s)
     """
 
     # The SRC_ROOT is the directory of the WORKSPACE and Pods.WORKSPACE
@@ -439,6 +442,7 @@ def new_pod_repository(name,
             generate_module_map = generate_module_map,
             generate_header_map = generate_header_map,
             header_visibility = header_visibility,
+            is_dynamic_framework = is_dynamic_framework,
             src_root = SRC_ROOT)
     WORKSPACE.add(repository_ctx)
 

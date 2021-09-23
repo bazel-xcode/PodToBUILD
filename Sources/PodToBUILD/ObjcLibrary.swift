@@ -96,8 +96,6 @@ public struct AppleFrameworkImport: BazelTarget {
     public var acknowledged: Bool {
         return true
     }
-    
-    public var is_dynamic_framework: Bool
 
     // apple_static_framework_import(
     //     name = "OCMock",
@@ -107,8 +105,10 @@ public struct AppleFrameworkImport: BazelTarget {
     //     visibility = ["visibility:public"]
     // )
     public func toSkylark() -> SkylarkNode {
+        let isDynamicFramework = GetBuildOptions().isDynamicFramework
+
         return SkylarkNode.functionCall(
-            name: is_dynamic_framework? "apple_dynamic_framework_import" :"apple_static_framework_import",
+            name: isDynamicFramework ? "apple_dynamic_framework_import" : "apple_static_framework_import",
                 arguments: [SkylarkFunctionArgument]([
                     .named(name: "name", value: .string(name)),
                     .named(name: "framework_imports",

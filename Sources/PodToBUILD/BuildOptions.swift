@@ -24,6 +24,7 @@ public protocol BuildOptions {
     var alwaysSplitRules: Bool { get }
     var vendorize: Bool { get }
     var childPaths: [String] { get }
+    var isDynamicFramework: Bool { get }
 }
 
 public struct BasicBuildOptions: BuildOptions {
