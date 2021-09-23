@@ -21,8 +21,8 @@ objc_library(
         "main.m",
     ],
     enable_modules = True,
-    deps = [
-        "@SlackTextViewController//:SlackTextViewController",
+    deps=[
+        "//Vendor/SlackTextViewController"
     ],
     sdk_frameworks = ["UIKit", "CoreGraphics"]
 )
