@@ -147,6 +147,7 @@ public struct ObjcImport: BazelTarget {
 public enum ObjcLibraryConfigurableKeys : String {
     case copts
     case deps
+    case features
     case sdkFrameworks = "sdk_frameworks"
 }
 
@@ -173,6 +174,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
     public var sdkFrameworks: AttrSet<[String]>
     public var copts: AttrSet<[String]>
     public var deps: AttrSet<[String]>
+    public var features: AttrSet<[String]>
 
     public let isTopLevelTarget: Bool
     public let externalName: String
@@ -191,6 +193,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         sdkDylibs: AttrSet<[String]> = AttrSet.empty,
         deps: AttrSet<[String]> = AttrSet.empty,
         copts: AttrSet<[String]> = AttrSet.empty,
+        features: AttrSet<[String]> = AttrSet.empty,
         bundles: AttrSet<[String]> = AttrSet.empty,
         resources: AttrSet<GlobNode> = AttrSet.empty,
         publicHeaders: AttrSet<GlobNode> = AttrSet.empty,
@@ -211,6 +214,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
         self.sdkDylibs = sdkDylibs
         self.deps = deps
         self.copts = copts
+        self.features = features
         self.bundles = bundles
         self.resources = resources
         self.nonArcSrcs = nonArcSrcs
@@ -398,6 +402,8 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             AttrSet(basic: xcconfigCopts) <>
             fallbackSpec.attr(\.compilerFlags)
 
+        features = AttrSet.empty
+
         // Select resources that are not prebuilt bundles
         let resourceFiles = (spec.attr(\.resources).map { (strArr: [String]) -> [String] in
             strArr.filter { (str: String) -> Bool in
@@ -440,6 +446,10 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             case .deps:
                 if let value = value as? String {
                     self.deps = self.deps <> AttrSet(basic: [value])
+                }
+            case .features:
+                if let value = value as? String {
+                    self.features = self.features <> AttrSet(basic: [value])
                 }
             }
 
@@ -620,9 +630,9 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                         lib.prefixHeader, includes: lib.includes,
                         sdkFrameworks: lib.sdkFrameworks, weakSdkFrameworks:
                         lib.weakSdkFrameworks, sdkDylibs: lib.sdkDylibs, deps:
-                        deps, copts: lib.copts, bundles: lib.bundles, resources:
-                        lib.resources, publicHeaders: lib.publicHeaders,
-                        nonArcSrcs: nonArcSources, requiresArc:
+                        deps, copts: lib.copts, features: lib.features, bundles:
+                        lib.bundles, resources: lib.resources, publicHeaders:
+                        lib.publicHeaders, nonArcSrcs: nonArcSources, requiresArc:
                         lib.requiresArc, isTopLevelTarget: lib.isTopLevelTarget)
 
     }
@@ -888,6 +898,13 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
             libArguments.append(.named(
                 name: "deps",
                 value: allDeps
+            ))
+        }
+
+        if !lib.features.isEmpty {
+            libArguments.append(.named(
+                name: "features",
+                value: lib.features.toSkylark()
             ))
         }
 
