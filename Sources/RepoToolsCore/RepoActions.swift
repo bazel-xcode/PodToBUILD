@@ -106,6 +106,7 @@ public enum SerializedRepoToolsAction {
             "--vendorize": .bool,
             "--header_visibility": .string,
             "--child_path": .stringList,
+            "--is_dynamic_framework": .bool,
         ]
 
         var idx = 0
@@ -164,7 +165,8 @@ public enum SerializedRepoToolsAction {
                                  headerVisibility: parsed["--header_visibility"]?.first as? String ?? "",
                                  alwaysSplitRules: false,
                                  vendorize: parsed["--vendorize"]?.first as? Bool ?? true,
-                                 childPaths: parsed["--child_path"] as? [String] ?? []
+                                 childPaths: parsed["--child_path"] as? [String] ?? [],
+                                 isDynamicFramework: parsed["--is_dynamic_framework"]?.first as? Bool ?? false
         )
     }
 }
@@ -451,7 +453,7 @@ public enum RepoActions {
                         $0.formUnion($1.sourcesOnDisk())
                     })
                 }
-                if let fwImport = convertible as? AppleStaticFrameworkImport {
+                if let fwImport = convertible as? AppleFrameworkImport {
                     globResults.formUnion(fwImport.frameworkImports.trivialize(into: Set<String>()) {
                         accum, next in
                         let HeaderFileTypes = Set([".h", ".hpp", ".hxx"])
