@@ -16,3 +16,4 @@ Pods/
 PodsHost/
 *.xcworkspace
 PodToBUILD.zip
+.DS_Store

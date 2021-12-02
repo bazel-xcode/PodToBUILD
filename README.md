@@ -10,7 +10,7 @@ In the root directory, add `rules_pods` to the Bazel `WORKSPACE`.
 ```bazel
 http_archive(
     name = "rules_pods",
-    urls = ["https://github.com/pinterest/PodToBUILD/releases/download/0.25.2-8a5efa0/PodToBUILD.zip"],
+    urls = ["https://github.com/pinterest/PodToBUILD/releases/download/4.0.0-ad1dec4/PodToBUILD.zip"],
 )
 ```
 
@@ -216,7 +216,7 @@ Supported operators:
 PlusEquals ( += ). Add an item to an array
 
 Implemented for:
-`objc_library`. Supported fields: `copts`, `deps`, `sdk_frameworks`
+`objc_library`. Supported fields: `copts`, `deps`, `features`, `sdk_frameworks`
 
 Example usage: add a custom define to the target, Texture's `copts`
 field
@@ -248,6 +248,8 @@ there is no need to add an entry for them.
 `enable_modules`: set generated rules `enable_modules` parameter
 
 `header_visibility`: DEPRECATED: This is replaced by headermaps: https://github.com/Bazelbuild/Bazel/pull/3712
+
+`is_dynamic_framework`: set to True if the pod uses prebuilt dynamic framework(s) 
 
 ### Known Complications
 

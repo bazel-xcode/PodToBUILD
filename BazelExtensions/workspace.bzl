@@ -151,6 +151,8 @@ def _impl(repository_ctx):
                 _cli_bool(repository_ctx.attr.generate_module_map),
                 "--vendorize",
                 _cli_bool(False),
+                "--is_dynamic_framework",
+                _cli_bool(repository_ctx.attr.is_dynamic_framework),
             ])
             substitutions[INIT_REPO_PLACEHOLDER] = " ".join(entry)
         else:
@@ -209,6 +211,7 @@ pod_repo_ = repository_rule(
         "enable_modules": attr.bool(default=False, mandatory=True),
         "generate_module_map": attr.bool(default=False, mandatory=True),
         "header_visibility": attr.string(),
+        "is_dynamic_framework": attr.bool(default=False, mandatory=False),
     }
 )
 
@@ -227,6 +230,7 @@ def new_pod_repository(name,
                        enable_modules=True,
                        generate_module_map=None,
                        header_visibility="pod_support",
+                       is_dynamic_framework=False,
                        ):
     """Declare a repository for a Pod
     Args:
@@ -256,7 +260,7 @@ def new_pod_repository(name,
          PlusEquals ( += ). Add an item to an array
 
          Implemented for:
-         `objc_library` [ `copts`, `deps`, `sdk_frameworks` ]
+         `objc_library` [ `copts`, `deps`, `features`, `sdk_frameworks` ]
 
          Example usage: add a custom define to the target, Texture's `copts`
          field
@@ -289,6 +293,8 @@ def new_pod_repository(name,
 
          header_visibility: DEPRECATED: This is replaced by headermaps:
          https://github.com/bazelbuild/bazel/pull/3712
+
+         is_dynamic_framework: set to True if the pod uses prebuilt dynamic framework(s)
     """
     if generate_module_map == None:
         generate_module_map = enable_modules
@@ -316,5 +322,6 @@ def new_pod_repository(name,
         trace=trace,
         enable_modules=enable_modules,
         generate_module_map=generate_module_map,
-        header_visibility=header_visibility
+        header_visibility=header_visibility,
+        is_dynamic_framework=is_dynamic_framework,
     )

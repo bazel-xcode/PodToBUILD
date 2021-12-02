@@ -73,7 +73,10 @@ new_pod_repository(
   podspec_url = "Vendor/PodSpecs/react-native-third-party-0.51.0/Folly.podspec",
   url = "https://github.com/facebook/folly/archive/v2016.09.26.00.zip",
   generate_module_map = False,
-  user_options = [ "folly.copts += -IVendor/Glog" ],
+  user_options = [
+    "folly.copts += -IVendor/Glog",
+    "folly.features += dead_strip",
+  ],
   install_script = """
     __INIT_REPO__
     # TODO: Why is the Podspec using this as a ModuleName, if Folly imports
