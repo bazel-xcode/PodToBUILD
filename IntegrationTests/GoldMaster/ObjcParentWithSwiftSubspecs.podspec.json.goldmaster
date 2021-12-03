@@ -94,6 +94,7 @@ swift_library(
     ":ObjcParentWithSwiftSubspecs_umbrella_header"
   ],
   generated_header_name = "ObjcParentWithSwiftSubspecs-Swift.h",
+  generates_header = True,
   features = [
     "swift.no_generated_module_map"
   ],

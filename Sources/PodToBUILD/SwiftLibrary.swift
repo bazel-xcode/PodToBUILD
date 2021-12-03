@@ -106,7 +106,7 @@ public struct SwiftLibrary: BazelTarget {
             isSplitDep: isSplitDep,
             sourceType: .swift
         )
-        self.name = name 
+        self.name = name
 
         self.sourceFiles = SwiftLibrary.getSources(spec: spec)
 
@@ -149,7 +149,7 @@ public struct SwiftLibrary: BazelTarget {
                 $0.hasPrefix("//") || $0.hasPrefix("@")
             }
         }
- 
+
         let swiftFlags = XCConfigTransformer.defaultTransformer(
             externalName: externalName, sourceType: .swift)
             .compilerFlags(for: fallbackSpec)
@@ -255,6 +255,7 @@ public struct SwiftLibrary: BazelTarget {
                 .named(name: "copts", value: coptsSkylark),
                 .named(name: "swiftc_inputs", value: swiftcInputs.toSkylark()),
                 .named(name: "generated_header_name", value: (externalName + "-Swift.h").toSkylark()),
+                .named(name: "generates_header", value: SkylarkNode.bool(true)),
                 .named(name: "features", value: ["swift.no_generated_module_map"].toSkylark()),
                 .named(name: "visibility", value: ["//visibility:public"].toSkylark()),
             ]
