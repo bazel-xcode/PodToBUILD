@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # This file is part of The LLVM Compiler Infrastructure
 #
 # This file is distributed under the University of Illinois Open Source

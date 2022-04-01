@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # update_pods.py Installs pods specified in Pods.WORKSPACE to $SRC_ROOT/Vendor/
 
 from subprocess import Popen, PIPE
@@ -25,6 +25,8 @@ def _exec(repository_ctx, command, cwd = None):
 
     process = Popen(command, stdout=PIPE, stderr=PIPE)
     result, error = process.communicate()
+    result = result.decode("utf-8")
+
     if process.returncode != 0:
         print("_exec failed %d %s %s" % (process.returncode, result, error))
         sys.exit(1)
@@ -33,7 +35,8 @@ def _exec(repository_ctx, command, cwd = None):
         print(result)
     if cwd:
         os.chdir(origWD)
-    return result.decode("utf-8")
+
+    return result
 
 def _cli_bool(b):
     if b:

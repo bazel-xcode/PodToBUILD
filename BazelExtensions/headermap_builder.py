@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import print_function
 
 import json
@@ -22,7 +22,7 @@ def main():
 
     # We write an intermediate JSON file, which represents the trans hmap
     fd, merge_file = tempfile.mkstemp()
-    with open(json_path, "r") as f:
+    with open(json_path, "rb") as f:
         input_data = json.load(f)
         # For every additional headermap, read it in and merge
         for path in sys.argv[3:]:
