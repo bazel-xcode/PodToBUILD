@@ -33,7 +33,7 @@ def _exec(repository_ctx, command, cwd = None):
         print(result)
     if cwd:
         os.chdir(origWD)
-    return result
+    return result.decode("utf-8")
 
 def _cli_bool(b):
     if b:
@@ -129,7 +129,7 @@ class PodRepositoryContext(object):
         return self.trace
 
 def HashFile(path):
-    f = open(path, "r")
+    f = open(path, "rb")
     f_hash = str(hash(f.read()))
     f.close()
     return str(f_hash)
