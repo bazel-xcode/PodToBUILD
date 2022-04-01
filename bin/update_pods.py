@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # update_pods.py Installs pods specified in Pods.WORKSPACE to $SRC_ROOT/Vendor/
 
 from subprocess import Popen, PIPE
