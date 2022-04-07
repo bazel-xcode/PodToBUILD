@@ -33,6 +33,8 @@ if action == "--finalize":
         "StringsTable": "Acknowledgements",
         "PreferenceSpecifiers": merged_fragments
     }
-    plistlib.writePlist(out_plist, output)
+    with open(output, 'wb') as f:
+        plistlib.dump(out_plist, f, fmt=plistlib.FMT_XML)
 elif action == "--merge":
-    plistlib.writePlist(merged_fragments, output)
+    with open(output, 'wb') as f:
+        plistlib.dump(merged_fragments, f, fmt=plistlib.FMT_XML)
