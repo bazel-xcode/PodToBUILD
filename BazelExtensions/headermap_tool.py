@@ -31,7 +31,7 @@ class HeaderMap(object):
     def frompath(path):
         with open(path, 'rb') as f:
             magic = f.read(4)
-            if type(magic) is bytes:
+            if isinstance(magic, bytes):
                 magic = magic.decode("utf-8")
             if magic == k_header_magic_LE:
                 endian_code = '<'
@@ -86,7 +86,7 @@ class HeaderMap(object):
                 raise SystemExit("error: %s: unable to read zero-sized string table"%(
                         path,))
             strtable = f.read(strtable_size)
-            if type(strtable) is bytes:
+            if isinstance(strtable, bytes):
                 strtable = strtable.decode("utf-8")
 
             if len(strtable) != strtable_size:
