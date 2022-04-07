@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # update_pods.py Installs pods specified in Pods.WORKSPACE to $SRC_ROOT/Vendor/
 
 from subprocess import Popen, PIPE
@@ -129,7 +129,7 @@ class PodRepositoryContext(object):
         return self.trace
 
 def HashFile(path):
-    f = open(path, "r")
+    f = open(path, "rb")
     f_hash = str(hash(f.read()))
     f.close()
     return str(f_hash)
@@ -203,7 +203,7 @@ def _needs_update(invocation_info):
     pod_root_dir = repository_ctx.GetPodRootDir()
     _exec(repository_ctx, ["/bin/bash", "-c", "mkdir -p " + pod_root_dir])
     _exec(repository_ctx, ["/bin/bash", "-c", "touch .pod-version"], pod_root_dir)
-    cached_version = _exec(repository_ctx, ["/bin/bash", "-c", "cat .pod-version"], pod_root_dir).split("\n")[0]
+    cached_version = _exec(repository_ctx, ["/bin/bash", "-c", "cat .pod-version"], pod_root_dir).split(b'\n')[0]
     return GetVersion(invocation_info) != cached_version
 
 def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
