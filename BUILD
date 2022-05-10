@@ -47,7 +47,7 @@ swift_library(
 
 swift_library(
     name = "RepoToolsCore",
-    srcs = glob(["Sources/RepoToolsCore/*.swift"]),
+    srcs = glob(["Sources/RepoToolsCore/**/*.swift"]),
     deps = [":PodToBUILD"],
     copts = ["-swift-version", "4"],
 )

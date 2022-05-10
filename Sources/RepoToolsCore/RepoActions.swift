@@ -28,7 +28,6 @@ public struct FetchOptions {
     public let subDir: String?
 }
 
-
 public struct WorkspaceOptions {
     public let vendorize: Bool = true
     public let trace: Bool
@@ -106,7 +105,7 @@ public enum SerializedRepoToolsAction {
             "--vendorize": .bool,
             "--header_visibility": .string,
             "--child_path": .stringList,
-            "--is_dynamic_framework": .bool,
+            "--is_dynamic_framework": .bool
         ]
 
         var idx = 0
@@ -266,7 +265,7 @@ public enum RepoActions {
         return JSONPodspec
     }
 
-    private static func initializeAliasDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
+    private static func initializeAliasDirectory(shell: ShellContext, podspecName: String, buildOptions: BuildOptions) {
         let visibility = SkylarkNode.functionCall(name: "package",
             arguments: [
                 .named(name: "default_visibility",
@@ -282,7 +281,7 @@ public enum RepoActions {
         }
         let buildFile = PodBuildFile.with(podSpec: podSpec, buildOptions:
             buildOptions, assimilate: true)
-        
+
         let getAliasName: (BazelTarget) -> String = {
             target in
             let name = target.name
@@ -348,7 +347,7 @@ public enum RepoActions {
             let path = "\(PodSupportDir)/Headers/Private/\(podSpec.name)-prefix.pch"
             shell.write(value: contents, toPath: URL(fileURLWithPath: path))
         }
-        podSpec.subspecs.forEach{ writeSpecPrefixHeader(shell: shell, podSpec: $0) }
+        podSpec.subspecs.forEach { writeSpecPrefixHeader(shell: shell, podSpec: $0) }
     }
 
     private static func writeDefaultPrefixHeader(shell: ShellContext, buildOptions: BuildOptions) {
@@ -369,7 +368,7 @@ public enum RepoActions {
         shell.write(value: defaultContents, toPath: URL(fileURLWithPath: path))
     }
 
-    private static func initializePodspecDirectory(shell: ShellContext, podspecName: String,buildOptions: BuildOptions) {
+    private static func initializePodspecDirectory(shell: ShellContext, podspecName: String, buildOptions: BuildOptions) {
         let workspaceRootPath: String
         if buildOptions.path != "." && buildOptions.childPaths.count == 0 {
             workspaceRootPath = "../..\(buildOptions.path)"
@@ -540,58 +539,29 @@ public enum RepoActions {
     /// incompatible with many pods.
     /// Operations should be atomic
     public static func fetch(shell: ShellContext, fetchOptions: FetchOptions) {
-        let podName = fetchOptions.podName
-        let urlString = fetchOptions.url
         _ = shell.command(CommandBinary.mkdir, arguments: ["-p", PodStoreCacheDir])
 
+        var downloader: Downloader?
+        for downloaderType in Downloaders {
+            if let _downloader = downloaderType.init(options: fetchOptions) {
+                downloader = _downloader
+                break
+            }
+        }
+
+        guard let downloader = downloader else {
+            fatalError("Can not download with given options")
+        }
+
         // Cache Hit
-        let podCacheRoot = escape(cacheRoot(forPod: podName, url: urlString))
+        let podCacheRoot = escape(downloader.cacheRoot())
         if shell.hasDir(podCacheRoot) {
             exportArchive(shell: shell, podCacheRoot: podCacheRoot,
                           fetchOptions: fetchOptions)
             return
         }
 
-        let downloadsDir = shell.tmpdir()
-        let url = NSURL(string: urlString)!
-        let fileName = url.lastPathComponent!
-        let download = downloadsDir + "/" + podName + "-" + fileName
-        guard let wwwUrl = NSURL(string: urlString).map({ $0 as URL }),
-            shell.download(url: wwwUrl, toFile: download) else {
-            fatalError("Download of \(podName) failed")
-        }
-
-        // Extract the downloaded archive
-        let extractDir = shell.tmpdir()
-        func extract() -> CommandOutput {
-            let lowercasedFileName = fileName.lowercased()
-            if lowercasedFileName.hasSuffix("zip") {
-                return shell.command(CommandBinary.sh, arguments: [
-                    "-c",
-                    unzipTransaction(
-                        rootDir: extractDir,
-                        fileName: escape(download)
-                    ),
-                ])
-            } else if
-                lowercasedFileName.hasSuffix("tar")
-                || lowercasedFileName.hasSuffix("tar.gz")
-                || lowercasedFileName.hasSuffix("tgz")
-                || lowercasedFileName.hasSuffix("txz") // txz is a txz extension
-                || lowercasedFileName.hasSuffix("tar.xz") // tar.xz is a txz extension
-            {
-                return shell.command(CommandBinary.sh, arguments: [
-                    "-c",
-                    untarTransaction(
-                        rootDir: extractDir,
-                        fileName: escape(download)
-                    ),
-                ])
-            }
-            fatalError("Cannot extract files other than .zip, .tar, .tar.gz, or .tgz. Got \(lowercasedFileName)")
-        }
-
-        assertCommandOutput(extract(), message: "Extraction of \(podName) failed")
+        let extractDir = downloader.download(shell: shell)
 
         // Save artifacts to cache root
         let export = shell.command(CommandBinary.sh, arguments: [
@@ -599,7 +569,7 @@ public enum RepoActions {
             "mkdir -p " + extractDir + " && " +
                 "cd " + extractDir + " && " +
                 "mkdir -p " + podCacheRoot + " && " +
-                "mv OUT/* " + podCacheRoot,
+                "mv OUT/* " + podCacheRoot
         ])
         _ = shell.command(CommandBinary.rm, arguments: ["-rf", extractDir])
         if export.terminationStatus != 0 {
@@ -676,4 +646,3 @@ public enum RepoActions {
             "rm -rf " + fileName
     }
 }
-
