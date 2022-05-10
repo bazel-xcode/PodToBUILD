@@ -577,6 +577,8 @@ public enum RepoActions {
                 lowercasedFileName.hasSuffix("tar")
                 || lowercasedFileName.hasSuffix("tar.gz")
                 || lowercasedFileName.hasSuffix("tgz")
+                || lowercasedFileName.hasSuffix("txz") // txz is a txz extension
+                || lowercasedFileName.hasSuffix("tar.xz") // tar.xz is a txz extension
             {
                 return shell.command(CommandBinary.sh, arguments: [
                     "-c",
@@ -592,7 +594,7 @@ public enum RepoActions {
         assertCommandOutput(extract(), message: "Extraction of \(podName) failed")
 
         // Save artifacts to cache root
-        let export = shell.command("/bin/sh", arguments: [
+        let export = shell.command(CommandBinary.sh, arguments: [
             "-c",
             "mkdir -p " + extractDir + " && " +
                 "cd " + extractDir + " && " +
