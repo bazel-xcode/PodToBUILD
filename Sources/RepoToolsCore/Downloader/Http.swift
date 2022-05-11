@@ -60,7 +60,7 @@ struct HttpDownloader: Downloader {
             if lowercasedFileName.hasSuffix("zip") {
                 return shell.command(CommandBinary.sh, arguments: [
                     "-c",
-                    unzipTransaction(
+                    HttpDownloader.unzipTransaction(
                         rootDir: extractDir,
                         fileName: escape(download)
                     )
@@ -74,7 +74,7 @@ struct HttpDownloader: Downloader {
             {
                 return shell.command(CommandBinary.sh, arguments: [
                     "-c",
-                    untarTransaction(
+                    HttpDownloader.untarTransaction(
                         rootDir: extractDir,
                         fileName: escape(download)
                     )
@@ -89,16 +89,16 @@ struct HttpDownloader: Downloader {
     }
 }
 
-fileprivate extension HttpDownloader {
+extension HttpDownloader {
     // Unzip the entire contents into OUT
-    func unzipTransaction(rootDir: String, fileName: String) -> String {
+    static func unzipTransaction(rootDir: String, fileName: String) -> String {
         return "mkdir -p " + rootDir + " && " +
         "cd " + rootDir + " && " +
         "unzip -d OUT " + fileName + " > /dev/null && " +
         "rm -rf " + fileName
     }
 
-    func untarTransaction(rootDir: String, fileName: String) -> String {
+    static func untarTransaction(rootDir: String, fileName: String) -> String {
         return "mkdir -p " + rootDir + " && " +
         "cd " + rootDir + " && " +
         "mkdir -p OUT && " +

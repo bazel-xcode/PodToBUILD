@@ -53,6 +53,78 @@ class PodStoreTests: XCTestCase {
             )
         )
     }
+
+    func testGitCommitDownloading() {
+        let shell = SystemShellContext()
+        let gitFetchOptions = FetchOptions(
+            podName: "Kingfisher",
+            url: "git@github.com:onevcat/Kingfisher.git",
+            trace: false,
+            subDir: nil,
+            revision: "commit:59eb199")
+        RepoActions.fetch(shell: shell, fetchOptions: gitFetchOptions)
+        let cacheDir = GitDownloader(options: gitFetchOptions, shell: shell)!.cacheRoot()
+        XCTAssertTrue(FileManager.default.fileExists(atPath: cacheDir))
+        try? FileManager.default.removeItem(atPath: cacheDir)
+    }
+
+    func testGitBranchDownloading() {
+        let shell = SystemShellContext()
+        let gitFetchOptions = FetchOptions(
+            podName: "Kingfisher",
+            url: "git@github.com:onevcat/Kingfisher.git",
+            trace: false,
+            subDir: nil,
+            revision: "branch:master;")
+        RepoActions.fetch(shell: shell, fetchOptions: gitFetchOptions)
+
+        let cacheDir = GitDownloader(options: gitFetchOptions, shell: shell)!.cacheRoot()
+        XCTAssertTrue(FileManager.default.fileExists(atPath: cacheDir))
+        try? FileManager.default.removeItem(atPath: cacheDir)
+    }
+
+    func testGitTagDownloading() {
+        let shell = SystemShellContext()
+        let gitFetchOptions = FetchOptions(
+            podName: "Kingfisher",
+            url: "git@github.com:onevcat/Kingfisher.git",
+            trace: false,
+            subDir: nil,
+            revision: "tag:7.2.2;")
+        RepoActions.fetch(shell: shell, fetchOptions: gitFetchOptions)
+
+        let cacheDir = GitDownloader(options: gitFetchOptions, shell: shell)!.cacheRoot()
+        XCTAssertTrue(FileManager.default.fileExists(atPath: cacheDir))
+        try? FileManager.default.removeItem(atPath: cacheDir)
+    }
+
+    func testGitBranchAndCommitDownloading() {
+        let shell = SystemShellContext()
+        let gitFetchOptions = FetchOptions(
+            podName: "Kingfisher",
+            url: "git@github.com:onevcat/Kingfisher.git",
+            trace: false,
+            subDir: nil,
+            revision: "commit:59eb199;branch:master")
+        RepoActions.fetch(shell: shell, fetchOptions: gitFetchOptions)
+
+        let cacheDir = GitDownloader(options: gitFetchOptions, shell: shell)!.cacheRoot()
+        XCTAssertTrue(FileManager.default.fileExists(atPath: cacheDir))
+        try? FileManager.default.removeItem(atPath: cacheDir)
+    }
+
+    func testGitTagAndBranchDownloading() {
+        // TODO: FatalError should be encountered here, there is no good way to verify this case
+
+        // let shell = SystemShellContext()
+        // let gitFetchOptions = FetchOptions(
+        //    podName: "Kingfisher",
+        //    url: "git@github.com:onevcat/Kingfisher.git",
+        //    trace: false,
+        //    subDir: nil,
+        //    revision: "branch:master;tag:7.2.2;")
+        // RepoActions.fetch(shell: shell, fetchOptions: gitFetchOptions)
+    }
     
     func testZipExtraction() {
         let hasDir =  MakeShellInvocation("/bin/[", arguments: ["-e",
@@ -61,7 +133,7 @@ class PodStoreTests: XCTestCase {
 
         
         let extract = MakeShellInvocation("/bin/sh",
-                                          arguments: ["-c", RepoActions.unzipTransaction(
+                                          arguments: ["-c", HttpDownloader.unzipTransaction(
                                             rootDir: escape(extractDir),
                                             fileName: escape(downloadPath)
                                             )],
