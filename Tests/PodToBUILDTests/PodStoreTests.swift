@@ -12,10 +12,12 @@ import XCTest
 
 let testPodName = "Foo"
 
-let fetchOpts = FetchOptions(podName: testPodName,
-                    url: "http://pinner.com/foo.zip",
-                    trace: false,
-                    subDir: nil)
+let fetchOpts = FetchOptions(
+    podName: testPodName,
+    url: "http://pinner.com/foo.zip",
+    trace: false,
+    subDir: nil,
+    revision: nil)
 
 class PodStoreTests: XCTestCase {
 

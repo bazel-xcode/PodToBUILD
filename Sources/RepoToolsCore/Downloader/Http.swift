@@ -27,7 +27,7 @@ private struct HttpOptions {
 struct HttpDownloader: Downloader {
     private var options: HttpOptions
 
-    init?(options: FetchOptions) {
+    init?(options: FetchOptions, shell: ShellContext) {
         guard let _options = HttpOptions(options) else {
             return nil
         }
@@ -60,7 +60,7 @@ struct HttpDownloader: Downloader {
             if lowercasedFileName.hasSuffix("zip") {
                 return shell.command(CommandBinary.sh, arguments: [
                     "-c",
-                    RepoActions.unzipTransaction(
+                    unzipTransaction(
                         rootDir: extractDir,
                         fileName: escape(download)
                     )
@@ -74,7 +74,7 @@ struct HttpDownloader: Downloader {
             {
                 return shell.command(CommandBinary.sh, arguments: [
                     "-c",
-                    RepoActions.untarTransaction(
+                    untarTransaction(
                         rootDir: extractDir,
                         fileName: escape(download)
                     )
@@ -85,6 +85,24 @@ struct HttpDownloader: Downloader {
 
         RepoActions.assertCommandOutput(extract(), message: "Extraction of \(podName) failed")
 
-        return extractDir
+        return extractDir + "/OUT" // extract method will append path component "OUT"
+    }
+}
+
+fileprivate extension HttpDownloader {
+    // Unzip the entire contents into OUT
+    func unzipTransaction(rootDir: String, fileName: String) -> String {
+        return "mkdir -p " + rootDir + " && " +
+        "cd " + rootDir + " && " +
+        "unzip -d OUT " + fileName + " > /dev/null && " +
+        "rm -rf " + fileName
+    }
+
+    func untarTransaction(rootDir: String, fileName: String) -> String {
+        return "mkdir -p " + rootDir + " && " +
+        "cd " + rootDir + " && " +
+        "mkdir -p OUT && " +
+        "tar -xzvf " + fileName + " -C OUT > /dev/null 2>&1 && " +
+        "rm -rf " + fileName
     }
 }

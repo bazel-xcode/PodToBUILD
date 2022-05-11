@@ -88,6 +88,7 @@ class PodRepositoryContext(object):
             target_name,
             url,
             podspec_url,
+            revision,
             strip_prefix,
             user_options,
             install_script_tpl,
@@ -102,6 +103,7 @@ class PodRepositoryContext(object):
         self.target_name = target_name
         self.url = url
         self.podspec_url = podspec_url
+        self.revision = revision
         self.strip_prefix = strip_prefix
         self.user_options = user_options
         self.install_script_tpl = install_script_tpl
@@ -127,6 +129,10 @@ class PodRepositoryContext(object):
         if OVERRIDE_TRACE:
             return True
         return self.trace
+
+    def GetRevision(self):
+        return self.revision
+
 
 def HashFile(path):
     f = open(path, "rb")
@@ -159,9 +165,11 @@ GLOBAL_COPTS = [
     "-Wno-error=nonportable-include-path"
 ]
 
+
 INHIBIT_WARNINGS_GLOBAL_COPTS = [
     "-Wno-everything",
 ]
+
 
 def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
     fetch_cmd = [
@@ -175,6 +183,10 @@ def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
         "--trace",
         "true" if repository_ctx.GetTrace() else "false"
     ]
+
+    if repository_ctx.GetRevision() is not None:
+        fetch_cmd.append("--revision")
+        fetch_cmd.append(repository_ctx.GetRevision())
 
     _exec(repository_ctx, fetch_cmd, repository_ctx.GetPodRootDir())
 
@@ -219,7 +231,7 @@ def _load_repo_if_needed(repository_ctx, repo_tool_bin_path):
         _exec(repository_ctx, ["rm", "-rf", repository_ctx.GetPodRootDir()])
     _exec(repository_ctx, ["mkdir", "-p", repository_ctx.GetPodRootDir()])
 
-    if _is_http_url(url):
+    if _is_http_url(url) or _is_git_url(url):
         _fetch_remote_repo(repository_ctx, repo_tool_bin_path, target_name, url)
     elif url.startswith("/"):
         _link_local_repo(repository_ctx, target_name, url)
@@ -350,6 +362,10 @@ def _update_repo_impl(invocation_info):
 def new_pod_repository(name,
             url = None,
             podspec_url = None,
+            commit = None,  # for giturl
+            branch = None,  # for giturl
+            tag = None,     # for giturl
+            sub_modules = False, # for giturl
             strip_prefix = "",
             user_options = [],
             install_script = None,
@@ -381,6 +397,14 @@ def new_pod_repository(name,
          the repository, and read a .podspec file. This requires having
          CocoaPods installed on build nodes. If a JSON podspec is provided here,
          then it is not required to run CocoaPods.
+
+         commit: the commit to checkout. This is only used if url is a git url.
+
+         branch: the branch to checkout. This is only used if url is a git url.
+
+         tag: the tag to checkout. This is only used if url is a git url.
+
+         sub_modules: whether to submodule the repository. This is only used if url is a git url.
 
          owner: the owner of this dependency
 
@@ -425,6 +449,16 @@ def new_pod_repository(name,
          is_dynamic_framework: set to True if the pod uses prebuilt dynamic framework(s)
     """
 
+    revision = None
+    if commit is not None:
+        revision = f"commit:{commit};"
+    if branch is not None:
+        revision += f"branch:{branch};"
+    if tag is not None:
+        revision += f"tag:{tag};"
+    if sub_modules:
+        revision += "submodules:true;"
+
     # The SRC_ROOT is the directory of the WORKSPACE and Pods.WORKSPACE
     global SRC_ROOT
     global WORKSPACE
@@ -433,6 +467,7 @@ def new_pod_repository(name,
             target_name = name,
             url = url,
             podspec_url = podspec_url,
+            revision = revision,
             strip_prefix = strip_prefix,
             user_options = user_options,
             install_script_tpl = install_script,
@@ -461,6 +496,9 @@ def _cleanup_pods():
 
 def _is_http_url(url):
     return url.startswith("http://") or url.startswith("https://")
+
+def _is_git_url(url):
+    return url.startswith("git@")
 
 # Build a release of `RepoTools` if needed. Under a release package,
 # the makefile is a noop.

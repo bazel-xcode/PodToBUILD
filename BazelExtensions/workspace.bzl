@@ -44,6 +44,10 @@ def _fetch_remote_repo(repository_ctx, repo_tool_bin, target_name, url):
         "true" if repository_ctx.attr.trace else "false"
     ]
 
+    if repository_ctx.attr.revision:
+        fetch_cmd.append("--revision")
+        fetch_cmd.append(repository_ctx.attr.revision)
+
     fetch_output = _exec(repository_ctx, fetch_cmd)
     if fetch_output.return_code != 0:
         fail("Could not retrieve pod " + target_name)
@@ -105,7 +109,7 @@ def _impl(repository_ctx):
         tool_name = repo_tool_dict[str(tool_label)]
         tool_bin_by_name[tool_name] = repository_ctx.path(tool_label)
 
-    if url.startswith("http") or url.startswith("https"):
+    if url.startswith("http") or url.startswith("https") or url.startswith("git@"):
         _fetch_remote_repo(
             repository_ctx, tool_bin_by_name[REPO_TOOL_NAME], target_name, url)
     else:
@@ -200,6 +204,7 @@ pod_repo_ = repository_rule(
         "target_name": attr.string(mandatory=True),
         "url": attr.string(mandatory=True),
         "podspec_url": attr.string(),
+        "revision": attr.string(),
         "podspec_file": attr.label(),
         "strip_prefix": attr.string(),
         "user_options": attr.string_list(),
@@ -219,6 +224,10 @@ def new_pod_repository(name,
                        url,
                        owner="",
                        podspec_url=None,
+                       commit = None,  # for giturl
+                       branch = None,  # for giturl
+                       tag = None,     # for giturl
+                       sub_modules = False, # for giturl
                        strip_prefix="",
                        user_options=[],
                        install_script=None,
@@ -244,6 +253,14 @@ def new_pod_repository(name,
          By default, we will look in the root of the repository, and read a .podspec file.
          This requires having CocoaPods installed on build nodes. If a JSON podspec is
          provided here, then it is not required to run CocoaPods.
+
+         commit: the commit to checkout. This is only used if url is a git url.
+
+         branch: the branch to checkout. This is only used if url is a git url.
+
+         tag: the tag to checkout. This is only used if url is a git url.
+
+         sub_modules: whether to submodule the repository. This is only used if url is a git url.
 
          owner: the owner of this dependency
 
@@ -307,11 +324,23 @@ def new_pod_repository(name,
     tool_labels = []
     for tool in repo_tools:
         tool_labels.append(tool)
+
+    revision = None
+    if commit != None:
+        revision = "commit" + commit + ";"
+    if branch != None:
+        revision += "branch" + branch + ";"
+    if tag != None:
+        revision += "tag" + tag + ";"
+    if sub_modules:
+        revision += "submodules:true;"
+    
     pod_repo_(
         name=name,
         target_name=name,
         url=url,
         podspec_url=podspec_url,
+        revision=revision,
         podspec_file=podspec_file,
         user_options=user_options,
         strip_prefix=strip_prefix,

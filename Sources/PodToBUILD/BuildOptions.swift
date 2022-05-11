@@ -11,6 +11,7 @@ public protocol BuildOptions {
     var trace: Bool { get }
     var podName: String { get }
     var path: String { get }
+    var revision: String { get }
 
     // Frontend options
 
@@ -33,6 +34,7 @@ public struct BasicBuildOptions: BuildOptions {
     public let userOptions: [String]
     public let globalCopts: [String]
     public let trace: Bool
+    public let revision: String
 
     public let enableModules: Bool
     public let generateModuleMap: Bool
@@ -48,6 +50,7 @@ public struct BasicBuildOptions: BuildOptions {
                 userOptions: [String] = [],
                 globalCopts: [String] = [],
                 trace: Bool = false,
+                revision: String = "",
                 enableModules: Bool = false,
                 generateModuleMap: Bool = false,
                 generateHeaderMap: Bool = false,
@@ -62,6 +65,7 @@ public struct BasicBuildOptions: BuildOptions {
         self.userOptions = userOptions
         self.globalCopts = globalCopts
         self.trace = trace
+        self.revision = revision
         self.enableModules = enableModules
         self.generateModuleMap = generateModuleMap
         self.generateHeaderMap = generateHeaderMap

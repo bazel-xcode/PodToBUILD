@@ -26,6 +26,7 @@ public struct FetchOptions {
     public let url: String
     public let trace: Bool
     public let subDir: String?
+    public let revision: String?
 }
 
 public struct WorkspaceOptions {
@@ -79,26 +80,33 @@ public enum SerializedRepoToolsAction {
             /// This is a bit insane ( the argument is --url )
             let url = UserDefaults.standard.string(forKey: "-url")
         else {
-            print("Usage: PodSpecName <action> --url <URL> --trace <trace>")
+            print("Usage: PodSpecName <action> --url <URL> --trace <trace> --sub_dir <sub_dir> --revision <revision>")
             exit(0)
         }
 
         let name = args[1]
         let trace = UserDefaults.standard.bool(forKey: "-trace")
         let subDir = UserDefaults.standard.string(forKey: "-sub_dir")
-        let fetchOpts = FetchOptions(podName: name, url: url, trace: trace,
-                                     subDir: subDir)
+        let revision = UserDefaults.standard.string(forKey: "-revision")
+        let fetchOpts = FetchOptions(
+            podName: name,
+            url: url,
+            trace: trace,
+            subDir: subDir,
+            revision: revision
+        )
         return fetchOpts
     }
 
     static func tryParseInit(args: [String]) -> BasicBuildOptions {
         // First arg is the path, we don't care about it
         // The right most option will be the winner.
-        var options: [String: CLIArgumentType] = [
+        let options: [String: CLIArgumentType] = [
             "--path": .string,
             "--user_option": .stringList,
             "--global_copt": .string,
             "--trace": .bool,
+            "--revision": .string,
             "--enable_modules": .bool,
             "--generate_module_map": .bool,
             "--generate_header_map": .bool,
@@ -158,6 +166,7 @@ public enum SerializedRepoToolsAction {
                                  userOptions: parsed["--user_option"] as? [String] ?? [],
                                  globalCopts: parsed["--global_copt"] as? [String] ?? [],
                                  trace: parsed["--trace"]?.first as? Bool ?? false,
+                                 revision: parsed["--revision"]?.first as? String ?? "",
                                  enableModules: parsed["--enable_modules"]?.first as? Bool ?? false,
                                  generateModuleMap: parsed["--generate_module_map"]?.first as? Bool ?? false,
                                  generateHeaderMap: parsed["--generate_header_map"]?.first as? Bool ?? false,
@@ -543,7 +552,7 @@ public enum RepoActions {
 
         var downloader: Downloader?
         for downloaderType in Downloaders {
-            if let _downloader = downloaderType.init(options: fetchOptions) {
+            if let _downloader = downloaderType.init(options: fetchOptions, shell: shell) {
                 downloader = _downloader
                 break
             }
@@ -569,7 +578,7 @@ public enum RepoActions {
             "mkdir -p " + extractDir + " && " +
                 "cd " + extractDir + " && " +
                 "mkdir -p " + podCacheRoot + " && " +
-                "mv OUT/* " + podCacheRoot
+                "mv * " + podCacheRoot
         ])
         _ = shell.command(CommandBinary.rm, arguments: ["-rf", extractDir])
         if export.terminationStatus != 0 {
@@ -628,21 +637,5 @@ public enum RepoActions {
         if output.terminationStatus != 0 {
             fatalError(message)
         }
-    }
-
-    // Unzip the entire contents into OUT
-    static func unzipTransaction(rootDir: String, fileName: String) -> String {
-        return "mkdir -p " + rootDir + " && " +
-            "cd " + rootDir + " && " +
-            "unzip -d OUT " + fileName + " > /dev/null && " +
-            "rm -rf " + fileName
-    }
-
-    static func untarTransaction(rootDir: String, fileName: String) -> String {
-        return "mkdir -p " + rootDir + " && " +
-            "cd " + rootDir + " && " +
-            "mkdir -p OUT && " +
-            "tar -xzvf " + fileName + " -C OUT > /dev/null 2>&1 && " +
-            "rm -rf " + fileName
     }
 }

@@ -10,11 +10,12 @@ import PodToBUILD
 import CloudKit
 
 let Downloaders: [Downloader.Type] = [
-    HttpDownloader.self
+    HttpDownloader.self,
+    GitDownloader.self
 ]
 
 protocol Downloader {
-    init?(options: FetchOptions)
+    init?(options: FetchOptions, shell: ShellContext)
 
     /// Cache dir for options
     /// - Parameter options: options from preprocess
@@ -29,7 +30,7 @@ protocol Downloader {
 }
 
 extension Downloader {
-    init?(options: FetchOptions) {
+    init?(options: FetchOptions, shell: ShellContext) {
         fatalError("Should never be called")
     }
 
