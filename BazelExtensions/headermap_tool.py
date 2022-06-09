@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # This file is part of The LLVM Compiler Infrastructure
 #
 # This file is distributed under the University of Illinois Open Source
@@ -31,6 +31,8 @@ class HeaderMap(object):
     def frompath(path):
         with open(path, 'rb') as f:
             magic = f.read(4)
+            if isinstance(magic, bytes):
+                magic = magic.decode("utf-8")
             if magic == k_header_magic_LE:
                 endian_code = '<'
             elif magic == k_header_magic_BE:
@@ -84,6 +86,8 @@ class HeaderMap(object):
                 raise SystemExit("error: %s: unable to read zero-sized string table"%(
                         path,))
             strtable = f.read(strtable_size)
+            if isinstance(strtable, bytes):
+                strtable = strtable.decode("utf-8")
 
             if len(strtable) != strtable_size:
                 raise SystemExit("error: %s: unable to read complete string table"%(
