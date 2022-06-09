@@ -45,14 +45,13 @@ public func makeLoadNodes(forConvertibles skylarkConvertibles: [SkylarkConvertib
     let hasAppleBundleImport = skylarkConvertibles.first(where: { $0 is AppleBundleImport }) != nil
     let hasAppleResourceBundle = skylarkConvertibles.first(where: { $0 is AppleResourceBundle }) != nil
     let hasAppleFrameworkImport = skylarkConvertibles.first(where: { $0 is AppleFrameworkImport }) != nil
-    let isDynamicFramework = GetBuildOptions().isDynamicFramework
+    let appleFrameworkImport = appleFrameworkImport(isDynamicFramework: GetBuildOptions().isDynamicFramework, isXCFramework: GetBuildOptions().isXCFramework)
     
     return .lines( [
         hasSwift ?  SkylarkNode.skylark("load('@build_bazel_rules_swift//swift:swift.bzl', 'swift_library')") : nil,
         hasAppleBundleImport ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_bundle_import')") : nil,
         hasAppleResourceBundle ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:resources.bzl', 'apple_resource_bundle')") : nil,
-        hasAppleFrameworkImport && isDynamicFramework ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:apple.bzl', 'apple_dynamic_framework_import')") : nil,
-        hasAppleFrameworkImport && !isDynamicFramework ?  SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:apple.bzl', 'apple_static_framework_import')") : nil,
+        hasAppleFrameworkImport ? SkylarkNode.skylark("load('@build_bazel_rules_apple//apple:apple.bzl', '\(appleFrameworkImport)')") : nil,
         ].compactMap { $0 }
     )
 }

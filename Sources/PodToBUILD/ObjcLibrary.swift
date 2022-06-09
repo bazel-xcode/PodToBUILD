@@ -105,13 +105,14 @@ public struct AppleFrameworkImport: BazelTarget {
     //     visibility = ["visibility:public"]
     // )
     public func toSkylark() -> SkylarkNode {
-        let isDynamicFramework = GetBuildOptions().isDynamicFramework
-
+        let isXCFramework = GetBuildOptions().isXCFramework
+        let appleFrameworkImport = appleFrameworkImport(isDynamicFramework: GetBuildOptions().isDynamicFramework, isXCFramework: isXCFramework)
+        
         return SkylarkNode.functionCall(
-            name: isDynamicFramework ? "apple_dynamic_framework_import" : "apple_static_framework_import",
+            name: appleFrameworkImport,
                 arguments: [SkylarkFunctionArgument]([
                     .named(name: "name", value: .string(name)),
-                    .named(name: "framework_imports",
+                    .named(name: isXCFramework ? "xcframework_imports": "framework_imports",
                            value: frameworkImports.map {
                                   GlobNode(include: Set($0.map { $0 + "/**" }))
                             }.toSkylark()),

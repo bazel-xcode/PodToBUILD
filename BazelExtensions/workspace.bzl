@@ -153,6 +153,8 @@ def _impl(repository_ctx):
                 _cli_bool(False),
                 "--is_dynamic_framework",
                 _cli_bool(repository_ctx.attr.is_dynamic_framework),
+                "--is_xcframework",
+                _cli_bool(repository_ctx.attr.is_xcframework),
             ])
             substitutions[INIT_REPO_PLACEHOLDER] = " ".join(entry)
         else:
@@ -212,6 +214,7 @@ pod_repo_ = repository_rule(
         "generate_module_map": attr.bool(default=False, mandatory=True),
         "header_visibility": attr.string(),
         "is_dynamic_framework": attr.bool(default=False, mandatory=False),
+        "is_xcframework": attr.bool(default=False, mandatory=False),
     }
 )
 
@@ -231,6 +234,7 @@ def new_pod_repository(name,
                        generate_module_map=None,
                        header_visibility="pod_support",
                        is_dynamic_framework=False,
+                       is_xcframework=False,
                        ):
     """Declare a repository for a Pod
     Args:
@@ -295,6 +299,8 @@ def new_pod_repository(name,
          https://github.com/bazelbuild/bazel/pull/3712
 
          is_dynamic_framework: set to True if the pod uses prebuilt dynamic framework(s)
+
+         is_xcframework: set To True if the the pod uses prebuild xcframework
     """
     if generate_module_map == None:
         generate_module_map = enable_modules
@@ -324,4 +330,5 @@ def new_pod_repository(name,
         generate_module_map=generate_module_map,
         header_visibility=header_visibility,
         is_dynamic_framework=is_dynamic_framework,
+        is_xcframework=is_xcframework,
     )

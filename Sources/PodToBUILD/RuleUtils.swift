@@ -158,3 +158,12 @@ public func bazelLabel(fromString string: String) -> String {
 }
 
 
+/// framework import for apple framework import
+/// - Parameters:
+///   - isDynamicFramework: whether internal framework is dynamic or static
+///   - isXCFramework: if it is XCFramework
+/// - Returns: apple framework import string such as "apple_static_xcframework_import"
+public func appleFrameworkImport(isDynamicFramework: Bool, isXCFramework: Bool) -> String {
+    return "apple_" + (isDynamicFramework ? "dynamic_" : "static_") + (isXCFramework ? "xcframework_" : "framework_") + "import"
+}
+

@@ -98,6 +98,7 @@ class PodRepositoryContext(object):
             generate_header_map = True,
             header_visibility = "pod_support",
             is_dynamic_framework = False,
+            is_xcframework = False,
             src_root = None):
         self.target_name = target_name
         self.url = url
@@ -112,6 +113,7 @@ class PodRepositoryContext(object):
         self.generate_header_map = generate_header_map
         self.header_visibility = header_visibility
         self.is_dynamic_framework = is_dynamic_framework
+        self.is_xcframework = is_xcframework
         self.src_root = src_root
 
     def GetPodRootDir(self):
@@ -302,7 +304,9 @@ def _update_repo_impl(invocation_info):
                 "--generate_header_map",
                 _cli_bool(repository_ctx.generate_header_map),
                 "--is_dynamic_framework",
-                _cli_bool(repository_ctx.is_dynamic_framework)
+                _cli_bool(repository_ctx.is_dynamic_framework),
+                "--is_xcframework",
+                _cli_bool(repository_ctx.is_xcframework)
             ])
 
             for child_pod in invocation_info.child_pods:
@@ -360,7 +364,8 @@ def new_pod_repository(name,
             generate_header_map = False,
             owner = "", # This is a Noop
             header_visibility = "pod_support",
-            is_dynamic_framework = False):
+            is_dynamic_framework = False,
+            is_xcframework = False):
     """Declare a repository for a Pod
     Args:
          name: the name of this repo
@@ -423,6 +428,8 @@ def new_pod_repository(name,
          https://github.com/bazelbuild/bazel/pull/3712
 
          is_dynamic_framework: set to True if the pod uses prebuilt dynamic framework(s)
+         
+         is_xcframework: set to True if the pod uses prebuilt xcframework
     """
 
     # The SRC_ROOT is the directory of the WORKSPACE and Pods.WORKSPACE
@@ -443,6 +450,7 @@ def new_pod_repository(name,
             generate_header_map = generate_header_map,
             header_visibility = header_visibility,
             is_dynamic_framework = is_dynamic_framework,
+            is_xcframework = is_xcframework,
             src_root = SRC_ROOT)
     WORKSPACE.add(repository_ctx)
 

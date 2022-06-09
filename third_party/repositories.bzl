@@ -93,7 +93,7 @@ def podtobuild_dependencies():
     namespaced_new_git_repository(
         name = "Yams",
         remote = "https://github.com/jpsim/Yams.git",
-        commit = "c947a306d2e80ecb2c0859047b35c73b8e1ca27f",
+        commit = "39698493e08190d867da98ff49210952b8059e78",
         patch_cmds = [
             """
 echo '

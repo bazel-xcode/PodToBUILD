@@ -25,6 +25,7 @@ public protocol BuildOptions {
     var vendorize: Bool { get }
     var childPaths: [String] { get }
     var isDynamicFramework: Bool { get }
+    var isXCFramework: Bool { get }
 }
 
 public struct BasicBuildOptions: BuildOptions {
@@ -42,6 +43,7 @@ public struct BasicBuildOptions: BuildOptions {
     public let vendorize: Bool
     public let childPaths: [String]
     public let isDynamicFramework: Bool
+    public let isXCFramework: Bool
 
     public init(podName: String = "",
                 path: String = ".",
@@ -55,7 +57,8 @@ public struct BasicBuildOptions: BuildOptions {
                 alwaysSplitRules: Bool = true,
                 vendorize: Bool = true,
                 childPaths: [String] = [],
-                isDynamicFramework: Bool = false
+                isDynamicFramework: Bool = false,
+                isXCFramework: Bool = false
     ) {
         self.podName = podName
         self.path = path
@@ -70,6 +73,7 @@ public struct BasicBuildOptions: BuildOptions {
         self.vendorize = vendorize
         self.childPaths = childPaths
         self.isDynamicFramework = isDynamicFramework
+        self.isXCFramework = isXCFramework
     }
 
     public static let empty = BasicBuildOptions(podName: "")
