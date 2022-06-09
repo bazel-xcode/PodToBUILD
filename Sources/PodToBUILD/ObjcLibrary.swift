@@ -105,23 +105,11 @@ public struct AppleFrameworkImport: BazelTarget {
     //     visibility = ["visibility:public"]
     // )
     public func toSkylark() -> SkylarkNode {
-        let isDynamicFramework = GetBuildOptions().isDynamicFramework
         let isXCFramework = GetBuildOptions().isXCFramework
-        
-        let frameworkType : String
-        
-        if isXCFramework && isDynamicFramework {
-            frameworkType = "apple_dynamic_xcframework_import"
-        } else if isXCFramework && !isDynamicFramework {
-            frameworkType = "apple_static_xcframework_import"
-        } else if !isXCFramework && isDynamicFramework {
-            frameworkType = "apple_dynamic_framework_import"
-        } else {
-            frameworkType = "apple_static_framework_import"
-        }
+        let appleFrameworkImport = appleFrameworkImport(isDynamicFramework: GetBuildOptions().isDynamicFramework, isXCFramework: isXCFramework)
         
         return SkylarkNode.functionCall(
-            name: frameworkType,
+            name: appleFrameworkImport,
                 arguments: [SkylarkFunctionArgument]([
                     .named(name: "name", value: .string(name)),
                     .named(name: isXCFramework ? "xcframework_imports": "framework_imports",

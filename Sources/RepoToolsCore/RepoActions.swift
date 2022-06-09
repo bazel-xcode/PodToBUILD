@@ -95,7 +95,7 @@ public enum SerializedRepoToolsAction {
     static func tryParseInit(args: [String]) -> BasicBuildOptions {
         // First arg is the path, we don't care about it
         // The right most option will be the winner.
-        var options: [String: CLIArgumentType] = [
+        let options: [String: CLIArgumentType] = [
             "--path": .string,
             "--user_option": .stringList,
             "--global_copt": .string,

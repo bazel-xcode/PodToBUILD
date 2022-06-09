@@ -43,7 +43,7 @@ public struct BasicBuildOptions: BuildOptions {
     public let vendorize: Bool
     public let childPaths: [String]
     public let isDynamicFramework: Bool
-    public let isXCFramework:Bool
+    public let isXCFramework: Bool
 
     public init(podName: String = "",
                 path: String = ".",
