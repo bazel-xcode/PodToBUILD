@@ -107,6 +107,7 @@ public enum SerializedRepoToolsAction {
             "--header_visibility": .string,
             "--child_path": .stringList,
             "--is_dynamic_framework": .bool,
+            "--is_xcframework": .bool,
         ]
 
         var idx = 0
@@ -166,7 +167,8 @@ public enum SerializedRepoToolsAction {
                                  alwaysSplitRules: false,
                                  vendorize: parsed["--vendorize"]?.first as? Bool ?? true,
                                  childPaths: parsed["--child_path"] as? [String] ?? [],
-                                 isDynamicFramework: parsed["--is_dynamic_framework"]?.first as? Bool ?? false
+                                 isDynamicFramework: parsed["--is_dynamic_framework"]?.first as? Bool ?? false,
+                                 isXCFramework: parsed["--is_xcframework"]?.first as? Bool ?? false
         )
     }
 }

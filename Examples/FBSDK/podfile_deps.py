@@ -1,18 +1,16 @@
 new_pod_repository(
   name = "FBSDKCoreKit",
-  url = "https://github.com/facebook/facebook-ios-sdk/archive/v7.1.1.zip",
-  podspec_url = "Vendor/Podspecs/FBSDKCoreKit.podspec.json",
-  generate_header_map = 1
+  url = "https://github.com/facebook/facebook-ios-sdk/archive/v9.0.1.zip",
+  generate_header_map = 1,
+  trace = True
 )
 new_pod_repository(
   name = "FBSDKLoginKit",
-  url = "https://github.com/facebook/facebook-ios-sdk/archive/v7.1.1.zip",
-  podspec_url = "Vendor/Podspecs/FBSDKLoginKit.podspec.json",
+  url = "https://github.com/facebook/facebook-ios-sdk/archive/v9.0.1.zip",
   generate_header_map = 1
 )
 new_pod_repository(
   name = "FBSDKShareKit",
-  url = "https://github.com/facebook/facebook-ios-sdk/archive/v7.1.1.zip",
-  podspec_url = "Vendor/Podspecs/FBSDKShareKit.podspec.json",
+  url = "https://github.com/facebook/facebook-ios-sdk/archive/v9.0.1.zip",
   generate_header_map = 1
 )

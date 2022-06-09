@@ -249,7 +249,9 @@ there is no need to add an entry for them.
 
 `header_visibility`: DEPRECATED: This is replaced by headermaps: https://github.com/Bazelbuild/Bazel/pull/3712
 
-`is_dynamic_framework`: set to True if the pod uses prebuilt dynamic framework(s) 
+`is_dynamic_framework`: set to True if the pod uses prebuilt dynamic framework(s)
+
+`is_xcframework`: set to True if the pod uses prebuilt xcframework
 
 ### Known Complications
 
@@ -372,4 +374,3 @@ swift package generate-xcodeproj
 ```
 
 PRs welcome :)!
-
