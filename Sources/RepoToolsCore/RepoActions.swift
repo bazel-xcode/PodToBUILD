@@ -456,13 +456,10 @@ public enum RepoActions {
                     })
                 }
                 if let fwImport = convertible as? AppleFrameworkImport {
-                    globResults.formUnion(fwImport.frameworkImports.trivialize(into: Set<String>()) {
+                    globResults.formUnion(fwImport.frameworkImport.trivialize(into: Set<String>()) {
                         accum, next in
                         let HeaderFileTypes = Set([".h", ".hpp", ".hxx"])
-                        let imports = next.reduce(into: Set<String>()) {
-                            accum, nextImport in
-                            accum.formUnion(Set(HeaderFileTypes.map { nextImport + "/**/*" + $0 }))
-                        }
+                        let imports = Set(HeaderFileTypes.map { next + "/**/*" + $0 })
                         let headersDir = GlobNode(include: imports)
                         accum.formUnion(headersDir.sourcesOnDisk())
                     })
