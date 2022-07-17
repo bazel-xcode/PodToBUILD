@@ -565,15 +565,15 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 // Logically, this segment of the code is identical to the ruby
                 // code. It would look like:
                 // return boolValue ? arcSources : GlobNode.empty
-                // however, bazel native rules don't allow cpp inside of the
-                // `non_arc_sourcs`. The following code opts in cpp sources only.
+                // however, bazel native rules don't allow cpp and c inside of the
+                // `non_arc_sourcs`. The following code opts in cpp and c sources only.
                 // the fobjc-arc _feature_ does not apply to the cpp language
                 // inside of clang
                 return boolValue ? arcSources : GlobNode(include: arcSources.include.map {
                     $0.compactMapInclude {
                         incPart -> String? in
                         let suffix = String(incPart.split(separator: ".").last!)
-                        if suffix == "cpp" || suffix == "cxx" || suffix == "cc" {
+                        if suffix == "cpp" || suffix == "cxx" || suffix == "cc" || suffix == "c" {
                             return incPart
                         }
                         return nil
