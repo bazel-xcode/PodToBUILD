@@ -74,6 +74,52 @@ that the `load` statement isn't required in `Pods.WORKSPACE`.
 
 _See the [Texture](Examples/Texture) example for a comprehensive example._
 
+### Private pods and sub-dependencies
+You can keep using CocoaPods as a dependency system, download sub-dependencies, and use private pods by adding a small snippet to your post_install hook in Podfile to generate Pods.WORKSPACE
+```ruby
+post_install do |installer|
+  puts "Post install"
+  puts "Generating Pods.WORKSPACE"
+  development_pods = installer.sandbox.development_pods.keys
+  # Add some pods here if you want to skip them
+  skip_pods = []
+  mapped_pods = installer.analysis_result.specifications.reduce({}) { |result, spec|
+    root_spec = spec
+    unless spec.parent.nil?
+      root_spec = spec.parent
+    end
+    if skip_pods.include? root_spec.name
+      puts "Skipping #{root_spec.name}"
+      result
+    end
+    url = "Pods/#{root_spec.name}"
+    if development_pods.include? root_spec.name
+      url = "."
+    end
+    result[root_spec.name] = {
+      name: root_spec.name,
+      url: url,
+      podspec_url: "#{root_spec.defined_in_file.to_s.gsub(/ /, '\ ')}",
+      generate_header_map: 1
+    }
+    result
+  }
+  File.open('Pods.WORKSPACE', 'w') { |file|
+    mapped_pods.each do |key, value|
+      new_pod_repository = %{
+new_pod_repository(
+  name = "#{value[:name]}",
+  url = "#{value[:url]}",
+  podspec_url = "#{value[:podspec_url]}",
+  generate_header_map = 1 
+)  
+      }
+      file.write(new_pod_repository)
+    end
+  }
+end
+```
+
 ## `new_pod_repository`
 
 This macro is the main point of integration for pod dependencies.
