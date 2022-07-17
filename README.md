@@ -90,7 +90,7 @@ post_install do |installer|
     end
     if skip_pods.include? root_spec.name
       puts "Skipping #{root_spec.name}"
-      result
+      next result
     end
     url = "Pods/#{root_spec.name}"
     if development_pods.include? root_spec.name
