@@ -59,7 +59,8 @@ swift_library(
     name = "PodToBUILDTestsLib",
     srcs = glob(["Tests/PodToBUILDTests/*.swift"]),
     deps = [":RepoToolsCore", "@podtobuild-SwiftCheck//:SwiftCheck"],
-    data = glob(["Examples/**/*.podspec.json"])
+    data = glob(["Examples/**/*.podspec.json"]),
+    testonly = True
 )
 
 macos_unit_test(

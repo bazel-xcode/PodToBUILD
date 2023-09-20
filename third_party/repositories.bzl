@@ -64,7 +64,7 @@ swift_c_module(
         module_map = module_map,
     ))
 
-def namespaced_swift_library(name, srcs, deps = None, defines = None, copts=[]):
+def namespaced_swift_library(name, srcs, deps = None, defines = None, copts=[], testonly=False):
     deps = [] if deps == None else deps
     defines = [] if defines == None else defines
     return """
@@ -75,12 +75,14 @@ swift_library(
     deps = [{deps}],
     defines = [{defines}],
     copts = ["-DSWIFT_PACKAGE", {copts}],
+    testonly = {testonly},
 )""".format(**dict(
         name = name,
         srcs = ",\n".join(['"%s"' % x for x in srcs]),
         defines = ",\n".join(['"%s"' % x for x in defines]),
         deps = ",\n".join(['"%s"' % namespaced_dep_name(x) for x in deps]),
         copts = ",\n".join(['"%s"' % x for x in copts]),
+        testonly = testonly
     ))
 
 def podtobuild_dependencies():
@@ -132,6 +134,7 @@ module CYaml {
             namespaced_swift_library(
                 name = "SwiftCheck",
                 srcs = ["Sources/**/*.swift"],
+                testonly = True
             ),
         ]),
         commit = "077c096c3ddfc38db223ac8e525ad16ffb987138",
