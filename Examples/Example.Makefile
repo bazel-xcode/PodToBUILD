@@ -12,6 +12,7 @@ REPOSITORY_OVERRIDE=--override_repository=rules_pods=$(RULES_PODS_DIR)
 BAZEL_OPTS=$(REPOSITORY_OVERRIDE) \
 	--disk_cache=$(HOME)/Library/Caches/Bazel \
 	--spawn_strategy=local \
+	--features rules_pods.testing  \
 	--apple_platform_type=ios
 
 all: bootstrap pod_test fetch build
@@ -41,7 +42,8 @@ test: info
 # Generally, this would be ran when dependencies are updated, and then,
 # dependencies _would_ be checked in.
 vendorize:
-	$(BAZEL) run @rules_pods//:update_pods $(BAZEL_OPTS) -- --src_root $(PWD)
+	echo vendorize
+	$(BAZEL) run  $(BAZEL_OPTS) @rules_pods//:update_pods -- --src_root $(PWD)
 	# The above is similar to running ../../bin/update_pods.py --src_root $(PWD)
 	# however, `rules_pods` is overriden
 	ditto $(RULES_PODS_DIR)/BazelExtensions Vendor/rules_pods/BazelExtensions
