@@ -5,6 +5,18 @@
 # Acknowledgements
 
 AcknowledgementProvider = provider()
+_EmptyObjcProvider = apple_common.new_objc_provider()
+
+def _make_objc_interface_provider(header, module_map=None):
+    if hasattr(_EmptyObjcProvider, "header"):
+        return apple_common.new_objc_provider(
+            header=header,
+            module_map = module_map
+        )
+
+    return apple_common.new_objc_provider(
+        module_map = module_map if module_map else depset([])
+    )
 
 def _acknowledgement_merger_impl(ctx):
     concat = ctx.attr.value.files.to_list() if ctx.attr.value else []
@@ -110,13 +122,19 @@ FOUNDATION_EXPORT const unsigned char ParentVersionString[];
       content=content,
       output=output
     )
-    objc_provider = apple_common.new_objc_provider(
+    objc_provider = _make_objc_interface_provider(
         header=depset([output]),
+    )
+    compilation_context = cc_common.create_compilation_context(
+        headers=depset([output]),
     )
 
     return struct(
         files=depset([output]),
-        providers=[objc_provider],
+        providers=[
+            CcInfo(compilation_context=compilation_context),
+            objc_provider,
+        ],
         objc=objc_provider,
         headers=depset([output]),
     )
@@ -194,7 +212,7 @@ module {module_name}.Swift {{
     providers = []
     if ctx.attr.module_map_name == "module.modulemap":
         provider_hdr = [module_map] + ([umbrella_header_file] if umbrella_header_file else [])
-        objc_provider = apple_common.new_objc_provider(
+        objc_provider = _make_objc_interface_provider(
             module_map=depset([module_map]),
             header=depset(provider_hdr)
         )
@@ -208,9 +226,13 @@ module {module_name}.Swift {{
     else:
         # This is an explicit module map. Currently, we use these for swift only
         provider_hdr = [module_map] + ([umbrella_header_file] if umbrella_header_file else [])
-        objc_provider = apple_common.new_objc_provider(
+        objc_provider = _make_objc_interface_provider(
             header=depset(provider_hdr + [module_map])
         )
+        compilation_context = cc_common.create_compilation_context(
+            headers=depset(provider_hdr),
+        )
+        providers.append(CcInfo(compilation_context=compilation_context))
 
     providers.append(objc_provider)
 
@@ -333,7 +355,9 @@ def _make_headermap_impl(ctx):
             hdrs.extend(compilation_context.headers.to_list())
 
         if hasattr(hdr_provider, "objc"):
-            hdrs.extend(hdr_provider.objc.direct_headers)
+            objc = hdr_provider.objc
+            if hasattr(objc, "direct_headers"):
+                hdrs.extend(objc.direct_headers)
 
         for hdr in hdrs:
             if hdr.path.endswith(".hmap"):
@@ -350,7 +374,7 @@ def _make_headermap_impl(ctx):
 
     compilation_context = cc_common.create_compilation_context(
         headers=depset([ctx.outputs.headermap]))
-    objc_provider = apple_common.new_objc_provider(
+    objc_provider = _make_objc_interface_provider(
         header=depset([ctx.outputs.headermap]),
     )
 
