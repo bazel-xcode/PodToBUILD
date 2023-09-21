@@ -93,7 +93,7 @@ release:
 	@ditto bazel-bin/Compiler bin/Compiler
 
 
-TESTED_BAZEL_VERSION=4.0.0
+TESTED_BAZEL_VERSION=6.3.2
 
 # Make a binary archive of PodToBUILD with the official github cli `hub`
 github_release:
