@@ -219,7 +219,11 @@ public struct PodBuildFile: SkylarkConvertible {
 
     private static func vendoredFrameworks(withPodspec spec: PodSpec) -> [BazelTarget] {
         let frameworks = spec.attr(\.vendoredFrameworks)
-        let baseName = "\(spec.moduleName ?? spec.name)_VendoredFramework_"
+        guard !frameworks.isEmpty else {
+            return []
+        }
+        let baseName = "\(spec.moduleName ?? spec.name)"
+        let suffix = "VendoredFramework"
 
         // Clunky but works:
         // AttrSet<[String]> -> [FrameworkImport(AttrSet<String>)]
@@ -232,7 +236,8 @@ public struct PodBuildFile: SkylarkConvertible {
         let allKeys = Set(watchos.keys) <> Set(tvos.keys) <> Set(osx.keys) <> Set(ios.keys) <> Set(basic.keys)
         return Array(allKeys).reduce(into: [BazelTarget]()) {
             (accum: inout [BazelTarget], framework: String) -> Void  in
-            let name = framework.replacingOccurrences(of: ".", with: "_")
+            let frameworkName = framework.components(separatedBy: ".").first ??  baseName
+            let name = frameworkName != baseName ?  "\(baseName)_\(frameworkName)"  : baseName
             let frameworkImports: AttrSet<[String]> = AttrSet(
                     basic: basic[framework] ?? [],
                     multi: MultiPlatform(
@@ -241,7 +246,7 @@ public struct PodBuildFile: SkylarkConvertible {
                         watchos: watchos[framework] ?? [],
                         tvos: tvos[framework] ?? []))
             accum.append(AppleFrameworkImport(
-                name: baseName + name,
+                name: "\(name)_\(suffix)",
                 frameworkImports: frameworkImports))
         }.sorted { $0.name < $1.name }
     }

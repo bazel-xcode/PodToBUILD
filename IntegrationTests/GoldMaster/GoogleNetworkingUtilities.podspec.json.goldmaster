@@ -105,7 +105,7 @@ objc_library(
   ],
   deps = [
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
-    ":GoogleNetworkingUtilities_VendoredFrameworks",
+    ":GoogleNetworkingUtilities_VendoredFramework",
     ":GoogleNetworkingUtilities_includes"
   ],
   copts = [
@@ -136,7 +136,7 @@ acknowledged_target(
   value = "//Vendor/GoogleNetworkingUtilities/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "GoogleNetworkingUtilities_VendoredFrameworks",
+  name = "GoogleNetworkingUtilities_VendoredFramework",
   framework_imports = glob(
     [
       "Frameworks/frameworks/GoogleNetworkingUtilities.framework/**"
@@ -147,7 +147,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "GoogleNetworkingUtilities_VendoredFrameworks_acknowledgement",
+  name = "GoogleNetworkingUtilities_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/GoogleNetworkingUtilities/pod_support_buildable:acknowledgement_fragment"
 )

@@ -108,7 +108,7 @@ objc_library(
   deps = [
     "//Vendor/GoogleNetworkingUtilities:GoogleNetworkingUtilities",
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
-    ":GoogleAuthUtilities_VendoredFrameworks",
+    ":GoogleAuthUtilities_VendoredFramework",
     ":GoogleAuthUtilities_includes"
   ],
   copts = [
@@ -145,7 +145,7 @@ acknowledged_target(
   value = "//Vendor/GoogleAuthUtilities/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "GoogleAuthUtilities_VendoredFrameworks",
+  name = "GoogleAuthUtilities_VendoredFramework",
   framework_imports = glob(
     [
       "Frameworks/frameworks/GoogleAuthUtilities.framework/**"
@@ -156,7 +156,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "GoogleAuthUtilities_VendoredFrameworks_acknowledgement",
+  name = "GoogleAuthUtilities_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/GoogleAuthUtilities/pod_support_buildable:acknowledgement_fragment"
 )

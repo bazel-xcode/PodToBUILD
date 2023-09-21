@@ -119,13 +119,13 @@ objc_library(
   pch = "pod_support/Headers/Private/KakaoOpenSDK-prefix.pch",
   deps = [
     ":KakaoLink",
-    ":KakaoLink_VendoredFrameworks",
+    ":KakaoLink_VendoredFramework",
     ":KakaoNavi",
-    ":KakaoNavi_VendoredFrameworks",
+    ":KakaoNavi_VendoredFramework",
     ":KakaoOpenSDK",
-    ":KakaoOpenSDK_VendoredFrameworks",
+    ":KakaoOpenSDK_VendoredFramework",
     ":KakaoS2",
-    ":KakaoS2_VendoredFrameworks",
+    ":KakaoS2_VendoredFramework",
     ":KakaoOpenSDK_includes"
   ],
   copts = [
@@ -222,7 +222,7 @@ objc_library(
     "WebKit"
   ],
   deps = [
-    ":KakaoOpenSDK_VendoredFrameworks",
+    ":KakaoOpenSDK_VendoredFramework",
     ":KakaoOpenSDK_includes"
   ],
   copts = [
@@ -251,7 +251,7 @@ acknowledged_target(
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "KakaoOpenSDK_VendoredFrameworks",
+  name = "KakaoOpenSDK_VendoredFramework",
   framework_imports = glob(
     [
       "KakaoOpenSDK.framework/**"
@@ -262,7 +262,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "KakaoOpenSDK_VendoredFrameworks_acknowledgement",
+  name = "KakaoOpenSDK_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
@@ -334,7 +334,7 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":KakaoNavi_VendoredFrameworks",
+    ":KakaoNavi_VendoredFramework",
     ":KakaoNavi_includes"
   ],
   copts = [
@@ -363,7 +363,7 @@ acknowledged_target(
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "KakaoNavi_VendoredFrameworks",
+  name = "KakaoNavi_VendoredFramework",
   framework_imports = glob(
     [
       "KakaoNavi.framework/**"
@@ -374,7 +374,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "KakaoNavi_VendoredFrameworks_acknowledgement",
+  name = "KakaoNavi_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
@@ -446,7 +446,7 @@ objc_library(
     "UIKit"
   ],
   deps = [
-    ":KakaoLink_VendoredFrameworks",
+    ":KakaoLink_VendoredFramework",
     ":KakaoLink_includes"
   ],
   copts = [
@@ -475,7 +475,7 @@ acknowledged_target(
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "KakaoLink_VendoredFrameworks",
+  name = "KakaoLink_VendoredFramework",
   framework_imports = glob(
     [
       "KakaoLink.framework/**"
@@ -486,7 +486,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "KakaoLink_VendoredFrameworks_acknowledgement",
+  name = "KakaoLink_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
@@ -558,7 +558,7 @@ objc_library(
     "Foundation"
   ],
   deps = [
-    ":KakaoS2_VendoredFrameworks",
+    ":KakaoS2_VendoredFramework",
     ":KakaoS2_includes"
   ],
   copts = [
@@ -587,7 +587,7 @@ acknowledged_target(
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "KakaoS2_VendoredFrameworks",
+  name = "KakaoS2_VendoredFramework",
   framework_imports = glob(
     [
       "KakaoS2.framework/**"
@@ -598,7 +598,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "KakaoS2_VendoredFrameworks_acknowledgement",
+  name = "KakaoS2_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/KakaoOpenSDK/pod_support_buildable:acknowledgement_fragment"
 )

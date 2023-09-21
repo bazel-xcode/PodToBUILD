@@ -114,7 +114,7 @@ objc_library(
     "//Vendor/GTMSessionFetcher:Core",
     "//Vendor/GoogleToolboxForMac:NSDictionary_URLArguments",
     "//Vendor/GoogleToolboxForMac:NSString_URLArguments",
-    ":GoogleSignIn_VendoredFrameworks",
+    ":GoogleSignIn_VendoredFramework",
     ":GoogleSignIn_includes"
   ],
   copts = [
@@ -164,7 +164,7 @@ acknowledged_target(
   value = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "GoogleSignIn_VendoredFrameworks",
+  name = "GoogleSignIn_VendoredFramework",
   framework_imports = glob(
     [
       "Frameworks/GoogleSignIn.framework/**"
@@ -175,7 +175,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "GoogleSignIn_VendoredFrameworks_acknowledgement",
+  name = "GoogleSignIn_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/GoogleSignIn/pod_support_buildable:acknowledgement_fragment"
 )

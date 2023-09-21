@@ -109,7 +109,7 @@ objc_library(
     "XCTest"
   ],
   deps = [
-    ":EarlGrey_VendoredFrameworks",
+    ":EarlGrey_VendoredFramework",
     ":EarlGrey_includes"
   ],
   copts = [
@@ -139,7 +139,7 @@ acknowledged_target(
   value = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "EarlGrey_VendoredFrameworks",
+  name = "EarlGrey_VendoredFramework",
   framework_imports = select(
     {
       "//conditions:default": glob(
@@ -154,7 +154,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "EarlGrey_VendoredFrameworks_acknowledgement",
+  name = "EarlGrey_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/EarlGrey/pod_support_buildable:acknowledgement_fragment"
 )

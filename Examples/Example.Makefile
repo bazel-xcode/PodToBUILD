@@ -42,7 +42,6 @@ test: info
 # Generally, this would be ran when dependencies are updated, and then,
 # dependencies _would_ be checked in.
 vendorize:
-	echo vendorize
 	$(BAZEL) run  $(BAZEL_OPTS) @rules_pods//:update_pods -- --src_root $(PWD)
 	# The above is similar to running ../../bin/update_pods.py --src_root $(PWD)
 	# however, `rules_pods` is overriden
