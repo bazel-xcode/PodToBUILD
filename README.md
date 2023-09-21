@@ -10,7 +10,8 @@ In the root directory, add `rules_pods` to the Bazel `WORKSPACE`.
 ```bazel
 http_archive(
     name = "rules_pods",
-    urls = ["https://github.com/pinterest/PodToBUILD/releases/download/4.1.0-412495/PodToBUILD.zip"],
+    urls = ["https://github.com/pinterest/PodToBUILD/releases/download/6.3.2-370b622/PodToBUILD.zip"],
+    sha256 = "ffdfe8c7a4c73cca5d7b7a67daa6ccdd046355637dbdb9b1366d021b4ad339b5",
 )
 ```
 
