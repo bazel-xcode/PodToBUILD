@@ -193,9 +193,57 @@ public struct PodBuildFile: SkylarkConvertible {
         []) + (bundleResources.basic ?? []) + (bundleResources.multi.ios ?? [])).sorted { $0.name < $1.name }
     }
 
+    private static func bucketFrameworkPath(path: String) -> String? {
+        let parts = path.components(separatedBy: "/")
+        let xcframework = parts.first(where: {
+            $0.hasSuffix(".xcframework")
+        })
+        guard xcframework == nil else {
+            return xcframework
+        }
+        return parts.reduce([],{ [$1] + $0 }).first(where: {
+            $0.hasSuffix(".framework")
+        })
+    }
+
+    private static func bucketFrameworkPaths(_ paths: [String]) -> [String:
+        [String]]{
+        return paths.reduce(into: [String: [String]]()) {
+            accum, path in
+            guard let name = bucketFrameworkPath(path: path) else {
+                return
+            }
+            accum[name] = (accum[name] ?? []) + [path]
+        }
+    }
+
     private static func vendoredFrameworks(withPodspec spec: PodSpec) -> [BazelTarget] {
         let frameworks = spec.attr(\.vendoredFrameworks)
-        return frameworks.isEmpty ? [] : [AppleFrameworkImport(name: "\(spec.moduleName ?? spec.name)_VendoredFrameworks", frameworkImports: frameworks)]
+        let baseName = "\(spec.moduleName ?? spec.name)_VendoredFramework_"
+
+        // Clunky but works:
+        // AttrSet<[String]> -> [FrameworkImport(AttrSet<String>)]
+        let basic = bucketFrameworkPaths(frameworks.basic ?? [])
+        let ios = bucketFrameworkPaths(frameworks.multi.ios ?? [])
+        let osx = bucketFrameworkPaths(frameworks.multi.osx ?? [])
+        let watchos = bucketFrameworkPaths(frameworks.multi.watchos ?? [])
+        let tvos = bucketFrameworkPaths(frameworks.multi.tvos ?? [])
+
+        let allKeys = Set(watchos.keys) <> Set(tvos.keys) <> Set(osx.keys) <> Set(ios.keys) <> Set(basic.keys)
+        return Array(allKeys).reduce(into: [BazelTarget]()) {
+            (accum: inout [BazelTarget], framework: String) -> Void  in
+            let name = framework.replacingOccurrences(of: ".", with: "_")
+            let frameworkImports: AttrSet<[String]> = AttrSet(
+                    basic: basic[framework] ?? [],
+                    multi: MultiPlatform(
+                        ios: ios[framework] ?? [], 
+                        osx: osx[framework] ?? [],
+                        watchos: watchos[framework] ?? [],
+                        tvos: tvos[framework] ?? []))
+            accum.append(AppleFrameworkImport(
+                name: baseName + name,
+                frameworkImports: frameworkImports))
+        }.sorted { $0.name < $1.name }
     }
 
     private static func vendoredLibraries(withPodspec spec: PodSpec) -> [BazelTarget] {
