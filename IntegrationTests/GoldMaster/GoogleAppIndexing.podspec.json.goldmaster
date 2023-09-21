@@ -110,7 +110,7 @@ objc_library(
     "SafariServices"
   ],
   deps = [
-    ":GoogleAppIndexing_VendoredFrameworks",
+    ":GoogleAppIndexing_VendoredFramework",
     ":GoogleAppIndexing_includes"
   ],
   copts = [
@@ -155,7 +155,7 @@ acknowledged_target(
   value = "//Vendor/GoogleAppIndexing/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "GoogleAppIndexing_VendoredFrameworks",
+  name = "GoogleAppIndexing_VendoredFramework",
   framework_imports = glob(
     [
       "Frameworks/GoogleAppIndexing.framework/**"
@@ -166,7 +166,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "GoogleAppIndexing_VendoredFrameworks_acknowledgement",
+  name = "GoogleAppIndexing_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/GoogleAppIndexing/pod_support_buildable:acknowledgement_fragment"
 )

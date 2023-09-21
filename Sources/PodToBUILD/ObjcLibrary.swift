@@ -799,7 +799,7 @@ public struct ObjcLibrary: BazelTarget, UserConfigurable, SourceExcludable {
                 .named(name: "deps", value: deps
                        .map { Set($0)
                            .filter { !($0.hasSuffix("_swift") ||
-                           $0.hasSuffix("_VendoredFrameworks") ||
+                           $0.hasSuffix("_VendoredFramework") ||
                            $0.hasSuffix("_VendoredLibraries"))
                            }
                            .map { $0.hasPrefix(":") ? $0 + "_hmap" : $0 }

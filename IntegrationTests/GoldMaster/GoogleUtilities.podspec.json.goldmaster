@@ -109,7 +109,7 @@ objc_library(
   ],
   deps = [
     "//Vendor/GoogleSymbolUtilities:GoogleSymbolUtilities",
-    ":GoogleUtilities_VendoredFrameworks",
+    ":GoogleUtilities_VendoredFramework",
     ":GoogleUtilities_includes"
   ],
   copts = [
@@ -140,7 +140,7 @@ acknowledged_target(
   value = "//Vendor/GoogleUtilities/pod_support_buildable:acknowledgement_fragment"
 )
 apple_static_framework_import(
-  name = "GoogleUtilities_VendoredFrameworks",
+  name = "GoogleUtilities_VendoredFramework",
   framework_imports = glob(
     [
       "Frameworks/frameworks/GoogleUtilities.framework/**"
@@ -151,7 +151,7 @@ apple_static_framework_import(
   ]
 )
 acknowledged_target(
-  name = "GoogleUtilities_VendoredFrameworks_acknowledgement",
+  name = "GoogleUtilities_VendoredFramework_acknowledgement",
   deps = [],
   value = "//Vendor/GoogleUtilities/pod_support_buildable:acknowledgement_fragment"
 )
