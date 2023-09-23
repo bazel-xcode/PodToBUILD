@@ -666,7 +666,7 @@ public enum RepoActions {
     static func unzipTransaction(rootDir: String, fileName: String) -> String {
         return "mkdir -p " + rootDir + " && " +
             "cd " + rootDir + " && " +
-            "unzip -d OUT " + fileName + " > /dev/null && " +
+            "ditto -x -k --sequesterRsrc --rsrc  " + fileName + " OUT > /dev/null && " +
             "rm -rf " + fileName
     }
 

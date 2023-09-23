@@ -76,6 +76,30 @@ class PodStoreTests: XCTestCase {
         XCTAssertTrue(shell.executed(encodedCommand: extract.0))
     }
 
+    func testZipExtractionWithSpecialCharacteres() {
+        let hasDir =  MakeShellInvocation("/bin/[", arguments: ["-e",
+                cacheRoot(forPod: "Charts", url: "https://github.com/danielgindi/Charts/archive/refs/tags/v4.0.1.zip"),
+                "]"], exitCode: 1)
+
+        
+        let extract = MakeShellInvocation("/bin/sh",
+                                          arguments: ["-c", RepoActions.unzipTransaction(
+                                            rootDir: escape(extractDir),
+                                            fileName: escape(downloadPath)
+                                            )],
+                                          exitCode: 0)
+        let shell = LogicalShellContext(commandInvocations: [
+            hasDir,
+            extract
+            ])
+
+        RepoActions.fetch(shell: shell, fetchOptions: fetchOpts)
+        XCTAssertTrue(shell.executed(encodedCommand:
+                LogicalShellContext.encodeDownload(url: URL(string: fetchOpts.url)!, toFile: downloadPath)
+        ))
+        XCTAssertTrue(shell.executed(encodedCommand: extract.0))
+    }
+
     func testCachedDownload() {
         let hasDir =  MakeShellInvocation("/bin/[", arguments: ["-e", cacheRoot(forPod: testPodName, url: "http://pinner.com/foo.zip"), "]"], value: 0)
         let shell = LogicalShellContext(commandInvocations: [
