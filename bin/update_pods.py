@@ -191,12 +191,21 @@ def _link_local_repo(repository_ctx, target_name, url):
     for repo_file in all_files:
         if len(repo_file) == 0:
             continue
+        # We should try to remove existing link if exists.
+        # In other case ln will create link inside existing directory 
+        # -f to ignore errors if file doesn't exists
+        rm_cmd = [
+            "rm",
+            "-f",
+            to_dir + repo_file
+        ]
         link_cmd = [
             "ln",
             "-sf",
             from_dir + repo_file,
             to_dir + repo_file
         ]
+        _exec(repository_ctx, rm_cmd)
         _exec(repository_ctx, link_cmd)
 
 def _needs_update(invocation_info):
