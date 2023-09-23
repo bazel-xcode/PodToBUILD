@@ -223,7 +223,9 @@ public struct PodSpec: PodSpecRepresentable {
         frameworks = strings(fromJSON: fieldMap[.frameworks])
         weakFrameworks = strings(fromJSON: fieldMap[.weakFrameworks])
         excludeFiles = strings(fromJSON: fieldMap[.excludeFiles])
-        sourceFiles = strings(fromJSON: fieldMap[.sourceFiles])
+        sourceFiles = strings(fromJSON: fieldMap[.sourceFiles]).map({ 
+            $0.hasSuffix("/") ? String($0.dropLast()) : $0
+        })
         publicHeaders = strings(fromJSON: fieldMap[.publicHeaders])
         privateHeaders = strings(fromJSON: fieldMap[.privateHeaders])
 
